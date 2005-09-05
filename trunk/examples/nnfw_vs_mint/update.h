@@ -1,0 +1,92 @@
+/* $Id: update.h,v 1.6 2005/02/20 14:16:59 stefano Exp $ */
+
+#ifndef MINT_UPDATE_H
+#define MINT_UPDATE_H
+
+#include "nodes.h"
+#include "weights.h"
+#include <stdio.h>
+
+/* an update rule is identified by a type (whether it acts on nodes or
+   weights) and by integer (rule id); a rule uses a given function to
+   update nodes/weights, different instance of a rule may coexist,
+   differing in parameter values such as, e.g., the slope of a sigmoid
+   function */
+
+/* there are some predefined rules whose identification integers are  
+   given here a mnemonic name: */
+enum {
+  mint_linear = 1,
+  mint_bounded_linear = 2,
+  mint_sigmoid = 3,
+  mint_binary = 4,
+  mint_integrator = 5
+};
+
+/* create a rule with a given id */
+struct mint_update *mint_update_new( int id );
+
+/* destroy a rule object */
+void mint_update_del( struct mint_update * );
+
+/* duplicate u1 */
+struct mint_update *mint_update_dup( const struct mint_update * );
+
+/* make dst equal to src, possibly changing its type */
+void mint_update_cpy( struct mint_update *dst, 
+		      const struct mint_update *src );
+
+/* save a rule to file - the rule id is saved as well as any parameter
+   values
+
+   NOTE: for user-defined rules, it is improtant that rule ids be
+   consistently across all programs! it is best to keep an own library
+   of rules for use by all programs one writes.
+ */
+void mint_update_save( const struct mint_update *, FILE * ); 
+
+/* load a rule from file - see the above NOTE. The file format is:
+
+   update <type> <id> <nparam> <param1> ... <paramn>
+
+   where: type is 'n' or 'w' according to whether this is a node or
+   weight update rule, <id> is a rule id number, <nparam> is the
+   number of ocnfigurable parameters in the rule, and <param1>
+   ... <paramn> their default values.
+ */
+struct mint_update *mint_update_load( FILE * );
+
+/* retrieve the update rule for node group n and apply it to all
+   nodes in the rage min-max */
+void mint_update_napply( mint_nodes n, int min, int max );
+void mint_update_wapply( mint_weights w, mint_nodes pre, mint_nodes post );
+
+/* retrieve rule id */
+int mint_update_id( const struct mint_update * );
+
+/* retrieve number of node states on which this rule operates */
+int mint_update_states( const struct mint_update * );
+
+/* retrieve number of rule parameters */
+int mint_update_nparam( const struct mint_update * );
+
+/* access to rule parameters */
+float mint_update_get_param( struct mint_update *, int i );
+void mint_update_set_param( struct mint_update *, int i, float x );
+
+/* create a update rule for use with the library; the parameters
+   passed will become the default ones for this rule
+   
+   NOTE: the return valus is the id given to the rule by the system -
+   to ensure that the same id always applies to the same rule, across
+   different runs of a program or different programs, make sure that,
+   in your code, rules be always added in the same sequence! */
+int mint_update_nadd( void(*function)( mint_nodes, int, int, float * ),
+		      int nstates, int nparam, float *param );
+
+int mint_update_wadd( void(*function)( mint_weights, mint_nodes,
+				       mint_nodes, float * ),
+		      int nstates, int nparam, float *param );
+
+#endif
+

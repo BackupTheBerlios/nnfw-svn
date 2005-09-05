@@ -1,0 +1,271 @@
+#LyX 1.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 221
+\textclass article
+\language italian
+\inputencoding auto
+\fontscheme default
+\graphics default
+\paperfontsize default
+\spacing single 
+\papersize Default
+\paperpackage a4
+\use_geometry 0
+\use_amsmath 0
+\use_natbib 0
+\use_numerical_citations 0
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\quotes_language english
+\quotes_times 2
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+
+\layout Title
+
+Neural Network FrameWork
+\layout Section
+
+L'Idea
+\layout Standard
+
+Il neural network framework (NNF) consente di poter costruire una rete neurale
+ artificiale sulla base di elementi di costruzione (Building-blocks) ed
+ attraverso regole di composizione dei building-blocks.
+\layout Standard
+
+La rete neurale è, quindi, il risultato della combinazione dei vari elementi.
+\layout Standard
+
+Il tutto è pensato sia per dare enorme flessibilità ed estensibilità delle
+ architetture possibili, sia per mantenere al massimo l'efficienza nella
+ simulazione della rete neurale.
+\layout Subsection
+
+Building-Blocks 
+\layout Standard
+
+Gli elementi di costruzione si suddividono in tre classi:
+\layout Itemize
+
+
+\series bold 
+Cluster
+\series default 
+: è un oggetto che contiene più neuroni al suo interno.
+ Definisce dei neuroni d'ingresso e dei neuroni d'uscita.
+ Questi due insiemi non sono necessariamente identici; alcuni neuroni possono
+ essere solo d'ingresso o solo d'uscita o nessuno dei due (nascosti all'interno
+ del cluster).
+ Vedere l'InnerLinker per capire come usare i neuroni nascosti del cluster.
+\layout Itemize
+
+
+\series bold 
+Linker
+\series default 
+: è l'oggetto che permette di connettere due o più cluster insieme.
+ In generale, il linker prende gli output dei neuroni di uno o più cluster
+ (denominati 
+\emph on 
+cluster d'ingresso
+\emph default 
+) e li inserisce come input dei neuroni di un'altro cluster (denominato
+ 
+\emph on 
+d'uscita
+\emph default 
+).
+ Possono esistere varie tipologie di linker a seconda del tipo di connessione
+ che si vuole realizzere, alcuni esempi sono:
+\begin_deeper 
+\layout Itemize
+
+Connessione completa fra i neuroni dei cluster in ingresso con quello di
+ uscita;
+\layout Itemize
+
+Connessione sparsa con probabilità 
+\emph on 
+P
+\emph default 
+ tra i neuroni del cluster in ingresso con quello d'uscita;
+\layout Itemize
+
+Connessioni che simulano sinapsi dinamiche;
+\layout Itemize
+
+Connessioni con 
+\emph on 
+time-delay
+\end_deeper 
+\layout Itemize
+
+
+\series bold 
+InnerLinker
+\series default 
+: questo oggetto è importante per le connessioni all'interno dei neuroni
+ di un cluster.
+ Questo consente di connettere i neuroni che sono soltanto d'ingresso di
+ un cluster con quelli che sono solo d'uscita o nascosti.
+ Un esempio dell'utilità dell'InnerLinker è la mappa di Kohonen o le reti
+ di Hopfield.
+ Infatti, un InnerLinker può connettere i neuroni di un cluster a formare
+ una rete di Hopfield ed attraverso i Linker usare solo alcuni neuroni come
+ ingresso e altri come output.
+\layout Subsection
+
+Regole di Costruzione
+\layout Standard
+
+Semplicemente si creano i vari cluster e li si connettono come desiderato.
+\layout Standard
+
+Ad ogni cluster inserito all'interno della rete verrà associato un identificativ
+o numerico, così come ai Linker e InnerLinker.
+\layout Subsection
+
+La Rete Neurale
+\layout Standard
+
+La rete neurale è un oggetto che contiene i vari cluster e linker connessi
+ tra loro.
+\layout Standard
+
+Ad ogni Cluster è associato un livello che ne determina la gerarchia strutturale.
+ Il livello 0 è pensato come il livello contenente i neuroni d'ingresso
+ della rete neurale, e l'ultimo livello come l'output della rete neurale
+ (anche se questo non è vincolante).
+ Almeno il livello 0 deve esistere !!! La numerazione dei livelli non ammette
+ 'buchi'.
+\layout Standard
+
+La rete neurale contiene un orologio 
+\emph on 
+temporale
+\emph default 
+ che tiene 'il tempo' della rete neurale o degli 
+\emph on 
+steps
+\emph default 
+ eseguiti.
+ Questo consente di avere sia una dinamica discreta che continua all'interno
+ della rete neurale.
+ Infatti, le varie regole di aggiornamento dei linker potrebbero basarsi
+ sia sul tempo che sugli steps della rete neurale
+\layout Standard
+
+
+\color blue
+Non ho ben chiaro se la rete neurale deve avere i metodi per manipolare
+ l'architettura, oppure solamente contenere i cluster e i linker e delegare
+ la creazione della struttura ad un 
+\emph on 
+ArchitectureManager
+\emph default 
+ che offre i metodi necessari a manipolare i cluster e i linker.
+\layout Subsection
+
+Spreading della rete
+\layout Standard
+
+Lo spreading della rete si effettua aggiornando i Cluster, i Linker e gli
+ InnerLinker della rete neurale costruita.
+\layout Standard
+
+Ogni Cluster, sulla base della funzione d'attivazione dei neuroni, aggiorna
+ gli output dei neuroni sulla base dell'input attuale.
+\layout Standard
+
+Ogni Linker preleva gli output dei neuroni dei cluster d'ingresso, effettua
+ i calcoli necessari e registra gli input dei neuroni del cluster d'uscita.
+\layout Standard
+
+Ogni InnerLinker aggiorna gli input dei neuroni del cluster sulla base degli
+ input al tempo di calcolo.
+ Gli InnerLinker sono intrinsecamente ricorrenti, e quindi terranno conto
+ di questo.
+\layout Standard
+
+Il coordinamento fra queste operazioni dipende dalla particolare strategia
+ scelta.
+ Ad esempio, nella strategia 
+\emph on 
+feedforward
+\emph default 
+ si partirà aggiornando i cluster di livello 0 e successivamente i Linker,
+ e così via fino all'ultimo livello.
+\layout Section
+
+Come Mantenere l'efficienza
+\layout Standard
+
+Per consentire che questo meccanismo non perda d'efficienza durante lo spreading
+ della rete, i Linker e gli InnerLinker dovranno avere accesso alla struttura
+ interna che contiene gli output e gli input dei neuroni del cluster.
+ Quindi, andranno fatte delle assunzioni forti all'interno della classe
+ Cluster che tutte le classi derivate dovranno rispettare.
+\layout Standard
+
+Durante l'aggiornamento di un Linker, questo accede direttamente alla struttura
+ interna così da evitare la chiamata a funzione per ottenere il vettore
+ degli output e dell'input dei neuroni dei cluster.
+\layout Standard
+
+
+\color blue
+Non ho ancora idea di come far condividere le strutture di memoria senza
+ al tempo stesso farle dipendere da una implementazione specifica !!! :-(
+ Forse i template mi potrebbero aiutare...
+ o forse no !!
+\newline 
+In ogni caso, forse in prima istanza un semplice array statico del C++ creato
+ attraverso l'uso di un template potrebbe risolvere la questione.
+ Ad esempio, un cluster di un certo numero di neuroni potrebbe essere una
+ classe template che accetta il numero di neuroni che deve contenere.
+ Si andrebbe a realizzare, così, un cluster statico, non ridimensionabile...
+ ma che sarebbe veloce !!!
+\newline 
+O forse in prima istanza basta una classe che alloca memoria dal costruttore
+ e poi non permette la modifica a run-time.
+ O forse si ?!?! Mah :-)
+\layout Section
+
+Si possono realizzare tutte le reti immaginabili ???
+\layout Standard
+
+Bè, a prima vista direi di si !!
+\layout Itemize
+
+E' possibile create strutture ibride a piacimento; Anche mischiare continue
+ e discrete insieme...
+ forse in futuro chissà !! :-)
+\layout Itemize
+
+Reti con sinpasi dinamiche o ritardate sia discrete che continue
+\layout Itemize
+
+Gli spiking neuron anche ?!?! Uhmm...
+ ci devo pensare un pò
+\layout Itemize
+
+Le reti tipo la GasNet, che richiedono una posizione spaziale dei neuroni...
+ potrebbe essere implementata attraverso un cluster che contiene un solo
+ neurone che definisce una posizione spaziale del cluster....
+ O meglio ancora con un cluster con una sua dimensione spaziale interna
+ e che organizza i neuroni all'interno nello spazio del cluster (bi- o tri-dimen
+sionale) ed usare un InnerLinker derivato o direttamente l'update del cluster
+ stesso per gestire le attivazioni dipendenti dalla posizione spaziale come
+ nelle GasNet.
+\layout Itemize
+
+Le Ricorrenze...
+ quante e quali più vi piacciono !! Nelle reti in cui vengono copiati gli
+ output di certi neuroni come input di altri neuroni possono essere realizzate
+ attraverso dei Linker che connettono uno-a-uno che semplicemente eseguono
+ una copia dal cluster d'ingresso a quello d'uscita.
+\the_end
