@@ -21,6 +21,7 @@
 #include "messages.h"
 #include <algorithm>
 #include <functional>
+#include <cstring>
 
 /**********************************************
  *  Implementation of BaseNeuralNet Class     *
@@ -184,6 +185,20 @@ void BaseNeuralNet::randomize( nnfwReal min, nnfwReal max ) {
     for ( LinkerVec::iterator it = linkersv.begin(); it != linkersv.end(); ++it ) {
         (*it)->randomize( min, max );
     }
+}
+
+Updatable* BaseNeuralNet::getByName( const char* name ) {
+    for ( ClusterVec::iterator it = clustersv.begin(); it != clustersv.end(); ++it ) {
+        if ( strcmp( (*it)->getName(), name ) == 0 ) {
+            return *it;
+        }
+    }
+    for ( LinkerVec::iterator it = linkersv.begin(); it != linkersv.end(); ++it ) {
+        if ( strcmp( (*it)->getName(), name ) == 0 ) {
+            return *it;
+        }
+    }
+    return NULL;
 }
 
 bool BaseNeuralNet::find( const Cluster* cl ) const {

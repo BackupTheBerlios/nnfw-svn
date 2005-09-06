@@ -127,6 +127,14 @@ public:
      */
     void randomize( nnfwReal min, nnfwReal max );
 
+    /*! \brief Return the Updatable with the name specified
+     *
+     *  Returns NULL-pointer if there's no updatable object whit the name specified<br>
+     *  WARNING: return the first that finds. If you have named different Updatables with same name
+     *   there no way to retrieve all of them with this methods... call them with unique name ;-)
+     */
+    Updatable* getByName( const char* );
+
     /*! \brief Return true if the Cluster is in this net
      *
      * Details
