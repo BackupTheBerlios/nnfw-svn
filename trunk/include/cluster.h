@@ -38,6 +38,11 @@
 class Cluster : public Updatable
 {
 public:
+    //! Construct a Cluster
+    Cluster( const char* name = "unnamed" ) : Updatable(name) {
+        // nothing to do
+    };
+
     /*! \brief Return the number of the inputs neuron
      *
      * Details...

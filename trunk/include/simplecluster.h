@@ -37,7 +37,7 @@ public:
      *
      *  Details...
      */
-    SimpleCluster( u_int numNeurons );
+    SimpleCluster( u_int numNeurons, const char* name = "unnamed" );
 
     /*! \brief Destructor
      *

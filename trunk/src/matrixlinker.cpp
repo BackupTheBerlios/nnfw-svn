@@ -25,7 +25,8 @@
  *  Implementation of MatrixLinker Class     *
  **********************************************/
 
-MatrixLinker::MatrixLinker( Cluster* from, Cluster* to ) {
+MatrixLinker::MatrixLinker( Cluster* from, Cluster* to, const char* name )
+    : Linker(name) {
     nrows = from->outputSize();
     outputsFrom = from->getOutputs();
 

@@ -40,6 +40,10 @@
 class Linker : public Updatable
 {
 public:
+    //! Construct
+    Linker( const char* name = "unnamed" ) : Updatable(name) {
+        // nothing to do
+    };
 
     /*! \brief Return the Cluster From
      *

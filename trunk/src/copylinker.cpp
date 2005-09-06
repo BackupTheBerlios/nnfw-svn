@@ -25,11 +25,12 @@
  *  Implementation of CopyLinker Class        *
  **********************************************/
 
-CopyLinker::CopyLinker( Cluster* from, Cluster* to ) {
+CopyLinker::CopyLinker( Cluster* from, Cluster* to, const char* name )
+    : Linker(name) {
     if ( from->outputSize() < to->inputSize() ) {
         dimData = from->outputSize();
     } else {
-        dimData = to->inputSize();
+        dimData = to->inputSize(); 
     }
     outputsFrom = from->getOutputs();
     inputsTo = to->getInputs();

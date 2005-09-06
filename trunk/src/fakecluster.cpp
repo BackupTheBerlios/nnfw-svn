@@ -29,7 +29,8 @@
  *  Implementation of FakeCluster Class       *
  **********************************************/
 
-FakeCluster::FakeCluster( u_int size ) {
+FakeCluster::FakeCluster( u_int size, const char* name )
+    : Cluster(name) {
     dim = size;
     data = new nnfwReal[dim];
     updater = new DummyUpdater();

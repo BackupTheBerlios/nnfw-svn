@@ -35,7 +35,7 @@ public:
      * only some data are copied <br>
      * Further Details coming soon ;-)
      */
-    CopyLinker( Cluster* from, Cluster* to );
+    CopyLinker( Cluster* from, Cluster* to, const char* name = "unnamed" );
 
     /*! \brief Destructor
      *

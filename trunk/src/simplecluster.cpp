@@ -28,7 +28,8 @@
  *  Implementation of SimpleCluster Class     *
  **********************************************/
 
-SimpleCluster::SimpleCluster( u_int numNeurons ) {
+SimpleCluster::SimpleCluster( u_int numNeurons, const char* name )
+    : Cluster(name) {
     this->numNeurons = numNeurons;
     outputdata = new nnfwReal[this->numNeurons];
     inputdata = new nnfwReal[this->numNeurons];

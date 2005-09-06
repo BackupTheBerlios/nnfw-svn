@@ -34,7 +34,7 @@ public:
      *
      * Details
      */
-    MatrixLinker( Cluster* from, Cluster* to );
+    MatrixLinker( Cluster* from, Cluster* to, const char* name = "unnamed" );
 
     /*! \brief Destructor
      *

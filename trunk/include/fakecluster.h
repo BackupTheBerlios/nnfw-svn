@@ -36,7 +36,7 @@ public:
      *
      *  Details...
      */
-    FakeCluster( u_int size );
+    FakeCluster( u_int size, const char* name = "unnamed" );
 
     /*! \brief Destructor
      *

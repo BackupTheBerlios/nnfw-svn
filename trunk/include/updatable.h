@@ -22,12 +22,21 @@
 
 /*! \brief Updateables objects
  *
- *  Details
+ *  The Updatable objects has a name.
  */
 class Updatable {
 public:
+    Updatable( const char* name = "unnamed" ) {
+        this->name = name;
+    };
     //! Update the object
     virtual void update() = 0;
+    //! Return the name associated
+    const char* getName() {
+        return name;
+    };
+protected:
+    const char* name;
 };
 
 #endif
