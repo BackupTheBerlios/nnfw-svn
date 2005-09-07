@@ -24,9 +24,6 @@
  *  \brief This file contains the declaration of the linkers implemented
  *
  *  Details...
- *  \todo Quando viene creato un MatrixLinker che prende gli input da un solo Cluster, questo Cluster viene memorizzato
- *        in un array contenente un solo elemento, e durante l'update() viene eseguito un for su questo array!!!<br>
- *        Modificare l'implementazione in modo da evitare di eseguire il for in questa situazione
  */
 
 #include "types.h"

@@ -20,7 +20,7 @@
 #ifndef NNFW_H
 #define NNFW_H
 
-/*! \mainpage Neural Network Framework
+/*! \mainpage Documentation
  *
  *  This is a Neural Network Framework for creating, simulating and analyze any neural network you can image !!
  *

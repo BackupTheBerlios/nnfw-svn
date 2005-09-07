@@ -1,3 +1,7 @@
+[Dir docs]
+Dirs=
+Files=footer-doxygen.html/header-doxygen.html/style-doxygen.css
+
 [Dir examples]
 Dirs=nnfw_vs_mint/test1
 Files=examples.pro
@@ -47,7 +51,7 @@ Dirs=
 Files=test6.cpp/test6.pro
 
 [Project Dir]
-Dirs=include/src/examples
+Dirs=include/src/examples/docs
 Files=Doxyfile/nnframework.pro/GPL.txt
 
 [Project File]
