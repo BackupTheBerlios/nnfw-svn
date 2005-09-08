@@ -27,6 +27,10 @@ void DummyUpdater::update( nnfwReal* inputs, nnfwReal* outputs, u_int numNeuron 
     }
 }
 
+void DummyUpdater::update( nnfwReal input, nnfwReal &output ) {
+    output = input;
+}
+
 const char* DummyUpdater::className() const {
     return "DummyUpdater";
 }
@@ -35,6 +39,10 @@ void SigmoidUpdater::update( nnfwReal* inputs, nnfwReal* outputs, u_int numNeuro
     for ( u_int i = 0; i<numNeuron; i++ ) {
         outputs[i] = 1.0/( 1.0 + exp( -lambda*( inputs[i] ) ) );
     }
+}
+
+void SigmoidUpdater::update( nnfwReal input, nnfwReal &output ) {
+    output = 1.0/( 1.0 + exp( -lambda*( input ) ) );
 }
 
 const char* SigmoidUpdater::className() const {
@@ -61,6 +69,22 @@ void FakeSigmoidUpdater::update( nnfwReal* inputs, nnfwReal* outputs, u_int numN
     }
 }
 
+void FakeSigmoidUpdater::update( nnfwReal x, nnfwReal &output ) {
+    nnfwReal x0 = 6. + 2./3.;
+    nnfwReal zero = 0.5;
+    x *= lambda;
+    x -= (.5 - zero) / (.075 + zero);
+    if ( x <= -x0 ) {
+        output = 0.0;
+    } else {
+        if ( x < x0 ) {
+            output = .5 + .575 * x / ( 1 + fabs(x) );
+        } else {
+            output = 1.0;
+        }
+    }
+}
+
 const char* FakeSigmoidUpdater::className() const {
     return "FakeSigmoidUpdater";
 }
@@ -73,15 +97,21 @@ void ScaledSigmoidUpdater::update( nnfwReal* inputs, nnfwReal* outputs, u_int nu
     }
 }
 
+void ScaledSigmoidUpdater::update( nnfwReal input, nnfwReal &output ) {
+    nnfwReal f;
+    f = 1.0/( 1.0 + exp( -lambda*( input ) ) );
+    output = ( max - min ) * f + min ;
+}
+
 const char* ScaledSigmoidUpdater::className() const {
     return "ScaledSigmoidUpdater";
 }
 
 void LinearUpdater::update( nnfwReal* inputs, nnfwReal* outputs, u_int numNeuron ) {
     for ( u_int i = 0; i<numNeuron; i++ ) {
-        double m = ( maxY-minY )/( maxX-minX );
-        double q = minY - m*minX;
-        double ret = m*(inputs[i]) + q;
+        nnfwReal m = ( maxY-minY )/( maxX-minX );
+        nnfwReal q = minY - m*minX;
+        nnfwReal ret = m*(inputs[i]) + q;
         if (ret < minY) {
             outputs[i] = minY;
         } else if (ret > maxY) {
@@ -89,6 +119,19 @@ void LinearUpdater::update( nnfwReal* inputs, nnfwReal* outputs, u_int numNeuron
         } else {
             outputs[i] = ret;
         }
+    }
+}
+
+void LinearUpdater::update( nnfwReal input, nnfwReal &output ) {
+    nnfwReal m = ( maxY-minY )/( maxX-minX );
+    nnfwReal q = minY - m*minX;
+    nnfwReal ret = m*(input) + q;
+    if (ret < minY) {
+        output = minY;
+    } else if (ret > maxY) {
+        output = maxY;
+    } else {
+        output = ret;
     }
 }
 

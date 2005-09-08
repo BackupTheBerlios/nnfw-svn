@@ -3,7 +3,7 @@ Dirs=
 Files=footer-doxygen.html/header-doxygen.html/style-doxygen.css
 
 [Dir examples]
-Dirs=nnfw_vs_mint/test1
+Dirs=nnfw_vs_mint/test1/test2
 Files=examples.pro
 
 [Dir examples/nnfw_vs_mint]
@@ -13,6 +13,10 @@ Files=arch.h/check.h/image.h/libmint.a/load_utils.h/mint.net/network.h/nnfw_vs_m
 [Dir examples/test1]
 Dirs=
 Files=test1.cpp/test1.pro
+
+[Dir examples/test2]
+Dirs=
+Files=test2.cpp/test2.pro
 
 [Dir include]
 Dirs=

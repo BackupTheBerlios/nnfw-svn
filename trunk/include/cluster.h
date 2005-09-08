@@ -34,6 +34,7 @@
  *
  *  Cluster objects memorize the inputs and outputs into array of nnfwReal !! 
  *  ( ... ?!?! ... )
+ *  \todo E' ancora utile avere il cluster con una dimensione di input diversa da quella di output ?!?!?
  */
 class Cluster : public Updatable
 {
@@ -55,16 +56,23 @@ public:
      */
     virtual u_int outputSize() const = 0;
 
-    /*! \brief Set the update function
+    /*! \brief Set the update function for all neurons contained
      *
      * Details...
+     *
      */
     virtual void setUpdater( ClusterUpdater* up ) = 0;
 
-    /*! \brief Get the update function
+    /*! \brief Set the update function for the neuron specified
+     *
+     * Details...
+     */
+    virtual void setUpdater( ClusterUpdater* up, u_int neuron ) = 0;
+
+    /*! \brief Get the update function for the neuron specified
      *
      */
-    virtual const ClusterUpdater* getUpdater() const = 0;
+    virtual const ClusterUpdater* getUpdater( u_int neuron ) const = 0;
 
     /*! \brief Set the input of neuron
      *

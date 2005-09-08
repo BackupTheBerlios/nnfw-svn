@@ -38,7 +38,10 @@ SimpleCluster::SimpleCluster( u_int numNeurons, const char* name )
     memset( outputdata, 0, sizeof(nnfwReal)*this->numNeurons );
     memset( biases, 0, sizeof(nnfwReal)*this->numNeurons );
     //! SigmoidUpdater as Default Updater
-    updater = new SigmoidUpdater( 1.0 );
+    singleUpdater = new SigmoidUpdater( 1.0 );
+    singleUpd = true;
+    //! Allocation for poolUpdater
+    poolUpdater = new ( ClusterUpdater ( *[this->numNeurons] ) );
 
     tmpdata = new nnfwReal[this->numNeurons];
     memset( tmpdata, 0, sizeof(nnfwReal)*this->numNeurons );
@@ -48,7 +51,7 @@ SimpleCluster::~SimpleCluster() {
     delete []outputdata;
     delete []inputdata;
     delete []biases;
-    delete updater;
+    delete []poolUpdater;
 }
 
 
@@ -61,22 +64,48 @@ u_int SimpleCluster::outputSize() const {
 }
 
 void SimpleCluster::setUpdater( ClusterUpdater* up ) {
-    if ( !up ) {
-        nnfwMessage( NNFW_ERROR, "Null Pointer passed to setUpdater! This operation will be ignored" );
+    singleUpdater = up;
+    singleUpd = true;
+    // Copy this updater to poolUpdater for future settings by setUpdater( up, numNeuron )
+    //  and for simpler implementation of getUpdater
+    for( u_int i = 0; i<numNeurons; i++ ) {
+        poolUpdater[i] = singleUpdater;
     }
-    delete updater;
-    updater = up;
+}
+
+void SimpleCluster::setUpdater( ClusterUpdater* up, u_int neuron ) {
+    if ( neuron >= numNeurons ) {
+        char msg[100];
+        sprintf( msg, "The neuron %u doesn't exists! The operation setUpdater will be ignored", neuron );
+        nnfwMessage( NNFW_ERROR, msg );
+        return;
+    }
+    poolUpdater[neuron] = up;
+    singleUpd = false;
 }
 
 void SimpleCluster::update() {
-    for ( u_int i = 0; i<numNeurons; i++ ) {
-        tmpdata[i] = inputdata[i] - biases[i];
+    if ( singleUpd ) {
+        for ( u_int i = 0; i<numNeurons; i++ ) {
+            tmpdata[i] = inputdata[i] - biases[i];
+        }
+        singleUpdater->update( tmpdata, outputdata, numNeurons );
+    } else {
+        for ( u_int i = 0; i<numNeurons; i++ ) {
+            poolUpdater[i]->update( inputdata[i] - biases[i], outputdata[i] );
+        }
     }
-    updater->update( tmpdata, outputdata, numNeurons );
 }
 
-const ClusterUpdater* SimpleCluster::getUpdater() const {
-    return updater;
+const ClusterUpdater* SimpleCluster::getUpdater( u_int neuron ) const {
+    if ( neuron >= numNeurons ) {
+        char msg[100];
+        sprintf( msg, "The neuron %u doesn't exists! The operation setInput will be ignored", neuron );
+        nnfwMessage( NNFW_ERROR, msg );
+        // ---- FIXME returning reference to temporary object !!!!!!!!
+        return new DummyUpdater();
+    }
+    return poolUpdater[ neuron ];
 }
 
 void SimpleCluster::setInput( u_int neuron, nnfwReal value ) {

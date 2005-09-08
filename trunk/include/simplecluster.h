@@ -70,11 +70,17 @@ public:
      */
     void setUpdater( ClusterUpdater* up );
 
+    /*! \brief Set the update function for the neuron specified
+     *
+     * Details...
+     */
+    void setUpdater( ClusterUpdater* up, u_int neuron );
+
     /*! \brief Get the update function
      *
      * Details...
      */
-    const ClusterUpdater* getUpdater() const;
+    const ClusterUpdater* getUpdater( u_int neuron ) const;
 
     /*! \brief Set the input of neuron
      *
@@ -147,8 +153,10 @@ private:
     nnfwReal* inputdata;
     nnfwReal* outputdata;
     nnfwReal* biases;
-    //! Updater Object
-    ClusterUpdater* updater;
+    //! Updaters Object
+    ClusterUpdater* singleUpdater;
+    ClusterUpdater** poolUpdater;
+    bool singleUpd;
     //! temporary data
     nnfwReal* tmpdata;
 };

@@ -43,6 +43,9 @@ public:
     //! Implement the dummy updating method
     void update( nnfwReal* inputs, nnfwReal* outputs, u_int numNeuron );
 
+    //! Single neuron update
+    void update( nnfwReal input, nnfwReal &output );
+
     //! \brief Return the class name
     const char* className() const;
 };
@@ -59,11 +62,14 @@ public:
         lambda = l;
     };
 
-    /* \brief Implement the updating method
+    /*! \brief Implement the updating method
      *
      * Details...
      */
     void update( nnfwReal* inputs, nnfwReal* outputs, u_int numNeuron );
+
+    //! Single neuron update
+    void update( nnfwReal input, nnfwReal &output );
 
     //! \brief Return the class name
     const char* className() const;
@@ -84,11 +90,14 @@ public:
         lambda = l;
     };
 
-    /* \brief Implement the updating method
+    /*! \brief Implement the updating method
      *
      * Details...
      */
     void update( nnfwReal* inputs, nnfwReal* outputs, u_int numNeuron );
+
+    //! Single neuron update
+    void update( nnfwReal input, nnfwReal &output );
 
     //! \brief Return the class name
     const char* className() const;
@@ -116,11 +125,14 @@ public:
         this->max = max;
     };
 
-    /* \brief Implement the updating method
+    /*! \brief Implement the updating method
      *
      * Details...
      */
     void update( nnfwReal* inputs, nnfwReal* outputs, u_int numNeuron );
+
+    //! Single neuron update
+    void update( nnfwReal input, nnfwReal &output );
 
     //! \brief Return the class name
     const char* className() const;
@@ -156,11 +168,14 @@ public:
         this->maxY = maxY;
     };
 
-    /* \brief Implement the updating method
+    /*! \brief Implement the updating method
      *
      * Details...
      */
     void update( nnfwReal* inputs, nnfwReal* outputs, u_int numNeuron );
+
+    //! Single neuron update
+    void update( nnfwReal input, nnfwReal &output );
 
     //! \brief Return the class name
     const char* className() const;

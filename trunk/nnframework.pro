@@ -34,6 +34,7 @@ HEADERS		= ./include/nnfw.h \
 
 SOURCES		= ./src/simplecluster.cpp \
               ./src/fakecluster.cpp \
+              ./src/clusterupdater.cpp \
               ./src/libclusterupdaters.cpp \
               ./src/matrixlinker.cpp \
               ./src/copylinker.cpp \

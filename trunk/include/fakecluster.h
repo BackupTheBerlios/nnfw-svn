@@ -68,10 +68,16 @@ public:
      */
     void setUpdater( ClusterUpdater* up );
 
+    /*! \brief This function is ignored !! ;-)
+     *
+     * Details...
+     */
+    void setUpdater( ClusterUpdater* up, u_int numNeuron );
+
     /*! \brief It's always return DummyUpdater ;-)
      *
      */
-    const ClusterUpdater* getUpdater() const;
+    const ClusterUpdater* getUpdater( u_int numNeuron ) const;
 
     /*! \brief Set the n-th position of vector
      *
@@ -130,7 +136,7 @@ public:
 private:
     u_int dim;
     nnfwReal* data;
-    ClusterUpdater* updater;
+    ClusterUpdater updater;
 };
 
 #endif

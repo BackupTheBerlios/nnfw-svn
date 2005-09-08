@@ -31,6 +31,7 @@
 /*! \brief Cluster Updater Class
  *
  *  Details...
+ *  \todo Qual'e' lo scopo del metodo className ?!?!?
  */
 class ClusterUpdater
 {
@@ -39,13 +40,19 @@ public:
      *
      *  Details...
      */
-    virtual void update( nnfwReal* inputs, nnfwReal* outputs, u_int numNeuron ) = 0;
+    virtual void update( nnfwReal* inputs, nnfwReal* outputs, u_int numNeuron );
+
+    /*! \brief Calculate the outputs of a single neuron
+     *
+     *  Details...
+     */
+    virtual void update( nnfwReal input, nnfwReal &output );
 
     /*! \brief Return the class name that identify the type of ClusterUpdater
      *
      * Details...
      */
-    virtual const char* className() const = 0;
+    virtual const char* className() const;
 };
 
 #endif

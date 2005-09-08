@@ -70,7 +70,7 @@ double testingNet() {
     // --- appling the sigmoid function on inputs
     nnfwReal finputs[ IN ];
     for ( int i = 0; i<IN; i++ ) {
-        finputs[i] = 1.0/( 1.0 + std::exp( - inputs[i] + biasesIn[i] ) );
+        finputs[i] = 1.0/( 1.0 + std::exp( i*( - inputs[i] + biasesIn[i] ) ) );
     }
 
     // --- multiply the inputs with weights matrix
@@ -98,6 +98,10 @@ int main( int argc, char* argv[] ) {
     net = new BaseNeuralNet();
     
     in = new SimpleCluster( IN );
+    for( int i = 0; i<IN; i++ ) {
+        in->setUpdater( new SigmoidUpdater( i ), i );
+    }
+
     out = new SimpleCluster( OUT );
 
     l = new MatrixLinker( in, out );
@@ -117,23 +121,11 @@ int main( int argc, char* argv[] ) {
     cout.precision( 10 );
     double errCum = 0.0;
     int i;
-    for ( i = 0; i<1; i++ ) {
+    for ( i = 0; i<100; i++ ) {
         randomize();
         errCum += testingNet();
     }
     cout << "True Sigmoid -> Error after " << i << " iteration: " << errCum << " Avg: " << errCum/i << endl;
-
-    FakeSigmoidUpdater f = FakeSigmoidUpdater( 1.0 );
-    in->setUpdater( new FakeSigmoidUpdater( 1.0 ) );
-    out->setUpdater( new FakeSigmoidUpdater( 1.0 ) );
-
-    cout.precision( 10 );
-    errCum = 0.0;
-    for ( i = 0; i<1; i++ ) {
-        randomize();
-        errCum += testingNet();
-    }
-    cout << "Fake Sigmoid -> Error after " << i << " iteration: " << errCum << " Avg: " << errCum/i << endl;
 
     return 0;
 }

@@ -33,12 +33,11 @@ FakeCluster::FakeCluster( u_int size, const char* name )
     : Cluster(name) {
     dim = size;
     data = new nnfwReal[dim];
-    updater = new DummyUpdater();
+    updater = DummyUpdater();
 }
 
 FakeCluster::~FakeCluster() {
     delete []data;
-    delete updater;
 }
 
 
@@ -54,12 +53,16 @@ void FakeCluster::setUpdater( ClusterUpdater* ) {
     nnfwMessage( NNFW_INFORMATION, "You are trying to set a ClusterUpdater on a FakeCluster !! ;-)" );
 }
 
+void FakeCluster::setUpdater( ClusterUpdater*, u_int ) {
+    nnfwMessage( NNFW_INFORMATION, "You are trying to set a ClusterUpdater on a FakeCluster !! ;-)" );
+}
+
 void FakeCluster::update() {
     return;
 }
 
-const ClusterUpdater* FakeCluster::getUpdater() const {
-    return updater;
+const ClusterUpdater* FakeCluster::getUpdater( u_int ) const {
+    return &updater;
 }
 
 void FakeCluster::setInput( u_int neuron, nnfwReal value ) {
