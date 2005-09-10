@@ -33,6 +33,9 @@
 #include "linker.h"
 #include "messages.h"
 
+//! Namespace that contains all classes of Neural Network Framework
+namespace nnfw {
+
 /*! \brief The Base Neural Network Class
  *
  * The BaseNeuralNetwork class can seen as a simple container of Clusters and Linkers<br>
@@ -170,6 +173,7 @@ protected:
     unsigned int dimUps;
 };
 
+}
 
 #endif
 

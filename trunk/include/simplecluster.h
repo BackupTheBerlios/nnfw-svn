@@ -23,6 +23,9 @@
 #include "cluster.h"
 #include "clusterupdater.h"
 
+//! Namespace that contains all classes of Neural Network Framework
+namespace nnfw {
+
 /*! \brief SimpleCluster Class. In this cluster a neuron have an input, a output and a bias value.
  *
  *  The SimpleCluster update the neurons contained using an object of type ClusterUpdater. The ClusterUpdater calculate the outputs
@@ -160,5 +163,7 @@ private:
     //! temporary data
     nnfwReal* tmpdata;
 };
+
+}
 
 #endif

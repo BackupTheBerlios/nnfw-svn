@@ -20,6 +20,9 @@
 #ifndef MESSAGGES_H
 #define MESSAGGES_H
 
+//! Namespace that contains all classes of Neural Network Framework
+namespace nnfw {
+
 /*! \file
  *  \brief This file contains the declaration of function nnfwMessage for displaying debug messages
  *
@@ -52,5 +55,7 @@ enum {
  * After a CRITICAL message is displayed the program is always aborted
  */
 void nnfwMessage( unsigned int category, const char* msg );
+
+}
 
 #endif

@@ -30,6 +30,9 @@
 #include <map>
 #include <string>
 
+//! Namespace that contains all classes of Neural Network Framework
+namespace nnfw {
+
 //! Generic Vector
 #define nnfwVector std::vector
 
@@ -64,5 +67,7 @@ extern LinkerVec emptyLinkerVec;
 
 //! Empty ClusterVec constant
 extern ClusterVec emptyClusterVec;
+
+}
 
 #endif

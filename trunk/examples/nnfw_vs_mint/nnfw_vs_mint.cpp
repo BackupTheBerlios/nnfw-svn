@@ -16,6 +16,8 @@ using namespace std;
 #include "matrixlinker.h"
 #include "libclusterupdaters.h"
 
+using namespace nnfw;
+
 #define NA   ( 27 )
 #define ND   ( 8 )
 

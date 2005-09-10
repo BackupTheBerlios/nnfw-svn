@@ -20,6 +20,9 @@
 #ifndef UPDATEABLE_H
 #define UPDATEABLE_H
 
+//! Namespace that contains all classes of Neural Network Framework
+namespace nnfw {
+
 /*! \brief Updateables objects
  *
  *  The Updatable objects has a name.
@@ -38,5 +41,7 @@ public:
 protected:
     const char* name;
 };
+
+}
 
 #endif

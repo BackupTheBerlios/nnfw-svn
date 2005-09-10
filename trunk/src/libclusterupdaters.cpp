@@ -21,6 +21,9 @@
 
 #include <cmath>
 
+//! Namespace that contains all classes of Neural Network Framework
+namespace nnfw {
+
 void DummyUpdater::update( nnfwReal* inputs, nnfwReal* outputs, u_int numNeuron ) {
     for ( u_int i = 0; i<numNeuron; i++ ) {
         outputs[i] = inputs[i];
@@ -137,4 +140,6 @@ void LinearUpdater::update( nnfwReal input, nnfwReal &output ) {
 
 const char* LinearUpdater::className() const {
     return "LinearUpdater";
+}
+
 }

@@ -24,6 +24,9 @@
 #include <cstdio>
 #include <cstring>
 
+//! Namespace that contains all classes of Neural Network Framework
+namespace nnfw {
+
 /**********************************************
  *  Implementation of SimpleCluster Class     *
  **********************************************/
@@ -190,4 +193,6 @@ void SimpleCluster::randomize( nnfwReal min, nnfwReal max ) {
     for ( u_int i = 0; i < numNeurons; i++ ) {
         biases[i] = Random::flatReal( min, max );
     }
+}
+
 }

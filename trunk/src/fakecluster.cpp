@@ -24,6 +24,8 @@
 #include <cstdio>
 #include <cstring>
 
+//! Namespace that contains all classes of Neural Network Framework
+namespace nnfw {
 
 /**********************************************
  *  Implementation of FakeCluster Class       *
@@ -123,7 +125,9 @@ nnfwReal* FakeCluster::getOutputs() {
     return data;
 }
 
-void FakeCluster::randomize( nnfwReal min, nnfwReal max ) {
+void FakeCluster::randomize( nnfwReal , nnfwReal ) {
     nnfwMessage( NNFW_INFORMATION, "What means 'randomize a Fake Cluster' ???" );
     return;
+}
+
 }

@@ -18,8 +18,11 @@
  ********************************************************************************/
 
 #include "messages.h"
-
 #include <iostream>
+
+//! Namespace that contains all classes of Neural Network Framework
+namespace nnfw {
+
 using namespace std;
 
 void nnfwMessage( unsigned int category, const char* msg ) {
@@ -39,4 +42,6 @@ void nnfwMessage( unsigned int category, const char* msg ) {
     }
     cout << "== Unrecognized Category: " << msg << endl;
     return;
+}
+
 }

@@ -22,6 +22,9 @@
 
 #include "linker.h"
 
+//! Namespace that contains all classes of Neural Network Framework
+namespace nnfw {
+
 /*! \brief CopyLinker Class. This linker copies the outputs of a cluster to inputs of another cluster
  *
  * Details...
@@ -71,7 +74,7 @@ public:
      *
      * Details
      */
-    void randomize( nnfwReal min, nnfwReal max ) {
+    void randomize( nnfwReal , nnfwReal ) {
         // --- Do Nothing
     };
 private:
@@ -81,5 +84,7 @@ private:
     Cluster* from;
     Cluster* to;
 };
+
+}
 
 #endif

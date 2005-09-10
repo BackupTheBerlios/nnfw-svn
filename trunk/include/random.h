@@ -29,6 +29,9 @@
 #include "types.h"
 #include "gsl/gsl_rng.h"
 
+//! Namespace that contains all classes of Neural Network Framework
+namespace nnfw {
+
 /*! \brief Random class define some static method for accessing the random number generator
  *
  *  Details
@@ -62,5 +65,7 @@ public:
 private:
     static gsl_rng* rnd;
 };
+
+}
 
 #endif

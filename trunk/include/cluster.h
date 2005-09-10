@@ -30,6 +30,9 @@
 #include "updatable.h"
 #include "clusterupdater.h"
 
+//! Namespace that contains all classes of Neural Network Framework
+namespace nnfw {
+
 /*! \brief Abstract Cluster Class. This define the common interface among Clusters
  *
  *  Cluster objects memorize the inputs and outputs into array of nnfwReal !! 
@@ -128,6 +131,8 @@ public:
      */
     virtual void randomize( nnfwReal min, nnfwReal max ) = 0;
 };
+
+}
 
 #endif
 

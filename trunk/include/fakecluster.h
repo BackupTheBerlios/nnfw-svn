@@ -22,6 +22,9 @@
 
 #include "cluster.h"
 
+//! Namespace that contains all classes of Neural Network Framework
+namespace nnfw {
+
 /*! \brief FakeCluster Class. The FakeCluster is a Cluster without neurons, it's like an array ! :-)
  *
  *  The FakeCluster implemented the Cluster Interface so it can be inserted inside a BaseNeuralNet, but it doesn't
@@ -138,5 +141,7 @@ private:
     nnfwReal* data;
     ClusterUpdater updater;
 };
+
+}
 
 #endif

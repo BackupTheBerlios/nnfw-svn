@@ -22,6 +22,9 @@
 
 #include "linker.h"
 
+//! Namespace that contains all classes of Neural Network Framework
+namespace nnfw {
+
 /*! \brief MatrixLinker Class define a full connection from a group of clusters to one cluster.
  *
  * Every connection is weighted, and the weight is memorized into a weight-matrix
@@ -115,5 +118,6 @@ private:
     Cluster* to;
 };
 
+}
 
 #endif

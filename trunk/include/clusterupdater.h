@@ -28,6 +28,9 @@
 
 #include "types.h"
 
+//! Namespace that contains all classes of Neural Network Framework
+namespace nnfw {
+
 /*! \brief Cluster Updater Class
  *
  *  Details...
@@ -54,5 +57,7 @@ public:
      */
     virtual const char* className() const;
 };
+
+}
 
 #endif

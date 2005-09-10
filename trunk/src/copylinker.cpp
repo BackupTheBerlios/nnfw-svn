@@ -21,6 +21,9 @@
 #include "random.h"
 #include <cstdio>
 
+//! Namespace that contains all classes of Neural Network Framework
+namespace nnfw {
+
 /**********************************************
  *  Implementation of CopyLinker Class        *
  **********************************************/
@@ -56,4 +59,6 @@ Cluster* CopyLinker::getTo() const {
 
 u_int CopyLinker::size() {
     return dimData;
+}
+
 }

@@ -30,6 +30,9 @@
 #include "cluster.h"
 #include "updatable.h"
 
+//! Namespace that contains all classes of Neural Network Framework
+namespace nnfw {
+
 /*! \brief Abstract Linker Class. This define the common interface among Linkers
  *
  * Details...
@@ -66,5 +69,7 @@ public:
      */
     virtual void randomize( nnfwReal min, nnfwReal max ) = 0;
 };
+
+}
 
 #endif

@@ -12,6 +12,8 @@ using namespace std;
 #include "matrixlinker.h"
 #include "libclusterupdaters.h"
 
+using namespace nnfw;
+
 #define IN   ( 8 )
 #define OUT   ( 3 )
 

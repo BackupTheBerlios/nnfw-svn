@@ -28,6 +28,9 @@
 
 #include "clusterupdater.h"
 
+//! Namespace that contains all classes of Neural Network Framework
+namespace nnfw {
+
 /*! \brief DummyUpdater
  *
  * DummyUpdater copyies the inputs to the outputs
@@ -189,6 +192,8 @@ public:
     //! maxY
     nnfwReal maxY;
 };
+
+}
 
 #endif
 
