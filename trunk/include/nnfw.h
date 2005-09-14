@@ -30,12 +30,17 @@
  * \todo Per generare una .DLL sotto windows ogni classe deve essere preceduta da __declspec(dllexport)
  *       (vedere qwt_globals.h per come fare)
  *
+ *
  */
 
 /*! \file
  *  \brief This is the main header files!! Include this file in your project... and play :-)
  *
  *  Details...
+ *
+ * \todo It's really useful this include file ?!?! I think that a file including everything is not very useful
+ *       rather a set of files that includes only some categories of classes: example clusterlib.h may includes
+ *       all subclasses of Cluster, linkerlib.h may includes all subclasses of Linker, and so on.
  */
 
 #include "types.h"

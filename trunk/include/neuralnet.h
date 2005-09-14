@@ -26,6 +26,7 @@
  *  Details ...
  *  \todo check da fare: un Cluster puo essere rimosso solo se non ha Linkers attaccati (giusto?!?!)
  *  \todo metodi da aggiungere: ricerca attraverso le strutture inLinks e outLinks
+ *  \todo Optimization of disable/enable mechanism
  */
 
 #include "types.h"
@@ -110,7 +111,26 @@ public:
      * Details..
      */
     void setOrder( Updatable* updatables[], u_int dim );
+    //! \brief Set the order
     void setOrder( UpdatableVec& );
+
+    /*! \brief Disable the Updatable
+     *
+     * Details...
+     */
+    void disable( Updatable* );
+
+    /*! \brief Enable the Updatable
+     *
+     * Details...
+     */
+    void enable( Updatable* );
+
+    /*! \brief Return true if the Updatable object is enabled
+     *
+     * Details...
+     */
+    bool isEnabled( Updatable* );
 
     /*! \brief Step
      *
@@ -118,7 +138,7 @@ public:
      */
     void step() {
         for( u_int i=0; i<dimUps; i++ ) {
-            ups[i]->update();
+            mask[i] && ups[i]->update();
         }
     };
 
@@ -170,6 +190,7 @@ protected:
 
     //! Array of Updateables ordered as specified
     nnfwVector<Updatable*> ups;
+    nnfwVector<bool> mask;
     unsigned int dimUps;
 };
 

@@ -27,9 +27,11 @@ namespace nnfw {
 
 /*! \brief FakeCluster Class. The FakeCluster is a Cluster without neurons, it's like an array ! :-)
  *
- *  The FakeCluster implemented the Cluster Interface so it can be inserted inside a BaseNeuralNet, but it doesn't
- *  contains neurons, but it contains a simple vector with values and inputs and outputs are alias name for this vector of data. <br>
- *  It's very useful for inputs layers that don't needs true nuerons but only a vector where registry the sensors values.
+ *  The FakeCluster implemented the Cluster Interface so it can be inserted inside a BaseNeuralNet,
+ *  but it doesn't contains neurons, but it contains a simple vector with values and inputs and outputs
+ *  are alias name for this vector of data. <br>
+ *  It's very useful for inputs layers that don't needs true neurons but only a vector where registry*
+ *  the sensors values.
  *
  */
 class FakeCluster : public Cluster

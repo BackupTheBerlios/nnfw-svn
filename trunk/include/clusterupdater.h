@@ -24,6 +24,8 @@
  *  \brief This file contains the declaration of the abstract ClusterUpdater Class
  *
  *  Details...
+ *
+ *  \todo What are the needs of className() methods ???
  */
 
 #include "types.h"

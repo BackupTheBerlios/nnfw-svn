@@ -21,9 +21,7 @@
 #define CLUSTER_H
 
 /*! \file
- *  \brief This file contains the declarations of the clusters implemented
- *
- *  Details...
+ *  \brief This file contains the declarations of the Cluster class
  */
 
 #include "types.h"

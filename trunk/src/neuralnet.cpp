@@ -165,6 +165,7 @@ void BaseNeuralNet::setOrder( Updatable* u[], u_int dim ) {
         }
     }
     dimUps = ups.size();
+    mask.assign( dimUps, 1 );    
     return;
 }
 
@@ -177,9 +178,41 @@ void BaseNeuralNet::setOrder( UpdatableVec& u ) {
         }
     }
     dimUps = ups.size();
+    mask.assign( dimUps, 1 );    
     return;
 }
 
+void BaseNeuralNet::disable( Updatable* up ) {
+    for( u_int i = 0; i<dimUps; i++ ) {
+        if ( ups[i] == up ) {
+            mask[i] = false;
+            return;
+        }
+    }
+    nnfwMessage( NNFW_WARNING, "an attemp to Disabling an Updatable not present in BaseNeuralNet" );
+    return;
+}
+
+void BaseNeuralNet::enable( Updatable* up ) {
+    for( u_int i = 0; i<dimUps; i++ ) {
+        if ( ups[i] == up ) {
+            mask[i] = true;
+            return;
+        }
+    }
+    nnfwMessage( NNFW_WARNING, "an attemp to Enabling an Updatable not present in BaseNeuralNet" );
+    return;
+}
+
+bool BaseNeuralNet::isEnabled( Updatable* up ) {
+    for( u_int i = 0; i<dimUps; i++ ) {
+        if ( ups[i] == up ) {
+            return mask[i];
+        }
+    }
+    nnfwMessage( NNFW_WARNING, "Updatable not present in BaseNeuralNet" );
+    return;
+}
 
 void BaseNeuralNet::randomize( nnfwReal min, nnfwReal max ) {
     for ( ClusterVec::iterator it = clustersv.begin(); it != clustersv.end(); ++it ) {

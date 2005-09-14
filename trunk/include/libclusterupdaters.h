@@ -24,6 +24,12 @@
  *  \brief Library of Common Updaters
  *
  *  Details...
+ *
+ *  \todo CompositeUpdater, a subclass of ClusterUpdater that allow to combine two or more ClusterUpdaters;
+ *        example: combining a SigmoidUpdater with LinearUpdater it's possibile realize an Updater that 
+ *        first truncate the input in a range [mix,max] and the apply the Sigmoid: Sigmoid( Linear( x ) )
+ *  \todo ComboLinearUpdater, a subclass of ClusterUpdater that constructs a linear combination of ClusterUpdaters:
+ *        example: 4*Sigmoid(x)+2*Linear(x)
  */
 
 #include "clusterupdater.h"

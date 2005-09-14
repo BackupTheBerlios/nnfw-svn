@@ -24,6 +24,11 @@
  *  \brief This file contains the common type defitions used on the whole framework
  *
  *  Details...
+ *
+ *  \todo operator << to Vector template that inserts element as push_back() method;
+ *
+ *  \todo is it a good idea remove the nnfw prefix from type names ?!?! Now, there is a namespace, and then,
+ *        C++ speaking, the type names are nnfw::nnfwXXXX ... Maybe there are too many nnfw prefix ! :-)
  */
 
 #include <vector>
