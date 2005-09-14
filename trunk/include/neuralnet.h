@@ -138,7 +138,9 @@ public:
      */
     void step() {
         for( u_int i=0; i<dimUps; i++ ) {
-            mask[i] && ups[i]->update();
+            if ( mask[i] ) {
+                ups[i]->update();
+            }
         }
     };
 

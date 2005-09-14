@@ -211,7 +211,7 @@ bool BaseNeuralNet::isEnabled( Updatable* up ) {
         }
     }
     nnfwMessage( NNFW_WARNING, "Updatable not present in BaseNeuralNet" );
-    return;
+    return false;
 }
 
 void BaseNeuralNet::randomize( nnfwReal min, nnfwReal max ) {
