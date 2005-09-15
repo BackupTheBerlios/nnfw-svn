@@ -33,27 +33,45 @@ namespace nnfw {
 
 /*! \brief Abstract Cluster Class. This define the common interface among Clusters
  *
- *  \section clusterMot Motivation
+ *  \par Motivation
  *    The Cluster class define the common interface amog Cluster. The subclasses may extends this interface
  *    for specific purpose (ex. SimpleCluster), but the BaseNeuralNet, the Linker and other classes depends
  *    only by this class. This abstraction allow to isolate the specific implementation of various classes
- *  \section clusterDescr Description
+ *  \par Description
  *    The Cluster class represent an abstract group of neurons. There isn't a neuron class. The Cluster
  *    class represent a group of neurons as two arrays: inputs and outputs. The inputs array represent the
  *    inputs of the neurons 'contained' in the cluster, and the outputs of this neurons are calculated by
- *    appling the function provided by ClusterUpdater.<br/>
- *    The number of neuron returned by size() method is also the dimension of inputs and outputs arrays<br/>
+ *    appling the function provided by ClusterUpdater.<br>
+ *    The number of neuron returned by size() method is also the dimension of inputs and outputs arrays
+ *    \par
  *    You can sets one subclasses of ClusterUpdater by setUpdater methods. If you don't specify an index when
  *    set a ClusterUpdater then this ClusterUpdater will be used to update the output of all neurons. Otherwise,
  *    you can specifiy different ClusterUpdater for different neuron.
- *          ------ Esempio -------
- *  \section clusterWarn Warnings
+ *    \code
+ *         // create a SimpleCluster, a specialized subclass of Cluster
+ *         SimpleCluster* simple = new SimpleCluster( 10 ); // this cluster contains 10 neurons
+ *         // set the SigmoidUpdater for all neurons
+ *         simple->setUpdater( new SigmoidUpdater( 1.0 ) );
+ *         // If you want that neuron 2 will be updated by a Linear function then type:
+ *         simple->setUpdater( new LinearUpdater(), 2 );
+ *         // After this statement only neuron 2 will be updated by Linear function and the others
+ *         //  will be updated with Sigmoidal function
+ *    \endcode
+ *  \par Warnings
+ *    <b>For whose want to implement a subclass of Cluster: </b>
  *    The getInputs and getOutputs methods have to returns a valid array of internal data, and not simply a copy
- *    of the internal data.
- *          ---- codice:     nnfwReal* in = cluster->getInputs();
- *                           in[2] = 3.0;   // This statement will be changes the inputs of third neuron.
- *    Every subclasses have to represents the input and output of neurons as nnfwReal arrays
- *      ( C arrays not STL-class )
+ *    of the internal data. Look at the following code:
+ *    \code
+ *         nnfwReal* in = cluster->getInputs();
+ *         in[2] = 3.0;   // This statement will be changes the inputs of third neuron.
+ *         // the above statements must be equivalent with the following
+ *         cluster->setInput( 2, 3.0 );
+ *    \endcode
+ *    The reasons behind this kind of behaviour its the efficiency!! When another class must do heavy calculation
+ *    on all inputs of a Cluster (as MatrixLinker do), then its more efficient that it takes the array returned
+ *    by getInputs (or getOutputs) and works over them.<br>
+ *    This imply that <b>every</b> subclasses have to represents the input and output 
+ *    of neurons as nnfwReal arrays ( C arrays not STL-classes )
  */
 class Cluster : public Updatable
 {
