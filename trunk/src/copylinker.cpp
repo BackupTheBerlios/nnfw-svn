@@ -30,10 +30,10 @@ namespace nnfw {
 
 CopyLinker::CopyLinker( Cluster* from, Cluster* to, const char* name )
     : Linker(name) {
-    if ( from->outputSize() < to->inputSize() ) {
-        dimData = from->outputSize();
+    if ( from->size() < to->size() ) {
+        dimData = from->size();
     } else {
-        dimData = to->inputSize(); 
+        dimData = to->size(); 
     }
     outputsFrom = from->getOutputs();
     inputsTo = to->getInputs();

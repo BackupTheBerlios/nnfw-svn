@@ -42,7 +42,12 @@ H3 {
     padding-left: 16px;
 }
 CAPTION { font-weight: bold }
-DIV.qindex {
+DIV.qindex {    font: bold italic 22px "Helvetica", "Verdana", sans-serif;
+    color: #005AF6;
+    padding-left: 8px;
+    text-align: left;
+    border-bottom: 2px solid #888;
+
 	width: 100%;
     font: 14px "Helvetica", "Verdana", sans-serif;
     color: black;
@@ -54,7 +59,7 @@ DIV.qindex {
     border-bottom: 1px solid #000;
     margin-bottom: 1px;
     text-decoration: none;
-	text-align: center;
+ 	text-align: center;
 }
 DIV.nav {
 	width: 100%;
@@ -189,6 +194,7 @@ TD.indexkey {
 	margin-top     : 2px;
 	margin-bottom  : 2px;
 	border: 1px solid #CCCCCC;
+    font-size: 14px;
 }
 TD.indexvalue {
 	background-color: #eeeeff;
@@ -202,6 +208,7 @@ TD.indexvalue {
 	margin-top     : 2px;
 	margin-bottom  : 2px;
 	border: 1px solid #CCCCCC;
+    font-size: 14px;
 }
 TR.memlist {
    background-color: #f0f0f0; 
@@ -230,7 +237,7 @@ SPAN.charliteral   { color: #008080 }
 }
 .mdescLeft {
     padding: 0px 8px 4px 8px;
-	font-size: 10px;
+	font-size: 14px;
 	font-style: italic;
 	background-color: #FAFAFA;
 	border-top: 1px none #E0E0E0;
@@ -241,7 +248,7 @@ SPAN.charliteral   { color: #008080 }
 }
 .mdescRight {
     padding: 0px 8px 4px 8px;
-	font-size: 10px;
+	font-size: 14px;
 	font-style: italic;
 	background-color: #FAFAFA;
 	border-top: 1px none #E0E0E0;
@@ -266,7 +273,7 @@ SPAN.charliteral   { color: #008080 }
 	border-bottom-style: none;
 	border-left-style: none;
 	background-color: #FAFAFA;
-	font-size: 12px;
+	font-size: 14px;
 }
 .memItemRight {
 	padding: 1px 8px 0px 8px;
@@ -284,7 +291,7 @@ SPAN.charliteral   { color: #008080 }
 	border-bottom-style: none;
 	border-left-style: none;
 	background-color: #FAFAFA;
-	font-size: 12px;
+	font-size: 14px;
 }
 .memTemplItemLeft {
 	padding: 1px 0px 0px 8px;
@@ -302,7 +309,7 @@ SPAN.charliteral   { color: #008080 }
 	border-bottom-style: none;
 	border-left-style: none;
 	background-color: #FAFAFA;
-	font-size: 12px;
+	font-size: 14px;
 }
 .memTemplItemRight {
 	padding: 1px 8px 0px 8px;
@@ -320,7 +327,7 @@ SPAN.charliteral   { color: #008080 }
 	border-bottom-style: none;
 	border-left-style: none;
 	background-color: #FAFAFA;
-	font-size: 12px;
+	font-size: 14px;
 }
 .memTemplParams {
 	padding: 1px 0px 0px 8px;
@@ -339,7 +346,7 @@ SPAN.charliteral   { color: #008080 }
 	border-left-style: none;
     color: #606060;
 	background-color: #FAFAFA;
-	font-size: 12px;
+	font-size: 14px;
 }
 .search { 
     color: #003399;

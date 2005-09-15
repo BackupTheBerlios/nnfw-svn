@@ -43,11 +43,7 @@ FakeCluster::~FakeCluster() {
 }
 
 
-u_int FakeCluster::inputSize() const {
-    return dim;
-}
-
-u_int FakeCluster::outputSize() const {
+u_int FakeCluster::size() const {
     return dim;
 }
 

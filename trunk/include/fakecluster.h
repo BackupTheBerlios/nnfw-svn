@@ -53,13 +53,7 @@ public:
      *
      * Details...
      */
-    u_int inputSize() const;
-
-    /*! \brief Return the size of the data vector
-     *
-     * Details...
-     */
-    u_int outputSize() const;
+    u_int size() const;
 
     /*! \brief Update ;-) It's do nothing !!
      *

@@ -33,9 +33,27 @@ namespace nnfw {
 
 /*! \brief Abstract Cluster Class. This define the common interface among Clusters
  *
- *  Cluster objects memorize the inputs and outputs into array of nnfwReal !! 
- *  ( ... ?!?! ... )
- *  \todo E' ancora utile avere il cluster con una dimensione di input diversa da quella di output ?!?!?
+ *  \section clusterMot Motivation
+ *    The Cluster class define the common interface amog Cluster. The subclasses may extends this interface
+ *    for specific purpose (ex. SimpleCluster), but the BaseNeuralNet, the Linker and other classes depends
+ *    only by this class. This abstraction allow to isolate the specific implementation of various classes
+ *  \section clusterDescr Description
+ *    The Cluster class represent an abstract group of neurons. There isn't a neuron class. The Cluster
+ *    class represent a group of neurons as two arrays: inputs and outputs. The inputs array represent the
+ *    inputs of the neurons 'contained' in the cluster, and the outputs of this neurons are calculated by
+ *    appling the function provided by ClusterUpdater.<br/>
+ *    The number of neuron returned by size() method is also the dimension of inputs and outputs arrays<br/>
+ *    You can sets one subclasses of ClusterUpdater by setUpdater methods. If you don't specify an index when
+ *    set a ClusterUpdater then this ClusterUpdater will be used to update the output of all neurons. Otherwise,
+ *    you can specifiy different ClusterUpdater for different neuron.
+ *          ------ Esempio -------
+ *  \section clusterWarn Warnings
+ *    The getInputs and getOutputs methods have to returns a valid array of internal data, and not simply a copy
+ *    of the internal data.
+ *          ---- codice:     nnfwReal* in = cluster->getInputs();
+ *                           in[2] = 3.0;   // This statement will be changes the inputs of third neuron.
+ *    Every subclasses have to represents the input and output of neurons as nnfwReal arrays
+ *      ( C arrays not STL-class )
  */
 class Cluster : public Updatable
 {
@@ -45,17 +63,11 @@ public:
         // nothing to do
     };
 
-    /*! \brief Return the number of the inputs neuron
+    /*! \brief Return the number of neurons
      *
      * Details...
      */
-    virtual u_int inputSize() const = 0;
-
-    /*! \brief Return the number of the outputs neuron
-     *
-     * Details...
-     */
-    virtual u_int outputSize() const = 0;
+    virtual u_int size() const = 0;
 
     /*! \brief Set the update function for all neurons contained
      *

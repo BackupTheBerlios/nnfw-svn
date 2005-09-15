@@ -58,11 +58,7 @@ SimpleCluster::~SimpleCluster() {
 }
 
 
-u_int SimpleCluster::inputSize() const {
-    return numNeurons;
-}
-
-u_int SimpleCluster::outputSize() const {
+u_int SimpleCluster::size() const {
     return numNeurons;
 }
 

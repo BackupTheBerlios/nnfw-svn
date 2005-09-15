@@ -48,17 +48,11 @@ public:
      */
     virtual ~SimpleCluster();
 
-    /*! \brief Return the number of the inputs neuron
+    /*! \brief Return the number of the neurons
      *
      * Details...
      */
-    u_int inputSize() const;
-
-    /*! \brief Return the number of the outputs neuron
-     *
-     * Details...
-     */
-    u_int outputSize() const;
+    u_int size() const;
 
     /*! \brief Update the outputs of neurons
      *

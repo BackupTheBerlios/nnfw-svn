@@ -30,10 +30,10 @@ namespace nnfw {
 
 MatrixLinker::MatrixLinker( Cluster* from, Cluster* to, const char* name )
     : Linker(name) {
-    nrows = from->outputSize();
+    nrows = from->size();
     outputsFrom = from->getOutputs();
 
-    ncols = to->inputSize();
+    ncols = to->size();
     inputsTo = to->getInputs();
 
     // Weight Matrix Allocation procedure
