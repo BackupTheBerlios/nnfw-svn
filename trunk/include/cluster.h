@@ -48,24 +48,24 @@ namespace nnfw {
  *    set a ClusterUpdater then this ClusterUpdater will be used to update the output of all neurons. Otherwise,
  *    you can specifiy different ClusterUpdater for different neuron.
  *    \code
- *         // create a SimpleCluster, a specialized subclass of Cluster
- *         SimpleCluster* simple = new SimpleCluster( 10 ); // this cluster contains 10 neurons
- *         // set the SigmoidUpdater for all neurons
- *         simple->setUpdater( new SigmoidUpdater( 1.0 ) );
- *         // If you want that neuron 2 will be updated by a Linear function then type:
- *         simple->setUpdater( new LinearUpdater(), 2 );
- *         // After this statement only neuron 2 will be updated by Linear function and the others
- *         //  will be updated with Sigmoidal function
+ * // create a SimpleCluster, a specialized subclass of Cluster
+ * SimpleCluster* simple = new SimpleCluster( 10 ); // this cluster contains 10 neurons
+ * // set the SigmoidUpdater for all neurons
+ * simple->setUpdater( new SigmoidUpdater( 1.0 ) );
+ * // If you want that neuron 2 will be updated by a Linear function then type:
+ * simple->setUpdater( new LinearUpdater(), 2 );
+ * // After this statement only neuron 2 will be updated by Linear function and the others
+ * //  will be updated with Sigmoidal function
  *    \endcode
  *  \par Warnings
  *    <b>For whose want to implement a subclass of Cluster: </b>
  *    The getInputs and getOutputs methods have to returns a valid array of internal data, and not simply a copy
  *    of the internal data. Look at the following code:
  *    \code
- *         nnfwReal* in = cluster->getInputs();
- *         in[2] = 3.0;   // This statement will be changes the inputs of third neuron.
- *         // the above statements must be equivalent with the following
- *         cluster->setInput( 2, 3.0 );
+ * nnfwReal* in = cluster->getInputs();
+ * in[2] = 3.0;   // This statement will be changes the inputs of third neuron.
+ * // the above statements must be equivalent with the following
+ * cluster->setInput( 2, 3.0 );
  *    \endcode
  *    The reasons behind this kind of behaviour its the efficiency!! When another class must do heavy calculation
  *    on all inputs of a Cluster (as MatrixLinker do), then its more efficient that it takes the array returned

@@ -27,6 +27,8 @@
  *  \todo check da fare: un Cluster puo essere rimosso solo se non ha Linkers attaccati (giusto?!?!)
  *  \todo metodi da aggiungere: ricerca attraverso le strutture inLinks e outLinks
  *  \todo Optimization of disable/enable mechanism
+ *  \todo Dovrebbe avere dei metodi per specificare i Cluster di input e di output ???
+ *        Come si identificano, altrimenti, tali Cluster ?? Questi sono indispensabili per il SupervisedLearning
  */
 
 #include "types.h"
