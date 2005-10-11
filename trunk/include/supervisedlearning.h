@@ -32,6 +32,13 @@
  */
 
 #include "types.h"
+#include "neuralnet.h"
+#include "simplecluster.h"
+#include "matrixlinker.h"
+#include <queue>
+
+//! Namespace that contains all classes of Neural Network Framework
+namespace nnfw {
 
 /*! \brief an Example to learn
  *
@@ -46,36 +53,93 @@
  *    provided for that purpose. During initialization, all error are setted to zero.<br>
  *    The inputs, outputs and errors vector can be modified, also, by the reference returned by methods
  *    inputs(), outputs() and errors() respectively.
+ *
  */
 class Example {
 public:
     //! Construct an example with (input,output) passed
     Example( nnfwRealVec inputs, nnfwRealVec outputs );
     // Forse c'e' bisogno di un copyconstructor e di un costruttore di default !!
-    //! Set the inputs
+    //! Set the input
     void setInput( nnfwRealVec inputs );
     //! return the inputs;
-    nnfwRealVec& inputs();
-    //! Set the outputs
+    nnfwRealVec& input();
+    //! Set the output
     void setOutput( nnfwRealVec outputs );
-    //! return the outputs;
-    nnfwRealVec& outputs();
-    //! Set the vector of errors
-    void setErrors( nnfwRealVec errors );
+    //! return the output;
+    nnfwRealVec& output();
+    //! Set the vector of error
+    void setError( nnfwRealVec errors );
     //! return the errors
-    nnfwRealVec& errors();
+    nnfwRealVec& error();
 private:
-    nnfwRealVec inputs;
-    nnfwRealVec outputs;
-    nnfwRealVec errors;
+    nnfwRealVec inputv;
+    nnfwRealVec outputv;
+    nnfwRealVec errorv;
 };
 
-/*! \brief A vector of Example, in other way the examples set that neural network have to learn
+/*! \brief ExampleSet class, in other way the examples set that neural network have to learn
  *
- *  This is simply a nnfwVector for two reasons: (i) it's indexed then the access is faster than other structures,
- *  (ii) there's no control of duplicate Examples then it's possible create a odd examples set
+ *
+ * \todo forse andrebbe fatta una classe piu' furba, cioe' che vincola gli esempi contenuti ad essere 
+ *     tutti della stessa dimensione di inputs e outputs !!
  */
-typedef ExampleSet nnfwVector<Example>;
+class ExampleSet {
+public:
+    /*! \brief This create an empty ExampleSet that accept Example of dimension of input and output as specified
+     *
+     *  The only constraint of the ExampleSet is that all the Example contained have to be of the same dimension
+     *  I don't think that its a great constraint... instead I think that its better, safer and faster !! :-)
+     */
+    ExampleSet( u_int inputSize, u_int outputSize );
+
+    /*! \brief Return the number of elements contained
+     *
+     * Details
+     */
+    u_int size();
+
+    /*! \brief Return the dimension of input's Example
+     *
+     * Details
+     */
+    u_int inputSize();
+
+    /*! \brief Return the dimension of output's Example
+     *
+     * Details
+     */
+    u_int outputSize();
+
+    /*! \brief Add an Example
+     *
+     * This method return false is you try to insert an Example of wrong dimensions<br>
+     * The Examples inserted are indexed from 0 to N following the order which this function was called;
+     * So, the first Example inserted is at 0, the second at 1 and so on.
+     */
+    bool add( Example& ex );
+
+    /*! \brief Remove an Example
+     *
+     * Details...
+     */
+    void remove( u_int exId );
+
+    /*! \brief Return a reference to the Example
+     *
+     * Details
+     */
+    Example& at( u_int id );
+
+private:
+    /*! This is simply a nnfwVector for two reasons: 
+     *    (i) it's indexed then the access is faster than other structures,
+     *    (ii) there's no control of duplicate Examples then it's possible create a odd examples set
+     */
+    nnfwVector<Example> examples;
+    u_int inputDim;
+    u_int outputDim;
+};
 
 /*! \brief Abstract class for Supervised Learning Algorithm
  *
@@ -103,6 +167,7 @@ public:
 /*! \brief Backpropagation learning algorithm
  *
  * Details
+ *
  */
 class BackpropagationLearning : public SupervisedLearning {
 public:
@@ -125,31 +190,86 @@ public:
     nnfwReal getRate();
     //! Momentum
     void setMomentum( nnfwReal );
-    //! the learning rate
+    //! return the Momentum
     nnfwReal getMomentum();
 protected:
 
     /* Backpropagation 
-     *    - errore sui Cluster di output
-     *    - propago l'errore sugli input & apprendo i Cluster
-     *    - errore sui Linker 
-     *    - propago l'errore & apprendo i pesi dei MatrixLinker ( delta = learnRate*errOut*peso*ActInput )
+     *
+     * Check sulla rete: SimpleCluster && DerivableClusterUpdater &&
+                         MatrixLinker && NienteRicorsioni &&
+     *                   Cluster Input e Output specificati 
+     * Check su ExampleSet: Dimesione del vettore di input == dimensioni dei Cluster di input &&
+     *                   Dimesione del vettore di output == dimensioni dei Cluster di output
+     *
+     *  Delta per gli output: (outTarget - outProdotto)*derivate( netInput )
+     *  Delta per hidden/input: derivate( netInput )*sum( peso_ij*delta_i )
+     *
+     *  Regola Apprendimento: dw_ij = rate * ????
+     *
+     * Fase 1: error backpropagation: associo ad ogni Cluster il suo vettore dei delta
+     *    !! Deve necessariamente partire dai Cluster di Output e 'scendere' attraverso la 
+     *       struttura della rete per propagare i delta !!
+     *    ---- Visita in Ampiezza al rovescio ----
+     *     strutture dati: Coda di Linker
+     *                     Mappa Cluster -> vettore dei delta
+     *  - calcolo i delta sui neuroni di output
+     *  - inizializzo la mappa dei Cluster: clusterOutput \-> deltas sul output dell'esempio     
+     *  - inizializzo la coda con i Linker entranti sui Cluster di Output
+     *  - fino a che la coda contiene elementi
+     *        linker <- pop dalla coda
+     *        deltaOut <- vettore dei delta del Cluster di uscita del linker 
+     *        deltaIn <- vettore dei delta mappato al Cluster di ingresso del linker
+     *                   (se ancora non esiste ne viene creato uno inizializzato con tutti zero)
+     *        for i = 0 to deltaOut.size
+     *          for j = 0 to deltaIn.size
+     *             deltaIn[j] += derivate( cluster.input(j) )*linker.w(i,j)*deltaOut[i]
+     *        Aggiungo nella coda tutti i linker entranti nel cluster linker.from()
+     * ---------------------------------------
+     *        
+     *  
+     * Fase 2: learning: sulla base dei vettori di delta applica la regola d'apprendimento
+     *    !! Non c'e' bisogno che segua la struttura delle rete !!
+     *  - foreach Cluster
+     *      learn( cluster, delta vector associato )
+     *  - foreach Linker
+     *      learn( linker, delta vector di linker.to )
+     * ---------------------------------------
+     *     
      */
-    //! Backpropagate the errors from the Cluster's outputs to Cluster's inputs
-    nnfwRealVec backpropCluster( SimpleCluster*, nnfwRealVec errOut );
+    /*! Calculate the delta vector of output Cluster passed
+     * \param errOut is the difference between target outputs and produced outputs by the net
+     * \param skipCount is the number of the element of errOut that have to be skipped
+     */
+    void deltaOutputCluster( SimpleCluster*, nnfwRealVec errOut, u_int skipCount );
+    //! Backpropagate the delta along the MatrixLinker passed;
+    void backpropLinker( MatrixLinker* );
     //! Modify the biases of Cluster's neurons
-    void learnCluster( SimpleCluster*, nnfwRealVec errors );
-    //! Backpropagate the errors ( inputs of the outgoing cluster of linker);
-    nnfwRealVec backpropLinker( MatrixLinker*, nnfwRealVec errOut );
+    void learnCluster( SimpleCluster* );
     //! Modify the weight of MatrixLinker
-    void learnLinker( MatrixLinker*, nnfwRealVec errors );
+    void learnLinker( MatrixLinker* );
+
+    //! Apply learning over one Example
+    void learnOne( Example& );
+
+    //! Set the error made by the net, given the example passed
+    void errorOfNet( Example& );
 
     //! The neural network
     BaseNeuralNet* net;
+    //! The queue of MatrixLinker
+    typedef std::queue<MatrixLinker*> MLqueue;
+    MLqueue mls;
+    //! Map from SimpleCluster to delta vector
+    typedef std::map<SimpleCluster*, nnfwRealVec> DeltaMap;
+    DeltaMap deltas;
+
     //! learning rate
     nnfwReal rate;
     //! momentum
     nnfwReal mom;
 };
+
+}
 
 #endif

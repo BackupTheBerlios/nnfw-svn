@@ -37,7 +37,7 @@ BaseNeuralNet::BaseNeuralNet() {
 BaseNeuralNet::~BaseNeuralNet() {
 }
 
-void BaseNeuralNet::addCluster( Cluster* c ) {
+void BaseNeuralNet::addCluster( Cluster* c, bool isInput, bool isOutput ) {
     if ( !c ) {
         nnfwMessage( NNFW_ERROR, "Null Pointer passed to addCluster! This operation will be ignored" );
         return;
@@ -48,6 +48,12 @@ void BaseNeuralNet::addCluster( Cluster* c ) {
         return;
     }
     clustersv.push_back( c );
+    if ( isInput ) {
+        inclusters.push_back( c );
+    }
+    if ( isOutput ) {
+        outclusters.push_back( c );
+    }
     return;
 }
 
@@ -64,6 +70,54 @@ bool BaseNeuralNet::removeCluster( Cluster* c ) {
     return true;
 }
 
+void BaseNeuralNet::markAsInput( Cluster* c ) {
+    if ( !c ) {
+        nnfwMessage( NNFW_ERROR, "Null Pointer passed to addCluster! This operation will be ignored" );
+        return;
+    }
+    // Check if the Cluster is already added
+    if ( !find( c ) ) {
+        nnfwMessage( NNFW_ERROR, "attempt to mark a Cluster not present in this net!" );
+        return;
+    }
+    inclusters.push_back( c );
+}
+
+void BaseNeuralNet::markAsOutput( Cluster* c ) {
+    if ( !c ) {
+        nnfwMessage( NNFW_ERROR, "Null Pointer passed to addCluster! This operation will be ignored" );
+        return;
+    }
+    // Check if the Cluster is already added
+    if ( !find( c ) ) {
+        nnfwMessage( NNFW_ERROR, "attempt to mark a Cluster not present in this net!" );
+        return;
+    }
+    outclusters.push_back( c );
+}
+
+void BaseNeuralNet::unmark( Cluster* c ) {
+    if ( !c ) {
+        nnfwMessage( NNFW_ERROR, "Null Pointer passed to addCluster! This operation will be ignored" );
+        return;
+    }
+    ClusterVec::iterator it = std::find( inclusters.begin(), inclusters.end(), c );
+    if ( it != inclusters.end() ) {
+        inclusters.erase( it );
+    }
+    it = std::find( outclusters.begin(), outclusters.end(), c );
+    if ( it != outclusters.end() ) {
+        outclusters.erase( it );
+    }
+    return;
+}
+
+void BaseNeuralNet::unmarkAll( ) {
+    inclusters.clear();
+    outclusters.clear();
+    return;
+}
+
 bool BaseNeuralNet::isIsolated( Cluster* c ) const {
     if ( !c ) {
         nnfwMessage( NNFW_ERROR, "Null Pointer passed to isIsolato! This operation will return false" );
@@ -74,6 +128,14 @@ bool BaseNeuralNet::isIsolated( Cluster* c ) const {
 
 const ClusterVec& BaseNeuralNet::clusters() const {
     return clustersv;
+}
+
+const ClusterVec& BaseNeuralNet::inputClusters() const {
+    return inclusters;
+}
+
+const ClusterVec& BaseNeuralNet::outputClusters() const {
+    return outclusters;
 }
 
 void BaseNeuralNet::addLinker( Linker* l ) {

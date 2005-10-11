@@ -38,6 +38,10 @@ const char* DummyUpdater::className() const {
     return "DummyUpdater";
 }
 
+nnfwReal DummyUpdater::derivate( nnfwReal ) {
+    return 1.0;
+}
+
 void SigmoidUpdater::update( nnfwReal* inputs, nnfwReal* outputs, u_int numNeuron ) {
     for ( u_int i = 0; i<numNeuron; i++ ) {
         outputs[i] = 1.0/( 1.0 + exp( -lambda*( inputs[i] ) ) );
@@ -50,6 +54,10 @@ void SigmoidUpdater::update( nnfwReal input, nnfwReal &output ) {
 
 const char* SigmoidUpdater::className() const {
     return "SigmoidUpdater";
+}
+
+nnfwReal SigmoidUpdater::derivate( nnfwReal x ) {
+    return x*(1.0-x);
 }
 
 void FakeSigmoidUpdater::update( nnfwReal* inputs, nnfwReal* outputs, u_int numNeuron ) {
@@ -92,6 +100,10 @@ const char* FakeSigmoidUpdater::className() const {
     return "FakeSigmoidUpdater";
 }
 
+nnfwReal FakeSigmoidUpdater::derivate( nnfwReal x ) {
+    return x*(1.0-x);
+}
+
 void ScaledSigmoidUpdater::update( nnfwReal* inputs, nnfwReal* outputs, u_int numNeuron ) {
     nnfwReal f;
     for ( u_int i = 0; i<numNeuron; i++ ) {
@@ -108,6 +120,10 @@ void ScaledSigmoidUpdater::update( nnfwReal input, nnfwReal &output ) {
 
 const char* ScaledSigmoidUpdater::className() const {
     return "ScaledSigmoidUpdater";
+}
+
+nnfwReal ScaledSigmoidUpdater::derivate( nnfwReal x ) {
+    return x*(1.0-x);
 }
 
 void LinearUpdater::update( nnfwReal* inputs, nnfwReal* outputs, u_int numNeuron ) {
@@ -140,6 +156,14 @@ void LinearUpdater::update( nnfwReal input, nnfwReal &output ) {
 
 const char* LinearUpdater::className() const {
     return "LinearUpdater";
+}
+
+nnfwReal LinearUpdater::derivate( nnfwReal x ) {
+    if ( x >= minX && x<= maxX ) {
+        return ( maxY-minY )/( maxX-minX );
+    } else {
+        return x*(1.0-x);
+    }
 }
 
 }

@@ -27,8 +27,6 @@
  *  \todo check da fare: un Cluster puo essere rimosso solo se non ha Linkers attaccati (giusto?!?!)
  *  \todo metodi da aggiungere: ricerca attraverso le strutture inLinks e outLinks
  *  \todo Optimization of disable/enable mechanism
- *  \todo Dovrebbe avere dei metodi per specificare i Cluster di input e di output ???
- *        Come si identificano, altrimenti, tali Cluster ?? Questi sono indispensabili per il SupervisedLearning
  */
 
 #include "types.h"
@@ -62,15 +60,40 @@ public:
 
     /*! \brief Add a Cluster into the neural network
      *
-     * Details...
+     * If isInput is true then the Cluster will be considered as an Input Cluster of this network
+     * If isOutput is true then the Cluster will be considered as an Output Cluster of this network
      */
-    void addCluster( Cluster* c );
+    void addCluster( Cluster* c, bool isInput = false, bool isOutput = false );
 
     /*! \brief Remove a Cluster from the network
      *
      * Details...
      */
     bool removeCluster( Cluster* c );
+
+    /*! \brief Mark a Cluster as an Input Cluster of this network
+     *
+     * Details
+     */
+    void markAsInput( Cluster* c );
+
+    /*! \brief Mark a Cluster as an Output Cluster of this network
+     *
+     * Details
+     */
+    void markAsOutput( Cluster* c );
+
+    /*! \brief Eliminate the marks from Cluster passed
+     *
+     *  Warning: if a Cluster have two marker (Input and Output marks) then both marker are removed
+     */
+    void unmark( Cluster* c );
+
+    /*! \brief Eliminate the marks from all Cluster present in this networks
+     *
+     * Details
+     */
+    void unmarkAll();
 
     /*! \brief Return true if there isn't Linkers connected with Cluster c 
      *
@@ -83,6 +106,19 @@ public:
      * Details...
      */
     const ClusterVec& clusters() const;
+
+    /*! \brief Returns the vector of Input Clusters contained
+     *
+     *  Gli Input Cluster sono restituiti nell'ordine con il quale sono stati marcati (?!?!?)
+     *  
+     */
+    const ClusterVec& inputClusters() const;
+
+    /*! \brief Returns the vector of Output Clusters contained
+     *
+     * Details...
+     */
+    const ClusterVec& outputClusters() const;
 
     /*! \brief Add Linker
      *
@@ -183,6 +219,10 @@ public:
 protected:
     //! Clusters
     ClusterVec clustersv;
+    //! Input Clusters
+    ClusterVec inclusters;
+    //! Output Clusters
+    ClusterVec outclusters;
     //! Linkers
     LinkerVec  linkersv;
 

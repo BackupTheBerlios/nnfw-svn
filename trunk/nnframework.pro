@@ -23,6 +23,7 @@ HEADERS		= ./include/nnfw.h \
               ./include/simplecluster.h \
               ./include/fakecluster.h \
 			  ./include/clusterupdater.h \
+              ./include/derivableclusterupdater.h \
 			  ./include/libclusterupdaters.h \
 			  ./include/linker.h \
               ./include/copylinker.h \
@@ -30,7 +31,8 @@ HEADERS		= ./include/nnfw.h \
 			  ./include/neuralnet.h \
 			  ./include/utils.h \
 			  ./include/messages.h \
-			  ./include/random.h
+			  ./include/random.h \
+              ./include/supervisedlearning.h
 
 SOURCES		= ./src/simplecluster.cpp \
               ./src/fakecluster.cpp \
@@ -41,7 +43,8 @@ SOURCES		= ./src/simplecluster.cpp \
 			  ./src/neuralnet.cpp \
 			  ./src/messages.cpp \
               ./src/random.cpp \
-              ./src/types.cpp
+              ./src/types.cpp \
+              ./src/supervisedlearning.cpp
 
 unix:LIBS += -L/usr/local/lib -lgsl -lgslcblas -lm
 

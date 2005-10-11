@@ -33,6 +33,7 @@
  */
 
 #include "clusterupdater.h"
+#include "derivableclusterupdater.h"
 
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {
@@ -41,7 +42,7 @@ namespace nnfw {
  *
  * DummyUpdater copyies the inputs to the outputs
  */
-class DummyUpdater : public ClusterUpdater
+class DummyUpdater : public DerivableClusterUpdater
 {
 public:
     //! Construct a dummy updater
@@ -57,13 +58,16 @@ public:
 
     //! \brief Return the class name
     const char* className() const;
+
+    //! return always 1 (an explain of why will be coming soon)
+    nnfwReal derivate( nnfwReal x );
 };
 
 /*! \brief Sigmoid Updater
  *
  * Details..
  */
-class SigmoidUpdater : public ClusterUpdater
+class SigmoidUpdater : public DerivableClusterUpdater
 {
 public:
     //! Construct a sigmoid updater with parameter l
@@ -83,6 +87,9 @@ public:
     //! \brief Return the class name
     const char* className() const;
 
+    //! return the approximation commonly used in backpropagation learning: x(1-x)
+    nnfwReal derivate( nnfwReal x );
+
     //! lambda is the slope of the curve
     nnfwReal lambda;
 };
@@ -91,7 +98,7 @@ public:
  *
  * Details..
  */
-class FakeSigmoidUpdater : public ClusterUpdater
+class FakeSigmoidUpdater : public DerivableClusterUpdater
 {
 public:
     //! Construct a sigmoid updater with parameter l
@@ -111,6 +118,9 @@ public:
     //! \brief Return the class name
     const char* className() const;
 
+    //! return the approximation commonly used in backpropagation learning: x(1-x)
+    nnfwReal derivate( nnfwReal x );
+
     //! lambda is the slope of the curve
     nnfwReal lambda;
 };
@@ -123,7 +133,7 @@ public:
  * (max-min) is the y value when x == 0
  *
  */
-class ScaledSigmoidUpdater : public ClusterUpdater
+class ScaledSigmoidUpdater : public DerivableClusterUpdater
 {
 public:
     //! Construct a scaled sigmoid updater with parameter l
@@ -146,6 +156,9 @@ public:
     //! \brief Return the class name
     const char* className() const;
 
+    //! return the approximation commonly used in backpropagation learning: x(1-x)
+    nnfwReal derivate( nnfwReal x );
+
     //! lambda is the slope of the curve
     nnfwReal lambda;
     //! min is the y value when x -> -infinite
@@ -166,7 +179,7 @@ public:
  * </pre>
  * Further Details coming soon ;-)
  */
-class LinearUpdater : public ClusterUpdater
+class LinearUpdater : public DerivableClusterUpdater
 {
 public:
     //! Construct a sigmoid updater with parameter l
@@ -188,6 +201,9 @@ public:
 
     //! \brief Return the class name
     const char* className() const;
+
+    //! return the m coefficient if x is in [minX, maxX] and x(1-x) otherwise
+    nnfwReal derivate( nnfwReal x );
 
     //! minX
     nnfwReal minX;
