@@ -1,8 +1,0 @@
-network 3 3
-nodes 1 0
-nodes 27 0
-nodes 8 0 
-weights 27 1 0 0 1
-weights 8  1 0 0 2 
-weights 8 27 0 1 2
-

@@ -2,14 +2,13 @@ TEMPLATE = lib
 TARGET   = ./lib/nnfw
 VERSION  = 0.1
 
-#unix:QMAKE_CXXFLAGS_DEBUG += -pg
-#unix:QMAKE_LFLAGS_DEBUG += -pg
-
 CONFIG += debug staticlib warn_on
 CONFIG -= qt
 
 contains( CONFIG, debug ) {
     unix:QMAKE_CXXFLAGS -= -O2
+    #unix:QMAKE_CXXFLAGS_DEBUG += -pg
+    #unix:QMAKE_LFLAGS_DEBUG += -pg
 }
 
 INCLUDEPATH += ./include
