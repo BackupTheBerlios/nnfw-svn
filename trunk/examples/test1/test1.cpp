@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <cstdio>
 #include <ctime>
+#include <cmath>
 
 using namespace std;
 
@@ -32,19 +33,19 @@ nnfwReal weights[ IN ][ OUT ];
 
 void randomize() {
     // Change the inputs
-    for ( int i = 0; i<in->inputSize(); i++ ) {
+    for ( int i = 0; i<in->size(); i++ ) {
         nnfwReal v = ( rand()%2000 - 1000.0 )/1000.0;
         in->setInput( i, v );
         inputs[ i ] = v;
     }
 
     // Change the biases
-    for ( int i = 0; i<in->inputSize(); i++ ) {
+    for ( int i = 0; i<in->size(); i++ ) {
         nnfwReal v = ( rand()%2000 - 1000.0 )/1000.0;
         in->setBias( i, v );
         biasesIn[ i ] = v;
     }
-    for ( int i = 0; i<out->inputSize(); i++ ) {
+    for ( int i = 0; i<out->size(); i++ ) {
         nnfwReal v = ( rand()%2000 - 1000.0 )/1000.0;
         out->setBias( i, v );
         biasesOut[ i ] = v;
@@ -72,7 +73,7 @@ double testingNet() {
     // --- appling the sigmoid function on inputs
     nnfwReal finputs[ IN ];
     for ( int i = 0; i<IN; i++ ) {
-        finputs[i] = 1.0/( 1.0 + std::exp( - inputs[i] + biasesIn[i] ) );
+        finputs[i] = 1.0/( 1.0 + exp( - inputs[i] + biasesIn[i] ) );
     }
 
     // --- multiply the inputs with weights matrix
@@ -84,7 +85,7 @@ double testingNet() {
 
     // --- appling the sigmoid function on outputs
     for ( int i = 0; i<OUT; i++ ) {
-        outputs[i] = 1.0/( 1.0 + std::exp( -outputs[i] + biasesOut[i] ) );
+        outputs[i] = 1.0/( 1.0 + exp( -outputs[i] + biasesOut[i] ) );
     }
 
     // --- Calculate the error between the calculations

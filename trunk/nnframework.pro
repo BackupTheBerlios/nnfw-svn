@@ -1,14 +1,14 @@
 TEMPLATE = lib
 TARGET   = ./lib/nnfw
-VERSION  = 0.3.3
+VERSION  = 0.1
 
 #unix:QMAKE_CXXFLAGS_DEBUG += -pg
 #unix:QMAKE_LFLAGS_DEBUG += -pg
 
 CONFIG += debug staticlib warn_on
+CONFIG -= qt
 
 contains( CONFIG, debug ) {
-	DEFINES += VERBOSE
     unix:QMAKE_CXXFLAGS -= -O2
 }
 
@@ -46,11 +46,9 @@ SOURCES		= ./src/simplecluster.cpp \
               ./src/types.cpp \
               ./src/supervisedlearning.cpp
 
-unix:LIBS += -L/usr/local/lib -lgsl -lgslcblas -lm
+OBJECTS_DIR =   ./.obj
 
 target.path = /usr/local/lib
 includes.path = /usr/local/include/nnfw
 includes.files = ./include/*.h
 INSTALLS   += target includes
-
-OBJECTS_DIR =	./.obj

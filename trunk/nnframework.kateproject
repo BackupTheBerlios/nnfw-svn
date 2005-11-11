@@ -1,3 +1,11 @@
+[Dir 3rdParts]
+Dirs=lib
+Files=
+
+[Dir 3rdParts/lib]
+Dirs=
+Files=libgsl.a/libgslcblas.a
+
 [Dir docs]
 Dirs=
 Files=footer-doxygen.html/header-doxygen.html/style-doxygen.css
