@@ -34,20 +34,20 @@ namespace nnfw {
 SimpleCluster::SimpleCluster( u_int numNeurons, const char* name )
     : Cluster(name) {
     this->numNeurons = numNeurons;
-    outputdata = new nnfwReal[this->numNeurons];
-    inputdata = new nnfwReal[this->numNeurons];
-    biases = new nnfwReal[this->numNeurons];
-    memset( inputdata, 0, sizeof(nnfwReal)*this->numNeurons );
-    memset( outputdata, 0, sizeof(nnfwReal)*this->numNeurons );
-    memset( biases, 0, sizeof(nnfwReal)*this->numNeurons );
+    outputdata = new Real[this->numNeurons];
+    inputdata = new Real[this->numNeurons];
+    biases = new Real[this->numNeurons];
+    memset( inputdata, 0, sizeof(Real)*this->numNeurons );
+    memset( outputdata, 0, sizeof(Real)*this->numNeurons );
+    memset( biases, 0, sizeof(Real)*this->numNeurons );
     //! SigmoidUpdater as Default Updater
     singleUpdater = new SigmoidUpdater( 1.0 );
     singleUpd = true;
     //! Allocation for poolUpdater
     poolUpdater = new ( ClusterUpdater ( *[this->numNeurons] ) );
 
-    tmpdata = new nnfwReal[this->numNeurons];
-    memset( tmpdata, 0, sizeof(nnfwReal)*this->numNeurons );
+    tmpdata = new Real[this->numNeurons];
+    memset( tmpdata, 0, sizeof(Real)*this->numNeurons );
 }
 
 SimpleCluster::~SimpleCluster() {
@@ -107,7 +107,7 @@ const ClusterUpdater* SimpleCluster::getUpdater( u_int neuron ) const {
     return poolUpdater[ neuron ];
 }
 
-void SimpleCluster::setInput( u_int neuron, nnfwReal value ) {
+void SimpleCluster::setInput( u_int neuron, Real value ) {
     if ( neuron >= numNeurons ) {
         char msg[100];
         sprintf( msg, "The neuron %u doesn't exists! The operation setInput will be ignored", neuron );
@@ -117,17 +117,17 @@ void SimpleCluster::setInput( u_int neuron, nnfwReal value ) {
     inputdata[neuron] = value;
 }
 
-void SimpleCluster::setAllInputs( nnfwReal value ) {
+void SimpleCluster::setAllInputs( Real value ) {
     for ( u_int i = 0; i<numNeurons; i++ ) {
         inputdata[i] = value;
     }
 }
 
 void SimpleCluster::resetInputs() {
-    memset( inputdata, 0, numNeurons*sizeof( nnfwReal ) );
+    memset( inputdata, 0, numNeurons*sizeof( Real ) );
 }
 
-nnfwReal SimpleCluster::getInput( u_int neuron ) const {
+Real SimpleCluster::getInput( u_int neuron ) const {
     if ( neuron >= numNeurons ) {
         char msg[100];
         sprintf( msg, "The neuron %u doesn't exists! The operation getInput will return 0.0", neuron );
@@ -137,11 +137,11 @@ nnfwReal SimpleCluster::getInput( u_int neuron ) const {
     return inputdata[neuron];
 }
 
-nnfwReal* SimpleCluster::getInputs() {
+Real* SimpleCluster::getInputs() {
     return inputdata;
 }
 
-void SimpleCluster::setOutput( u_int neuron, nnfwReal value ) {
+void SimpleCluster::setOutput( u_int neuron, Real value ) {
     if ( neuron >= numNeurons ) {
         char msg[100];
         sprintf( msg, "The neuron %u doesn't exists! The operation setOutput will be ignored", neuron );
@@ -151,7 +151,7 @@ void SimpleCluster::setOutput( u_int neuron, nnfwReal value ) {
     outputdata[neuron] = value;
 }
 
-nnfwReal SimpleCluster::getOutput( u_int neuron ) const {
+Real SimpleCluster::getOutput( u_int neuron ) const {
     if ( neuron >= numNeurons ) {
         char msg[100];
         sprintf( msg, "The neuron %u doesn't exists! The operation getOutput will return 0.0", neuron );
@@ -161,11 +161,11 @@ nnfwReal SimpleCluster::getOutput( u_int neuron ) const {
     return outputdata[neuron];
 }
 
-nnfwReal* SimpleCluster::getOutputs() {
+Real* SimpleCluster::getOutputs() {
     return outputdata;
 }
 
-void SimpleCluster::setBias( u_int neuron, nnfwReal bias ) {
+void SimpleCluster::setBias( u_int neuron, Real bias ) {
     if ( neuron >= numNeurons ) {
         char msg[100];
         sprintf( msg, "The neuron %u doesn't exists! The operation setBias will be ignored", neuron );
@@ -175,7 +175,7 @@ void SimpleCluster::setBias( u_int neuron, nnfwReal bias ) {
     biases[neuron] = bias;
 }
 
-nnfwReal SimpleCluster::getBias( u_int neuron ) {
+Real SimpleCluster::getBias( u_int neuron ) {
     if ( neuron >= numNeurons ) {
         char msg[100];
         sprintf( msg, "The neuron %u doesn't exists! The operation getBias will return 0.0", neuron );
@@ -185,7 +185,7 @@ nnfwReal SimpleCluster::getBias( u_int neuron ) {
     return biases[neuron];
 }
 
-void SimpleCluster::randomize( nnfwReal min, nnfwReal max ) {
+void SimpleCluster::randomize( Real min, Real max ) {
     for ( u_int i = 0; i < numNeurons; i++ ) {
         biases[i] = Random::flatReal( min, max );
     }

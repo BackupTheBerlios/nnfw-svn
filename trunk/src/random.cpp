@@ -31,15 +31,15 @@ void Random::setSeed( long int seed ) {
     return;
 }
 
-nnfwReal Random::flatReal( nnfwReal min, nnfwReal max ) {
-    return (nnfwReal)( gsl_ran_flat( rnd, (double)min, (double)max ) );
+Real Random::flatReal( Real min, Real max ) {
+    return (Real)( gsl_ran_flat( rnd, (double)min, (double)max ) );
 }
 
 bool Random::boolean( ) {
     return ( gsl_rng_get( rnd )%2 );
 }
 
-bool Random::boolean( nnfwReal trueProb ) {
+bool Random::boolean( Real trueProb ) {
     return ( trueProb > gsl_rng_uniform( rnd ) );
 }
 

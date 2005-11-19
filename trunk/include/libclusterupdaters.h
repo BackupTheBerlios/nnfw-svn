@@ -50,17 +50,20 @@ public:
         // --- Nothing To Do
     };
 
+    //! Destructor
+    virtual ~DummyUpdater() { /* Nothing to do */ };
+
     //! Implement the dummy updating method
-    void update( nnfwReal* inputs, nnfwReal* outputs, u_int numNeuron );
+    void update( Real* inputs, Real* outputs, u_int numNeuron );
 
     //! Single neuron update
-    void update( nnfwReal input, nnfwReal &output );
+    void update( Real input, Real &output );
 
     //! \brief Return the class name
     const char* className() const;
 
     //! return always 1 (an explain of why will be coming soon)
-    nnfwReal derivate( nnfwReal x );
+    Real derivate( Real x );
 };
 
 /*! \brief Sigmoid Updater
@@ -71,27 +74,30 @@ class SigmoidUpdater : public DerivableClusterUpdater
 {
 public:
     //! Construct a sigmoid updater with parameter l
-    SigmoidUpdater( nnfwReal l = 1.0 ) {
+    SigmoidUpdater( Real l = 1.0 ) {
         lambda = l;
     };
+
+    //! Destructor
+    virtual ~SigmoidUpdater() { /* Nothing to do */ };
 
     /*! \brief Implement the updating method
      *
      * Details...
      */
-    void update( nnfwReal* inputs, nnfwReal* outputs, u_int numNeuron );
+    void update( Real* inputs, Real* outputs, u_int numNeuron );
 
     //! Single neuron update
-    void update( nnfwReal input, nnfwReal &output );
+    void update( Real input, Real &output );
 
     //! \brief Return the class name
     const char* className() const;
 
     //! return the approximation commonly used in backpropagation learning: x(1-x)
-    nnfwReal derivate( nnfwReal x );
+    Real derivate( Real x );
 
     //! lambda is the slope of the curve
-    nnfwReal lambda;
+    Real lambda;
 };
 
 /*! \brief Fake Sigmoid Updater !! Is a linear approximation of sigmoid function
@@ -102,27 +108,30 @@ class FakeSigmoidUpdater : public DerivableClusterUpdater
 {
 public:
     //! Construct a sigmoid updater with parameter l
-    FakeSigmoidUpdater( nnfwReal l = 1.0 ) {
+    FakeSigmoidUpdater( Real l = 1.0 ) {
         lambda = l;
     };
+
+    //! Destructor
+    virtual ~FakeSigmoidUpdater() { /* Nothing to do */ };
 
     /*! \brief Implement the updating method
      *
      * Details...
      */
-    void update( nnfwReal* inputs, nnfwReal* outputs, u_int numNeuron );
+    void update( Real* inputs, Real* outputs, u_int numNeuron );
 
     //! Single neuron update
-    void update( nnfwReal input, nnfwReal &output );
+    void update( Real input, Real &output );
 
     //! \brief Return the class name
     const char* className() const;
 
     //! return the approximation commonly used in backpropagation learning: x(1-x)
-    nnfwReal derivate( nnfwReal x );
+    Real derivate( Real x );
 
     //! lambda is the slope of the curve
-    nnfwReal lambda;
+    Real lambda;
 };
 
 /*! \brief ScaledSigmoid Updater
@@ -137,34 +146,37 @@ class ScaledSigmoidUpdater : public DerivableClusterUpdater
 {
 public:
     //! Construct a scaled sigmoid updater with parameter l
-    ScaledSigmoidUpdater( nnfwReal l = 1.0,
-                          nnfwReal min = -1.0, nnfwReal max = +1.0 ) {
+    ScaledSigmoidUpdater( Real l = 1.0,
+                          Real min = -1.0, Real max = +1.0 ) {
         lambda = l;
         this->min = min;
         this->max = max;
     };
 
+    //! Destructor
+    virtual ~ScaledSigmoidUpdater() { /* Nothing to do */ };
+
     /*! \brief Implement the updating method
      *
      * Details...
      */
-    void update( nnfwReal* inputs, nnfwReal* outputs, u_int numNeuron );
+    void update( Real* inputs, Real* outputs, u_int numNeuron );
 
     //! Single neuron update
-    void update( nnfwReal input, nnfwReal &output );
+    void update( Real input, Real &output );
 
     //! \brief Return the class name
     const char* className() const;
 
     //! return the approximation commonly used in backpropagation learning: x(1-x)
-    nnfwReal derivate( nnfwReal x );
+    Real derivate( Real x );
 
     //! lambda is the slope of the curve
-    nnfwReal lambda;
+    Real lambda;
     //! min is the y value when x -> -infinite
-    nnfwReal min;
+    Real min;
     //! max is the y value when x -> +infinite
-    nnfwReal max;
+    Real max;
 };
 
 /*! \brief Linear Updater
@@ -183,36 +195,39 @@ class LinearUpdater : public DerivableClusterUpdater
 {
 public:
     //! Construct a sigmoid updater with parameter l
-    LinearUpdater( nnfwReal minX, nnfwReal maxX, nnfwReal minY = -1, nnfwReal maxY = +1 ) {
+    LinearUpdater( Real minX, Real maxX, Real minY = -1, Real maxY = +1 ) {
         this->minX = minX;
         this->maxX = maxX;
         this->minY = minY;
         this->maxY = maxY;
     };
 
+    //! Destructor
+    virtual ~LinearUpdater() { /* Nothing to do */ };
+
     /*! \brief Implement the updating method
      *
      * Details...
      */
-    void update( nnfwReal* inputs, nnfwReal* outputs, u_int numNeuron );
+    void update( Real* inputs, Real* outputs, u_int numNeuron );
 
     //! Single neuron update
-    void update( nnfwReal input, nnfwReal &output );
+    void update( Real input, Real &output );
 
     //! \brief Return the class name
     const char* className() const;
 
     //! return the m coefficient if x is in [minX, maxX] and x(1-x) otherwise
-    nnfwReal derivate( nnfwReal x );
+    Real derivate( Real x );
 
     //! minX
-    nnfwReal minX;
+    Real minX;
     //! maxX
-    nnfwReal maxX;
+    Real maxX;
     //! minY
-    nnfwReal minY;
+    Real minY;
     //! maxY
-    nnfwReal maxY;
+    Real maxY;
 };
 
 }

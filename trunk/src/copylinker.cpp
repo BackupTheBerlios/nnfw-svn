@@ -45,7 +45,7 @@ CopyLinker::~CopyLinker() {
 }
 
 void CopyLinker::update() {
-    memcpy( outputsFrom, inputsTo, dimData*sizeof( nnfwReal ) );
+    memcpy( outputsFrom, inputsTo, dimData*sizeof( Real ) );
     return;
 }
 

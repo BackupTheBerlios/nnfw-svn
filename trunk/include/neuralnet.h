@@ -188,7 +188,7 @@ public:
      *  \param min is the lower-bound of random number generator desired
      *  \param max is the upper-bound of random number generator desired
      */
-    void randomize( nnfwReal min, nnfwReal max );
+    void randomize( Real min, Real max );
 
     /*! \brief Return the Updatable with the name specified
      *
@@ -226,15 +226,15 @@ protected:
     //! Linkers
     LinkerVec  linkersv;
 
-    typedef nnfwMap<Cluster*, LinkerVec> LinkVecMap;
+    typedef Map<Cluster*, LinkerVec> LinkVecMap;
     //! mappa dei linkers entranti (cluster -> vettore linkers entranti)
     LinkVecMap inLinks;
     //! map of outgoing linkers (cluster -> vettore linkers uscenti)
     LinkVecMap outLinks;
 
     //! Array of Updateables ordered as specified
-    nnfwVector<Updatable*> ups;
-    nnfwVector<bool> mask;
+    Vector<Updatable*> ups;
+    Vector<bool> mask;
     unsigned int dimUps;
 };
 

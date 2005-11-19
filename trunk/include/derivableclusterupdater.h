@@ -41,11 +41,14 @@ namespace nnfw {
 class DerivableClusterUpdater : public ClusterUpdater
 {
 public:
+    //! Destructor
+    virtual ~DerivableClusterUpdater() { /* Nothing to do */ };
+
     /*! \brief Compute the derivate of the function represent
      *
      * Details...
      */
-    virtual nnfwReal derivate( nnfwReal x ) = 0;
+    virtual Real derivate( Real x ) = 0;
 };
 
 }

@@ -276,7 +276,7 @@ bool BaseNeuralNet::isEnabled( Updatable* up ) {
     return false;
 }
 
-void BaseNeuralNet::randomize( nnfwReal min, nnfwReal max ) {
+void BaseNeuralNet::randomize( Real min, Real max ) {
     for ( ClusterVec::iterator it = clustersv.begin(); it != clustersv.end(); ++it ) {
         (*it)->randomize( min, max );
     }

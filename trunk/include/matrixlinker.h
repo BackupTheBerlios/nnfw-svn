@@ -67,19 +67,19 @@ public:
      *
      * Details
      */
-    void randomize( nnfwReal min, nnfwReal max );
+    void randomize( Real min, Real max );
 
     /*! \brief Set the weight of the connection specified
      *
      * Details
      */
-    void setWeight( u_int from, u_int to, nnfwReal weight );
+    void setWeight( u_int from, u_int to, Real weight );
 
     /*! \brief Get the weight of the connection specified
      *
      * Details
      */
-    nnfwReal getWeight( u_int from, u_int to );
+    Real getWeight( u_int from, u_int to );
 
     /*! \brief Return the Cluster From
      *
@@ -103,13 +103,13 @@ public:
     void update();
 private:
     //! incoming cluster output
-    nnfwReal* outputsFrom;
+    Real* outputsFrom;
     //! outgoing cluster inputs
-    nnfwReal* inputsTo;
+    Real* inputsTo;
     //! Weight Matrix ( [column][row] )
-    nnfwReal **w;
+    Real **w;
     //! Memory allocated for the weight matrix
-    nnfwReal* memM;
+    Real* memM;
     //! Registers the dimensions of the matrix
     u_int nrows, ncols;
     //! Registers the cluster from

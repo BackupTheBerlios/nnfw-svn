@@ -41,17 +41,19 @@ namespace nnfw {
 class ClusterUpdater
 {
 public:
+    //! Destructor
+    virtual ~ClusterUpdater() { /* Nothing to do */ };
     /*! \brief Calculate the outputs of neurons by the inputs given
      *
      *  Details...
      */
-    virtual void update( nnfwReal* inputs, nnfwReal* outputs, u_int numNeuron );
+    virtual void update( Real* inputs, Real* outputs, u_int numNeuron );
 
     /*! \brief Calculate the outputs of a single neuron
      *
      *  Details...
      */
-    virtual void update( nnfwReal input, nnfwReal &output );
+    virtual void update( Real input, Real &output );
 
     /*! \brief Return the class name that identify the type of ClusterUpdater
      *

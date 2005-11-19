@@ -27,8 +27,6 @@
  *
  *  \todo operator << to Vector template that inserts element as push_back() method;
  *
- *  \todo is it a good idea remove the nnfw prefix from type names ?!?! Now, there is a namespace, and then,
- *        C++ speaking, the type names are nnfw::nnfwXXXX ... Maybe there are too many nnfw prefix ! :-)
  */
 
 #include <vector>
@@ -39,33 +37,33 @@
 namespace nnfw {
 
 //! Generic Vector
-#define nnfwVector std::vector
+#define Vector std::vector
 
 //! Generic Map
-#define nnfwMap std::map
+#define Map std::map
 
 //! Generic Pair
-#define nnfwPair std::pair
+#define Pair std::pair
 
 //! Unsigned integer
 typedef unsigned int u_int;
 
 //! Abstraction on the type of real numbers
-typedef float nnfwReal;
-//! Vector of nnfwReal
-typedef nnfwVector<nnfwReal> nnfwRealVec;
+typedef float Real;
+//! Vector of Real
+typedef Vector<Real> RealVec;
 
 class Updatable;
 //! Array of Updatable
-typedef nnfwVector<Updatable*> UpdatableVec;
+typedef Vector<Updatable*> UpdatableVec;
 
 class Cluster;
 //! Array of Clusters
-typedef nnfwVector<Cluster*> ClusterVec;
+typedef Vector<Cluster*> ClusterVec;
 
 class Linker;
 //! Array of Linkers
-typedef nnfwVector<Linker*> LinkerVec;
+typedef Vector<Linker*> LinkerVec;
 
 //! Empty LinkerVec constant
 extern LinkerVec emptyLinkerVec;

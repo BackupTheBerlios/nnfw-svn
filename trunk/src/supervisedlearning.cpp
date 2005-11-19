@@ -23,28 +23,28 @@
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {
 
-Example::Example( nnfwRealVec inputs, nnfwRealVec outputs )
+Example::Example( RealVec inputs, RealVec outputs )
     : inputv(inputs), outputv(outputs), errorv() {
     errorv.resize( outputv.size() );
 }
 
-void Example::setInput( nnfwRealVec inputs ) {
+void Example::setInput( RealVec inputs ) {
     inputv = inputs;
 }
 
-nnfwRealVec& Example::input() {
+RealVec& Example::input() {
     return inputv;
 }
 
-void Example::setOutput( nnfwRealVec outputs ) {
+void Example::setOutput( RealVec outputs ) {
     outputv = outputs;
 }
 
-nnfwRealVec& Example::output() {
+RealVec& Example::output() {
     return outputv;
 }
 
-void Example::setError( nnfwRealVec errors ) {
+void Example::setError( RealVec errors ) {
     if ( errors.size() != outputv.size() ) {
         nnfwMessage( NNFW_ERROR, "Error vector must have the same size of output vector" );
         return;
@@ -52,7 +52,7 @@ void Example::setError( nnfwRealVec errors ) {
     errorv = errors;
 }
 
-nnfwRealVec& Example::error() {
+RealVec& Example::error() {
     return errorv;
 }
 
@@ -153,13 +153,13 @@ void BackpropagationLearning::learnOne( Example& ex ) {
     const ClusterVec cls = net->clusters();
     for( u_int i=0; i<cls.size(); i++ ) {
         // ---- per ogni SimpleCluster associo un vettore della stessa dimensione inizializzato con zeri
-        deltas.insert( std::make_pair( (SimpleCluster*)(cls[i]), nnfwRealVec( cls[i]->size(), 0.0 ) ) );
+        deltas.insert( std::make_pair( (SimpleCluster*)(cls[i]), RealVec( cls[i]->size(), 0.0 ) ) );
     }
 
     // ----- Calcolo i delta per i Cluster di output
     u_int skip = 0;
     errorOfNet( ex );
-    nnfwRealVec errNet = ex.error();
+    RealVec errNet = ex.error();
     const ClusterVec outC = net->outputClusters();
     for( u_int i=0; i<outC.size(); i++ ) {
         deltaOutputCluster( (SimpleCluster*)(outC[i]), errNet, skip );
@@ -198,24 +198,24 @@ void BackpropagationLearning::learnOne( Example& ex ) {
     return;
 }
 
-void BackpropagationLearning::setRate( nnfwReal r ) {
+void BackpropagationLearning::setRate( Real r ) {
     rate = r;
 }
 
-nnfwReal BackpropagationLearning::getRate() {
+Real BackpropagationLearning::getRate() {
     return rate;
 }
 
-void BackpropagationLearning::setMomentum( nnfwReal m ) {
+void BackpropagationLearning::setMomentum( Real m ) {
     mom = m;
 }
 
-nnfwReal BackpropagationLearning::getMomentum() {
+Real BackpropagationLearning::getMomentum() {
     return mom;
 }
 
-void BackpropagationLearning::deltaOutputCluster( SimpleCluster* c, nnfwRealVec errOut, u_int skipCount ) {
-    nnfwRealVec& delta = deltas[c];
+void BackpropagationLearning::deltaOutputCluster( SimpleCluster* c, RealVec errOut, u_int skipCount ) {
+    RealVec& delta = deltas[c];
     u_int dimC = c->size();
     //----- ERROR: usa la derivata del ClusterUpdater settato sul neurone 0 per tutti i neuroni !!!!
     DerivableClusterUpdater* dup = (DerivableClusterUpdater*)(c->getUpdater( 0 ));
@@ -227,10 +227,10 @@ void BackpropagationLearning::deltaOutputCluster( SimpleCluster* c, nnfwRealVec 
 
 void BackpropagationLearning::backpropLinker( MatrixLinker* l ) {
     // vettore dei delta del Cluster di uscita del linker 
-    nnfwRealVec& deltaOut = deltas[ (SimpleCluster*)(l->getTo()) ];
+    RealVec& deltaOut = deltas[ (SimpleCluster*)(l->getTo()) ];
     // vettore dei delta mappato al Cluster di ingresso del linker
     SimpleCluster* clsIn = (SimpleCluster*)(l->getFrom());
-    nnfwRealVec& deltaIn  = deltas[ clsIn ];
+    RealVec& deltaIn  = deltas[ clsIn ];
     // Per il calcolo della derivata sul Cluster di ingresso del linker
     //----- ERROR: usa la derivata del ClusterUpdater settato sul neurone 0 per tutti i neuroni !!!!
     DerivableClusterUpdater* dup = (DerivableClusterUpdater*)(clsIn->getUpdater( 0 ));
@@ -254,9 +254,9 @@ void BackpropagationLearning::learnLinker( MatrixLinker* ) {
 }
 
 void BackpropagationLearning::errorOfNet( Example& ex ) { 
-    nnfwRealVec& inputs = ex.input();
-    nnfwRealVec& outputs = ex.output();
-    nnfwRealVec& errors = ex.error();    
+    RealVec& inputs = ex.input();
+    RealVec& outputs = ex.output();
+    RealVec& errors = ex.error();    
     // Set the inputs of the network
     const ClusterVec inC = net->inputClusters();
     u_int count = 0;

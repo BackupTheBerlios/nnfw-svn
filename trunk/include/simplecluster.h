@@ -83,13 +83,13 @@ public:
      *
      * Details...
      */
-    void setInput( u_int neuron, nnfwReal value );
+    void setInput( u_int neuron, Real value );
 
     /*! \brief Set all the inputs with the same value
      *
      * Details...
      */
-    void setAllInputs( nnfwReal value );
+    void setAllInputs( Real value );
 
     /*! \brief It will sets the inputs at the value of biases
      *
@@ -101,61 +101,61 @@ public:
      *
      * Details...
      */
-    nnfwReal getInput( u_int neuron ) const;
+    Real getInput( u_int neuron ) const;
 
     /*! \brief Get the array of inputs
      *
      *  Return the array of inputs, not a copy of inputs; Then you can change inputs by the pointer returned !!!
      */
-    nnfwReal* getInputs( );
+    Real* getInputs( );
 
     /*! \brief Force the output of the neuron at value specified
      *
      * Details...
      */
-    void setOutput( u_int neuron, nnfwReal value );
+    void setOutput( u_int neuron, Real value );
 
     /*! \brief Get the output of neuron
      *
      * Details...
      */
-    nnfwReal getOutput( u_int neuron ) const;
+    Real getOutput( u_int neuron ) const;
 
     /*! \brief Get the array of inputs
      *
      *  Return the array of outputs, not a copy of outputs; Then you can change outputs by the pointer returned !!!
      */
-    nnfwReal* getOutputs( );
+    Real* getOutputs( );
 
     /*! \brief Set the bias of the neuron
      *
      * Details ...
      */
-    void setBias( u_int neuron, nnfwReal bias );
+    void setBias( u_int neuron, Real bias );
 
     /*! \brief Get bias of the neuron
      *
      * Details...
      */
-    nnfwReal getBias( u_int neuron );
+    Real getBias( u_int neuron );
 
     /*! \brief Randomize the biases of SimpleCluster
      *
      * Details...
      */
-    void randomize( nnfwReal min, nnfwReal max );
+    void randomize( Real min, Real max );
 
 private:
     u_int numNeurons;
-    nnfwReal* inputdata;
-    nnfwReal* outputdata;
-    nnfwReal* biases;
+    Real* inputdata;
+    Real* outputdata;
+    Real* biases;
     //! Updaters Object
     ClusterUpdater* singleUpdater;
     ClusterUpdater** poolUpdater;
     bool singleUpd;
     //! temporary data
-    nnfwReal* tmpdata;
+    Real* tmpdata;
 };
 
 }

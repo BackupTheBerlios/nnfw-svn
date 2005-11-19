@@ -74,12 +74,12 @@ public:
      *
      * Details
      */
-    void randomize( nnfwReal , nnfwReal ) {
+    void randomize( Real , Real ) {
         // --- Do Nothing
     };
 private:
-    nnfwReal* outputsFrom;
-    nnfwReal* inputsTo;
+    Real* outputsFrom;
+    Real* inputsTo;
     u_int dimData;
     Cluster* from;
     Cluster* to;

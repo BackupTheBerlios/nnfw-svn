@@ -34,7 +34,7 @@ namespace nnfw {
 FakeCluster::FakeCluster( u_int size, const char* name )
     : Cluster(name) {
     dim = size;
-    data = new nnfwReal[dim];
+    data = new Real[dim];
     updater = DummyUpdater();
 }
 
@@ -63,7 +63,7 @@ const ClusterUpdater* FakeCluster::getUpdater( u_int ) const {
     return &updater;
 }
 
-void FakeCluster::setInput( u_int neuron, nnfwReal value ) {
+void FakeCluster::setInput( u_int neuron, Real value ) {
     if ( neuron >= dim ) {
         char msg[100];
         sprintf( msg, "The neuron %u doesn't exists! The operation setInput will be ignored", neuron );
@@ -73,17 +73,17 @@ void FakeCluster::setInput( u_int neuron, nnfwReal value ) {
     data[neuron] = value;
 }
 
-void FakeCluster::setAllInputs( nnfwReal value ) {
+void FakeCluster::setAllInputs( Real value ) {
     for ( u_int i = 0; i<dim; i++ ) {
         data[i] = value;
     }
 }
 
 void FakeCluster::resetInputs() {
-    memset( data, 0, dim*sizeof( nnfwReal ) );
+    memset( data, 0, dim*sizeof( Real ) );
 }
 
-nnfwReal FakeCluster::getInput( u_int neuron ) const {
+Real FakeCluster::getInput( u_int neuron ) const {
     if ( neuron >= dim ) {
         char msg[100];
         sprintf( msg, "The neuron %u doesn't exists! The operation getInput will return 0.0", neuron );
@@ -93,11 +93,11 @@ nnfwReal FakeCluster::getInput( u_int neuron ) const {
     return data[neuron];
 }
 
-nnfwReal* FakeCluster::getInputs() {
+Real* FakeCluster::getInputs() {
     return data;
 }
 
-void FakeCluster::setOutput( u_int neuron, nnfwReal value ) {
+void FakeCluster::setOutput( u_int neuron, Real value ) {
     if ( neuron >= dim ) {
         char msg[100];
         sprintf( msg, "The neuron %u doesn't exists! The operation setOutput will be ignored", neuron );
@@ -107,7 +107,7 @@ void FakeCluster::setOutput( u_int neuron, nnfwReal value ) {
     data[neuron] = value;
 }
 
-nnfwReal FakeCluster::getOutput( u_int neuron ) const {
+Real FakeCluster::getOutput( u_int neuron ) const {
     if ( neuron >= dim ) {
         char msg[100];
         sprintf( msg, "The neuron %u doesn't exists! The operation getOutput will return 0.0", neuron );
@@ -117,11 +117,11 @@ nnfwReal FakeCluster::getOutput( u_int neuron ) const {
     return data[neuron];
 }
 
-nnfwReal* FakeCluster::getOutputs() {
+Real* FakeCluster::getOutputs() {
     return data;
 }
 
-void FakeCluster::randomize( nnfwReal , nnfwReal ) {
+void FakeCluster::randomize( Real , Real ) {
     nnfwMessage( NNFW_INFORMATION, "What means 'randomize a Fake Cluster' ???" );
     return;
 }

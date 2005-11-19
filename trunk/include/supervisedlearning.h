@@ -43,11 +43,11 @@ namespace nnfw {
 /*! \brief an Example to learn
  *
  *  \par Motivation
- *    This class register a pair (input, outputT) where input is a nnfwRealVec with inputs that if given at
- *    neural network, it have to procude value present in the outputT nnfwRealVec<br>
+ *    This class register a pair (input, outputT) where input is a RealVec with inputs that if given at
+ *    neural network, it have to procude value present in the outputT RealVec<br>
  *    This call register also the error made(commesso) by neural network ( outputNN - outputT )
  *  \par Description
- *    This class register inputs, desired outputs and errors by nnfwRealVec and don't do any kind of control
+ *    This class register inputs, desired outputs and errors by RealVec and don't do any kind of control
  *    about sizes and values contained.<br>
  *    The values of inputs and outputs can be setted by setInput() and setOutput() or directly in the constructor
  *    provided for that purpose. During initialization, all error are setted to zero.<br>
@@ -58,24 +58,24 @@ namespace nnfw {
 class Example {
 public:
     //! Construct an example with (input,output) passed
-    Example( nnfwRealVec inputs, nnfwRealVec outputs );
+    Example( RealVec inputs, RealVec outputs );
     // Forse c'e' bisogno di un copyconstructor e di un costruttore di default !!
     //! Set the input
-    void setInput( nnfwRealVec inputs );
+    void setInput( RealVec inputs );
     //! return the inputs;
-    nnfwRealVec& input();
+    RealVec& input();
     //! Set the output
-    void setOutput( nnfwRealVec outputs );
+    void setOutput( RealVec outputs );
     //! return the output;
-    nnfwRealVec& output();
+    RealVec& output();
     //! Set the vector of error
-    void setError( nnfwRealVec errors );
+    void setError( RealVec errors );
     //! return the errors
-    nnfwRealVec& error();
+    RealVec& error();
 private:
-    nnfwRealVec inputv;
-    nnfwRealVec outputv;
-    nnfwRealVec errorv;
+    RealVec inputv;
+    RealVec outputv;
+    RealVec errorv;
 };
 
 /*! \brief ExampleSet class, in other way the examples set that neural network have to learn
@@ -132,11 +132,11 @@ public:
     Example& at( u_int id );
 
 private:
-    /*! This is simply a nnfwVector for two reasons: 
+    /*! This is simply a Vector for two reasons: 
      *    (i) it's indexed then the access is faster than other structures,
      *    (ii) there's no control of duplicate Examples then it's possible create a odd examples set
      */
-    nnfwVector<Example> examples;
+    Vector<Example> examples;
     u_int inputDim;
     u_int outputDim;
 };
@@ -185,13 +185,13 @@ public:
     //! test the neural network 
     bool test( ExampleSet* );
     //! Set the learning rate
-    void setRate( nnfwReal );
+    void setRate( Real );
     //! the learning rate
-    nnfwReal getRate();
+    Real getRate();
     //! Momentum
-    void setMomentum( nnfwReal );
+    void setMomentum( Real );
     //! return the Momentum
-    nnfwReal getMomentum();
+    Real getMomentum();
 protected:
 
     /* Backpropagation 
@@ -241,7 +241,7 @@ protected:
      * \param errOut is the difference between target outputs and produced outputs by the net
      * \param skipCount is the number of the element of errOut that have to be skipped
      */
-    void deltaOutputCluster( SimpleCluster*, nnfwRealVec errOut, u_int skipCount );
+    void deltaOutputCluster( SimpleCluster*, RealVec errOut, u_int skipCount );
     //! Backpropagate the delta along the MatrixLinker passed;
     void backpropLinker( MatrixLinker* );
     //! Modify the biases of Cluster's neurons
@@ -261,13 +261,13 @@ protected:
     typedef std::queue<MatrixLinker*> MLqueue;
     MLqueue mls;
     //! Map from SimpleCluster to delta vector
-    typedef std::map<SimpleCluster*, nnfwRealVec> DeltaMap;
+    typedef std::map<SimpleCluster*, RealVec> DeltaMap;
     DeltaMap deltas;
 
     //! learning rate
-    nnfwReal rate;
+    Real rate;
     //! momentum
-    nnfwReal mom;
+    Real mom;
 };
 
 }

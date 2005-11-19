@@ -62,7 +62,7 @@ namespace nnfw {
  *    The getInputs and getOutputs methods have to returns a valid array of internal data, and not simply a copy
  *    of the internal data. Look at the following code:
  *    \code
- * nnfwReal* in = cluster->getInputs();
+ * Real* in = cluster->getInputs();
  * in[2] = 3.0;   // This statement will be changes the inputs of third neuron.
  * // the above statements must be equivalent with the following
  * cluster->setInput( 2, 3.0 );
@@ -71,7 +71,7 @@ namespace nnfw {
  *    on all inputs of a Cluster (as MatrixLinker do), then its more efficient that it takes the array returned
  *    by getInputs (or getOutputs) and works over them.<br>
  *    This imply that <b>every</b> subclasses have to represents the input and output 
- *    of neurons as nnfwReal arrays ( C arrays not STL-classes )
+ *    of neurons as Real arrays ( C arrays not STL-classes )
  */
 class Cluster : public Updatable
 {
@@ -80,6 +80,9 @@ public:
     Cluster( const char* name = "unnamed" ) : Updatable(name) {
         // nothing to do
     };
+
+    //! Destructor
+    virtual ~Cluster() { /* Nothing to do */ };
 
     /*! \brief Return the number of neurons
      *
@@ -109,13 +112,13 @@ public:
      *
      * Details...
      */
-    virtual void setInput( u_int neuron, nnfwReal value ) = 0;
+    virtual void setInput( u_int neuron, Real value ) = 0;
 
     /*! \brief Set all the inputs with the same value
      *
      * Details...
      */
-    virtual void setAllInputs( nnfwReal value ) = 0;
+    virtual void setAllInputs( Real value ) = 0;
 
     /*! \brief Reset the inputs of this cluster, typically this means that the inputs will be set to zero.
      *
@@ -127,37 +130,37 @@ public:
      *
      * Details...
      */
-    virtual nnfwReal getInput( u_int neuron ) const = 0;
+    virtual Real getInput( u_int neuron ) const = 0;
 
     /*! \brief Get the array of inputs
      *
      *  Return the array of inputs, not a copy of inputs; Then you can change inputs by the pointer returned !!!
      */
-    virtual nnfwReal* getInputs( ) = 0;
+    virtual Real* getInputs( ) = 0;
 
     /*! \brief Force the output of the neuron at value specified
      *
      * Details...
      */
-    virtual void setOutput( u_int neuron, nnfwReal value ) = 0;
+    virtual void setOutput( u_int neuron, Real value ) = 0;
 
     /*! \brief Get the output of neuron
      *
      * Details...
      */
-    virtual nnfwReal getOutput( u_int neuron ) const = 0;
+    virtual Real getOutput( u_int neuron ) const = 0;
 
     /*! \brief Get the array of inputs
      *
      *  Return the array of outputs, not a copy of outputs; Then you can change outputs by the pointer returned !!!
      */
-    virtual nnfwReal* getOutputs( ) = 0;
+    virtual Real* getOutputs( ) = 0;
 
     /*! \brief Randomize the parameters of the Cluster
      *
      * The parameters randomized by this method will be specified by sub-classes
      */
-    virtual void randomize( nnfwReal min, nnfwReal max ) = 0;
+    virtual void randomize( Real min, Real max ) = 0;
 };
 
 }

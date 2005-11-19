@@ -49,13 +49,13 @@ public:
      *
      * Details..
      */
-    static nnfwReal flatReal( nnfwReal min, nnfwReal max );
+    static Real flatReal( Real min, Real max );
 
     /*! \brief Return a random boolean value; True value appear with probability specified as paramater
      *
      * Details..
      */
-    static bool boolean( nnfwReal trueProb );
+    static bool boolean( Real trueProb );
 
     /*! \brief Return a random boolean value; True and False values are the same probability
      *

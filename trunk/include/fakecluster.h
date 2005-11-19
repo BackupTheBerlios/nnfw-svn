@@ -82,13 +82,13 @@ public:
      *
      * Details...
      */
-    void setInput( u_int n, nnfwReal value );
+    void setInput( u_int n, Real value );
 
     /*! \brief Set all the inputs with the same value
      *
      * Details...
      */
-    void setAllInputs( nnfwReal value );
+    void setAllInputs( Real value );
 
     /*! \brief Reset the data of vector ( set all inputs to zero )
      *
@@ -100,41 +100,41 @@ public:
      *
      * Details...
      */
-    nnfwReal getInput( u_int neuron ) const;
+    Real getInput( u_int neuron ) const;
 
     /*! \brief Get the array of inputs
      *
      *  Return the array of inputs, not a copy of inputs; Then you can change inputs by the pointer returned !!!
      */
-    nnfwReal* getInputs( );
+    Real* getInputs( );
 
     /*! \brief Same as setInput ;-)
      *
      * Details...
      */
-    void setOutput( u_int neuron, nnfwReal value );
+    void setOutput( u_int neuron, Real value );
 
     /*! \brief Get the output of neuron ( same as getInput ) ;-)
      *
      * Details...
      */
-    nnfwReal getOutput( u_int neuron ) const;
+    Real getOutput( u_int neuron ) const;
 
     /*! \brief Get the array of inputs
      *
      *  Return the array of outputs, not a copy of outputs; Then you can change outputs by the pointer returned !!!
      */
-    nnfwReal* getOutputs( );
+    Real* getOutputs( );
 
     /*! \brief Randomize ?!?! What means 'randomize a FakeCluster' ???
      *
      * Details...
      */
-    void randomize( nnfwReal min, nnfwReal max );
+    void randomize( Real min, Real max );
 
 private:
     u_int dim;
-    nnfwReal* data;
+    Real* data;
     ClusterUpdater updater;
 };
 

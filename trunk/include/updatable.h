@@ -29,9 +29,12 @@ namespace nnfw {
  */
 class Updatable {
 public:
+    //! Constructor
     Updatable( const char* name = "unnamed" ) {
         this->name = name;
     };
+    //! Destructor
+    virtual ~Updatable() { /* Nothing to do */ };
     //! Update the object
     virtual void update() = 0;
     //! Return the name associated

@@ -38,8 +38,8 @@ MatrixLinker::MatrixLinker( Cluster* from, Cluster* to, const char* name )
 
     // Weight Matrix Allocation procedure
     //  Matrix[column][row]
-    memM = new nnfwReal[nrows*ncols];
-    w = new ( nnfwReal ( *[ncols] ) );
+    memM = new Real[nrows*ncols];
+    w = new ( Real ( *[ncols] ) );
     for ( u_int i = 0; i<ncols; i++ ) {
         w[i] = memM + i*nrows;
     }
@@ -64,7 +64,7 @@ u_int MatrixLinker::size() {
     return nrows*ncols;
 }
 
-void MatrixLinker::randomize( nnfwReal min, nnfwReal max ) {
+void MatrixLinker::randomize( Real min, Real max ) {
     for ( u_int i = 0; i<nrows; i++ ) {
         for ( u_int j = 0; j<ncols; j++ ) {
             w[j][i] = Random::flatReal( min, max );
@@ -72,7 +72,7 @@ void MatrixLinker::randomize( nnfwReal min, nnfwReal max ) {
     }
 }
 
-void MatrixLinker::setWeight( u_int from, u_int to, nnfwReal weight ) {
+void MatrixLinker::setWeight( u_int from, u_int to, Real weight ) {
     if ( from >= nrows ) {
         // Messaggio di errore !!!
         return;
@@ -84,7 +84,7 @@ void MatrixLinker::setWeight( u_int from, u_int to, nnfwReal weight ) {
     w[to][from] = weight;
 };
 
-nnfwReal MatrixLinker::getWeight( u_int from, u_int to ) {
+Real MatrixLinker::getWeight( u_int from, u_int to ) {
     if ( from >= nrows ) {
         // Messaggio di errore !!!
         return 0.0;
@@ -106,7 +106,7 @@ Cluster* MatrixLinker::getTo() const {
 
 void MatrixLinker::update() {
     // --- Dubbio: e' necessario/utile resettare inputsTo ???
-    memset( inputsTo, 0x00, sizeof(nnfwReal)*ncols );
+    memset( inputsTo, 0x00, sizeof(Real)*ncols );
     for ( u_int i = 0; i<ncols; i++ ) {
         for ( u_int j = 0; j<nrows; j++ ) {
             inputsTo[i] += outputsFrom[j] * w[i][j];

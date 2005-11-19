@@ -71,7 +71,7 @@ public:
      *
      * The parameters randomized by this method will be specified by sub-classes
      */
-    virtual void randomize( nnfwReal min, nnfwReal max ) = 0;
+    virtual void randomize( Real min, Real max ) = 0;
 };
 
 }

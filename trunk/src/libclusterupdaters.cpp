@@ -24,13 +24,13 @@
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {
 
-void DummyUpdater::update( nnfwReal* inputs, nnfwReal* outputs, u_int numNeuron ) {
+void DummyUpdater::update( Real* inputs, Real* outputs, u_int numNeuron ) {
     for ( u_int i = 0; i<numNeuron; i++ ) {
         outputs[i] = inputs[i];
     }
 }
 
-void DummyUpdater::update( nnfwReal input, nnfwReal &output ) {
+void DummyUpdater::update( Real input, Real &output ) {
     output = input;
 }
 
@@ -38,17 +38,17 @@ const char* DummyUpdater::className() const {
     return "DummyUpdater";
 }
 
-nnfwReal DummyUpdater::derivate( nnfwReal ) {
+Real DummyUpdater::derivate( Real ) {
     return 1.0;
 }
 
-void SigmoidUpdater::update( nnfwReal* inputs, nnfwReal* outputs, u_int numNeuron ) {
+void SigmoidUpdater::update( Real* inputs, Real* outputs, u_int numNeuron ) {
     for ( u_int i = 0; i<numNeuron; i++ ) {
         outputs[i] = 1.0/( 1.0 + exp( -lambda*( inputs[i] ) ) );
     }
 }
 
-void SigmoidUpdater::update( nnfwReal input, nnfwReal &output ) {
+void SigmoidUpdater::update( Real input, Real &output ) {
     output = 1.0/( 1.0 + exp( -lambda*( input ) ) );
 }
 
@@ -56,14 +56,14 @@ const char* SigmoidUpdater::className() const {
     return "SigmoidUpdater";
 }
 
-nnfwReal SigmoidUpdater::derivate( nnfwReal x ) {
+Real SigmoidUpdater::derivate( Real x ) {
     return x*(1.0-x);
 }
 
-void FakeSigmoidUpdater::update( nnfwReal* inputs, nnfwReal* outputs, u_int numNeuron ) {
-    nnfwReal x;
-    nnfwReal x0 = 6. + 2./3.;
-    nnfwReal zero = 0.5;
+void FakeSigmoidUpdater::update( Real* inputs, Real* outputs, u_int numNeuron ) {
+    Real x;
+    Real x0 = 6. + 2./3.;
+    Real zero = 0.5;
     for ( u_int i = 0; i<numNeuron; i++ ) {
         x = inputs[i];
         x *= lambda;
@@ -80,9 +80,9 @@ void FakeSigmoidUpdater::update( nnfwReal* inputs, nnfwReal* outputs, u_int numN
     }
 }
 
-void FakeSigmoidUpdater::update( nnfwReal x, nnfwReal &output ) {
-    nnfwReal x0 = 6. + 2./3.;
-    nnfwReal zero = 0.5;
+void FakeSigmoidUpdater::update( Real x, Real &output ) {
+    Real x0 = 6. + 2./3.;
+    Real zero = 0.5;
     x *= lambda;
     x -= (.5 - zero) / (.075 + zero);
     if ( x <= -x0 ) {
@@ -100,20 +100,20 @@ const char* FakeSigmoidUpdater::className() const {
     return "FakeSigmoidUpdater";
 }
 
-nnfwReal FakeSigmoidUpdater::derivate( nnfwReal x ) {
+Real FakeSigmoidUpdater::derivate( Real x ) {
     return x*(1.0-x);
 }
 
-void ScaledSigmoidUpdater::update( nnfwReal* inputs, nnfwReal* outputs, u_int numNeuron ) {
-    nnfwReal f;
+void ScaledSigmoidUpdater::update( Real* inputs, Real* outputs, u_int numNeuron ) {
+    Real f;
     for ( u_int i = 0; i<numNeuron; i++ ) {
         f = 1.0/( 1.0 + exp( -lambda*( inputs[i] ) ) );
         outputs[i] = ( max - min ) * f + min ;
     }
 }
 
-void ScaledSigmoidUpdater::update( nnfwReal input, nnfwReal &output ) {
-    nnfwReal f;
+void ScaledSigmoidUpdater::update( Real input, Real &output ) {
+    Real f;
     f = 1.0/( 1.0 + exp( -lambda*( input ) ) );
     output = ( max - min ) * f + min ;
 }
@@ -122,15 +122,15 @@ const char* ScaledSigmoidUpdater::className() const {
     return "ScaledSigmoidUpdater";
 }
 
-nnfwReal ScaledSigmoidUpdater::derivate( nnfwReal x ) {
+Real ScaledSigmoidUpdater::derivate( Real x ) {
     return x*(1.0-x);
 }
 
-void LinearUpdater::update( nnfwReal* inputs, nnfwReal* outputs, u_int numNeuron ) {
+void LinearUpdater::update( Real* inputs, Real* outputs, u_int numNeuron ) {
     for ( u_int i = 0; i<numNeuron; i++ ) {
-        nnfwReal m = ( maxY-minY )/( maxX-minX );
-        nnfwReal q = minY - m*minX;
-        nnfwReal ret = m*(inputs[i]) + q;
+        Real m = ( maxY-minY )/( maxX-minX );
+        Real q = minY - m*minX;
+        Real ret = m*(inputs[i]) + q;
         if (ret < minY) {
             outputs[i] = minY;
         } else if (ret > maxY) {
@@ -141,10 +141,10 @@ void LinearUpdater::update( nnfwReal* inputs, nnfwReal* outputs, u_int numNeuron
     }
 }
 
-void LinearUpdater::update( nnfwReal input, nnfwReal &output ) {
-    nnfwReal m = ( maxY-minY )/( maxX-minX );
-    nnfwReal q = minY - m*minX;
-    nnfwReal ret = m*(input) + q;
+void LinearUpdater::update( Real input, Real &output ) {
+    Real m = ( maxY-minY )/( maxX-minX );
+    Real q = minY - m*minX;
+    Real ret = m*(input) + q;
     if (ret < minY) {
         output = minY;
     } else if (ret > maxY) {
@@ -158,7 +158,7 @@ const char* LinearUpdater::className() const {
     return "LinearUpdater";
 }
 
-nnfwReal LinearUpdater::derivate( nnfwReal x ) {
+Real LinearUpdater::derivate( Real x ) {
     if ( x >= minX && x<= maxX ) {
         return ( maxY-minY )/( maxX-minX );
     } else {
