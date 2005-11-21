@@ -11,6 +11,8 @@ contains( CONFIG, debug ) {
     #unix:QMAKE_LFLAGS_DEBUG += -pg
 }
 
+#LIBS += -lgsl -lgslcblas -lm
+
 INCLUDEPATH += ./include
 
 DEPENDPATH  += ./include
@@ -31,7 +33,7 @@ HEADERS		= ./include/nnfw.h \
 			  ./include/utils.h \
 			  ./include/messages.h \
 			  ./include/random.h \
-              ./include/supervisedlearning.h
+              ./include/blockslearning.h
 
 SOURCES		= ./src/simplecluster.cpp \
               ./src/fakecluster.cpp \
@@ -43,7 +45,7 @@ SOURCES		= ./src/simplecluster.cpp \
 			  ./src/messages.cpp \
               ./src/random.cpp \
               ./src/types.cpp \
-              ./src/supervisedlearning.cpp
+              ./src/blockslearning.cpp
 
 OBJECTS_DIR =   ./.obj
 

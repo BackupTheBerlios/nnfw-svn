@@ -26,12 +26,14 @@
  *  Details...
  *
  *  \todo operator << to Vector template that inserts element as push_back() method;
+ *  \todo operators: + - / % += -= /= %= to RealVec class
  *
  */
 
 #include <vector>
 #include <map>
 #include <string>
+#include "messages.h"
 
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {
@@ -50,12 +52,62 @@ typedef unsigned int u_int;
 
 //! Abstraction on the type of real numbers
 typedef float Real;
+
 //! Vector of Real
-typedef Vector<Real> RealVec;
+class RealVec : public Vector<Real> {
+public:
+    //! Constructor
+    RealVec( u_int dim = 0 ) : Vector<Real>(dim) { /* Nothing to do */ };
+    //! Operator +
+    const RealVec operator+(const RealVec& r) {
+        if( this->size() != r.size() ) {
+            nnfwMessage( NNFW_ERROR, "Different numbers of element" );
+            return *this;
+        }
+        u_int dim = this->size();
+        RealVec sum( dim );
+        for( u_int i=0; i<dim; i++ ) {
+            sum[i] = (*this)[i] + r[i];
+        }
+        return sum;
+    };
+    //! Operator +=
+    RealVec& operator+=(const RealVec& r ) {
+        if( this->size() != r.size() ) {
+            nnfwMessage( NNFW_ERROR, "Different numbers of element" );
+            return *this;
+        }
+        u_int dim = this->size();
+        for( u_int i=0; i<dim; i++ ) {
+            (*this)[i] += r[i];
+        }
+        return (*this);
+    };
+    //! Operator - WARNING: this operator doesn't check the dimension
+    const RealVec operator-(const Real* r) {
+        u_int dim = this->size();
+        RealVec out( dim );
+        for( u_int i=0; i<dim; i++ ) {
+            out[i] = (*this)[i] - r[i];
+        }
+        return out;
+    };
+};
+//! Operator <<
+inline RealVec& operator<<( RealVec& vec, const Real v ) {
+    vec.push_back( v );
+    return vec;
+};
+//typedef Vector<Real> RealVec;
 
 class Updatable;
 //! Array of Updatable
 typedef Vector<Updatable*> UpdatableVec;
+//! Operator <<
+inline UpdatableVec& operator<<(UpdatableVec& vec, Updatable* v ) {
+    vec.push_back( v );
+    return vec;
+};
 
 class Cluster;
 //! Array of Clusters
