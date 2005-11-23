@@ -175,6 +175,13 @@ void SimpleCluster::setBias( u_int neuron, Real bias ) {
     biases[neuron] = bias;
 }
 
+void SimpleCluster::setBiases( const RealVec biases ) {
+    u_int dim = biases.size();
+    for( u_int i=0; i<dim; i++ ) {
+        setBias( i, biases[i] );
+    }
+}
+
 Real SimpleCluster::getBias( u_int neuron ) {
     if ( neuron >= numNeurons ) {
         char msg[100];

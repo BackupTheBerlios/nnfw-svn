@@ -34,11 +34,7 @@ void DummyUpdater::update( Real input, Real &output ) {
     output = input;
 }
 
-const char* DummyUpdater::className() const {
-    return "DummyUpdater";
-}
-
-Real DummyUpdater::derivate( Real ) {
+Real DummyUpdater::derivate( Real ) const {
     return 1.0;
 }
 
@@ -52,11 +48,7 @@ void SigmoidUpdater::update( Real input, Real &output ) {
     output = 1.0/( 1.0 + exp( -lambda*( input ) ) );
 }
 
-const char* SigmoidUpdater::className() const {
-    return "SigmoidUpdater";
-}
-
-Real SigmoidUpdater::derivate( Real x ) {
+Real SigmoidUpdater::derivate( Real x ) const {
     return x*(1.0-x);
 }
 
@@ -96,11 +88,7 @@ void FakeSigmoidUpdater::update( Real x, Real &output ) {
     }
 }
 
-const char* FakeSigmoidUpdater::className() const {
-    return "FakeSigmoidUpdater";
-}
-
-Real FakeSigmoidUpdater::derivate( Real x ) {
+Real FakeSigmoidUpdater::derivate( Real x ) const {
     return x*(1.0-x);
 }
 
@@ -118,11 +106,7 @@ void ScaledSigmoidUpdater::update( Real input, Real &output ) {
     output = ( max - min ) * f + min ;
 }
 
-const char* ScaledSigmoidUpdater::className() const {
-    return "ScaledSigmoidUpdater";
-}
-
-Real ScaledSigmoidUpdater::derivate( Real x ) {
+Real ScaledSigmoidUpdater::derivate( Real x ) const {
     return x*(1.0-x);
 }
 
@@ -154,11 +138,7 @@ void LinearUpdater::update( Real input, Real &output ) {
     }
 }
 
-const char* LinearUpdater::className() const {
-    return "LinearUpdater";
-}
-
-Real LinearUpdater::derivate( Real x ) {
+Real LinearUpdater::derivate( Real x ) const {
     if ( x >= minX && x<= maxX ) {
         return ( maxY-minY )/( maxX-minX );
     } else {

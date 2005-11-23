@@ -14,8 +14,4 @@ void ClusterUpdater::update( Real input, Real &output ) {
         output = input;
 }
 
-const char* ClusterUpdater::className() const {
-    return "ClusterUpdater";
-}
-
 }

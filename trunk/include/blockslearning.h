@@ -136,6 +136,8 @@ public:
 protected:
     //! SimpleCluster to learn
     SimpleCluster* cl;
+    //! learn rate
+    Real rate;
 };
 
 /*! \brief Implements the Gradient descent rule for a MatrixLinker
@@ -158,6 +160,8 @@ public:
 protected:
     //! MatrixLinker to learn
     MatrixLinker* ml;
+    //! learn rate
+    Real rate;
 };
 
 };

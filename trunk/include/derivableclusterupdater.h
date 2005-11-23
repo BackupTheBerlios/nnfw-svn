@@ -36,11 +36,12 @@ namespace nnfw {
 /*! \brief Derivable Cluster Updater Class
  *
  *  Details...
- *  \todo Qual'e' lo scopo del metodo className ?!?!?
  */
 class DerivableClusterUpdater : public ClusterUpdater
 {
 public:
+    //! Constructor
+    DerivableClusterUpdater() : ClusterUpdater() { /* Nothing to do */ };
     //! Destructor
     virtual ~DerivableClusterUpdater() { /* Nothing to do */ };
 
@@ -48,7 +49,7 @@ public:
      *
      * Details...
      */
-    virtual Real derivate( Real x ) = 0;
+    virtual Real derivate( Real x ) const { return x; };
 };
 
 }

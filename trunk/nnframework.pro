@@ -2,7 +2,7 @@ TEMPLATE = lib
 TARGET   = ./lib/nnfw
 VERSION  = 0.1
 
-CONFIG += debug staticlib warn_on
+CONFIG += debug staticlib rtti warn_on
 CONFIG -= qt
 
 contains( CONFIG, debug ) {

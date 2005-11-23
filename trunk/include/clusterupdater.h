@@ -36,7 +36,6 @@ namespace nnfw {
 /*! \brief Cluster Updater Class
  *
  *  Details...
- *  \todo Qual'e' lo scopo del metodo className ?!?!?
  */
 class ClusterUpdater
 {
@@ -54,12 +53,6 @@ public:
      *  Details...
      */
     virtual void update( Real input, Real &output );
-
-    /*! \brief Return the class name that identify the type of ClusterUpdater
-     *
-     * Details...
-     */
-    virtual const char* className() const;
 };
 
 }

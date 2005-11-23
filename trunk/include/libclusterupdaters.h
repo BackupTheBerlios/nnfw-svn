@@ -59,11 +59,8 @@ public:
     //! Single neuron update
     void update( Real input, Real &output );
 
-    //! \brief Return the class name
-    const char* className() const;
-
     //! return always 1 (an explain of why will be coming soon)
-    Real derivate( Real x );
+    Real derivate( Real x ) const;
 };
 
 /*! \brief Sigmoid Updater
@@ -90,11 +87,8 @@ public:
     //! Single neuron update
     void update( Real input, Real &output );
 
-    //! \brief Return the class name
-    const char* className() const;
-
     //! return the approximation commonly used in backpropagation learning: x(1-x)
-    Real derivate( Real x );
+    Real derivate( Real x )  const;
 
     //! lambda is the slope of the curve
     Real lambda;
@@ -124,11 +118,8 @@ public:
     //! Single neuron update
     void update( Real input, Real &output );
 
-    //! \brief Return the class name
-    const char* className() const;
-
     //! return the approximation commonly used in backpropagation learning: x(1-x)
-    Real derivate( Real x );
+    Real derivate( Real x ) const;
 
     //! lambda is the slope of the curve
     Real lambda;
@@ -165,11 +156,8 @@ public:
     //! Single neuron update
     void update( Real input, Real &output );
 
-    //! \brief Return the class name
-    const char* className() const;
-
     //! return the approximation commonly used in backpropagation learning: x(1-x)
-    Real derivate( Real x );
+    Real derivate( Real x ) const;
 
     //! lambda is the slope of the curve
     Real lambda;
@@ -214,11 +202,8 @@ public:
     //! Single neuron update
     void update( Real input, Real &output );
 
-    //! \brief Return the class name
-    const char* className() const;
-
     //! return the m coefficient if x is in [minX, maxX] and x(1-x) otherwise
-    Real derivate( Real x );
+    Real derivate( Real x ) const;
 
     //! minX
     Real minX;

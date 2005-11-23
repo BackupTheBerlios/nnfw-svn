@@ -57,21 +57,47 @@ typedef float Real;
 class RealVec : public Vector<Real> {
 public:
     //! Constructor
-    RealVec( u_int dim = 0 ) : Vector<Real>(dim) { /* Nothing to do */ };
+    RealVec( u_int dim = 0 ) : Vector<Real>(dim, 0.0f) { /* Nothing to do */ };
+    //! Construct by const Real* vector
+    RealVec( const Real* r, u_int dim ) {
+        for( u_int i=0; i<dim; i++ ) {
+            this->push_back( r[i] );
+        }
+    };
+    //! Construct a vector contains one element
+    RealVec( const Real v ) {
+        this->push_back( v );
+    };
+    // ****************************
+    // *** UNARY OPERATORS
     //! Operator +
-    const RealVec operator+(const RealVec& r) {
+    const RealVec& operator+() const {
+        return (*this);
+    };
+    //! Operator -
+    const RealVec operator-() {
+        u_int dim = this->size();
+        for( u_int i=0; i<dim; i++ ) {
+            (*this)[i] = -((*this)[i]);
+        }
+        return (*this);
+    };
+    // ****************************
+    // *** BINARY OPERATORS
+    //! Operator + with RealVec
+    const RealVec operator+( const RealVec& r ) const {
         if( this->size() != r.size() ) {
             nnfwMessage( NNFW_ERROR, "Different numbers of element" );
-            return *this;
+            return (*this);
         }
         u_int dim = this->size();
-        RealVec sum( dim );
+        RealVec rop( dim );
         for( u_int i=0; i<dim; i++ ) {
-            sum[i] = (*this)[i] + r[i];
+            rop[i] = (*this)[i] + r[i];
         }
-        return sum;
+        return rop;
     };
-    //! Operator +=
+    //! Operator += with RealVec
     RealVec& operator+=(const RealVec& r ) {
         if( this->size() != r.size() ) {
             nnfwMessage( NNFW_ERROR, "Different numbers of element" );
@@ -83,8 +109,67 @@ public:
         }
         return (*this);
     };
+    //! Operator + with Real
+    const RealVec operator+( const Real& r ) const {
+        u_int dim = this->size();
+        RealVec rop( dim );
+        for( u_int i=0; i<dim; i++ ) {
+            rop[i] = (*this)[i] + r;
+        }
+        return rop;
+    };
+    //! Operator += with Real
+    RealVec& operator+=(const Real& r ) {
+        u_int dim = this->size();
+        for( u_int i=0; i<dim; i++ ) {
+            (*this)[i] += r;
+        }
+        return (*this);
+    };
+    //! Operator - with RealVec
+    const RealVec operator-( const RealVec& r ) const {
+        if( this->size() != r.size() ) {
+            nnfwMessage( NNFW_ERROR, "Different numbers of element" );
+            return (*this);
+        }
+        u_int dim = this->size();
+        RealVec rop( dim );
+        for( u_int i=0; i<dim; i++ ) {
+            rop[i] = (*this)[i] - r[i];
+        }
+        return rop;
+    };
+    //! Operator -= with RealVec
+    RealVec& operator-=(const RealVec& r ) {
+        if( this->size() != r.size() ) {
+            nnfwMessage( NNFW_ERROR, "Different numbers of element" );
+            return *this;
+        }
+        u_int dim = this->size();
+        for( u_int i=0; i<dim; i++ ) {
+            (*this)[i] -= r[i];
+        }
+        return (*this);
+    };
+    //! Operator - with Real
+    const RealVec operator-( const Real& r ) const {
+        u_int dim = this->size();
+        RealVec rop( dim );
+        for( u_int i=0; i<dim; i++ ) {
+            rop[i] = (*this)[i] - r;
+        }
+        return rop;
+    };
+    //! Operator -= with Real
+    RealVec& operator-=(const Real& r ) {
+        u_int dim = this->size();
+        for( u_int i=0; i<dim; i++ ) {
+            (*this)[i] -= r;
+        }
+        return (*this);
+    };
     //! Operator - WARNING: this operator doesn't check the dimension
-    const RealVec operator-(const Real* r) {
+    const RealVec operator-(const Real* r) const {
         u_int dim = this->size();
         RealVec out( dim );
         for( u_int i=0; i<dim; i++ ) {
@@ -92,12 +177,118 @@ public:
         }
         return out;
     };
+    //! Operator * with RealVec
+    const RealVec operator*( const RealVec& r ) const {
+        if( this->size() != r.size() ) {
+            nnfwMessage( NNFW_ERROR, "Different numbers of element" );
+            return (*this);
+        }
+        u_int dim = this->size();
+        RealVec rop( dim );
+        for( u_int i=0; i<dim; i++ ) {
+            rop[i] = (*this)[i] * r[i];
+        }
+        return rop;
+    };
+    //! Operator *= with RealVec
+    RealVec& operator*=(const RealVec& r ) {
+        if( this->size() != r.size() ) {
+            nnfwMessage( NNFW_ERROR, "Different numbers of element" );
+            return *this;
+        }
+        u_int dim = this->size();
+        for( u_int i=0; i<dim; i++ ) {
+            (*this)[i] *= r[i];
+        }
+        return (*this);
+    };
+    //! Operator * with Real
+    const RealVec operator*( const Real& r ) const {
+        u_int dim = this->size();
+        RealVec rop( dim );
+        for( u_int i=0; i<dim; i++ ) {
+            rop[i] = (*this)[i] * r;
+        }
+        return rop;
+    };
+    //! Operator *= with Real
+    RealVec& operator*=(const Real& r ) {
+        u_int dim = this->size();
+        for( u_int i=0; i<dim; i++ ) {
+            (*this)[i] *= r;
+        }
+        return (*this);
+    };
+    //! Operator / with RealVec
+    const RealVec operator/( const RealVec& r ) const {
+        if( this->size() != r.size() ) {
+            nnfwMessage( NNFW_ERROR, "Different numbers of element" );
+            return (*this);
+        }
+        u_int dim = this->size();
+        RealVec rop( dim );
+        for( u_int i=0; i<dim; i++ ) {
+            rop[i] = (*this)[i] / r[i];
+        }
+        return rop;
+    };
+    //! Operator /= with RealVec
+    RealVec& operator/=(const RealVec& r ) {
+        if( this->size() != r.size() ) {
+            nnfwMessage( NNFW_ERROR, "Different numbers of element" );
+            return *this;
+        }
+        u_int dim = this->size();
+        for( u_int i=0; i<dim; i++ ) {
+            (*this)[i] /= r[i];
+        }
+        return (*this);
+    };
+    //! Operator / with Real
+    const RealVec operator/( const Real& r ) const {
+        u_int dim = this->size();
+        RealVec rop( dim );
+        for( u_int i=0; i<dim; i++ ) {
+            rop[i] = (*this)[i] / r;
+        }
+        return rop;
+    };
+    //! Operator /= with Real
+    RealVec& operator/=(const Real& r ) {
+        u_int dim = this->size();
+        for( u_int i=0; i<dim; i++ ) {
+            (*this)[i] /= r;
+        }
+        return (*this);
+    };
 };
 //! Operator <<
 inline RealVec& operator<<( RealVec& vec, const Real v ) {
     vec.push_back( v );
     return vec;
 };
+//! Operator +
+inline RealVec operator+( const Real v, const RealVec& vec ) {
+    return vec+v;
+};
+//! Operator -
+inline RealVec operator-( const Real v, const RealVec& vec ) {
+    return vec-v;
+};
+//! Operator *
+inline RealVec operator*( const Real v, const RealVec& vec ) {
+    return vec*v;
+};
+//! Operator /
+inline RealVec operator/( const Real v, const RealVec& vec ) {
+    u_int dim = vec.size();
+    RealVec rop( dim );
+    for( u_int i; i<dim; i++ ) {
+        rop[i] = v/vec[i];    
+    }
+    return rop;
+};
+
 //typedef Vector<Real> RealVec;
 
 class Updatable;

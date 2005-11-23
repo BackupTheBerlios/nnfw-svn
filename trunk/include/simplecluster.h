@@ -133,6 +133,12 @@ public:
      */
     void setBias( u_int neuron, Real bias );
 
+    /*! \brief Set the biases from the vector given
+     *
+     * Details ...
+     */
+    void setBiases( const RealVec biases );
+
     /*! \brief Get bias of the neuron
      *
      * Details...
