@@ -182,7 +182,7 @@ public:
 class LinearUpdater : public DerivableClusterUpdater
 {
 public:
-    //! Construct a sigmoid updater with parameter l
+    //! Construct a linear updater
     LinearUpdater( Real minX, Real maxX, Real minY = -1, Real maxY = +1 ) {
         this->minX = minX;
         this->maxX = maxX;
@@ -213,6 +213,37 @@ public:
     Real minY;
     //! maxY
     Real maxY;
+};
+
+/*! \brief Binary thresholded Updater
+ *
+ * Further Details coming soon ;-)
+ */
+class BinaryUpdater : public DerivableClusterUpdater
+{
+public:
+    //! Construct a binary updater
+    BinaryUpdater( Real threshold = 0.0f ) {
+        this->threshold = threshold;
+    };
+
+    //! Destructor
+    virtual ~BinaryUpdater() { /* Nothing to do */ };
+
+    /*! \brief Implement the updating method
+     *
+     * Details...
+     */
+    void update( Real* inputs, Real* outputs, u_int numNeuron );
+
+    //! Single neuron update
+    void update( Real input, Real &output );
+
+    //! return the m coefficient if x is in [minX, maxX] and x(1-x) otherwise
+    Real derivate( Real x ) const;
+
+    //! Threshold
+    Real threshold;
 };
 
 }

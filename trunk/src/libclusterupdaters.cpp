@@ -146,4 +146,18 @@ Real LinearUpdater::derivate( Real x ) const {
     }
 }
 
+void BinaryUpdater::update( Real* inputs, Real* outputs, u_int numNeuron ) {
+    for ( u_int i = 0; i<numNeuron; i++ ) {
+        ( inputs[i] > threshold ) ? outputs[i] = 1.0f : outputs[i] = 0.0f;
+    }
+}
+
+void BinaryUpdater::update( Real input, Real &output ) {
+    ( input > threshold ) ? output = 1.0f : output = 0.0f;
+}
+
+Real BinaryUpdater::derivate( Real x ) const {
+    return x*(1.0-x);
+}
+
 }
