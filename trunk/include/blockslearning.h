@@ -133,11 +133,23 @@ public:
      *  l'errore sull'input netto che viene passato al preBlock (se c'e' ne uno)
      */
     virtual void learn();
+    //! Set learning rate
+    void setRate( Real rate );
+    //! Return the learning rate
+    Real getRate();
+    //! Set Momentum
+    void setMomentum( Real m );
+    //! Return Momentum
+    Real getMomentum();
 protected:
     //! SimpleCluster to learn
     SimpleCluster* cl;
     //! learn rate
     Real rate;
+    //! Momentum
+    Real momento;
+    //! Vecchio errore (per il calcolo del momento)
+    RealVec errorOld;
 };
 
 /*! \brief Implements the Gradient descent rule for a MatrixLinker
@@ -157,11 +169,23 @@ public:
      *  l'errore sugli output dei neuroni del Cluster in entrata; l'errore viene passato al preBlock (se c'e' ne uno)
      */
     virtual void learn();
+    //! Set learning rate
+    void setRate( Real rate );
+    //! Return the learning rate
+    Real getRate();
+    //! Set Momentum
+    void setMomentum( Real m );
+    //! Return Momentum
+    Real getMomentum();
 protected:
     //! MatrixLinker to learn
     MatrixLinker* ml;
     //! learn rate
     Real rate;
+    //! Momentum
+    Real momento;
+    //! Vecchio errore (per il calcolo del momento)
+    RealVec errorOld;
 };
 
 };

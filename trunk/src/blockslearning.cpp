@@ -54,7 +54,10 @@ GradientSimpleCluster::GradientSimpleCluster( SimpleCluster* cl, BaseTeachBlock*
     this->cl = cl;
     target.resize( cl->size() );
     error.resize( cl->size() );
-    rate = 0.3;
+    errorOld.resize( cl->size() );
+    errorOld.assign( errorOld.size(), 0.0f );
+    rate = 0.2;
+    momento = 0.0;
 }
 
 void GradientSimpleCluster::learn() {
@@ -82,18 +85,39 @@ void GradientSimpleCluster::learn() {
     }
     // --- 2. Applica la regola del gradiente ai bias (pensati come pesi attaccati ad un neurone attivo a -1)
     for( u_int i=0; i<error.size(); i++ ) {
-        cl->setBias( i, cl->getBias(i) - (rate*error[i]) );
+        Real deltaMoment = - (rate*error[i]) + momento*errorOld[i];
+        cl->setBias( i, cl->getBias(i) + deltaMoment );
     }
+    errorOld = error;
 
     error.assign( error.size(), 0.0f );
+}
+
+void GradientSimpleCluster::setRate( Real rate ) {
+    this->rate = rate;
+}
+
+Real GradientSimpleCluster::getRate() {
+    return rate;
+}
+
+void GradientSimpleCluster::setMomentum( Real m ) {
+    this->momento = m;
+}
+
+Real GradientSimpleCluster::getMomentum() {
+    return momento;
 }
 
 GradientMatrixLinker::GradientMatrixLinker( MatrixLinker* ml, BaseTeachBlock* pre, BaseTeachBlock* post)
     : SupervisedTeachBlock( pre, post ) {
     this->ml = ml;
-    rate = 0.3;
+    rate = 0.2;
+    momento = 0.0;
     target.resize( ml->getCols() );
     error.resize( ml->getCols() );
+    errorOld.resize( ml->getCols() );
+    errorOld.assign( errorOld.size(), 0.0f );
 }
 
 void GradientMatrixLinker::learn() {
@@ -125,11 +149,29 @@ void GradientMatrixLinker::learn() {
     const Real* outIn = ml->getFrom()->getOutputs();
     for( u_int c=0; c<outS; c++ ) {
         for( u_int r=0; r<inpS; r++ ) {
-            ml->setWeight( r, c, ml->getWeight(r,c) + (rate*error[c]*outIn[r]) );
+            Real deltaMoment = (rate*error[c]*outIn[r]) + momento*errorOld[c];
+            ml->setWeight( r, c, ml->getWeight(r,c) + deltaMoment );
         }
     }
+    errorOld = error;
 
     error.assign( error.size(), 0.0f );
+}
+
+void GradientMatrixLinker::setRate( Real rate ) {
+    this->rate = rate;
+}
+
+Real GradientMatrixLinker::getRate() {
+    return rate;
+}
+
+void GradientMatrixLinker::setMomentum( Real m ) {
+    this->momento = m;
+}
+
+Real GradientMatrixLinker::getMomentum() {
+    return momento;
 }
 
 };
