@@ -33,7 +33,8 @@ HEADERS		= ./include/nnfw.h \
 			  ./include/utils.h \
 			  ./include/messages.h \
 			  ./include/random.h \
-              ./include/blockslearning.h
+              ./include/blockslearning.h \
+              ./include/learningnetwork.h
 
 SOURCES		= ./src/simplecluster.cpp \
               ./src/fakecluster.cpp \
@@ -45,7 +46,8 @@ SOURCES		= ./src/simplecluster.cpp \
 			  ./src/messages.cpp \
               ./src/random.cpp \
               ./src/types.cpp \
-              ./src/blockslearning.cpp
+              ./src/blockslearning.cpp \
+              ./src/learningnetwork.cpp
 
 OBJECTS_DIR =   ./.obj
 

@@ -35,6 +35,8 @@
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {
 
+class Updatable;
+
 /*! \brief Abstract class representing the common interface for all building blocks for learning
  *  \par Motivation
  *   Il BaseTeachBlock si collega con altri BaseTeachBlock a creare una 'rete di apprendimento'<br>
@@ -59,6 +61,8 @@ public:
     virtual ~BaseTeachBlock() { /* Nothing to do */ };
     //! One step of the learning method implemented by subclasses
     virtual void learn() = 0;
+    //! Return the Updatable
+    virtual Updatable* getUpdatable() = 0;
 protected:
     //! Pre BaseTeachBlock Vector
     Vector<BaseTeachBlock*> preVec;
@@ -97,6 +101,8 @@ public:
     SupervisedTeachBlock( BaseTeachBlock* preBlock = 0, BaseTeachBlock* postBlock = 0 );
     //! One step of the learning method implemented by subclasses
     virtual void learn() = 0;
+    //! Return the Updatable
+    virtual Updatable* getUpdatable() = 0;
     //! Set the desired output values for the current input values
     void setTarget( RealVec target );
     //! Return the target values specified
@@ -133,6 +139,8 @@ public:
      *  l'errore sull'input netto che viene passato al preBlock (se c'e' ne uno)
      */
     virtual void learn();
+    //! Return the SimpleCluster associated
+    virtual SimpleCluster* getUpdatable();
     //! Set learning rate
     void setRate( Real rate );
     //! Return the learning rate
@@ -169,6 +177,8 @@ public:
      *  l'errore sugli output dei neuroni del Cluster in entrata; l'errore viene passato al preBlock (se c'e' ne uno)
      */
     virtual void learn();
+    //! Return the MatrixLinker associated
+    virtual MatrixLinker* getUpdatable();
     //! Set learning rate
     void setRate( Real rate );
     //! Return the learning rate

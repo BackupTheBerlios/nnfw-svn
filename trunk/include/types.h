@@ -51,7 +51,7 @@ namespace nnfw {
 typedef unsigned int u_int;
 
 //! Abstraction on the type of real numbers
-typedef float Real;
+typedef double Real;
 
 //! Vector of Real
 class RealVec : public Vector<Real> {
@@ -313,6 +313,15 @@ extern LinkerVec emptyLinkerVec;
 
 //! Empty ClusterVec constant
 extern ClusterVec emptyClusterVec;
+
+class BaseTeachBlock;
+//! Array of Updatable
+typedef Vector<BaseTeachBlock*> TeachBlockVec;
+//! Operator <<
+inline TeachBlockVec& operator<<(TeachBlockVec& vec, BaseTeachBlock* v ) {
+    vec.push_back( v );
+    return vec;
+};
 
 }
 

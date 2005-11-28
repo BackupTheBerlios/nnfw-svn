@@ -43,8 +43,7 @@ namespace nnfw {
  * The relationship among Clusters and Linkers must be specified by cluster and linker constructors; 
  *
  */
-class BaseNeuralNet
-{
+class BaseNeuralNet {
 public:
     /*! \brief Construct an empty neural network
      *
@@ -175,6 +174,9 @@ public:
      *  Details
      */
     void step() {
+        for( u_int i=0; i<zeroclusters.size(); i++ ) {
+            zeroclusters[i]->setAllInputs( 0.0 );
+        }
         for( u_int i=0; i<dimUps; i++ ) {
             if ( mask[i] ) {
                 ups[i]->update();
@@ -219,6 +221,8 @@ public:
 protected:
     //! Clusters
     ClusterVec clustersv;
+    //! Cluster da azzerrare prima dello step ( clusterv - inclusters )
+    ClusterVec zeroclusters;
     //! Input Clusters
     ClusterVec inclusters;
     //! Output Clusters

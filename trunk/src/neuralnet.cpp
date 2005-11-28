@@ -50,6 +50,8 @@ void BaseNeuralNet::addCluster( Cluster* c, bool isInput, bool isOutput ) {
     clustersv.push_back( c );
     if ( isInput ) {
         inclusters.push_back( c );
+    } else {
+        zeroclusters.push_back( c );
     }
     if ( isOutput ) {
         outclusters.push_back( c );
@@ -62,11 +64,16 @@ bool BaseNeuralNet::removeCluster( Cluster* c ) {
         nnfwMessage( NNFW_ERROR, "Null Pointer passed to addCluster! This operation will return false" );
         return false;
     }
+    unmark( c );
     ClusterVec::iterator it = std::find( clustersv.begin(), clustersv.end(), c );
     if ( it == clustersv.end() ) {
         return false;
     }
     clustersv.erase( it );
+    it = std::find( zeroclusters.begin(), zeroclusters.end(), c );
+    if ( it != zeroclusters.end() ) {
+        zeroclusters.erase( it );        
+    }
     return true;
 }
 
@@ -79,6 +86,10 @@ void BaseNeuralNet::markAsInput( Cluster* c ) {
     if ( !find( c ) ) {
         nnfwMessage( NNFW_ERROR, "attempt to mark a Cluster not present in this net!" );
         return;
+    }
+    ClusterVec::iterator it = std::find( zeroclusters.begin(), zeroclusters.end(), c );
+    if ( it != zeroclusters.end() ) {
+        zeroclusters.erase( it );        
     }
     inclusters.push_back( c );
 }
@@ -104,6 +115,7 @@ void BaseNeuralNet::unmark( Cluster* c ) {
     ClusterVec::iterator it = std::find( inclusters.begin(), inclusters.end(), c );
     if ( it != inclusters.end() ) {
         inclusters.erase( it );
+        zeroclusters.push_back( c );
     }
     it = std::find( outclusters.begin(), outclusters.end(), c );
     if ( it != outclusters.end() ) {
@@ -113,6 +125,9 @@ void BaseNeuralNet::unmark( Cluster* c ) {
 }
 
 void BaseNeuralNet::unmarkAll( ) {
+    for( u_int i=0; i<inclusters.size(); i++ ) {
+        zeroclusters.push_back( inclusters[i] );
+    }
     inclusters.clear();
     outclusters.clear();
     return;
@@ -227,7 +242,8 @@ void BaseNeuralNet::setOrder( Updatable* u[], u_int dim ) {
         }
     }
     dimUps = ups.size();
-    mask.assign( dimUps, 1 );    
+    mask.resize( dimUps );
+    mask.assign( dimUps, true );
     return;
 }
 
@@ -240,7 +256,8 @@ void BaseNeuralNet::setOrder( UpdatableVec& u ) {
         }
     }
     dimUps = ups.size();
-    mask.assign( dimUps, 1 );    
+    mask.resize( dimUps );
+    mask.assign( dimUps, true );
     return;
 }
 
