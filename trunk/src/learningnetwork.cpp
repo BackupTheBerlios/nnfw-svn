@@ -42,12 +42,6 @@ void LearningNetwork::addTeachBlock( BaseTeachBlock* b ) {
     blocksv.push_back(b);
 }
 
-bool LearningNetwork::isIsolated( BaseTeachBlock* b ) const {
-    // Uhmmm... come lo implemento ?!?!
-    nnfwMessage( NNFW_WARNING, "Not implemented yet" );
-    return false;
-}
-
 const TeachBlockVec& LearningNetwork::teachBlocks() const {
     return blocksv;
 }
@@ -79,12 +73,6 @@ void LearningNetwork::setOrder( TeachBlockVec& bv ) {
     return;    
 }
 
-void LearningNetwork::setOrder( orderPattern ordp ) {
-    // Potrei ordinarli senza avere la classe BaseNeuralNet, ma ci metterei O(n^2) (giusto?!?!)
-    // con la classe BaseNeuralNet solo O(n)
-    nnfwMessage( NNFW_WARNING, "Not implemented yet" );
-}
-
 void LearningNetwork::disable( BaseTeachBlock* b ) {
     for( u_int i = 0; i<dimBls; i++ ) {
         if ( bls[i] == b ) {
@@ -92,7 +80,6 @@ void LearningNetwork::disable( BaseTeachBlock* b ) {
             return;
         }
     }
-    //nnfwMessage( NNFW_WARNING, "an attemp to Disabling a BaseTeachBlock not present in LearningNetwork" );
     return;
 }
 
@@ -103,7 +90,6 @@ void LearningNetwork::enable( BaseTeachBlock* b ) {
             return;
         }
     }
-    //nnfwMessage( NNFW_WARNING, "an attemp to Enabling a BaseTeachBlock not present in LearningNetwork" );
     return;
 }
 
@@ -113,7 +99,7 @@ bool LearningNetwork::isEnabled( BaseTeachBlock* b ) {
             return mask[i];
         }
     }
-    //nnfwMessage( NNFW_WARNING, "BaseTeachBlock not present in LearningNetwork" );
+    nnfwMessage( NNFW_WARNING, "BaseTeachBlock not present" );
     return false;
 }
 

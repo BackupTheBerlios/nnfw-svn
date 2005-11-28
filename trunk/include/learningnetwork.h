@@ -55,11 +55,6 @@ public:
      */
     void addTeachBlock( BaseTeachBlock* );
 
-    /*! \brief Return true if there aren't any BaseTeachBlock connected with BaseTeachBlock passed
-     * Details..
-     */
-    bool isIsolated( BaseTeachBlock* ) const;
-
     /*! \brief Returns the vector of BaseTeachBlocks contained
      * Details...
      */
@@ -71,15 +66,6 @@ public:
     void setOrder( BaseTeachBlock* blocks[], u_int dim );
     //! \brief Set the order
     void setOrder( TeachBlockVec& );
-
-    /*! \brief Commonly used order pattern
-     *  <b>fwd</b>: follow the forward connections of the neural network
-     *  <b>revFwd</b>: the reverse of above ( i.e.: backpropagation )
-     */
-    enum orderPattern { fwd = 1, revFwd = 2 };
-
-    //! \brief Set the order by a given pattern specified
-    void setOrder( orderPattern ordp );
 
     /*! \brief Disable the calling of learn() method of BaseTeachBlock passed
      * Details...
