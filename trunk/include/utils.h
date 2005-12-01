@@ -28,6 +28,32 @@
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {
 
+class BaseNeuralNet;
+class LearningNetwork;
+
+/*! \brief Function to quickly construct a FeedForward Neural Network
+ *  Return a BaseNeuralNetwork that represent a feedforwar neural net.<br>
+ *  La rete neurale risultante conterra' SimpleCluster connessi tramite MatrixLinker.<br>
+ *  Il numero di neuroni all'interno dei SimpleCluster sono presi dal vettore layers passato.<br>
+ *  Il SimpleCluster di dimensione layers[0] sara' l'input della rete neurale e quello corrispondente
+ *  all'ultimo valore di layers sara' l'output. Gli altri, in ordine, saranno i SimpleCluster nascosti.
+ *  \param layers il vettore che specifica le dimensioni dei SimpleCluster
+ */
+BaseNeuralNet* feedForwardNet( U_IntVec layers );
+
+/*! \brief Function to quickly construct a Backpropagation Learning Network
+ *  Details
+ *  It only use GradientSimpleCluster and GradientMatrixLinker
+ */
+LearningNetwork* backpropagationFor( BaseNeuralNet* net );
+
+/*! \brief A quick way to sets all the parameters of Gradient types blocks in LearningNetwork passed
+ * \param learnNet the LearningNewtork contains the Gradient blocks to configure
+ * \param rate the learning rate
+ * \param momento the momentum parameter (default is zero)
+ */
+void setParamsOfGradientBlocks( LearningNetwork* learnNet, Real rate, Real momento = 0.0 );
+
 }
 
 #endif

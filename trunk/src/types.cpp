@@ -22,8 +22,8 @@
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {
 
-LinkerVec emptyLinkerVec;
+const LinkerVec emptyLinkerVec;
 
-ClusterVec emptyClusterVec;
+const ClusterVec emptyClusterVec;
 
 }

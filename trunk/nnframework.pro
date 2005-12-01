@@ -43,6 +43,7 @@ SOURCES		= ./src/simplecluster.cpp \
               ./src/matrixlinker.cpp \
               ./src/copylinker.cpp \
 			  ./src/neuralnet.cpp \
+              ./src/utils.cpp \
 			  ./src/messages.cpp \
               ./src/random.cpp \
               ./src/types.cpp \

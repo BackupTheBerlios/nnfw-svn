@@ -31,7 +31,9 @@ class Updatable {
 public:
     //! Constructor
     Updatable( const char* name = "unnamed" ) {
-        this->name = name;
+        u_int size = strlen(name);
+        this->name = new char[size];
+        memcpy( this->name, name, sizeof(char)*size );
     };
     //! Destructor
     virtual ~Updatable() { /* Nothing to do */ };
@@ -42,7 +44,7 @@ public:
         return name;
     };
 protected:
-    const char* name;
+    char* name;
 };
 
 }

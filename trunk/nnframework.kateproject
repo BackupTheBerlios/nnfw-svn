@@ -6,6 +6,10 @@ Files=
 Dirs=
 Files=libgsl.a/libgslcblas.a
 
+[Dir apidoc]
+Dirs=
+Files=footer-doxygen.html/header-doxygen.html/iestyle.css/style.css/style-doxygen.css
+
 [Dir docs]
 Dirs=
 Files=footer-doxygen.html/header-doxygen.html/style-doxygen.css
@@ -32,7 +36,7 @@ Files=clusterupdater.h/libclusterupdaters.h/messages.h/neuralnet.h/nnfw.h/random
 
 [Dir src]
 Dirs=
-Files=libclusterupdaters.cpp/messages.cpp/neuralnet.cpp/random.cpp/types.cpp/fakecluster.cpp/simplecluster.cpp/copylinker.cpp/matrixlinker.cpp/clusterupdater.cpp/blockslearning.cpp/learningnetwork.cpp
+Files=libclusterupdaters.cpp/messages.cpp/neuralnet.cpp/random.cpp/types.cpp/fakecluster.cpp/simplecluster.cpp/copylinker.cpp/matrixlinker.cpp/clusterupdater.cpp/blockslearning.cpp/learningnetwork.cpp/utils.cpp
 
 [Dir tests]
 Dirs=test1/test2/test3/test4/test5/test6
@@ -63,7 +67,7 @@ Dirs=
 Files=test6.cpp/test6.pro
 
 [Project Dir]
-Dirs=include/src/docs
+Dirs=include/src/apidoc
 Files=Doxyfile/nnframework.pro/GPL.txt
 
 [Project File]

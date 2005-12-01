@@ -25,8 +25,6 @@
  *
  *  Details...
  *
- *  \todo operator << to Vector template that inserts element as push_back() method;
- *  \todo operators: + - / % += -= /= %= to RealVec class
  *
  */
 
@@ -289,7 +287,13 @@ inline RealVec operator/( const Real v, const RealVec& vec ) {
     return rop;
 };
 
-//typedef Vector<Real> RealVec;
+//! Array of Unsigned Integer
+typedef Vector<u_int> U_IntVec;
+//! Operator <<
+inline U_IntVec& operator<<(U_IntVec& vec, u_int v ) {
+    vec.push_back( v );
+    return vec;
+};
 
 class Updatable;
 //! Array of Updatable
@@ -303,16 +307,26 @@ inline UpdatableVec& operator<<(UpdatableVec& vec, Updatable* v ) {
 class Cluster;
 //! Array of Clusters
 typedef Vector<Cluster*> ClusterVec;
+//! Operator <<
+inline ClusterVec& operator<<(ClusterVec& vec, Cluster* v ) {
+    vec.push_back( v );
+    return vec;
+};
 
 class Linker;
 //! Array of Linkers
 typedef Vector<Linker*> LinkerVec;
+//! Operator <<
+inline LinkerVec& operator<<(LinkerVec& vec, Linker* v ) {
+    vec.push_back( v );
+    return vec;
+};
 
 //! Empty LinkerVec constant
-extern LinkerVec emptyLinkerVec;
+extern const LinkerVec emptyLinkerVec;
 
 //! Empty ClusterVec constant
-extern ClusterVec emptyClusterVec;
+extern const ClusterVec emptyClusterVec;
 
 class BaseTeachBlock;
 //! Array of Updatable

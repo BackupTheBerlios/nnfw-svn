@@ -297,8 +297,8 @@ void BaseNeuralNet::randomize( Real min, Real max ) {
     for ( ClusterVec::iterator it = clustersv.begin(); it != clustersv.end(); ++it ) {
         (*it)->randomize( min, max );
     }
-    for ( LinkerVec::iterator it = linkersv.begin(); it != linkersv.end(); ++it ) {
-        (*it)->randomize( min, max );
+    for ( LinkerVec::iterator it2 = linkersv.begin(); it2 != linkersv.end(); ++it2 ) {
+        (*it2)->randomize( min, max );
     }
 }
 
@@ -308,9 +308,9 @@ Updatable* BaseNeuralNet::getByName( const char* name ) {
             return *it;
         }
     }
-    for ( LinkerVec::iterator it = linkersv.begin(); it != linkersv.end(); ++it ) {
-        if ( strcmp( (*it)->getName(), name ) == 0 ) {
-            return *it;
+    for ( LinkerVec::iterator it2 = linkersv.begin(); it2 != linkersv.end(); ++it2 ) {
+        if ( strcmp( (*it2)->getName(), name ) == 0 ) {
+            return *it2;
         }
     }
     return NULL;
