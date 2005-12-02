@@ -42,8 +42,12 @@ class LearningNetwork;
 BaseNeuralNet* feedForwardNet( U_IntVec layers );
 
 /*! \brief Function to quickly construct a Backpropagation Learning Network
- *  Details
  *  It only use GradientSimpleCluster and GradientMatrixLinker
+ *  WARNINGS: Questa funzione non controlla la struttura della rete neurale, quindi e' cura di chi la usa
+ *   assicurarsi che la rete neurale soddisfi i seguenti requisiti:<br>
+ *   a) Deve essere una struttura FeedForward senza MatrixLinker a formare ricorrenze<br>
+ *   b) Devono esistere Cluster di inputs e di outputs<br>
+ *   c) La struttura principale della rete deve essere composta da SimpleCluster e MatrixLinker
  */
 LearningNetwork* backpropagationFor( BaseNeuralNet* net );
 
