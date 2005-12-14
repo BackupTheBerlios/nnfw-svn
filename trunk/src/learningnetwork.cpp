@@ -46,6 +46,16 @@ const TeachBlockVec& LearningNetwork::teachBlocks() const {
     return blocksv;
 }
 
+BaseTeachBlock* LearningNetwork::getByName( const char* name ) {
+    u_int dim = blocksv.size();
+    for( u_int i = 0; i<dim; i++ ) {
+        if ( strcmp( blocksv[i]->getName(), name ) == 0 ) {
+            return blocksv[i];
+        }
+    }
+    return 0;
+}
+
 void LearningNetwork::setOrder( BaseTeachBlock* blocks[], u_int dim ) {
     bls.clear();
     for( u_int i=0; i<dim; i++ ) {

@@ -25,7 +25,7 @@
 
 namespace nnfw {
 
-BaseTeachBlock::BaseTeachBlock( BaseTeachBlock* preBlock, BaseTeachBlock* postBlock )
+BaseTeachBlock::BaseTeachBlock( BaseTeachBlock* preBlock, BaseTeachBlock* postBlock, const char* name )
     : preVec(), postVec() {
     if (preBlock) {
         preVec.push_back( preBlock );
@@ -35,6 +35,9 @@ BaseTeachBlock::BaseTeachBlock( BaseTeachBlock* preBlock, BaseTeachBlock* postBl
         postVec.push_back( postBlock );
         postBlock->addPreBlock( this );
     }
+    u_int size = strlen(name);
+    this->name = new char[size];
+    memcpy( this->name, name, sizeof(char)*size );
 }
 
 void BaseTeachBlock::addPostBlock( BaseTeachBlock* postBlock ) {
@@ -45,8 +48,8 @@ void BaseTeachBlock::addPreBlock( BaseTeachBlock* preBlock ) {
     preVec.push_back( preBlock );
 }
 
-SupervisedTeachBlock::SupervisedTeachBlock( BaseTeachBlock* preBlock, BaseTeachBlock* postBlock )
-    : BaseTeachBlock( preBlock, postBlock ), target(), error() {
+SupervisedTeachBlock::SupervisedTeachBlock( BaseTeachBlock* preBlock, BaseTeachBlock* postBlock, const char* name )
+    : BaseTeachBlock( preBlock, postBlock, name ), target(), error() {
 }
 
 void SupervisedTeachBlock::setTarget( RealVec target ) {
@@ -67,8 +70,8 @@ RealVec SupervisedTeachBlock::getError() {
     return error;
 }
 
-GradientSimpleCluster::GradientSimpleCluster( SimpleCluster* cl, BaseTeachBlock* pre, BaseTeachBlock* post)
-    : SupervisedTeachBlock( pre, post ) {
+GradientSimpleCluster::GradientSimpleCluster( SimpleCluster* cl, BaseTeachBlock* pre, BaseTeachBlock* post, const char* name)
+    : SupervisedTeachBlock( pre, post, name ) {
     this->cl = cl;
     target.resize( cl->size() );
     error.resize( cl->size() );
@@ -131,8 +134,8 @@ Real GradientSimpleCluster::getMomentum() {
     return momento;
 }
 
-GradientMatrixLinker::GradientMatrixLinker( MatrixLinker* ml, BaseTeachBlock* pre, BaseTeachBlock* post)
-    : SupervisedTeachBlock( pre, post ) {
+GradientMatrixLinker::GradientMatrixLinker( MatrixLinker* ml, BaseTeachBlock* pre, BaseTeachBlock* post, const char* name )
+    : SupervisedTeachBlock( pre, post, name ) {
     this->ml = ml;
     rate = 0.3;
     momento = 0.0;

@@ -53,7 +53,7 @@ public:
     /*! \brief Add a BaseTeachBlock
      *  Details
      */
-    void addTeachBlock( BaseTeachBlock* );
+    void addTeachBlock( BaseTeachBlock* b );
 
     /*! \brief Returns the vector of BaseTeachBlocks contained
      * Details...
@@ -66,6 +66,9 @@ public:
     void setOrder( BaseTeachBlock* blocks[], u_int dim );
     //! \brief Set the order
     void setOrder( TeachBlockVec& );
+
+    //! Return the BaseTeachBlock with name specified
+    BaseTeachBlock* getByName( const char* name );
 
     /*! \brief Disable the calling of learn() method of BaseTeachBlock passed
      * Details...

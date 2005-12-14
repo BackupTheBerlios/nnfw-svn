@@ -56,13 +56,17 @@ class BaseTeachBlock {
 public:
     /*! \brief Construct a BaseTeachBlock attached to specified BaseTeachBlocks
      */
-    BaseTeachBlock( BaseTeachBlock* preBlock = 0, BaseTeachBlock* postBlock = 0 );
+    BaseTeachBlock( BaseTeachBlock* preBlock = 0, BaseTeachBlock* postBlock = 0, const char* name = "unnamed" );
     //! Destructor
     virtual ~BaseTeachBlock() { /* Nothing to do */ };
     //! One step of the learning method implemented by subclasses
     virtual void learn() = 0;
     //! Return the Updatable
     virtual Updatable* getUpdatable() = 0;
+    //! Return the name
+    const char* getName() {
+        return name;
+    };
 protected:
     //! Pre BaseTeachBlock Vector
     Vector<BaseTeachBlock*> preVec;
@@ -72,6 +76,8 @@ protected:
     void addPostBlock( BaseTeachBlock* postBlock );
     //! Method for automatically creation of preVec
     void addPreBlock( BaseTeachBlock* preBlock );
+    //! Name associated
+    char* name;
 };
 
 /*! \brief Abstract class representing a generic TeachBlock for SupervisedLearning
@@ -98,7 +104,7 @@ class SupervisedTeachBlock : public BaseTeachBlock {
 public:
     /*! \brief Construct a SupervisedTeachBlock attached to specified BaseTeachBlock
      */
-    SupervisedTeachBlock( BaseTeachBlock* preBlock = 0, BaseTeachBlock* postBlock = 0 );
+    SupervisedTeachBlock( BaseTeachBlock* preBlock = 0, BaseTeachBlock* postBlock = 0, const char* name = "unnamed" );
     //! One step of the learning method implemented by subclasses
     virtual void learn() = 0;
     //! Return the Updatable
@@ -133,7 +139,7 @@ protected:
 class GradientSimpleCluster : public SupervisedTeachBlock {
 public:
     //! Construct a Gradient block attached to SimpleCluster passed
-    GradientSimpleCluster( SimpleCluster* cl, BaseTeachBlock* preBlock = 0, BaseTeachBlock* postBlock = 0);
+    GradientSimpleCluster( SimpleCluster* cl, BaseTeachBlock* preBlock = 0, BaseTeachBlock* postBlock = 0, const char* name = "unnamed");
     /*! \brief Apply one step of the Gradient descent rule
      *  La regola del gradiente applicata ad un SimpleCluster consente di apprendere i valori di bias e di calcolare
      *  l'errore sull'input netto che viene passato al preBlock (se c'e' ne uno)
@@ -171,7 +177,7 @@ protected:
 class GradientMatrixLinker : public SupervisedTeachBlock {
 public:
     //! Construct a Gradient block attached to SimpleCluster passed
-    GradientMatrixLinker( MatrixLinker* ml, BaseTeachBlock* preBlock = 0, BaseTeachBlock* postBlock = 0);
+    GradientMatrixLinker( MatrixLinker* ml, BaseTeachBlock* preBlock = 0, BaseTeachBlock* postBlock = 0, const char* name = "unnamed");
     /*! \brief Apply one step of the Gradient descent rule
      *  La regola del gradiente applicata ad un MatrixLinker consente di apprendere i valori dei pesi e di calcolare
      *  l'errore sugli output dei neuroni del Cluster in entrata; l'errore viene passato al preBlock (se c'e' ne uno)

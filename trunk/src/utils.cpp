@@ -92,13 +92,15 @@ LearningNetwork* backpropagationFor( BaseNeuralNet* net ) {
         qcl.push( info );
     }
 
+    char buf[150];
     while( qcl.size() != 0 || qml.size() != 0 ) {
         // Inserisco nella learnNet tutti i SimpleCluster dello strato corrente e
         // costruisco la coda dei MatrixLinker entranti su questi SimpleCluster
         while( qcl.size() != 0 ) {
             clusInfo info = qcl.top();
             qcl.pop();
-            GradientSimpleCluster* gcl = new GradientSimpleCluster( info.cl, 0, info.post );
+            sprintf( buf, "Gradient%s", (info.cl)->getName() );
+            GradientSimpleCluster* gcl = new GradientSimpleCluster( info.cl, 0, info.post, buf );
             learnNet->addTeachBlock( gcl );
             ord << gcl;
             const LinkerVec lv = net->linkers( info.cl, false );
@@ -117,7 +119,8 @@ LearningNetwork* backpropagationFor( BaseNeuralNet* net ) {
         while( qml.size() != 0 ) {
             linkInfo info = qml.top();
             qml.pop();
-            GradientMatrixLinker* gml = new GradientMatrixLinker( info.ml, 0, info.post );
+            sprintf( buf, "Gradient%s", (info.ml)->getName() );
+            GradientMatrixLinker* gml = new GradientMatrixLinker( info.ml, 0, info.post, buf );
             learnNet->addTeachBlock( gml );
             ord << gml;
             SimpleCluster* preC = dynamic_cast<SimpleCluster*>( (info.ml)->getFrom() );
