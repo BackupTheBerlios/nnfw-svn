@@ -1,6 +1,6 @@
 TEMPLATE = lib
 TARGET   = ./lib/nnfw
-VERSION  = 0.1
+VERSION  = 0.2
 
 CONFIG += debug staticlib rtti warn_on
 CONFIG -= qt
@@ -10,8 +10,6 @@ contains( CONFIG, debug ) {
     #unix:QMAKE_CXXFLAGS_DEBUG += -pg
     #unix:QMAKE_LFLAGS_DEBUG += -pg
 }
-
-#LIBS += -lgsl -lgslcblas -lm
 
 INCLUDEPATH += ./include
 

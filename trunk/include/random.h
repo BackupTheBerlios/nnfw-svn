@@ -27,7 +27,6 @@
  */
 
 #include "types.h"
-#include "gsl/gsl_rng.h"
 
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {
@@ -63,7 +62,7 @@ public:
      */
     static bool boolean( );
 private:
-    static gsl_rng* rnd;
+//    static gsl_rng* rnd;
 };
 
 }

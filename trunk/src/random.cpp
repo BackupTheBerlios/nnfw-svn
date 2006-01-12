@@ -18,13 +18,14 @@
  ********************************************************************************/
 
 #include "random.h"
-#include "gsl/gsl_randist.h"
 
+#include "gsl/gsl_rng.h"
+#include "gsl/gsl_randist.h"
 
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {
 
-gsl_rng* Random::rnd = gsl_rng_alloc( gsl_rng_taus2 );
+gsl_rng* rnd = gsl_rng_alloc( gsl_rng_taus2 );
 
 void Random::setSeed( long int seed ) {
     gsl_rng_set( rnd, seed );
