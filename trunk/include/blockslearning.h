@@ -52,7 +52,7 @@ class Updatable;
  *  \par Warnings
  *     Warn
  */
-class BaseTeachBlock {
+class NNFW_API BaseTeachBlock {
 public:
     /*! \brief Construct a BaseTeachBlock attached to specified BaseTeachBlocks
      */
@@ -100,7 +100,7 @@ protected:
  *  \par Warnings
  *     Warn
  */
-class SupervisedTeachBlock : public BaseTeachBlock {
+class NNFW_API SupervisedTeachBlock : public BaseTeachBlock {
 public:
     /*! \brief Construct a SupervisedTeachBlock attached to specified BaseTeachBlock
      */
@@ -136,7 +136,7 @@ protected:
  *  \par Warnings
  *     Warn
  */
-class GradientSimpleCluster : public SupervisedTeachBlock {
+class NNFW_API GradientSimpleCluster : public SupervisedTeachBlock {
 public:
     //! Construct a Gradient block attached to SimpleCluster passed
     GradientSimpleCluster( SimpleCluster* cl, BaseTeachBlock* preBlock = 0, BaseTeachBlock* postBlock = 0, const char* name = "unnamed");
@@ -174,7 +174,7 @@ protected:
  *  \par Warnings
  *     Warn
  */
-class GradientMatrixLinker : public SupervisedTeachBlock {
+class NNFW_API GradientMatrixLinker : public SupervisedTeachBlock {
 public:
     //! Construct a Gradient block attached to SimpleCluster passed
     GradientMatrixLinker( MatrixLinker* ml, BaseTeachBlock* preBlock = 0, BaseTeachBlock* postBlock = 0, const char* name = "unnamed");

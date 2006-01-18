@@ -33,8 +33,7 @@ namespace nnfw {
  *  <em> I know... I know that the name ClusterUpdater is confusing... but for now I haven't a better idea !! </em>
  *  Further Details coming soon ... :-)
  */
-class SimpleCluster : public Cluster
-{
+class NNFW_API SimpleCluster : public Cluster {
 public:
     /*! \brief Construct a Cluster that contains numNeurons neuron
      *

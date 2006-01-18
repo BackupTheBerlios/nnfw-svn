@@ -39,7 +39,7 @@ class LearningNetwork;
  *  all'ultimo valore di layers sara' l'output. Gli altri, in ordine, saranno i SimpleCluster nascosti.
  *  \param layers il vettore che specifica le dimensioni dei SimpleCluster
  */
-BaseNeuralNet* feedForwardNet( U_IntVec layers );
+NNFW_API BaseNeuralNet* feedForwardNet( U_IntVec layers );
 
 /*! \brief Function to quickly construct a Backpropagation Learning Network
  *  It only use GradientSimpleCluster and GradientMatrixLinker
@@ -49,14 +49,14 @@ BaseNeuralNet* feedForwardNet( U_IntVec layers );
  *   b) Devono esistere Cluster di inputs e di outputs<br>
  *   c) La struttura principale della rete deve essere composta da SimpleCluster e MatrixLinker
  */
-LearningNetwork* backpropagationFor( BaseNeuralNet* net );
+NNFW_API LearningNetwork* backpropagationFor( BaseNeuralNet* net );
 
 /*! \brief A quick way to sets all the parameters of Gradient types blocks in LearningNetwork passed
  * \param learnNet the LearningNewtork contains the Gradient blocks to configure
  * \param rate the learning rate
  * \param momento the momentum parameter (default is zero)
  */
-void setParamsOfGradientBlocks( LearningNetwork* learnNet, Real rate, Real momento = 0.0 );
+NNFW_API void setParamsOfGradientBlocks( LearningNetwork* learnNet, Real rate, Real momento = 0.0 );
 
 }
 

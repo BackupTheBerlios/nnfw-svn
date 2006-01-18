@@ -20,6 +20,17 @@
 #ifndef MESSAGGES_H
 #define MESSAGGES_H
 
+// Definition a macro for exporting/importing data and types to/from .dll (it's only useful for windows)
+#ifdef NNFW_WIN32
+    #ifdef DLL_CREATING
+        #define NNFW_API __declspec(dllexport)
+    #else
+        #define NNFW_API __declspec(dllimport)
+    #endif
+#else
+    #define NNFW_API
+#endif
+
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {
 
@@ -37,7 +48,6 @@ namespace nnfw {
  *     <li><b>NNFW_CRITICAL</b>: it's a critical error. It's not possibile go on !!! The program will be
  *         terminated. The user of library must avoid that this messages arises </li>
  *  </ul>
- *  <em>If the library is linked against QT then the messages will arises in a dialog window</em>
  */
 
 //! Categories of messages
@@ -50,11 +60,8 @@ enum {
 
 /*! \brief Print out a message
  *
- * If the library are linked againts QT library and the qApp is istanced then a QMessageBox is used <br>
- * When a ERROR message is displayed by a QMessageBox, then the user can Abort the program<br>
- * After a CRITICAL message is displayed the program is always aborted
  */
-void nnfwMessage( unsigned int category, const char* msg );
+NNFW_API void nnfwMessage( unsigned int category, const char* msg );
 
 }
 

@@ -27,7 +27,7 @@ namespace nnfw {
  *
  *  The Updatable objects has a name.
  */
-class Updatable {
+class NNFW_API Updatable {
 public:
     //! Constructor
     Updatable( const char* name = "unnamed" ) {

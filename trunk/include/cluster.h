@@ -73,7 +73,7 @@ namespace nnfw {
  *    This imply that <b>every</b> subclasses have to represents the input and output 
  *    of neurons as Real arrays ( C arrays not STL-classes )
  */
-class Cluster : public Updatable
+class NNFW_API Cluster : public Updatable
 {
 public:
     //! Construct a Cluster

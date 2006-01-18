@@ -2,7 +2,7 @@ TEMPLATE = lib
 TARGET   = ./lib/nnfw
 VERSION  = 0.2
 
-CONFIG += debug staticlib rtti warn_on
+CONFIG += debug dll rtti warn_on
 CONFIG -= qt
 
 contains( CONFIG, debug ) {
@@ -10,6 +10,16 @@ contains( CONFIG, debug ) {
     #unix:QMAKE_CXXFLAGS_DEBUG += -pg
     #unix:QMAKE_LFLAGS_DEBUG += -pg
 }
+
+#### Definition for creating DLL library under linux
+linux:DEFINES += DLL_CREATING
+linux:LIBS += -L/usr/lib -lgsl -lgslcblas -lm
+
+#### Definition for creating DLL library under windows
+win32:DEFINES += NNFW_WIN32 DLL_CREATING
+#### Assuming installation of GSL into F:\Programmi\GSL (change it)
+win32:LIBS += F:\Programmi\GSL\lib\gsl.lib F:\Programmi\GSL\lib\gslcblas.lib
+win32:INCLUDEPATH += F:\Programmi\GSL\include
 
 INCLUDEPATH += ./include
 
@@ -50,7 +60,7 @@ SOURCES		= ./src/simplecluster.cpp \
 
 OBJECTS_DIR =   ./.obj
 
-target.path = /usr/local/lib
-includes.path = /usr/local/include/nnfw
+target.path = /usr2/local/lib
+includes.path = /usr2/local/include/nnfw
 includes.files = ./include/*.h
 INSTALLS   += target includes

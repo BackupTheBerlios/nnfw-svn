@@ -29,8 +29,7 @@ namespace nnfw {
  *
  * Details...
  */
-class CopyLinker : public Linker
-{
+class NNFW_API CopyLinker : public Linker {
 public:
     /*! \brief Constructor
      *

@@ -43,7 +43,7 @@ namespace nnfw {
  * The relationship among Clusters and Linkers must be specified by cluster and linker constructors; 
  *
  */
-class BaseNeuralNet {
+class NNFW_API BaseNeuralNet {
 public:
     /*! \brief Construct an empty neural network
      *

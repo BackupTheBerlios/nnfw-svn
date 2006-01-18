@@ -20,27 +20,29 @@
 #include "messages.h"
 #include <iostream>
 
+extern void exit( int status );
+
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {
 
-using namespace std;
+//using namespace std;
 
 void nnfwMessage( unsigned int category, const char* msg ) {
     switch( category ) {
     case NNFW_INFORMATION:
-        cout << "== Information: " << msg << endl;
+        std::cout << "== Information: " << msg << std::endl;
         return;
     case NNFW_WARNING:
-        cout << "== Warning: " << msg << endl;
+        std::cout << "== Warning: " << msg << std::endl;
         return;
     case NNFW_ERROR:
-        cout << "== ERROR: " << msg << endl;
+        std::cout << "== ERROR: " << msg << std::endl;
         return;
     case NNFW_CRITICAL:
-        cout << "== CRITICAL ERROR: " << msg << endl;
+        std::cout << "== CRITICAL ERROR: " << msg << std::endl;
         exit( 1 );
     }
-    cout << "== Unrecognized Category: " << msg << endl;
+    std::cout << "== Unrecognized Category: " << msg << std::endl;
     return;
 }
 
