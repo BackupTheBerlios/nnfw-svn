@@ -33,7 +33,7 @@ public:
     Updatable( const char* name = "unnamed" ) {
         u_int size = strlen(name);
         this->name = new char[size];
-        memcpy( this->name, name, sizeof(char)*size );
+        strcpy( this->name, name );
     };
     //! Destructor
     virtual ~Updatable() { /* Nothing to do */ };

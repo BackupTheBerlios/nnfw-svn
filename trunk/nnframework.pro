@@ -16,7 +16,7 @@ linux:DEFINES += DLL_CREATING
 linux:LIBS += -L/usr/lib -lgsl -lgslcblas -lm
 
 #### Definition for creating DLL library under windows
-win32:DEFINES += NNFW_WIN32 DLL_CREATING
+win32:DEFINES += WIN32 DLL_CREATING
 #### Assuming installation of GSL into F:\Programmi\GSL (change it)
 win32:LIBS += F:\Programmi\GSL\lib\gsl.lib F:\Programmi\GSL\lib\gslcblas.lib
 win32:INCLUDEPATH += F:\Programmi\GSL\include

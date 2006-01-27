@@ -21,7 +21,7 @@
 #define MESSAGGES_H
 
 // Definition a macro for exporting/importing data and types to/from .dll (it's only useful for windows)
-#ifdef NNFW_WIN32
+#ifdef WIN32
     #ifdef DLL_CREATING
         #define NNFW_API __declspec(dllexport)
     #else

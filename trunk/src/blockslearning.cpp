@@ -37,7 +37,7 @@ BaseTeachBlock::BaseTeachBlock( BaseTeachBlock* preBlock, BaseTeachBlock* postBl
     }
     u_int size = strlen(name);
     this->name = new char[size];
-    memcpy( this->name, name, sizeof(char)*size );
+    strcpy( this->name, name );
 }
 
 void BaseTeachBlock::addPostBlock( BaseTeachBlock* postBlock ) {
