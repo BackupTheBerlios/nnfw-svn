@@ -40,11 +40,10 @@ SimpleCluster::SimpleCluster( u_int numNeurons, const char* name )
     memset( inputdata, 0, sizeof(Real)*this->numNeurons );
     memset( outputdata, 0, sizeof(Real)*this->numNeurons );
     memset( biases, 0, sizeof(Real)*this->numNeurons );
-    //! SigmoidUpdater as Default Updater
-    singleUpdater = new SigmoidUpdater( 1.0 );
-    singleUpd = true;
     //! Allocation for poolUpdater
     poolUpdater = new ( ClusterUpdater ( *[this->numNeurons] ) );
+    //! SigmoidUpdater as Default Updater
+    setUpdater( new SigmoidUpdater( 1.0 ) );
 
     tmpdata = new Real[this->numNeurons];
     memset( tmpdata, 0, sizeof(Real)*this->numNeurons );
@@ -175,7 +174,7 @@ void SimpleCluster::setBias( u_int neuron, Real bias ) {
     biases[neuron] = bias;
 }
 
-void SimpleCluster::setBiases( const RealVec biases ) {
+void SimpleCluster::setBiases( const RealVec& biases ) {
     u_int dim = biases.size();
     for( u_int i=0; i<dim; i++ ) {
         setBias( i, biases[i] );

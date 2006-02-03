@@ -20,17 +20,6 @@
 #ifndef MESSAGGES_H
 #define MESSAGGES_H
 
-// Definition a macro for exporting/importing data and types to/from .dll (it's only useful for windows)
-#ifdef WIN32
-    #ifdef DLL_CREATING
-        #define NNFW_API __declspec(dllexport)
-    #else
-        #define NNFW_API __declspec(dllimport)
-    #endif
-#else
-    #define NNFW_API
-#endif
-
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {
 
@@ -61,7 +50,7 @@ enum {
 /*! \brief Print out a message
  *
  */
-NNFW_API void nnfwMessage( unsigned int category, const char* msg );
+void nnfwMessage( unsigned int category, const char* msg );
 
 }
 

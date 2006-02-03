@@ -35,7 +35,7 @@ namespace nnfw {
  *
  *  Details
  */
-class NNFW_API Random {
+class  Random {
 public:
     /*! \brief Set the seed of the random number generator
      *

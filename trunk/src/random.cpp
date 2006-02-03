@@ -19,29 +19,49 @@
 
 #include "random.h"
 
+#ifndef WIN32
 #include "gsl/gsl_rng.h"
 #include "gsl/gsl_randist.h"
+#endif
 
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {
 
+#ifndef WIN32
 gsl_rng* rnd = gsl_rng_alloc( gsl_rng_taus2 );
+#endif
 
 void Random::setSeed( long int seed ) {
+#ifndef WIN32
     gsl_rng_set( rnd, seed );
+#else
+    srand( seed );
+#endif
     return;
 }
 
 Real Random::flatReal( Real min, Real max ) {
+#ifndef WIN32
     return (Real)( gsl_ran_flat( rnd, (double)min, (double)max ) );
+#else
+    return (Real)( (Real)( rand() )/RAND_MAX )*(max-min)+min;
+#endif
 }
 
 bool Random::boolean( ) {
+#ifndef WIN32
     return ( gsl_rng_get( rnd )%2 );
+#else
+    return ( rand()%2 );
+#endif
 }
 
 bool Random::boolean( Real trueProb ) {
+#ifndef WIN32
     return ( trueProb > gsl_rng_uniform( rnd ) );
+#else
+    return ( trueProb >  ( (Real)( rand() )/RAND_MAX ) );
+#endif
 }
 
 }

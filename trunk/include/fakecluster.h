@@ -34,7 +34,7 @@ namespace nnfw {
  *  the sensors values.
  *
  */
-class NNFW_API FakeCluster : public Cluster {
+class  FakeCluster : public Cluster {
 public:
     /*! \brief Construct a FakeCluster
      *

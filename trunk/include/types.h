@@ -28,17 +28,6 @@
  *
  */
 
-// Definition a macro for exporting/importing data and types to/from .dll (it's only useful for windows)
-#ifdef WIN32
-    #ifdef DLL_CREATING
-        #define NNFW_API __declspec(dllexport)
-    #else
-        #define NNFW_API __declspec(dllimport)
-    #endif
-#else
-    #define NNFW_API
-#endif
-
 #include <vector>
 #include <map>
 #include <string>
@@ -57,13 +46,13 @@ namespace nnfw {
 #define Pair std::pair
 
 //! Unsigned integer
-typedef NNFW_API unsigned int u_int;
+typedef  unsigned int u_int;
 
 //! Abstraction on the type of real numbers
-typedef NNFW_API double Real;
+typedef  double Real;
 
 //! Vector of Real
-class NNFW_API RealVec : public Vector<Real> {
+class  RealVec : public Vector<Real> {
 public:
     //! Constructor
     RealVec( u_int dim = 0 ) : Vector<Real>(dim, 0.0f) { /* Nothing to do */ };
@@ -299,7 +288,7 @@ inline RealVec operator/( const Real v, const RealVec& vec ) {
 };
 
 //! Array of Unsigned Integer
-typedef NNFW_API Vector<u_int> U_IntVec;
+typedef  Vector<u_int> U_IntVec;
 //! Operator <<
 inline U_IntVec& operator<<(U_IntVec& vec, u_int v ) {
     vec.push_back( v );
@@ -308,7 +297,7 @@ inline U_IntVec& operator<<(U_IntVec& vec, u_int v ) {
 
 class Updatable;
 //! Array of Updatable
-typedef NNFW_API Vector<Updatable*> UpdatableVec;
+typedef  Vector<Updatable*> UpdatableVec;
 //! Operator <<
 inline UpdatableVec& operator<<(UpdatableVec& vec, Updatable* v ) {
     vec.push_back( v );
@@ -317,7 +306,7 @@ inline UpdatableVec& operator<<(UpdatableVec& vec, Updatable* v ) {
 
 class Cluster;
 //! Array of Clusters
-typedef NNFW_API Vector<Cluster*> ClusterVec;
+typedef  Vector<Cluster*> ClusterVec;
 //! Operator <<
 inline ClusterVec& operator<<(ClusterVec& vec, Cluster* v ) {
     vec.push_back( v );
@@ -326,7 +315,7 @@ inline ClusterVec& operator<<(ClusterVec& vec, Cluster* v ) {
 
 class Linker;
 //! Array of Linkers
-typedef NNFW_API Vector<Linker*> LinkerVec;
+typedef  Vector<Linker*> LinkerVec;
 //! Operator <<
 inline LinkerVec& operator<<(LinkerVec& vec, Linker* v ) {
     vec.push_back( v );
@@ -334,14 +323,14 @@ inline LinkerVec& operator<<(LinkerVec& vec, Linker* v ) {
 };
 
 //! Empty LinkerVec constant
-NNFW_API extern const LinkerVec emptyLinkerVec;
+ extern const LinkerVec emptyLinkerVec;
 
 //! Empty ClusterVec constant
-NNFW_API extern const ClusterVec emptyClusterVec;
+ extern const ClusterVec emptyClusterVec;
 
 class BaseTeachBlock;
 //! Array of Updatable
-typedef NNFW_API Vector<BaseTeachBlock*> TeachBlockVec;
+typedef  Vector<BaseTeachBlock*> TeachBlockVec;
 //! Operator <<
 inline TeachBlockVec& operator<<(TeachBlockVec& vec, BaseTeachBlock* v ) {
     vec.push_back( v );

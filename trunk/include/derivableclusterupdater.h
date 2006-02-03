@@ -37,7 +37,7 @@ namespace nnfw {
  *
  *  Details...
  */
-class NNFW_API DerivableClusterUpdater : public ClusterUpdater {
+class  DerivableClusterUpdater : public ClusterUpdater {
 public:
     //! Constructor
     DerivableClusterUpdater() : ClusterUpdater() { /* Nothing to do */ };

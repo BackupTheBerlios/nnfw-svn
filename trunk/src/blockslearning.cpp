@@ -52,7 +52,7 @@ SupervisedTeachBlock::SupervisedTeachBlock( BaseTeachBlock* preBlock, BaseTeachB
     : BaseTeachBlock( preBlock, postBlock, name ), target(), error() {
 }
 
-void SupervisedTeachBlock::setTarget( RealVec target ) {
+void SupervisedTeachBlock::setTarget( const RealVec& target ) {
     mode = targetMode;
     this->target = target;
 }
@@ -61,7 +61,7 @@ RealVec SupervisedTeachBlock::getTarget() {
     return target;
 }
 
-void SupervisedTeachBlock::addError( RealVec error ) {
+void SupervisedTeachBlock::addError( const RealVec& error ) {
     mode = errorMode;
     this->error += error;
 }

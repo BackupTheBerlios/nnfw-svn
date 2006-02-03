@@ -33,7 +33,7 @@ namespace nnfw {
  *  <em> I know... I know that the name ClusterUpdater is confusing... but for now I haven't a better idea !! </em>
  *  Further Details coming soon ... :-)
  */
-class NNFW_API SimpleCluster : public Cluster {
+class  SimpleCluster : public Cluster {
 public:
     /*! \brief Construct a Cluster that contains numNeurons neuron
      *
@@ -136,7 +136,7 @@ public:
      *
      * Details ...
      */
-    void setBiases( const RealVec biases );
+    void setBiases( const RealVec& biases );
 
     /*! \brief Get bias of the neuron
      *

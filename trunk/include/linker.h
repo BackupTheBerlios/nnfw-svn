@@ -41,7 +41,7 @@ namespace nnfw {
  *
  * Details...
  */
-class NNFW_API Linker : public Updatable {
+class  Linker : public Updatable {
 public:
     //! Construct
     Linker( const char* name = "unnamed" ) : Updatable(name) {

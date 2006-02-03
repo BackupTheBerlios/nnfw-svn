@@ -52,7 +52,7 @@ class Updatable;
  *  \par Warnings
  *     Warn
  */
-class NNFW_API BaseTeachBlock {
+class  BaseTeachBlock {
 public:
     /*! \brief Construct a BaseTeachBlock attached to specified BaseTeachBlocks
      */
@@ -100,7 +100,7 @@ protected:
  *  \par Warnings
  *     Warn
  */
-class NNFW_API SupervisedTeachBlock : public BaseTeachBlock {
+class SupervisedTeachBlock : public BaseTeachBlock {
 public:
     /*! \brief Construct a SupervisedTeachBlock attached to specified BaseTeachBlock
      */
@@ -110,11 +110,11 @@ public:
     //! Return the Updatable
     virtual Updatable* getUpdatable() = 0;
     //! Set the desired output values for the current input values
-    void setTarget( RealVec target );
+    void setTarget( const RealVec& target );
     //! Return the target values specified
     RealVec getTarget();
     //! Add the error passed to the error already registered
-    void addError( RealVec error );
+    void addError( const RealVec& error );
     //! Return the last Errors values
     RealVec getError();
 protected:
@@ -136,7 +136,7 @@ protected:
  *  \par Warnings
  *     Warn
  */
-class NNFW_API GradientSimpleCluster : public SupervisedTeachBlock {
+class GradientSimpleCluster : public SupervisedTeachBlock {
 public:
     //! Construct a Gradient block attached to SimpleCluster passed
     GradientSimpleCluster( SimpleCluster* cl, BaseTeachBlock* preBlock = 0, BaseTeachBlock* postBlock = 0, const char* name = "unnamed");
@@ -174,7 +174,7 @@ protected:
  *  \par Warnings
  *     Warn
  */
-class NNFW_API GradientMatrixLinker : public SupervisedTeachBlock {
+class GradientMatrixLinker : public SupervisedTeachBlock {
 public:
     //! Construct a Gradient block attached to SimpleCluster passed
     GradientMatrixLinker( MatrixLinker* ml, BaseTeachBlock* preBlock = 0, BaseTeachBlock* postBlock = 0, const char* name = "unnamed");

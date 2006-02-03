@@ -30,7 +30,7 @@ namespace nnfw {
  * Every connection is weighted, and the weight is memorized into a weight-matrix
  * Details ...
  */
-class NNFW_API MatrixLinker : public Linker {
+class  MatrixLinker : public Linker {
 public:
     /*! \brief Connect clusters with a complete connections
      *

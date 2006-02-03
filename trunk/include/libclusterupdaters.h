@@ -42,7 +42,7 @@ namespace nnfw {
  *
  * DummyUpdater copyies the inputs to the outputs
  */
-class NNFW_API DummyUpdater : public DerivableClusterUpdater {
+class  DummyUpdater : public DerivableClusterUpdater {
 public:
     //! Construct a dummy updater
     DummyUpdater( ) {
@@ -66,7 +66,7 @@ public:
  *
  * Details..
  */
-class NNFW_API SigmoidUpdater : public DerivableClusterUpdater {
+class  SigmoidUpdater : public DerivableClusterUpdater {
 public:
     //! Construct a sigmoid updater with parameter l
     SigmoidUpdater( Real l = 1.0 ) {
@@ -96,7 +96,7 @@ public:
  *
  * Details..
  */
-class NNFW_API FakeSigmoidUpdater : public DerivableClusterUpdater {
+class  FakeSigmoidUpdater : public DerivableClusterUpdater {
 public:
     //! Construct a sigmoid updater with parameter l
     FakeSigmoidUpdater( Real l = 1.0 ) {
@@ -130,7 +130,7 @@ public:
  * (max-min) is the y value when x == 0
  *
  */
-class NNFW_API ScaledSigmoidUpdater : public DerivableClusterUpdater {
+class  ScaledSigmoidUpdater : public DerivableClusterUpdater {
 public:
     //! Construct a scaled sigmoid updater with parameter l
     ScaledSigmoidUpdater( Real l = 1.0,
@@ -175,7 +175,7 @@ public:
  * </pre>
  * Further Details coming soon ;-)
  */
-class NNFW_API LinearUpdater : public DerivableClusterUpdater {
+class  LinearUpdater : public DerivableClusterUpdater {
 public:
     //! Construct a linear updater
     LinearUpdater( Real minX, Real maxX, Real minY = -1, Real maxY = +1 ) {
@@ -214,7 +214,7 @@ public:
  *
  * Further Details coming soon ;-)
  */
-class NNFW_API BinaryUpdater : public DerivableClusterUpdater {
+class  BinaryUpdater : public DerivableClusterUpdater {
 public:
     //! Construct a binary updater
     BinaryUpdater( Real threshold = 0.0f ) {
