@@ -20,15 +20,12 @@
 #ifndef NNFW_H
 #define NNFW_H
 
-/*! \mainpage Neural Network Framework
+/*! \mainpage Neural Network Framework (svn release: 33)
  *  <h1>Class Reference</h1>
  *
  *  This is a Neural Network Framework for creating, simulating and analyze any neural network you can image !!
  *  <br><br>
  *
- *
- * \todo Per generare una .DLL sotto windows ogni classe deve essere preceduta da __declspec(dllexport)
- *       (vedere qwt_globals.h per come fare)
  *
  *
  */
