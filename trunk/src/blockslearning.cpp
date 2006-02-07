@@ -36,7 +36,7 @@ BaseTeachBlock::BaseTeachBlock( BaseTeachBlock* preBlock, BaseTeachBlock* postBl
         postBlock->addPreBlock( this );
     }
     u_int size = strlen(name);
-    this->name = new char[size];
+    this->name = new char[size+1];
     strcpy( this->name, name );
 }
 
