@@ -27,23 +27,47 @@ namespace nnfw {
 
 /*! \brief CopyLinker Class. This linker copies the outputs of a cluster to inputs of another cluster
  *
- * Details...
+ *  \par Motivation
+ *     Il CopyLinker e' un oggetto che 'letteralmente' copia i dati da un Cluster ad un altro.
+ *     Esistano quattro modalita' di funzionamento di questo oggetto specificate dal relativo enum
+ *
+ *     -# CopyLinker::In2In : copia i valori di <b>input</b> del Cluster 'from' nell'<b>input</b> del Cluster 'to'
+ *     -# CopyLinker::In2Out : copia i valori di <b>input</b> del Cluster 'from' nell'<b>output</b> del Cluster 'to'
+ *     -# CopyLinker::Out2In : copia i valori di <b>output</b> del Cluster 'from' nell'<b>input</b> del Cluster 'to'
+ *     -# CopyLinker::Out2Out : copia i valori di <b>output</b> del Cluster 'from' nell'<b>output</b> del Cluster 'to'
+ *
+ *     Il CopyLinker e' utile nelle reti neurali dove c'e' un trasferimento di dati da un Cluster ad un altro che non
+ *     necessita di computazione. Ad esempio, nelle reti alla Elmann, i valori di inputs di uno strato interno vengono
+ *     riportati come inputs di uno strato di input della rete (CopyLinker in modalita' CopyLinker::In2In)
+ *  \par Description
+ *     Desc
+ *  \par Warnings
+ *     Quando le dimensioni tra i dati da copiare non corrispondono, allora vengono copiati il massimo numero possibile
+ *     di dati. Ad esempio, in un CopyLinker in modalita' In2In tra due Cluster 'from' e 'to' di dimensione 8 e 5
+ *     rispettivamente, allora solo i primi 5 dati del Cluster 'from' vengono copiati nei 5 inputs del Cluster 'to'.<br>
+ *     Viceversa, se le dimensioni di 'from' e 'to' sono 5 e 8, rispettivamente, allora i 5 inputs del Cluster 'from'
+ *     (tutti i dati della sorgente) vengono copiati nei primi 5 inputs del Cluster 'to'.
  */
 class  CopyLinker : public Linker {
 public:
+    //! Modality of Data Copying
+    typedef enum { In2In = 0, In2Out = 2, Out2In = 4, Out2Out = 8 } CopyMode;
+
     /*! \brief Constructor
-     *
-     * If the dimension of outputs and inputs between cluster aren't the same, then
-     * only some data are copied <br>
-     * Further Details coming soon ;-)
      */
-    CopyLinker( Cluster* from, Cluster* to, const char* name = "unnamed" );
+    CopyLinker( Cluster* from, Cluster* to, CopyMode mode, const char* name = "unnamed" );
 
     /*! \brief Destructor
-     *
-     * Details
      */
     virtual ~CopyLinker();
+
+    /*! \brief Change the Modality of Data Copying
+     */
+    void setMode( CopyMode );
+
+    /*! \brief Return the Modality of Data Copying
+     */
+    CopyMode getMode();
     
     /*! \brief Update the linker
      *
@@ -77,11 +101,12 @@ public:
         // --- Do Nothing
     };
 private:
-    Real* outputsFrom;
-    Real* inputsTo;
+    Real* dataFrom;
+    Real* dataTo;
     u_int dimData;
     Cluster* from;
     Cluster* to;
+    CopyMode mode;
 };
 
 }

@@ -28,24 +28,55 @@ namespace nnfw {
  *  Implementation of CopyLinker Class        *
  **********************************************/
 
-CopyLinker::CopyLinker( Cluster* from, Cluster* to, const char* name )
+CopyLinker::CopyLinker( Cluster* from, Cluster* to, CopyMode mode, const char* name )
     : Linker(name) {
     if ( from->size() < to->size() ) {
         dimData = from->size();
     } else {
         dimData = to->size(); 
     }
-    outputsFrom = from->getOutputs();
-    inputsTo = to->getInputs();
     this->from = from;
     this->to = to;
+    // Follow initialization force setMode method to setting datas, otherwise strange automatic compile-time
+    // initialization may results in unpredictable behaviour
+    this->mode = (CopyMode)-1;
+    setMode( mode );
 }
 
 CopyLinker::~CopyLinker() {
 }
 
+void CopyLinker::setMode( CopyMode cm ) {
+    if ( this->mode == cm ) return;
+
+    this->mode = cm;
+    switch( mode ) {
+    case In2In:
+        dataFrom = from->getInputs();
+        dataTo = to->getInputs();
+        break;
+    case In2Out:
+        dataFrom = from->getInputs();
+        dataTo = to->getOutputs();
+        break;
+    case Out2In:
+        dataFrom = from->getOutputs();
+        dataTo = to->getInputs();
+        break;
+    case Out2Out:
+        dataFrom = from->getOutputs();
+        dataTo = to->getOutputs();
+        break;
+    }
+    return;
+}
+
+CopyLinker::CopyMode CopyLinker::getMode() {
+    return mode;
+}
+
 void CopyLinker::update() {
-    memcpy( outputsFrom, inputsTo, dimData*sizeof( Real ) );
+    memcpy( dataFrom, dataTo, dimData*sizeof( Real ) );
     return;
 }
 
