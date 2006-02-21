@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA  *
  ********************************************************************************/
 
-#ifndef SIMPLECLUSTER_H
-#define SIMPLECLUSTER_H
+#ifndef BIASEDCLUSTER_H
+#define BIASEDCLUSTER_H
 
 #include "cluster.h"
 #include "clusterupdater.h"
@@ -26,26 +26,26 @@
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {
 
-/*! \brief SimpleCluster Class. In this cluster a neuron have an input, a output.
+/*! \brief BiasedCluster Class. In this cluster a neuron have an input, a output and a bias value.
  *
- *  The SimpleCluster update the neurons contained using an object of type ClusterUpdater. The ClusterUpdater calculate the outputs
+ *  The BiasedCluster update the neurons contained using an object of type ClusterUpdater. The ClusterUpdater calculate the outputs
  *  of neuron as function of inputs of the neurons. <br>
  *  <em> I know... I know that the name ClusterUpdater is confusing... but for now I haven't a better idea !! </em>
  *  Further Details coming soon ... :-)
  */
-class  SimpleCluster : public Cluster {
+class  BiasedCluster : public Cluster {
 public:
     /*! \brief Construct a Cluster that contains numNeurons neuron
      *
      *  Details...
      */
-    SimpleCluster( u_int numNeurons, const char* name = "unnamed" );
+    BiasedCluster( u_int numNeurons, const char* name = "unnamed" );
 
     /*! \brief Destructor
      *
      * Details..
      */
-    virtual ~SimpleCluster();
+    virtual ~BiasedCluster();
 
     /*! \brief Return the number of the neurons
      *
@@ -126,7 +126,31 @@ public:
      */
     Real* getOutputs( );
 
-    /*! \brief Randomize the biases of SimpleCluster
+    /*! \brief Set the bias of the neuron
+     *
+     * Details ...
+     */
+    void setBias( u_int neuron, Real bias );
+
+    /*! \brief Set all biases with the same value
+     *
+     * Details ...
+     */
+    void setAllBiases( Real bias );
+
+    /*! \brief Set the biases from the vector given
+     *
+     * Details ...
+     */
+    void setBiases( const RealVec& biases );
+
+    /*! \brief Get bias of the neuron
+     *
+     * Details...
+     */
+    Real getBias( u_int neuron );
+
+    /*! \brief Randomize the biases of BiasedCluster
      *
      * Details...
      */
@@ -136,6 +160,7 @@ private:
     u_int numNeurons;
     Real* inputdata;
     Real* outputdata;
+    Real* biases;
     //! Updaters Object
     ClusterUpdater* singleUpdater;
     ClusterUpdater** poolUpdater;

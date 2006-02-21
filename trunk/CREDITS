@@ -1,0 +1,12 @@
+Copyright 2005-2006 Gianluca Massera <gmassera@istc.cnr.it>
+
+Current Maintainers:
+    * Gianluca Massera <gmassera@istc.cnr.it>
+
+Thanks: (surname alphabetically sorted)
+    * Federico Cecconi,
+    * Marco Mirolli:     for consulting about project design and developing windows library
+
+Thanks to all people involved in follow projects:
+    * trolltech QT library: a must for developing cross-platform application
+        ( http://www.trolltech.com )

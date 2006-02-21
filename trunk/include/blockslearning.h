@@ -29,7 +29,7 @@
 
 #include "types.h"
 #include "neuralnet.h"
-#include "simplecluster.h"
+#include "biasedcluster.h"
 #include "matrixlinker.h"
 
 //! Namespace that contains all classes of Neural Network Framework
@@ -128,7 +128,7 @@ protected:
     learnMode mode;
 };
 
-/*! \brief Implements the gradient descent rule for a SimpleCluster
+/*! \brief Implements the gradient descent rule for a BiasedCluster
  *  \par Motivation
  *     Mot
  *  \par Description
@@ -136,17 +136,17 @@ protected:
  *  \par Warnings
  *     Warn
  */
-class GradientSimpleCluster : public SupervisedTeachBlock {
+class GradientBiasedCluster : public SupervisedTeachBlock {
 public:
-    //! Construct a Gradient block attached to SimpleCluster passed
-    GradientSimpleCluster( SimpleCluster* cl, BaseTeachBlock* preBlock = 0, BaseTeachBlock* postBlock = 0, const char* name = "unnamed");
+    //! Construct a Gradient block attached to BiasedCluster passed
+    GradientBiasedCluster( BiasedCluster* cl, BaseTeachBlock* preBlock = 0, BaseTeachBlock* postBlock = 0, const char* name = "unnamed");
     /*! \brief Apply one step of the Gradient descent rule
-     *  La regola del gradiente applicata ad un SimpleCluster consente di apprendere i valori di bias e di calcolare
+     *  La regola del gradiente applicata ad un BiasedCluster consente di apprendere i valori di bias e di calcolare
      *  l'errore sull'input netto che viene passato al preBlock (se c'e' ne uno)
      */
     virtual void learn();
-    //! Return the SimpleCluster associated
-    virtual SimpleCluster* getUpdatable();
+    //! Return the BiasedCluster associated
+    virtual BiasedCluster* getUpdatable();
     //! Set learning rate
     void setRate( Real rate );
     //! Return the learning rate
@@ -156,8 +156,8 @@ public:
     //! Return Momentum
     Real getMomentum();
 protected:
-    //! SimpleCluster to learn
-    SimpleCluster* cl;
+    //! BiasedCluster to learn
+    BiasedCluster* cl;
     //! learn rate
     Real rate;
     //! Momentum
@@ -176,7 +176,7 @@ protected:
  */
 class GradientMatrixLinker : public SupervisedTeachBlock {
 public:
-    //! Construct a Gradient block attached to SimpleCluster passed
+    //! Construct a Gradient block attached to MatrixLinker passed
     GradientMatrixLinker( MatrixLinker* ml, BaseTeachBlock* preBlock = 0, BaseTeachBlock* postBlock = 0, const char* name = "unnamed");
     /*! \brief Apply one step of the Gradient descent rule
      *  La regola del gradiente applicata ad un MatrixLinker consente di apprendere i valori dei pesi e di calcolare

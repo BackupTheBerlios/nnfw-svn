@@ -27,6 +27,7 @@ HEADERS		= ./include/nnfw.h \
               ./include/updatable.h \
 			  ./include/cluster.h \
               ./include/simplecluster.h \
+              ./include/biasedcluster.h \
               ./include/fakecluster.h \
 			  ./include/clusterupdater.h \
               ./include/derivableclusterupdater.h \
@@ -42,6 +43,7 @@ HEADERS		= ./include/nnfw.h \
               ./include/learningnetwork.h
 
 SOURCES		= ./src/simplecluster.cpp \
+              ./src/biasedcluster.cpp \
               ./src/fakecluster.cpp \
               ./src/clusterupdater.cpp \
               ./src/libclusterupdaters.cpp \

@@ -20,7 +20,7 @@
 #include "blockslearning.h"
 #include "cluster.h"
 #include "derivableclusterupdater.h"
-#include "simplecluster.h"
+#include "biasedcluster.h"
 #include "matrixlinker.h"
 
 namespace nnfw {
@@ -70,7 +70,7 @@ RealVec SupervisedTeachBlock::getError() {
     return error;
 }
 
-GradientSimpleCluster::GradientSimpleCluster( SimpleCluster* cl, BaseTeachBlock* pre, BaseTeachBlock* post, const char* name)
+GradientBiasedCluster::GradientBiasedCluster( BiasedCluster* cl, BaseTeachBlock* pre, BaseTeachBlock* post, const char* name)
     : SupervisedTeachBlock( pre, post, name ) {
     this->cl = cl;
     target.resize( cl->size() );
@@ -81,7 +81,7 @@ GradientSimpleCluster::GradientSimpleCluster( SimpleCluster* cl, BaseTeachBlock*
     momento = 0.0;
 }
 
-void GradientSimpleCluster::learn() {
+void GradientBiasedCluster::learn() {
     // Da implementare
     if ( mode == SupervisedTeachBlock::targetMode ) {
         //--- Calcolo l'errore
@@ -114,23 +114,23 @@ void GradientSimpleCluster::learn() {
     error.assign( error.size(), 0.0f );
 }
 
-SimpleCluster* GradientSimpleCluster::getUpdatable() {
+BiasedCluster* GradientBiasedCluster::getUpdatable() {
     return cl;
 }
 
-void GradientSimpleCluster::setRate( Real rate ) {
+void GradientBiasedCluster::setRate( Real rate ) {
     this->rate = rate;
 }
 
-Real GradientSimpleCluster::getRate() {
+Real GradientBiasedCluster::getRate() {
     return rate;
 }
 
-void GradientSimpleCluster::setMomentum( Real m ) {
+void GradientBiasedCluster::setMomentum( Real m ) {
     this->momento = m;
 }
 
-Real GradientSimpleCluster::getMomentum() {
+Real GradientBiasedCluster::getMomentum() {
     return momento;
 }
 
@@ -151,7 +151,7 @@ void GradientMatrixLinker::learn() {
         //--- Calcolo l'errore
         error = target - ml->getTo()->getInputs();
     }
-    // --- I delta di eventuali neuroni mi arriva direttamente da GradientSimpleCluster
+    // --- I delta di eventuali neuroni mi arriva direttamente da GradientBiasedCluster
     
     // --- 1. Propaga l'errore ai preBlocks
     // (devo propagare solo l'errore moltiplicato per il peso relativo)

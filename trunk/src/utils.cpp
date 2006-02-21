@@ -31,15 +31,15 @@ namespace nnfw {
 
 BaseNeuralNet* feedForwardNet( U_IntVec layers ) {
     BaseNeuralNet* net = new BaseNeuralNet();
-    SimpleCluster* prec = 0;
-    SimpleCluster* curr = 0;
+    BiasedCluster* prec = 0;
+    BiasedCluster* curr = 0;
     UpdatableVec ord;
     char buf[50];
     u_int clCount = 1;
     u_int mlCount = 1;
     for( u_int i=0; i<layers.size(); i++ ) {
-        sprintf( buf, "SimpleCluster%d", clCount );
-        curr = new SimpleCluster( layers[i], buf );
+        sprintf( buf, "BiasedCluster%d", clCount );
+        curr = new BiasedCluster( layers[i], buf );
         if ( i == 0 ) {
             net->addCluster( curr, true );
         } else if ( i == (layers.size()-1) ) {
@@ -66,10 +66,10 @@ BaseNeuralNet* feedForwardNet( U_IntVec layers ) {
 
 typedef struct {
     MatrixLinker* ml;
-    GradientSimpleCluster* post;
+    GradientBiasedCluster* post;
 } linkInfo;
 typedef struct {
-    SimpleCluster* cl;
+    BiasedCluster* cl;
     GradientMatrixLinker* post;
 } clusInfo;
 
@@ -80,11 +80,11 @@ LearningNetwork* backpropagationFor( BaseNeuralNet* net ) {
     std::stack<linkInfo> qml;
     std::stack<clusInfo> qcl;
 
-    // Inizializzo qcl con i SimpleCluster dello strato di output
+    // Inizializzo qcl con i BiasedCluster dello strato di output
     const ClusterVec cv = net->outputClusters();
     u_int dim = cv.size();
     for( u_int i=0; i<dim; i++ ) {
-        SimpleCluster* cl = dynamic_cast<SimpleCluster*>( cv[i] );
+        BiasedCluster* cl = dynamic_cast<BiasedCluster*>( cv[i] );
         if ( !cl ) continue;
         clusInfo info;
         info.cl = cl;
@@ -94,13 +94,13 @@ LearningNetwork* backpropagationFor( BaseNeuralNet* net ) {
 
     char buf[150];
     while( qcl.size() != 0 || qml.size() != 0 ) {
-        // Inserisco nella learnNet tutti i SimpleCluster dello strato corrente e
-        // costruisco la coda dei MatrixLinker entranti su questi SimpleCluster
+        // Inserisco nella learnNet tutti i BiasedCluster dello strato corrente e
+        // costruisco la coda dei MatrixLinker entranti su questi BiasedCluster
         while( qcl.size() != 0 ) {
             clusInfo info = qcl.top();
             qcl.pop();
             sprintf( buf, "Gradient%s", (info.cl)->getName() );
-            GradientSimpleCluster* gcl = new GradientSimpleCluster( info.cl, 0, info.post, buf );
+            GradientBiasedCluster* gcl = new GradientBiasedCluster( info.cl, 0, info.post, buf );
             learnNet->addTeachBlock( gcl );
             ord << gcl;
             const LinkerVec lv = net->linkers( info.cl, false );
@@ -115,7 +115,7 @@ LearningNetwork* backpropagationFor( BaseNeuralNet* net ) {
             }
         }
         // Inserisco nella learnNet tutti i MatrixLinker dello strato corrente e
-        // costruisco la coda dei SimpleCluster di partenza dei MatrixLinker della coda
+        // costruisco la coda dei BiasedCluster di partenza dei MatrixLinker della coda
         while( qml.size() != 0 ) {
             linkInfo info = qml.top();
             qml.pop();
@@ -123,7 +123,7 @@ LearningNetwork* backpropagationFor( BaseNeuralNet* net ) {
             GradientMatrixLinker* gml = new GradientMatrixLinker( info.ml, 0, info.post, buf );
             learnNet->addTeachBlock( gml );
             ord << gml;
-            SimpleCluster* preC = dynamic_cast<SimpleCluster*>( (info.ml)->getFrom() );
+            BiasedCluster* preC = dynamic_cast<BiasedCluster*>( (info.ml)->getFrom() );
             if ( preC != 0 ) {
                 clusInfo infoC;
                 infoC.cl = preC;
@@ -140,7 +140,7 @@ LearningNetwork* backpropagationFor( BaseNeuralNet* net ) {
 void setParamsOfGradientBlocks( LearningNetwork* learnNet, Real rate, Real momento ) {
     const TeachBlockVec bls = learnNet->teachBlocks();
     for( u_int i=0; i<bls.size(); i++ ) {
-        GradientSimpleCluster* gcl = dynamic_cast<GradientSimpleCluster*>(bls[i]);
+        GradientBiasedCluster* gcl = dynamic_cast<GradientBiasedCluster*>(bls[i]);
         if ( gcl != 0 ) {
             gcl->setRate( rate );
             gcl->setMomentum( momento );
