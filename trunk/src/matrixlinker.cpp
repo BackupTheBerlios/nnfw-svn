@@ -105,9 +105,12 @@ Cluster* MatrixLinker::getTo() const {
 };
 
 void MatrixLinker::update() {
+//    Real* ptr;
     for ( u_int i = 0; i<ncols; i++ ) {
+//        ptr = w[i];
         for ( u_int j = 0; j<nrows; j++ ) {
             inputsTo[i] += outputsFrom[j] * w[i][j];
+//            inputsTo[i] += outputsFrom[j] * ptr[j];
         }
     }
     return;

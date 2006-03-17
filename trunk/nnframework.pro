@@ -2,8 +2,14 @@ TEMPLATE = lib
 TARGET   = ./lib/nnfw
 VERSION  = 0.2
 
-CONFIG += debug staticlib rtti warn_on
+CONFIG += release staticlib rtti warn_on
+CONFIG -= debug
 CONFIG -= qt
+
+!isEmpty( DEBUG ) {
+    CONFIG -= release
+    CONFIG += debug
+}
 
 contains( CONFIG, debug ) {
     unix:QMAKE_CXXFLAGS -= -O2
