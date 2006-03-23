@@ -47,101 +47,16 @@ public:
      */
     virtual ~SimpleCluster();
 
-    /*! \brief Return the number of the neurons
-     *
-     * Details...
-     */
-    u_int size() const;
-
     /*! \brief Update the outputs of neurons
      *
      * Details
      */
     void update();
 
-    /*! \brief Set the update function
-     *
-     * ATTENTION: This function delete the previous updater class registered !!! <br>
-     * Details...
+    /*! \brief Randomize Nothing ;-)
      */
-    void setUpdater( ClusterUpdater* up );
+    void randomize( Real min, Real max ) { /* Nothing To Do */ };
 
-    /*! \brief Set the update function for the neuron specified
-     *
-     * Details...
-     */
-    void setUpdater( ClusterUpdater* up, u_int neuron );
-
-    /*! \brief Get the update function
-     *
-     * Details...
-     */
-    const ClusterUpdater* getUpdater( u_int neuron ) const;
-
-    /*! \brief Set the input of neuron
-     *
-     * Details...
-     */
-    void setInput( u_int neuron, Real value );
-
-    /*! \brief Set all the inputs with the same value
-     *
-     * Details...
-     */
-    void setAllInputs( Real value );
-
-    /*! \brief It will sets the inputs at the value of biases
-     *
-     * Details...
-     */
-    void resetInputs();
-
-    /*! \brief Get the input of neuron
-     *
-     * Details...
-     */
-    Real getInput( u_int neuron ) const;
-
-    /*! \brief Get the array of inputs
-     *
-     *  Return the array of inputs, not a copy of inputs; Then you can change inputs by the pointer returned !!!
-     */
-    Real* getInputs( );
-
-    /*! \brief Force the output of the neuron at value specified
-     *
-     * Details...
-     */
-    void setOutput( u_int neuron, Real value );
-
-    /*! \brief Get the output of neuron
-     *
-     * Details...
-     */
-    Real getOutput( u_int neuron ) const;
-
-    /*! \brief Get the array of inputs
-     *
-     *  Return the array of outputs, not a copy of outputs; Then you can change outputs by the pointer returned !!!
-     */
-    Real* getOutputs( );
-
-    /*! \brief Randomize the biases of SimpleCluster
-     *
-     * Details...
-     */
-    void randomize( Real min, Real max );
-
-private:
-    u_int numNeurons;
-    Real* inputdata;
-    Real* outputdata;
-    //! Updaters Object
-    ClusterUpdater* singleUpdater;
-    ClusterUpdater** poolUpdater;
-    bool singleUpd;
-    //! temporary data
-    Real* tmpdata;
 };
 
 }

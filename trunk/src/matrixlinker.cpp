@@ -31,10 +31,7 @@ namespace nnfw {
 MatrixLinker::MatrixLinker( Cluster* from, Cluster* to, const char* name )
     : Linker(name) {
     nrows = from->size();
-    outputsFrom = from->getOutputs();
-
     ncols = to->size();
-    inputsTo = to->getInputs();
 
     // Weight Matrix Allocation procedure
     //  Matrix[column][row]
@@ -105,6 +102,11 @@ Cluster* MatrixLinker::getTo() const {
 };
 
 void MatrixLinker::update() {
+    // incoming cluster output
+    Real* outputsFrom = from->outputs();
+    // outgoing cluster inputs
+    Real* inputsTo = to->inputs();
+
 //    Real* ptr;
     for ( u_int i = 0; i<ncols; i++ ) {
 //        ptr = w[i];

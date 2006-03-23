@@ -52,20 +52,20 @@ void CopyLinker::setMode( CopyMode cm ) {
     this->mode = cm;
     switch( mode ) {
     case In2In:
-        dataFrom = from->getInputs();
-        dataTo = to->getInputs();
+        dataFrom = &Cluster::inputs; //from->inputs; //from->getInputs();
+        dataTo = &Cluster::inputs; //to->inputs; //to->getInputs();
         break;
     case In2Out:
-        dataFrom = from->getInputs();
-        dataTo = to->getOutputs();
+        dataFrom = &Cluster::inputs; //from->getInputs();
+        dataTo = &Cluster::outputs; //to->getOutputs();
         break;
     case Out2In:
-        dataFrom = from->getOutputs();
-        dataTo = to->getInputs();
+        dataFrom = &Cluster::outputs; //from->getOutputs();
+        dataTo = &Cluster::inputs; //to->getInputs();
         break;
     case Out2Out:
-        dataFrom = from->getOutputs();
-        dataTo = to->getOutputs();
+        dataFrom = &Cluster::outputs; //from->getOutputs();
+        dataTo = &Cluster::outputs; //to->getOutputs();
         break;
     }
     return;
@@ -76,7 +76,7 @@ CopyLinker::CopyMode CopyLinker::getMode() {
 }
 
 void CopyLinker::update() {
-    memcpy( dataFrom, dataTo, dimData*sizeof( Real ) );
+    memcpy( (from->*dataFrom)(), (to->*dataTo)(), dimData*sizeof( Real ) );
     return;
 }
 

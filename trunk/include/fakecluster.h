@@ -30,7 +30,7 @@ namespace nnfw {
  *  The FakeCluster implemented the Cluster Interface so it can be inserted inside a BaseNeuralNet,
  *  but it doesn't contains neurons, but it contains a simple vector with values and inputs and outputs
  *  are alias name for this vector of data. <br>
- *  It's very useful for inputs layers that don't needs true neurons but only a vector where registry*
+ *  It's very useful for inputs layers that don't needs true neurons but only a vector where registry
  *  the sensors values.
  *
  */
@@ -48,93 +48,14 @@ public:
      */
     virtual ~FakeCluster();
 
-    /*! \brief Return the size of the data vector
-     *
-     * Details...
-     */
-    u_int size() const;
-
     /*! \brief Update ;-) It's do nothing !!
-     *
-     * Details
      */
     void update();
 
-    /*! \brief This function is ignored !! ;-)
-     *
-     * Details...
-     */
-    void setUpdater( ClusterUpdater* up );
-
-    /*! \brief This function is ignored !! ;-)
-     *
-     * Details...
-     */
-    void setUpdater( ClusterUpdater* up, u_int numNeuron );
-
-    /*! \brief It's always return DummyUpdater ;-)
-     *
-     */
-    const ClusterUpdater* getUpdater( u_int numNeuron ) const;
-
-    /*! \brief Set the n-th position of vector
-     *
-     * Details...
-     */
-    void setInput( u_int n, Real value );
-
-    /*! \brief Set all the inputs with the same value
-     *
-     * Details...
-     */
-    void setAllInputs( Real value );
-
-    /*! \brief Reset the data of vector ( set all inputs to zero )
-     *
-     * Details...
-     */
-    void resetInputs();
-
-    /*! \brief Get the input of neuron
-     *
-     * Details...
-     */
-    Real getInput( u_int neuron ) const;
-
-    /*! \brief Get the array of inputs
-     *
-     *  Return the array of inputs, not a copy of inputs; Then you can change inputs by the pointer returned !!!
-     */
-    Real* getInputs( );
-
-    /*! \brief Same as setInput ;-)
-     *
-     * Details...
-     */
-    void setOutput( u_int neuron, Real value );
-
-    /*! \brief Get the output of neuron ( same as getInput ) ;-)
-     *
-     * Details...
-     */
-    Real getOutput( u_int neuron ) const;
-
-    /*! \brief Get the array of inputs
-     *
-     *  Return the array of outputs, not a copy of outputs; Then you can change outputs by the pointer returned !!!
-     */
-    Real* getOutputs( );
-
     /*! \brief Randomize ?!?! What means 'randomize a FakeCluster' ???
-     *
-     * Details...
      */
     void randomize( Real min, Real max );
 
-private:
-    u_int dim;
-    Real* data;
-    ClusterUpdater updater;
 };
 
 }

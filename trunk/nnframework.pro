@@ -48,7 +48,8 @@ HEADERS		= ./include/nnfw.h \
               ./include/blockslearning.h \
               ./include/learningnetwork.h
 
-SOURCES		= ./src/simplecluster.cpp \
+SOURCES		= ./src/cluster.cpp \
+              ./src/simplecluster.cpp \
               ./src/biasedcluster.cpp \
               ./src/fakecluster.cpp \
               ./src/clusterupdater.cpp \

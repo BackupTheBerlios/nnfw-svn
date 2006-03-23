@@ -101,10 +101,6 @@ public:
      */
     void update();
 private:
-    //! incoming cluster output
-    Real* outputsFrom;
-    //! outgoing cluster inputs
-    Real* inputsTo;
     //! Weight Matrix ( [column][row] )
     Real **w;
     //! Memory allocated for the weight matrix

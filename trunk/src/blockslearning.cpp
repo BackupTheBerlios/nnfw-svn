@@ -85,10 +85,10 @@ void GradientBiasedCluster::learn() {
     // Da implementare
     if ( mode == SupervisedTeachBlock::targetMode ) {
         //--- Calcolo l'errore
-        error = target - cl->getOutputs();
+        error = target - cl->outputs();
     }
     // --- calcolo del delta; error * derivataFunzioneAttivazione( input_netto )
-    const Real* out = cl->getOutputs();
+    const Real* out = cl->outputs();
     for( u_int i=0; i<error.size(); i++ ) {
         const DerivableClusterUpdater* dup = dynamic_cast<const DerivableClusterUpdater*>( cl->getUpdater( i ) );
         if ( dup == 0 ) {
@@ -149,7 +149,7 @@ void GradientMatrixLinker::learn() {
     // Da implementare
     if ( mode == targetMode ) {
         //--- Calcolo l'errore
-        error = target - ml->getTo()->getInputs();
+        error = target - ml->getTo()->inputs();
     }
     // --- I delta di eventuali neuroni mi arriva direttamente da GradientBiasedCluster
     
@@ -171,7 +171,7 @@ void GradientMatrixLinker::learn() {
     }
 
     // --- 2. Applica la regola del gradiente ai bias (pensati come pesi attaccati ad un neurone attivo a -1)
-    const Real* outIn = ml->getFrom()->getOutputs();
+    const Real* outIn = ml->getFrom()->outputs();
     for( u_int c=0; c<outS; c++ ) {
         for( u_int r=0; r<inpS; r++ ) {
             Real deltaMoment = (rate*error[c]*outIn[r]) + momento*errorOld[c];

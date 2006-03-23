@@ -32,134 +32,20 @@ namespace nnfw {
  **********************************************/
 
 SimpleCluster::SimpleCluster( u_int numNeurons, const char* name )
-    : Cluster(name) {
-    this->numNeurons = numNeurons;
-    outputdata = new Real[this->numNeurons];
-    inputdata = new Real[this->numNeurons];
-    memset( inputdata, 0, sizeof(Real)*this->numNeurons );
-    memset( outputdata, 0, sizeof(Real)*this->numNeurons );
-    //! Allocation for poolUpdater
-    poolUpdater = new ( ClusterUpdater ( *[this->numNeurons] ) );
-    //! SigmoidUpdater as Default Updater
-    setUpdater( new SigmoidUpdater( 1.0 ) );
-
-    tmpdata = new Real[this->numNeurons];
-    memset( tmpdata, 0, sizeof(Real)*this->numNeurons );
+    : Cluster( numNeurons, name) {
 }
 
 SimpleCluster::~SimpleCluster() {
-    delete []outputdata;
-    delete []inputdata;
-    delete []poolUpdater;
-}
-
-
-u_int SimpleCluster::size() const {
-    return numNeurons;
-}
-
-void SimpleCluster::setUpdater( ClusterUpdater* up ) {
-    singleUpdater = up;
-    singleUpd = true;
-    // Copy this updater to poolUpdater for future settings by setUpdater( up, numNeuron )
-    //  and for simpler implementation of getUpdater
-    for( u_int i = 0; i<numNeurons; i++ ) {
-        poolUpdater[i] = singleUpdater;
-    }
-}
-
-void SimpleCluster::setUpdater( ClusterUpdater* up, u_int neuron ) {
-    if ( neuron >= numNeurons ) {
-        char msg[100];
-        sprintf( msg, "The neuron %u doesn't exists! The operation setUpdater will be ignored", neuron );
-        nnfwMessage( NNFW_ERROR, msg );
-        return;
-    }
-    poolUpdater[neuron] = up;
-    singleUpd = false;
 }
 
 void SimpleCluster::update() {
-    if ( singleUpd ) {
-        singleUpdater->update( inputdata, outputdata, numNeurons );
+    if ( isSingleUpdater() ) {
+        updaters()[0]->update( inputs(), outputs(), size() );
     } else {
-        for ( u_int i = 0; i<numNeurons; i++ ) {
-            poolUpdater[i]->update( inputdata[i], outputdata[i] );
+        for ( u_int i = 0; i<size(); i++ ) {
+            updaters()[i]->update( inputs()[i], outputs()[i] );
         }
     }
-}
-
-const ClusterUpdater* SimpleCluster::getUpdater( u_int neuron ) const {
-    if ( neuron >= numNeurons ) {
-        char msg[100];
-        sprintf( msg, "The neuron %u doesn't exists! The operation setInput will be ignored", neuron );
-        nnfwMessage( NNFW_ERROR, msg );
-        // ---- FIXME returning reference to temporary object !! (NON E' vero che e' temporary... e un memory leak)
-        return new DummyUpdater();
-    }
-    return poolUpdater[ neuron ];
-}
-
-void SimpleCluster::setInput( u_int neuron, Real value ) {
-    if ( neuron >= numNeurons ) {
-        char msg[100];
-        sprintf( msg, "The neuron %u doesn't exists! The operation setInput will be ignored", neuron );
-        nnfwMessage( NNFW_ERROR, msg );
-        return;
-    }
-    inputdata[neuron] = value;
-}
-
-void SimpleCluster::setAllInputs( Real value ) {
-    for ( u_int i = 0; i<numNeurons; i++ ) {
-        inputdata[i] = value;
-    }
-}
-
-void SimpleCluster::resetInputs() {
-    memset( inputdata, 0, numNeurons*sizeof( Real ) );
-}
-
-Real SimpleCluster::getInput( u_int neuron ) const {
-    if ( neuron >= numNeurons ) {
-        char msg[100];
-        sprintf( msg, "The neuron %u doesn't exists! The operation getInput will return 0.0", neuron );
-        nnfwMessage( NNFW_ERROR, msg );
-        return 0.0;
-    }
-    return inputdata[neuron];
-}
-
-Real* SimpleCluster::getInputs() {
-    return inputdata;
-}
-
-void SimpleCluster::setOutput( u_int neuron, Real value ) {
-    if ( neuron >= numNeurons ) {
-        char msg[100];
-        sprintf( msg, "The neuron %u doesn't exists! The operation setOutput will be ignored", neuron );
-        nnfwMessage( NNFW_ERROR, msg );
-        return;
-    }
-    outputdata[neuron] = value;
-}
-
-Real SimpleCluster::getOutput( u_int neuron ) const {
-    if ( neuron >= numNeurons ) {
-        char msg[100];
-        sprintf( msg, "The neuron %u doesn't exists! The operation getOutput will return 0.0", neuron );
-        nnfwMessage( NNFW_ERROR, msg );
-        return 0.0;
-    }
-    return outputdata[neuron];
-}
-
-Real* SimpleCluster::getOutputs() {
-    return outputdata;
-}
-
-void SimpleCluster::randomize( Real , Real ) {
-    // --- Nothing to do
 }
 
 }
