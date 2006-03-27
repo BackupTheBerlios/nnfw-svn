@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005 Gianluca Massera <emmegian@yahoo.it>                     *
+ *  Copyright (C) 2005-2006 Gianluca Massera <emmegian@yahoo.it>                     *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -20,7 +20,7 @@
 #ifndef NNFW_H
 #define NNFW_H
 
-/*! \mainpage Neural Network Framework (svn release: 37)
+/*! \mainpage Neural Network Framework (release 0.2 - revision 44)
  *  <h1>Class Reference</h1>
  *
  *  This is a Neural Network Framework for creating, simulating and analyze any neural network you can image !!
