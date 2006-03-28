@@ -21,6 +21,10 @@
 #include "random.h"
 #include <cstdio>
 
+#ifdef NNFW_USE_MKL
+#include <mkl_cblas.h>
+#endif
+
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {
 
@@ -106,15 +110,15 @@ void MatrixLinker::update() {
     Real* outputsFrom = from->outputs();
     // outgoing cluster inputs
     Real* inputsTo = to->inputs();
-
-//    Real* ptr;
+#ifdef NNFW_USE_MKL
+    cblas_dgemv(CblasColMajor, CblasTrans, nrows, ncols, 1.0, memM, nrows, outputsFrom, 1, 0.0, inputsTo, 1);
+#else
     for ( u_int i = 0; i<ncols; i++ ) {
-//        ptr = w[i];
         for ( u_int j = 0; j<nrows; j++ ) {
             inputsTo[i] += outputsFrom[j] * w[i][j];
-//            inputsTo[i] += outputsFrom[j] * ptr[j];
         }
     }
+#endif
     return;
 }
 

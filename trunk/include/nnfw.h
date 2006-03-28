@@ -20,7 +20,7 @@
 #ifndef NNFW_H
 #define NNFW_H
 
-/*! \mainpage Neural Network Framework (release 0.2.1 - SVN revision 45)
+/*! \mainpage Neural Network Framework (release 0.2.2 - SVN revision 47)
  *  <h1>Class Reference</h1>
  *
  *  This is a Neural Network Framework for creating, simulating and analyze any neural network you can image !!

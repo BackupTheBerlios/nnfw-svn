@@ -49,7 +49,7 @@ namespace nnfw {
 typedef  unsigned int u_int;
 
 //! Abstraction on the type of real numbers
-typedef  double Real;
+typedef double Real;
 
 //! Vector of Real
 class  RealVec : public Vector<Real> {

@@ -21,8 +21,17 @@
 
 #include <cmath>
 
+#ifdef NNFW_USE_MKL
+#include <mkl_vml.h>
+#include <mkl_cblas.h>
+#endif
+
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {
+
+#ifdef NNFW_USE_MKL
+int inutile = vmlSetMode( VML_LA );
+#endif
 
 void DummyUpdater::update( Real* inputs, Real* outputs, u_int numNeuron ) {
     for ( u_int i = 0; i<numNeuron; i++ ) {
@@ -39,9 +48,20 @@ Real DummyUpdater::derivate( Real ) const {
 }
 
 void SigmoidUpdater::update( Real* inputs, Real* outputs, u_int numNeuron ) {
+#ifdef NNFW_USE_MKL
+    for ( u_int i = 0; i<numNeuron; i++ ) {
+        outputs[i] = -lambda*inputs[i];
+    }
+    // outputs = exp( outputs )
+    vdExp( numNeuron, outputs, outputs );
+    for ( u_int i = 0; i<numNeuron; i++ ) {
+        outputs[i] = 1.0/( 1.0 + outputs[i] );
+    }
+#else
     for ( u_int i = 0; i<numNeuron; i++ ) {
         outputs[i] = 1.0/( 1.0 + exp( -lambda*( inputs[i] ) ) );
     }
+#endif
 }
 
 void SigmoidUpdater::update( Real input, Real &output ) {
@@ -93,11 +113,21 @@ Real FakeSigmoidUpdater::derivate( Real x ) const {
 }
 
 void ScaledSigmoidUpdater::update( Real* inputs, Real* outputs, u_int numNeuron ) {
+#ifdef NNFW_USE_MKL
+    for ( u_int i = 0; i<numNeuron; i++ ) {
+        outputs[i] = -lambda*( inputs[i] );
+    }
+    vdExp( numNeuron, outputs, outputs );
+    for ( u_int i = 0; i<numNeuron; i++ ) {
+        outputs[i] = (max - min ) * (1.0/( 1.0 + outputs[i] )) + min;
+    }
+#else
     Real f;
     for ( u_int i = 0; i<numNeuron; i++ ) {
         f = 1.0/( 1.0 + exp( -lambda*( inputs[i] ) ) );
         outputs[i] = ( max - min ) * f + min ;
     }
+#endif
 }
 
 void ScaledSigmoidUpdater::update( Real input, Real &output ) {

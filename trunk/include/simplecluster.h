@@ -55,7 +55,7 @@ public:
 
     /*! \brief Randomize Nothing ;-)
      */
-    void randomize( Real min, Real max ) { /* Nothing To Do */ };
+    void randomize( Real, Real ) { /* Nothing To Do */ };
 
 };
 
