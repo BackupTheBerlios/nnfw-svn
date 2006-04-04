@@ -26,17 +26,18 @@
 #include <mkl_cblas.h>
 #endif
 
+#ifdef NNFW_DEBUG
+#include "messages.h"
+#endif
+
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {
 
-#ifdef NNFW_USE_MKL
-int inutile = vmlSetMode( VML_LA );
-#endif
-
-void DummyUpdater::update( Real* inputs, Real* outputs, u_int numNeuron ) {
-    for ( u_int i = 0; i<numNeuron; i++ ) {
+void DummyUpdater::update( RealVec& inputs, RealVec& outputs ) {
+    outputs.assign( inputs );
+/*    for ( u_int i = 0; i<numNeuron; i++ ) {
         outputs[i] = inputs[i];
-    }
+    }*/
 }
 
 void DummyUpdater::update( Real input, Real &output ) {
@@ -47,21 +48,24 @@ Real DummyUpdater::derivate( Real ) const {
     return 1.0;
 }
 
-void SigmoidUpdater::update( Real* inputs, Real* outputs, u_int numNeuron ) {
-#ifdef NNFW_USE_MKL
-    for ( u_int i = 0; i<numNeuron; i++ ) {
-        outputs[i] = -lambda*inputs[i];
-    }
-    // outputs = exp( outputs )
-    vdExp( numNeuron, outputs, outputs );
-    for ( u_int i = 0; i<numNeuron; i++ ) {
-        outputs[i] = 1.0/( 1.0 + outputs[i] );
-    }
-#else
-    for ( u_int i = 0; i<numNeuron; i++ ) {
-        outputs[i] = 1.0/( 1.0 + exp( -lambda*( inputs[i] ) ) );
+void SigmoidUpdater::update( RealVec& inputs, RealVec& outputs ) {
+    u_int size = inputs.size();
+#ifdef NNFW_DEBUG
+    if ( inputs.size() != outputs.size() ) {
+        nnfwMessage( NNFW_ERROR, "The output dimension doesn't match the input dimension" );
+        return;
     }
 #endif
+    outputs.assign( inputs );
+    outputs.scale( -lambda );
+/*    for ( u_int i = 0; i<size; i++ ) {
+        outputs[i] = -lambda*inputs[i];
+    }*/
+    outputs.exp();
+    //vdExp( size, outputs, outputs );
+    for ( u_int i = 0; i<size; i++ ) {
+        outputs[i] = 1.0/( 1.0 + outputs[i] );
+    }
 }
 
 void SigmoidUpdater::update( Real input, Real &output ) {
@@ -72,11 +76,18 @@ Real SigmoidUpdater::derivate( Real x ) const {
     return x*(1.0-x);
 }
 
-void FakeSigmoidUpdater::update( Real* inputs, Real* outputs, u_int numNeuron ) {
+void FakeSigmoidUpdater::update( RealVec& inputs, RealVec& outputs ) {
+    u_int size = inputs.size();
+#ifdef NNFW_DEBUG
+    if ( inputs.size() != outputs.size() ) {
+        nnfwMessage( NNFW_ERROR, "The output dimension doesn't match the input dimension" );
+        return;
+    }
+#endif
     Real x;
     Real x0 = 6. + 2./3.;
     Real zero = 0.5;
-    for ( u_int i = 0; i<numNeuron; i++ ) {
+    for ( u_int i = 0; i<size; i++ ) {
         x = inputs[i];
         x *= lambda;
         x -= (.5 - zero) / (.075 + zero);
@@ -112,22 +123,23 @@ Real FakeSigmoidUpdater::derivate( Real x ) const {
     return x*(1.0-x);
 }
 
-void ScaledSigmoidUpdater::update( Real* inputs, Real* outputs, u_int numNeuron ) {
-#ifdef NNFW_USE_MKL
-    for ( u_int i = 0; i<numNeuron; i++ ) {
-        outputs[i] = -lambda*( inputs[i] );
-    }
-    vdExp( numNeuron, outputs, outputs );
-    for ( u_int i = 0; i<numNeuron; i++ ) {
-        outputs[i] = (max - min ) * (1.0/( 1.0 + outputs[i] )) + min;
-    }
-#else
-    Real f;
-    for ( u_int i = 0; i<numNeuron; i++ ) {
-        f = 1.0/( 1.0 + exp( -lambda*( inputs[i] ) ) );
-        outputs[i] = ( max - min ) * f + min ;
+void ScaledSigmoidUpdater::update( RealVec& inputs, RealVec& outputs ) {
+    u_int size = inputs.size();
+#ifdef NNFW_DEBUG
+    if ( inputs.size() != outputs.size() ) {
+        nnfwMessage( NNFW_ERROR, "The output dimension doesn't match the input dimension" );
+        return;
     }
 #endif
+    outputs.assign( inputs );
+    outputs.scale( -lambda );
+/*    for ( u_int i = 0; i<numNeuron; i++ ) {
+        outputs[i] = -lambda*( inputs[i] );
+    }*/
+    outputs.exp();
+    for ( u_int i = 0; i<size; i++ ) {
+        outputs[i] = (max - min ) * (1.0/( 1.0 + outputs[i] )) + min;
+    }
 }
 
 void ScaledSigmoidUpdater::update( Real input, Real &output ) {
@@ -140,8 +152,15 @@ Real ScaledSigmoidUpdater::derivate( Real x ) const {
     return x*(1.0-x);
 }
 
-void LinearUpdater::update( Real* inputs, Real* outputs, u_int numNeuron ) {
-    for ( u_int i = 0; i<numNeuron; i++ ) {
+void LinearUpdater::update( RealVec& inputs, RealVec& outputs ) {
+    u_int size = inputs.size();
+#ifdef NNFW_DEBUG
+    if ( inputs.size() != outputs.size() ) {
+        nnfwMessage( NNFW_ERROR, "The output dimension doesn't match the input dimension" );
+        return;
+    }
+#endif
+    for ( u_int i = 0; i<size; i++ ) {
         Real m = ( maxY-minY )/( maxX-minX );
         Real q = minY - m*minX;
         Real ret = m*(inputs[i]) + q;
@@ -176,8 +195,15 @@ Real LinearUpdater::derivate( Real x ) const {
     }
 }
 
-void BinaryUpdater::update( Real* inputs, Real* outputs, u_int numNeuron ) {
-    for ( u_int i = 0; i<numNeuron; i++ ) {
+void BinaryUpdater::update( RealVec& inputs, RealVec& outputs ) {
+    u_int size = inputs.size();
+#ifdef NNFW_DEBUG
+    if ( inputs.size() != outputs.size() ) {
+        nnfwMessage( NNFW_ERROR, "The output dimension doesn't match the input dimension" );
+        return;
+    }
+#endif
+    for ( u_int i = 0; i<size; i++ ) {
         ( inputs[i] > threshold ) ? outputs[i] = 1.0f : outputs[i] = 0.0f;
     }
 }

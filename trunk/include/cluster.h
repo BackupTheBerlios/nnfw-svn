@@ -85,7 +85,6 @@ public:
     virtual ~Cluster();
 
     /*! \brief Return the number of neurons (the length of input and output arrays)
-     *
      * Details...
      */
     u_int size() const {
@@ -93,43 +92,36 @@ public:
     };
 
     /*! \brief Set the input of neuron
-     *
      * Details...
      */
     virtual void setInput( u_int neuron, Real value );
 
     /*! \brief Set all the inputs with the same value
-     *
      * Details...
      */
     virtual void setAllInputs( Real value );
 
     /*! \brief Reset the inputs of this cluster, typically this means that the inputs will be set to zero.
-     *
      * Details...
      */
     virtual void resetInputs();
 
     /*! \brief Get the input of neuron
-     *
      * Details...
      */
     virtual Real getInput( u_int neuron ) const;
 
     /*! \brief Force the output of the neuron at value specified
-     *
      * Details...
      */
     virtual void setOutput( u_int neuron, Real value );
 
     /*! \brief Get the output of neuron
-     *
      * Details...
      */
     virtual Real getOutput( u_int neuron ) const;
 
     /*! \brief Randomize the parameters of the Cluster
-     *
      * The parameters randomized by this method will be specified by sub-classes
      */
     virtual void randomize( Real min, Real max ) = 0;
@@ -165,7 +157,7 @@ public:
     /*! \brief Get the array of inputs
      *  Return the array of inputs, not a copy of inputs; Then you can change inputs by the pointer returned !!!
      */
-    Real* inputs() {
+    RealVec& inputs() {
         return inputdata;
     };
 
@@ -173,7 +165,7 @@ public:
      *
      *  Return the array of outputs, not a copy of outputs; Then you can change outputs by the pointer returned !!!
      */
-    Real* outputs() {
+    RealVec& outputs() {
         return outputdata;
     };
 
@@ -181,21 +173,21 @@ protected:
     /*! \brief Only for special needs during subclass implementation
      *  See the FakeCluster implemetation for an example
      */
-    void changeInputPointerData( Real* newPointer ) {
-        inputdata = newPointer;
-    };
+//     void changeInputPointerData( Real* newPointer ) {
+//         inputdata = newPointer;
+//     };
 
     /*! \brief Only for special needs during subclass implementation
      *  See the FakeCluster implemetation for an example
      */
-    void changeOutputPointerData( Real* newPointer ) {
-        outputdata = newPointer;
-    };
+//     void changeOutputPointerData( Real* newPointer ) {
+//         outputdata = newPointer;
+//     };
 
 private:
     u_int numNeurons;
-    Real* inputdata;
-    Real* outputdata;
+    RealVec inputdata;
+    RealVec outputdata;
     //! Updaters Object
     ClusterUpdater* singleUpdater;
     ClusterUpdater** poolUpdater;

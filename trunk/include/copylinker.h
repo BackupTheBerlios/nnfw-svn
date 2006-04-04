@@ -101,8 +101,8 @@ public:
         // --- Do Nothing
     };
 private:
-    Real* (Cluster::*dataFrom)();
-    Real* (Cluster::*dataTo)();
+    RealVec& (Cluster::*dataFrom)();
+    RealVec& (Cluster::*dataTo)();
     u_int dimData;
     Cluster* from;
     Cluster* to;

@@ -32,11 +32,11 @@ Files=test2.cpp/test2.pro
 
 [Dir include]
 Dirs=
-Files=clusterupdater.h/libclusterupdaters.h/messages.h/neuralnet.h/nnfw.h/random.h/types.h/utils.h/cluster.h/fakecluster.h/simplecluster.h/linker.h/copylinker.h/matrixlinker.h/updatable.h/derivableclusterupdater.h/blockslearning.h/learningnetwork.h/biasedcluster.h
+Files=clusterupdater.h/libclusterupdaters.h/messages.h/neuralnet.h/nnfw.h/random.h/types.h/utils.h/cluster.h/fakecluster.h/simplecluster.h/linker.h/copylinker.h/matrixlinker.h/updatable.h/derivableclusterupdater.h/blockslearning.h/learningnetwork.h/biasedcluster.h/realvec.h
 
 [Dir src]
 Dirs=
-Files=libclusterupdaters.cpp/messages.cpp/neuralnet.cpp/random.cpp/types.cpp/fakecluster.cpp/simplecluster.cpp/copylinker.cpp/matrixlinker.cpp/clusterupdater.cpp/blockslearning.cpp/learningnetwork.cpp/utils.cpp/biasedcluster.cpp/cluster.cpp
+Files=libclusterupdaters.cpp/messages.cpp/neuralnet.cpp/random.cpp/types.cpp/fakecluster.cpp/simplecluster.cpp/copylinker.cpp/matrixlinker.cpp/clusterupdater.cpp/blockslearning.cpp/learningnetwork.cpp/utils.cpp/biasedcluster.cpp/cluster.cpp/realvec.cpp
 
 [Dir tests]
 Dirs=test1/test2/test3/test4/test5/test6

@@ -175,7 +175,7 @@ public:
      */
     void step() {
         for( u_int i=0; i<zeroclusters.size(); i++ ) {
-            zeroclusters[i]->setAllInputs( 0.0 );
+            zeroclusters[i]->resetInputs();
         }
         for( u_int i=0; i<dimUps; i++ ) {
             if ( mask[i] ) {

@@ -54,10 +54,10 @@ SupervisedTeachBlock::SupervisedTeachBlock( BaseTeachBlock* preBlock, BaseTeachB
 
 void SupervisedTeachBlock::setTarget( const RealVec& target ) {
     mode = targetMode;
-    this->target = target;
+    this->target.assign( target );
 }
 
-RealVec SupervisedTeachBlock::getTarget() {
+RealVec& SupervisedTeachBlock::getTarget() {
     return target;
 }
 
@@ -66,7 +66,7 @@ void SupervisedTeachBlock::addError( const RealVec& error ) {
     this->error += error;
 }
 
-RealVec SupervisedTeachBlock::getError() {
+RealVec& SupervisedTeachBlock::getError() {
     return error;
 }
 
@@ -85,10 +85,11 @@ void GradientBiasedCluster::learn() {
     // Da implementare
     if ( mode == SupervisedTeachBlock::targetMode ) {
         //--- Calcolo l'errore
-        error = target - cl->outputs();
+        error.assign( target );
+        error -= cl->outputs();
     }
     // --- calcolo del delta; error * derivataFunzioneAttivazione( input_netto )
-    const Real* out = cl->outputs();
+    const RealVec& out = cl->outputs();
     for( u_int i=0; i<error.size(); i++ ) {
         const DerivableClusterUpdater* dup = dynamic_cast<const DerivableClusterUpdater*>( cl->getUpdater( i ) );
         if ( dup == 0 ) {
@@ -109,8 +110,7 @@ void GradientBiasedCluster::learn() {
         Real deltaMoment = - (rate*error[i]) + momento*errorOld[i];
         cl->setBias( i, cl->getBias(i) + deltaMoment );
     }
-    errorOld = error;
-
+    errorOld.assign( error );
     error.assign( error.size(), 0.0f );
 }
 
@@ -149,7 +149,8 @@ void GradientMatrixLinker::learn() {
     // Da implementare
     if ( mode == targetMode ) {
         //--- Calcolo l'errore
-        error = target - ml->getTo()->inputs();
+        error.assign( target );
+        error -= ml->getTo()->inputs();
     }
     // --- I delta di eventuali neuroni mi arriva direttamente da GradientBiasedCluster
     
@@ -171,15 +172,14 @@ void GradientMatrixLinker::learn() {
     }
 
     // --- 2. Applica la regola del gradiente ai bias (pensati come pesi attaccati ad un neurone attivo a -1)
-    const Real* outIn = ml->getFrom()->outputs();
+    const RealVec& outIn = ml->getFrom()->outputs();
     for( u_int c=0; c<outS; c++ ) {
         for( u_int r=0; r<inpS; r++ ) {
             Real deltaMoment = (rate*error[c]*outIn[r]) + momento*errorOld[c];
             ml->setWeight( r, c, ml->getWeight(r,c) + deltaMoment );
         }
     }
-    errorOld = error;
-
+    errorOld.assign( error );
     error.assign( error.size(), 0.0f );
 }
 

@@ -112,11 +112,11 @@ public:
     //! Set the desired output values for the current input values
     void setTarget( const RealVec& target );
     //! Return the target values specified
-    RealVec getTarget();
+    RealVec& getTarget();
     //! Add the error passed to the error already registered
     void addError( const RealVec& error );
     //! Return the last Errors values
-    RealVec getError();
+    RealVec& getError();
 protected:
     //! the desired output values
     RealVec target;

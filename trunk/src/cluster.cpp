@@ -32,12 +32,15 @@ namespace nnfw {
  **********************************************/
 
 Cluster::Cluster( u_int numNeurons, const char* name )
-    : Updatable(name) {
+    : Updatable(name), inputdata(numNeurons), outputdata(numNeurons) {
     this->numNeurons = numNeurons;
-    outputdata = new Real[this->numNeurons];
+    outputdata.zeroing();
+    inputdata.zeroing();
+/*    outputdata = new Real[this->numNeurons];
     inputdata = new Real[this->numNeurons];
     memset( inputdata, 0, sizeof(Real)*this->numNeurons );
-    memset( outputdata, 0, sizeof(Real)*this->numNeurons );
+    memset( outputdata, 0, sizeof(Real)*this->numNeurons );*/
+
     //! Allocation for poolUpdater
     poolUpdater = new ( ClusterUpdater ( *[this->numNeurons] ) );
     //! SigmoidUpdater as Default Updater
@@ -45,8 +48,8 @@ Cluster::Cluster( u_int numNeurons, const char* name )
 }
 
 Cluster::~Cluster() {
-    delete []outputdata;
-    delete []inputdata;
+/*    delete []outputdata;
+    delete []inputdata;*/
     delete []poolUpdater;
 }
 
@@ -93,13 +96,15 @@ void Cluster::setInput( u_int neuron, Real value ) {
 }
 
 void Cluster::setAllInputs( Real value ) {
-    for ( u_int i = 0; i<numNeurons; i++ ) {
+    inputdata.assign( numNeurons, value );
+/*    for ( u_int i = 0; i<numNeurons; i++ ) {
         inputdata[i] = value;
-    }
+    }*/
 }
 
 void Cluster::resetInputs() {
-    memset( inputdata, 0, numNeurons*sizeof( Real ) );
+    inputdata.zeroing();
+    //memset( inputdata, 0, numNeurons*sizeof( Real ) );
 }
 
 Real Cluster::getInput( u_int neuron ) const {

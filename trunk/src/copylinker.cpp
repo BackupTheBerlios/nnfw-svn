@@ -76,7 +76,7 @@ CopyLinker::CopyMode CopyLinker::getMode() {
 }
 
 void CopyLinker::update() {
-    memcpy( (from->*dataFrom)(), (to->*dataTo)(), dimData*sizeof( Real ) );
+    memcpy( (from->*dataFrom)().rawdata(), (to->*dataTo)().rawdata(), dimData*sizeof( Real ) );
     return;
 }
 

@@ -27,26 +27,23 @@
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {
 
-/**********************************************
- *  Implementation of FakeCluster Class       *
- **********************************************/
-
 FakeCluster::FakeCluster( u_int size, const char* name )
     : Cluster( size, name) {
     // Merge the two array of data, and free one of them
-    changeOutputPointerData( inputs() );
-    delete []( outputs() );
+/*    changeOutputPointerData( inputs() );
+    delete []( outputs() );*/
 }
 
 FakeCluster::~FakeCluster() {
 }
 
 void FakeCluster::update() {
+    outputs().assign( inputs() );
     return;
 }
 
 void FakeCluster::randomize( Real , Real ) {
-    //nnfwMessage( NNFW_INFORMATION, "What means 'randomize a Fake Cluster' ???" );
+    nnfwMessage( NNFW_INFORMATION, "What means 'randomize a Fake Cluster' ???" );
     return;
 }
 

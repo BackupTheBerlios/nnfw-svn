@@ -53,7 +53,7 @@ public:
     virtual ~DummyUpdater() { /* Nothing to do */ };
 
     //! Implement the dummy updating method
-    void update( Real* inputs, Real* outputs, u_int numNeuron );
+    void update( RealVec& inputs, RealVec& outputs );
 
     //! Single neuron update
     void update( Real input, Real &output );
@@ -80,7 +80,7 @@ public:
      *
      * Details...
      */
-    void update( Real* inputs, Real* outputs, u_int numNeuron );
+    void update( RealVec& inputs, RealVec& outputs );
 
     //! Single neuron update
     void update( Real input, Real &output );
@@ -110,7 +110,7 @@ public:
      *
      * Details...
      */
-    void update( Real* inputs, Real* outputs, u_int numNeuron );
+    void update( RealVec& inputs, RealVec& outputs );
 
     //! Single neuron update
     void update( Real input, Real &output );
@@ -147,7 +147,7 @@ public:
      *
      * Details...
      */
-    void update( Real* inputs, Real* outputs, u_int numNeuron );
+    void update( RealVec& inputs, RealVec& outputs );
 
     //! Single neuron update
     void update( Real input, Real &output );
@@ -192,7 +192,7 @@ public:
      *
      * Details...
      */
-    void update( Real* inputs, Real* outputs, u_int numNeuron );
+    void update( RealVec& inputs, RealVec& outputs );
 
     //! Single neuron update
     void update( Real input, Real &output );
@@ -228,7 +228,7 @@ public:
      *
      * Details...
      */
-    void update( Real* inputs, Real* outputs, u_int numNeuron );
+    void update( RealVec& inputs, RealVec& outputs );
 
     //! Single neuron update
     void update( Real input, Real &output );

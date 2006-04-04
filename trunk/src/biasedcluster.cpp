@@ -27,30 +27,29 @@
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {
 
-/**********************************************
- *  Implementation of BiasedCluster Class     *
- **********************************************/
-
 BiasedCluster::BiasedCluster( u_int numNeurons, const char* name )
-    : Cluster( numNeurons, name) {
-    biases = new Real[numNeurons];
+    : Cluster( numNeurons, name), biases(numNeurons), tmpdata(numNeurons) {
+    biases.zeroing();
+    tmpdata.zeroing();
+/*    biases = new Real[numNeurons];
     memset( biases, 0, sizeof(Real)*numNeurons );
-
     tmpdata = new Real[numNeurons];
-    memset( tmpdata, 0, sizeof(Real)*numNeurons );
+    memset( tmpdata, 0, sizeof(Real)*numNeurons );*/
 }
 
 BiasedCluster::~BiasedCluster() {
-    delete []biases;
-    delete []tmpdata;
+/*    delete []biases;
+    delete []tmpdata;*/
 }
 
 void BiasedCluster::update() {
     if ( isSingleUpdater() ) {
-        for ( u_int i = 0; i<size(); i++ ) {
+/*        for ( u_int i = 0; i<size(); i++ ) {
             tmpdata[i] = inputs()[i] - biases[i];
-        }
-        updaters()[0]->update( tmpdata, outputs(), size() );
+        }*/
+        tmpdata.assign( inputs() );
+        tmpdata -= biases;
+        updaters()[0]->update( tmpdata, outputs() );
     } else {
         for ( u_int i = 0; i<size(); i++ ) {
             updaters()[i]->update( inputs()[i] - biases[i], outputs()[i] );
@@ -69,16 +68,18 @@ void BiasedCluster::setBias( u_int neuron, Real bias ) {
 }
 
 void BiasedCluster::setAllBiases( Real bias ) {
-    for( u_int i=0; i<size(); i++ ) {
+    biases.assign( size(), bias );
+/*    for( u_int i=0; i<size(); i++ ) {
         biases[i] = bias;
-    }
+    }*/
 }
 
-void BiasedCluster::setBiases( const RealVec& biases ) {
-    u_int dim = biases.size();
+void BiasedCluster::setBiases( const RealVec& bias ) {
+    biases.assign( bias );
+/*    u_int dim = biases.size();
     for( u_int i=0; i<dim; i++ ) {
         setBias( i, biases[i] );
-    }
+    }*/
 }
 
 Real BiasedCluster::getBias( u_int neuron ) {

@@ -17,66 +17,32 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA  *
  ********************************************************************************/
 
-#ifndef BIASEDCLUSTER_H
-#define BIASEDCLUSTER_H
+#include "types.h"
 
-#include "cluster.h"
-#include "clusterupdater.h"
+#include <cmath>
+
+#ifdef NNFW_USE_MKL
+#include <mkl_vml.h>
+#include <mkl_cblas.h>
+#endif
 
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {
 
-/*! \brief BiasedCluster Class. In this cluster a neuron have an input, a output and a bias value.
- *
- *  The BiasedCluster update the neurons contained using an object of type ClusterUpdater. The ClusterUpdater calculate the outputs
- *  of neuron as function of inputs of the neurons. <br>
- *  <em> I know... I know that the name ClusterUpdater is confusing... but for now I haven't a better idea !! </em>
- *  Further Details coming soon ... :-)
- */
-class  BiasedCluster : public Cluster {
-public:
-    /*! \brief Construct a Cluster that contains numNeurons neuron
-     *
-     *  Details...
-     */
-    BiasedCluster( u_int numNeurons, const char* name = "unnamed" );
+#ifdef NNFW_USE_MKL
+int inutile = vmlSetMode( VML_LA );
+#endif
 
-    /*! \brief Destructor
-     *
-     * Details..
-     */
-    virtual ~BiasedCluster();
-
-    /*! \brief Update the outputs of neurons
-     */
-    void update();
-
-    /*! \brief Set the bias of the neuron
-     */
-    void setBias( u_int neuron, Real bias );
-
-    /*! \brief Set all biases with the same value
-     */
-    void setAllBiases( Real bias );
-
-    /*! \brief Set the biases from the vector given
-     */
-    void setBiases( const RealVec& biases );
-
-    /*! \brief Get bias of the neuron
-     */
-    Real getBias( u_int neuron );
-
-    /*! \brief Randomize the biases of BiasedCluster
-     */
-    void randomize( Real min, Real max );
-
-private:
-    RealVec biases;
-    //! temporary data
-    RealVec tmpdata;
-};
+RealVec& RealVec::exp() {
+#ifdef NNFW_USE_MKL
+    vdExp( vsize, data, data );
+#else
+    for( u_int i=0; i<vsize; i++ ) {
+        data[i] = std::exp( data[i] );
+    };
+#endif
+    return (*this);
+}
 
 }
 
-#endif

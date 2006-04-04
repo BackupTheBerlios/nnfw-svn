@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA  *
  ********************************************************************************/
 
-#ifndef BIASEDCLUSTER_H
-#define BIASEDCLUSTER_H
+#ifndef DDECLUSTER_H
+#define DDECLUSTER_H
 
 #include "cluster.h"
 #include "clusterupdater.h"
@@ -26,55 +26,34 @@
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {
 
-/*! \brief BiasedCluster Class. In this cluster a neuron have an input, a output and a bias value.
- *
- *  The BiasedCluster update the neurons contained using an object of type ClusterUpdater. The ClusterUpdater calculate the outputs
- *  of neuron as function of inputs of the neurons. <br>
- *  <em> I know... I know that the name ClusterUpdater is confusing... but for now I haven't a better idea !! </em>
- *  Further Details coming soon ... :-)
+/*! \brief DDECluster Class. In this cluster the input/output relation is governed by a Discrete Differential Equation
+ *  \par Motivation
+ *  \par Description
+ *  \par Warnings
  */
-class  BiasedCluster : public Cluster {
+class  DDECluster : public Cluster {
 public:
     /*! \brief Construct a Cluster that contains numNeurons neuron
-     *
      *  Details...
      */
-    BiasedCluster( u_int numNeurons, const char* name = "unnamed" );
+    DDECluster( u_int numNeurons, const char* name = "unnamed" );
 
     /*! \brief Destructor
-     *
      * Details..
      */
-    virtual ~BiasedCluster();
+    virtual ~DDECluster();
 
     /*! \brief Update the outputs of neurons
+     * Details
      */
     void update();
 
-    /*! \brief Set the bias of the neuron
+    /*! \brief Randomize Nothing ;-)
      */
-    void setBias( u_int neuron, Real bias );
-
-    /*! \brief Set all biases with the same value
-     */
-    void setAllBiases( Real bias );
-
-    /*! \brief Set the biases from the vector given
-     */
-    void setBiases( const RealVec& biases );
-
-    /*! \brief Get bias of the neuron
-     */
-    Real getBias( u_int neuron );
-
-    /*! \brief Randomize the biases of BiasedCluster
-     */
-    void randomize( Real min, Real max );
+    void randomize( Real, Real ) { /* Nothing To Do */ };
 
 private:
-    RealVec biases;
-    //! temporary data
-    RealVec tmpdata;
+    Real** coeff; // RealMatrix coeff;
 };
 
 }

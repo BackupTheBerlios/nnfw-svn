@@ -46,7 +46,7 @@ public:
      *
      *  Details...
      */
-    virtual void update( Real* inputs, Real* outputs, u_int numNeuron );
+    virtual void update( RealVec& inputs, RealVec& outputs );
 
     /*! \brief Calculate the outputs of a single neuron
      *

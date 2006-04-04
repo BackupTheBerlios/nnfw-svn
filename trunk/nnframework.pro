@@ -14,6 +14,7 @@ CONFIG -= qt
 contains( CONFIG, debug ) {
     unix:QMAKE_CXXFLAGS -= -O2
     unix:QMAKE_CXXFLAGS += -O0
+    DEFINES += NNFW_DEBUG
 }
 
 #### Definition for creating library under linux
@@ -45,6 +46,7 @@ DEPENDPATH  += ./include
 
 HEADERS		= ./include/nnfw.h \
 			  ./include/types.h \
+              ./include/realvector.h \
               ./include/updatable.h \
 			  ./include/cluster.h \
               ./include/simplecluster.h \
@@ -76,6 +78,7 @@ SOURCES		= ./src/cluster.cpp \
 			  ./src/messages.cpp \
               ./src/random.cpp \
               ./src/types.cpp \
+              ./src/realvec.cpp \
               ./src/blockslearning.cpp \
               ./src/learningnetwork.cpp
 
