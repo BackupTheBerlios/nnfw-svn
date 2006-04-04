@@ -5,6 +5,7 @@ VERSION  = 0.2.1
 CONFIG += release staticlib rtti warn_on
 CONFIG -= debug
 CONFIG -= qt
+unix:QMAKE_CXXFLAGS -= -O2
 
 !isEmpty( DEBUG ) {
     CONFIG -= release
@@ -12,9 +13,13 @@ CONFIG -= qt
 }
 
 contains( CONFIG, debug ) {
-    unix:QMAKE_CXXFLAGS -= -O2
     unix:QMAKE_CXXFLAGS += -O0
     DEFINES += NNFW_DEBUG
+}
+contains( CONFIG, release ) {
+    unix:QMAKE_CXXFLAGS += -O3
+    unix:QMAKE_CXXFLAGS += -funroll-loops
+    unix:QMAKE_CXXFLAGS -= -O2
 }
 
 #### Definition for creating library under linux

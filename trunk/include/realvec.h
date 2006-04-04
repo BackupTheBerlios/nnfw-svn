@@ -42,35 +42,19 @@ class RealVec {
 public:
     /*! \brief Construct an empty vector of dimension size
      */
-    RealVec( u_int size ) {
-        vsize = size;
-        allocated = size;
-        data = new Real[vsize];
-    };
+    RealVec( u_int size );
 
     /*! \brief Construct an empty vector with dimesion zero
      */
-    RealVec() {
-        data = 0;
-        vsize = 0;
-        allocated = 0;
-    };
+    RealVec();
 
     /*! \brief Construct by copying data from const Real* vector
      */
-    RealVec( const Real* r, u_int dim ) {
-        data = new Real[dim];
-        vsize = dim;
-        allocated = dim;
-        memcpy( data, r, sizeof(Real)*dim );
-    };
+    RealVec( const Real* r, u_int dim );
 
     /*! \brief Destructor
-    ------- DA PROBLEMI... Perche???? Non capisco !! :-(
-    ~RealVec() {
-        delete []data;
-    };
-*/
+     */
+    ~RealVec();
 
     /*! \brief Raw Data
      * ======== QUESTO METODO NON DOVREBBE ESISTERE ?!?!? =========
@@ -180,10 +164,6 @@ public:
     // ****************************
     // *** UNARY OPERATORS ********
     // ****************************
-    //! Operator +
-    RealVec& operator+() {
-        return (*this);
-    };
     //! Operator -
     RealVec& operator-() {
         for( u_int i=0; i<vsize; i++ ) {
@@ -195,20 +175,6 @@ public:
     // ****************************
     // *** BINARY OPERATORS *******
     // ****************************
-    //! Operator + with RealVec
-    const RealVec operator+( const RealVec& r ) const {
-#ifdef NNFW_DEBUG
-        if( vsize != r.vsize ) {
-            nnfwMessage( NNFW_ERROR, "Different numbers of element" );
-            return (*this);
-        }
-#endif
-        RealVec rop( vsize );
-        for( u_int i=0; i<vsize; i++ ) {
-            rop.data[i] = data[i] + r.data[i];
-        }
-        return rop;
-    };
     //! Operator += with RealVec
     RealVec& operator+=(const RealVec& r ) {
 #ifdef NNFW_DEBUG
@@ -222,35 +188,12 @@ public:
         }
         return (*this);
     };
-    //! Operator + with Real
-    const RealVec operator+( const Real& r ) const {
-        RealVec rop( vsize );
-        for( u_int i=0; i<vsize; i++ ) {
-            rop.data[i] = data[i] + r;
-        }
-        return rop;
-    };
     //! Operator += with Real
     RealVec& operator+=(const Real& r ) {
         for( u_int i=0; i<vsize; i++ ) {
             data[i] += r;
         }
         return (*this);
-    };
-    friend RealVec operator+( const Real v, const RealVec& vec );
-    //! Operator - with RealVec
-    const RealVec operator-( const RealVec& r ) const {
-#ifdef NNFW_DEBUG
-        if( vsize != r.vsize ) {
-            nnfwMessage( NNFW_ERROR, "Different numbers of element" );
-            return (*this);
-        }
-#endif
-        RealVec rop( vsize );
-        for( u_int i=0; i<vsize; i++ ) {
-            rop.data[i] = data[i] - r.data[i];
-        }
-        return rop;
     };
     //! Operator -= with RealVec
     RealVec& operator-=(const RealVec& r ) {
@@ -265,35 +208,12 @@ public:
         }
         return (*this);
     };
-    //! Operator - with Real
-    const RealVec operator-( const Real& r ) const {
-        RealVec rop( vsize );
-        for( u_int i=0; i<vsize; i++ ) {
-            rop.data[i] = data[i] - r;
-        }
-        return rop;
-    };
     //! Operator -= with Real
     RealVec& operator-=(const Real& r ) {
         for( u_int i=0; i<vsize; i++ ) {
             data[i] -= r;
         }
         return (*this);
-    };
-    friend RealVec operator-( const Real v, const RealVec& vec );
-    //! Operator * with RealVec
-    const RealVec operator*( const RealVec& r ) const {
-#ifdef NNFW_DEBUG
-        if( vsize != r.vsize ) {
-            nnfwMessage( NNFW_ERROR, "Different numbers of element" );
-            return (*this);
-        }
-#endif
-        RealVec rop( vsize );
-        for( u_int i=0; i<vsize; i++ ) {
-            rop.data[i] = data[i] * r.data[i];
-        }
-        return rop;
     };
     //! Operator *= with RealVec
     RealVec& operator*=(const RealVec& r ) {
@@ -308,35 +228,12 @@ public:
         }
         return (*this);
     };
-    //! Operator * with Real
-    const RealVec operator*( const Real& r ) const {
-        RealVec rop( vsize );
-        for( u_int i=0; i<vsize; i++ ) {
-            rop.data[i] = data[i] * r;
-        }
-        return rop;
-    };
     //! Operator *= with Real
     RealVec& operator*=(const Real& r ) {
         for( u_int i=0; i<vsize; i++ ) {
             data[i] *= r;
         }
         return (*this);
-    };
-    friend RealVec operator*( const Real v, const RealVec& vec );
-    //! Operator / with RealVec
-    const RealVec operator/( const RealVec& r ) const {
-#ifdef NNFW_DEBUG
-        if( vsize != r.vsize ) {
-            nnfwMessage( NNFW_ERROR, "Different numbers of element" );
-            return (*this);
-        }
-#endif
-        RealVec rop( vsize );
-        for( u_int i=0; i<vsize; i++ ) {
-            rop.data[i] = data[i] / r.data[i];
-        }
-        return rop;
     };
     //! Operator /= with RealVec
     RealVec& operator/=(const RealVec& r ) {
@@ -351,14 +248,6 @@ public:
         }
         return (*this);
     };
-    //! Operator / with Real
-    const RealVec operator/( const Real& r ) const {
-        RealVec rop( vsize );
-        for( u_int i=0; i<vsize; i++ ) {
-            rop.data[i] = data[i] / r;
-        }
-        return rop;
-    };
     //! Operator /= with Real
     RealVec& operator/=(const Real& r ) {
         for( u_int i=0; i<vsize; i++ ) {
@@ -366,8 +255,6 @@ public:
         }
         return (*this);
     };
-    friend RealVec operator/( const Real v, const RealVec& vec );
-
 
     // ****************************
     // *** MATH FUNCTION **********
@@ -378,11 +265,30 @@ public:
 
     /*! \brief Scaling (scalar-vector multiply)
      */
-    RealVec& scale( const Real v ) {
+    void scale( const Real v ) {
         for( u_int i=0; i<vsize; i++ ) {
             data[i] *= v;
         }
-        return (*this);
+    };
+
+    /*! \brief Element Inversion
+     */
+    void inv();
+
+    /*! \brief Equation: a*x
+     */
+    void assign_amulx( const Real a, const RealVec& x ) {
+        for( u_int i=0; i<vsize; i++ ) {
+            data[i] = a*x[i];
+        }
+    };
+
+    /*! \brief Equation: a/x
+     */
+    void assign_adivx( const Real a, const RealVec& x ) {
+        for( u_int i=0; i<vsize; i++ ) {
+            data[i] = a/x[i];
+        }
     };
 
 private:
@@ -395,65 +301,11 @@ private:
 
     /*! \brief Copy-Constructor
      */
-    RealVec( const RealVec& orig ) {
-        vsize = orig.vsize;
-        allocated = orig.allocated;
-        data = new Real[allocated];
-        memcpy( data, orig.data, sizeof(Real)*vsize );
-    };
+    RealVec( const RealVec& orig );
 
     /*! \brief Assignment Operator
      */
-    RealVec& operator=( const RealVec& src ) {
-        // delete []data;  <-- DA PROBLEMI... Perche??? Non capisco !! :-(
-        vsize = src.vsize;
-        allocated = src.allocated;
-        data = new Real[allocated];
-        memcpy( data, src.data, sizeof(Real)*vsize );
-        return (*this);
-    };
-};
-
-// ***********************************
-// *** Operators with scalar Real ***
-// ***********************************
-//! Operator +
-inline RealVec operator+( const Real v, const RealVec& vec ) {
-//    return vec+v;
-    u_int size = vec.vsize;
-    RealVec rop( size );
-    for( u_int i; i<size; i++ ) {
-        rop.data[i] = v + vec.data[i];
-    }
-    return rop;
-};
-//! Operator -
-inline RealVec operator-( const Real v, const RealVec& vec ) {
-    u_int size = vec.vsize;
-    RealVec rop( size );
-    for( u_int i=0; i<size; i++ ) {
-        rop.data[i] = v - vec.data[i];
-    }
-    return rop;
-};
-//! Operator *
-inline RealVec operator*( const Real v, const RealVec& vec ) {
-//    return vec*v;
-    u_int size = vec.vsize;
-    RealVec rop( size );
-    for( u_int i; i<size; i++ ) {
-        rop.data[i] = v * vec.data[i];
-    }
-    return rop;
-};
-//! Operator /
-inline RealVec operator/( const Real v, const RealVec& vec ) {
-    u_int size = vec.vsize;
-    RealVec rop( size );
-    for( u_int i; i<size; i++ ) {
-        rop.data[i] = v / vec.data[i];    
-    }
-    return rop;
+    RealVec& operator=( const RealVec& src );
 };
 
 }

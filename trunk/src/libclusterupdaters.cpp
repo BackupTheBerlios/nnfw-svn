@@ -35,9 +35,6 @@ namespace nnfw {
 
 void DummyUpdater::update( RealVec& inputs, RealVec& outputs ) {
     outputs.assign( inputs );
-/*    for ( u_int i = 0; i<numNeuron; i++ ) {
-        outputs[i] = inputs[i];
-    }*/
 }
 
 void DummyUpdater::update( Real input, Real &output ) {
@@ -49,23 +46,16 @@ Real DummyUpdater::derivate( Real ) const {
 }
 
 void SigmoidUpdater::update( RealVec& inputs, RealVec& outputs ) {
-    u_int size = inputs.size();
 #ifdef NNFW_DEBUG
     if ( inputs.size() != outputs.size() ) {
         nnfwMessage( NNFW_ERROR, "The output dimension doesn't match the input dimension" );
         return;
     }
 #endif
-    outputs.assign( inputs );
-    outputs.scale( -lambda );
-/*    for ( u_int i = 0; i<size; i++ ) {
-        outputs[i] = -lambda*inputs[i];
-    }*/
+    outputs.assign_amulx( -lambda, inputs );
     outputs.exp();
-    //vdExp( size, outputs, outputs );
-    for ( u_int i = 0; i<size; i++ ) {
-        outputs[i] = 1.0/( 1.0 + outputs[i] );
-    }
+    outputs += 1.0;
+    outputs.inv();
 }
 
 void SigmoidUpdater::update( Real input, Real &output ) {
@@ -77,13 +67,13 @@ Real SigmoidUpdater::derivate( Real x ) const {
 }
 
 void FakeSigmoidUpdater::update( RealVec& inputs, RealVec& outputs ) {
-    u_int size = inputs.size();
 #ifdef NNFW_DEBUG
     if ( inputs.size() != outputs.size() ) {
         nnfwMessage( NNFW_ERROR, "The output dimension doesn't match the input dimension" );
         return;
     }
 #endif
+    u_int size = inputs.size();
     Real x;
     Real x0 = 6. + 2./3.;
     Real zero = 0.5;
@@ -124,18 +114,14 @@ Real FakeSigmoidUpdater::derivate( Real x ) const {
 }
 
 void ScaledSigmoidUpdater::update( RealVec& inputs, RealVec& outputs ) {
-    u_int size = inputs.size();
 #ifdef NNFW_DEBUG
     if ( inputs.size() != outputs.size() ) {
         nnfwMessage( NNFW_ERROR, "The output dimension doesn't match the input dimension" );
         return;
     }
 #endif
-    outputs.assign( inputs );
-    outputs.scale( -lambda );
-/*    for ( u_int i = 0; i<numNeuron; i++ ) {
-        outputs[i] = -lambda*( inputs[i] );
-    }*/
+    u_int size = inputs.size();
+    outputs.assign_amulx( -lambda, inputs );
     outputs.exp();
     for ( u_int i = 0; i<size; i++ ) {
         outputs[i] = (max - min ) * (1.0/( 1.0 + outputs[i] )) + min;
@@ -153,13 +139,13 @@ Real ScaledSigmoidUpdater::derivate( Real x ) const {
 }
 
 void LinearUpdater::update( RealVec& inputs, RealVec& outputs ) {
-    u_int size = inputs.size();
 #ifdef NNFW_DEBUG
     if ( inputs.size() != outputs.size() ) {
         nnfwMessage( NNFW_ERROR, "The output dimension doesn't match the input dimension" );
         return;
     }
 #endif
+    u_int size = inputs.size();
     for ( u_int i = 0; i<size; i++ ) {
         Real m = ( maxY-minY )/( maxX-minX );
         Real q = minY - m*minX;
