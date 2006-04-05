@@ -17,57 +17,29 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA  *
  ********************************************************************************/
 
-#ifndef DDECLUSTER_H
-#define DDECLUSTER_H
-
-#include "cluster.h"
-#include "clusterupdater.h"
+#include "ddecluster.h"
 
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {
 
-/*! \brief DDECluster Class. In this cluster the input/output relation is governed by a Discrete Differential Equation
- *  \par Motivation
- *    Create a Cluster where the outputs dependes on previous value, or in other words on derivative of outputs
- *  \par Description
- *    This Cluster calculate the outputs accordlying with follow equation:<br>
- *    a0 + a1 * f(x) + a2 * x + a3 * y + a4 * y' + a5 * y'' + ... + aN * y^(n-3) <br>
- *    
- *  \par Warnings
- */
-class  DDECluster : public Cluster {
-public:
+DDECluster::DDECluster( const RealVec& c, u_int numNeurons, const char* name )
+    : Cluster( numNeurons, name ) {
+    setCoeff( c );
+}
 
-    /*! \brief Construct a DDECluster setting coefficients as specified
-     *  Details...
-     */
-    DDECluster( const RealVec& coeff, u_int numNeurons, const char* name = "unnamed" );
+virtual DDECluster::~DDECluster() {
+    /* Nothing to do */
+}
 
-    /*! \brief Destructor
-     * Details..
-     */
-    virtual ~DDECluster();
+void DDECluster::setCoeff( const RealVec& c ) {
+    coeff.resize( c.size() );
+    coeff.assign( c );
+    story.resize( );
+}
 
-    /*! \brief Set the Coeffiecients
-     */
-    void setCoeff( const RealVec& coef );
-
-    /*! \brief Update the outputs of neurons
-     * Details
-     */
-    void update();
-
-    /*! \brief Randomize Nothing ;-)
-     */
-    void randomize( Real, Real ) { /* Nothing To Do */ };
-
-private:
-    //! Coefficient of equation
-    RealVec coeff;
-    //! Output Story
-    Vector<RealVec*> story;
-};
+void DDECluster::update() {
+    /* Complicato da Implementare !! :-) */
+}
 
 }
 
-#endif

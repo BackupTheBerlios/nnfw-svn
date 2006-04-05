@@ -17,59 +17,79 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA  *
  ********************************************************************************/
 
-#include "matrixlinker.h"
+#include "sparsematrixlinker.h"
 #include "random.h"
-#include <cstdio>
-
-#ifdef NNFW_USE_MKL
-#include <mkl_cblas.h>
-#endif
 
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {
 
-MatrixLinker::MatrixLinker( Cluster* from, Cluster* to, const char* name )
-    : Linker(name) {
-    nrows = from->size();
-    ncols = to->size();
-
-    // Weight Matrix Allocation procedure
+SparseMatrixLinker::SparseMatrixLinker( Cluster* from, Cluster* to, const char* name )
+    : MatrixLinker( from, to, name ) {
+    // Mask Matrix Allocation procedure
     //  Matrix[column][row]
-    memM = new Real[nrows*ncols];
-    w = new ( Real ( *[ncols] ) );
+    memMask = new bool[nrows*ncols];
+    mask = new ( bool ( *[ncols] ) );
     for ( u_int i = 0; i<ncols; i++ ) {
-        w[i] = memM + i*nrows;
+        mask[i] = memMask + i*nrows;
     }
-
-    this->from = from;
-    this->to = to;
+    // Set Full Connection
+    for( u_int i=0; i<ncols; i++ ) {
+        for( u_int j=0; j<nrows; j++ ) {
+            mask[i][j] = true;
+        }
+    }
 }
 
-MatrixLinker::~MatrixLinker() {
-    delete []memM;
+SparseMatrixLinker::SparseMatrixLinker( Real prob, Cluster* from, Cluster* to, const char* name )
+    : MatrixLinker( from, to, name ) {
+    // Mask Matrix Allocation procedure
+    //  Matrix[column][row]
+    memMask = new bool[nrows*ncols];
+    mask = new ( bool ( *[ncols] ) );
+    for ( u_int i = 0; i<ncols; i++ ) {
+        mask[i] = memMask + i*nrows;
+    }
+    // Set a Connection with probability specified
+    for( u_int i=0; i<ncols; i++ ) {
+        for( u_int j=0; j<nrows; j++ ) {
+            mask[i][j] = Random::boolean( prob );
+        }
+    }
 }
 
-u_int MatrixLinker::getRows() {
-    return nrows;
+SparseMatrixLinker::~SparseMatrixLinker() {
+    delete []memMask;
 }
 
-u_int MatrixLinker::getCols() {
-    return ncols;
+void SparseMatrixLinker::setWeight( u_int from, u_int to, Real weight ) {
+    if ( from >= nrows ) {
+        // Messaggio di errore !!!
+        return;
+    }
+    if ( to >= ncols ) {
+        // Messaggio di errore !!!
+        return;
+    }
+    if ( mask[to][from] ) {
+        w[to][from] = weight;
+    } else {
+        w[to][from] = 0.0;
+    }
 }
 
-u_int MatrixLinker::size() {
-    return nrows*ncols;
-}
-
-void MatrixLinker::randomize( Real min, Real max ) {
+void SparseMatrixLinker::randomize( Real min, Real max ) {
     for ( u_int i = 0; i<nrows; i++ ) {
         for ( u_int j = 0; j<ncols; j++ ) {
-            w[j][i] = Random::flatReal( min, max );
+            if ( mask[j][i] ) {
+                w[j][i] = Random::flatReal( min, max );
+            } else {
+                w[j][i] = 0.0;
+            }
         }
     }
 }
 
-void MatrixLinker::setWeight( u_int from, u_int to, Real weight ) {
+void SparseMatrixLinker::connection( u_int from, u_int to ) {
     if ( from >= nrows ) {
         // Messaggio di errore !!!
         return;
@@ -78,44 +98,21 @@ void MatrixLinker::setWeight( u_int from, u_int to, Real weight ) {
         // Messaggio di errore !!!
         return;
     }
-    w[to][from] = weight;
-};
+    mask[to][from] = true;
+}
 
-Real MatrixLinker::getWeight( u_int from, u_int to ) {
+void SparseMatrixLinker::disconnection( u_int from, u_int to ) {
     if ( from >= nrows ) {
         // Messaggio di errore !!!
-        return 0.0;
+        return;
     }
     if ( to >= ncols ) {
         // Messaggio di errore !!!
-        return 0.0;
+        return;
     }
-    return w[to][from];
-};
-
-Cluster* MatrixLinker::getFrom() const {
-    return from;
-};
-
-Cluster* MatrixLinker::getTo() const {
-    return to;
-};
-
-void MatrixLinker::update() {
-    // incoming cluster output
-    Real* outputsFrom = from->outputs().rawdata();
-    // outgoing cluster inputs
-    Real* inputsTo = to->inputs().rawdata();
-#ifdef NNFW_USE_MKL
-    cblas_dgemv(CblasColMajor, CblasTrans, nrows, ncols, 1.0, memM, nrows, outputsFrom, 1, 1.0, inputsTo, 1);
-#else
-    for ( u_int i = 0; i<ncols; i++ ) {
-        for ( u_int j = 0; j<nrows; j++ ) {
-            inputsTo[i] += outputsFrom[j] * w[i][j];
-        }
-    }
-#endif
-    return;
+    mask[to][from] = false;
+    w[to][from] = 0.0;
 }
 
 }
+

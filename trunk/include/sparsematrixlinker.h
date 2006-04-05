@@ -17,55 +17,58 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA  *
  ********************************************************************************/
 
-#ifndef DDECLUSTER_H
-#define DDECLUSTER_H
+#ifndef SPARSEMATRIXLINKER_H
+#define SPARSEMATRIXLINKER_H
 
-#include "cluster.h"
-#include "clusterupdater.h"
+#include "linker.h"
+#include "matrixlinker.h"
 
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {
 
-/*! \brief DDECluster Class. In this cluster the input/output relation is governed by a Discrete Differential Equation
- *  \par Motivation
- *    Create a Cluster where the outputs dependes on previous value, or in other words on derivative of outputs
- *  \par Description
- *    This Cluster calculate the outputs accordlying with follow equation:<br>
- *    a0 + a1 * f(x) + a2 * x + a3 * y + a4 * y' + a5 * y'' + ... + aN * y^(n-3) <br>
- *    
- *  \par Warnings
+/*! \brief SparseMatrixLinker Class extend MatrixLinker for allow non-full connection between Clusters
+ * Every connection is weighted, and the weight is memorized into a weight-matrix
+ * Details ...
  */
-class  DDECluster : public Cluster {
+class  SparseMatrixLinker : public MatrixLinker {
 public:
-
-    /*! \brief Construct a DDECluster setting coefficients as specified
-     *  Details...
-     */
-    DDECluster( const RealVec& coeff, u_int numNeurons, const char* name = "unnamed" );
-
-    /*! \brief Destructor
-     * Details..
-     */
-    virtual ~DDECluster();
-
-    /*! \brief Set the Coeffiecients
-     */
-    void setCoeff( const RealVec& coef );
-
-    /*! \brief Update the outputs of neurons
+    /*! \brief Connect clusters with complete connections
      * Details
      */
-    void update();
+    SparseMatrixLinker( Cluster* from, Cluster* to, const char* name = "unnamed" );
 
-    /*! \brief Randomize Nothing ;-)
+    /*! \brief Connect neurons of Clusters with a random connections with probability passed
      */
-    void randomize( Real, Real ) { /* Nothing To Do */ };
+    SparseMatrixLinker( Real prob, Cluster* from, Cluster* to, const char* name = "unnamed" );
+
+    /*! \brief Destructor
+     * Details
+     */
+    virtual ~SparseMatrixLinker();
+
+    /*! \brief Set the weight of the connection specified
+     * Details
+     */
+    virtual void setWeight( u_int from, u_int to, Real weight );
+
+    /*! \brief Randomize the weights of the SparseMatrixLinker
+     * Details
+     */
+    virtual void randomize( Real min, Real max );
+
+    /*! \brief Connect two neuron
+     */
+    void connection( u_int from, u_int to );
+
+    /*! \brief Disconnect the two neuron
+     */
+    void disconnection( u_int from, u_int to );
 
 private:
-    //! Coefficient of equation
-    RealVec coeff;
-    //! Output Story
-    Vector<RealVec*> story;
+    //! Mask Matrix ( [column][row] )
+    bool **mask;
+    //! Memory allocated for the mask matrix
+    bool* memMask;
 };
 
 }

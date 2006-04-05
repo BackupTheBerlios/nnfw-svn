@@ -63,22 +63,19 @@ public:
     u_int size();
 
     /*! \brief Randomize the weights of the MatrixLinker
-     *
      * Details
      */
-    void randomize( Real min, Real max );
+    virtual void randomize( Real min, Real max );
 
     /*! \brief Set the weight of the connection specified
-     *
      * Details
      */
-    void setWeight( u_int from, u_int to, Real weight );
+    virtual void setWeight( u_int from, u_int to, Real weight );
 
     /*! \brief Get the weight of the connection specified
-     *
      * Details
      */
-    Real getWeight( u_int from, u_int to );
+    virtual Real getWeight( u_int from, u_int to );
 
     /*! \brief Return the Cluster From
      *
@@ -93,18 +90,15 @@ public:
     Cluster* getTo() const;
 
     /*! \brief Update the Linker
-     *
-     * This update, for the moment, calculate a feedforward propagation.
-     * In other words, multiply the vector of outputsFrom with matrix w and register the result in the vector inputsTo<br>
-     *
      * Details...
      */
     void update();
 private:
-    //! Weight Matrix ( [column][row] )
-    Real **w;
     //! Memory allocated for the weight matrix
     Real* memM;
+protected:
+    //! Weight Matrix ( [column][row] )
+    Real **w;
     //! Registers the dimensions of the matrix
     u_int nrows, ncols;
     //! Registers the cluster from

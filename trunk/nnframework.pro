@@ -63,6 +63,7 @@ HEADERS		= ./include/nnfw.h \
 			  ./include/linker.h \
               ./include/copylinker.h \
               ./include/matrixlinker.h \
+              ./include/sparsematrixlinker.h \
 			  ./include/neuralnet.h \
 			  ./include/utils.h \
 			  ./include/messages.h \
@@ -77,6 +78,7 @@ SOURCES		= ./src/cluster.cpp \
               ./src/clusterupdater.cpp \
               ./src/libclusterupdaters.cpp \
               ./src/matrixlinker.cpp \
+              ./src/sparsematrixlinker.cpp \
               ./src/copylinker.cpp \
 			  ./src/neuralnet.cpp \
               ./src/utils.cpp \
