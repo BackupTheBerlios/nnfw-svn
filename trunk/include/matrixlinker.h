@@ -93,14 +93,12 @@ public:
      * Details...
      */
     void update();
-private:
-    //! Memory allocated for the weight matrix
-    Real* memM;
+
 protected:
-    //! Weight Matrix ( [column][row] )
-    Real **w;
     //! Registers the dimensions of the matrix
     u_int nrows, ncols;
+    //! Weight Matrix --- In futuro sostituita da RealMat ---
+    Matrix<Real> w;
     //! Registers the cluster from
     Cluster* from;
     //! Registers the cluster to

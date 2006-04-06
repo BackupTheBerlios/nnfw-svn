@@ -1,11 +1,13 @@
 TEMPLATE = lib
 TARGET   = ./lib/nnfw
-VERSION  = 0.2.1
+VERSION  = 0.3.0
 
 CONFIG += release staticlib rtti warn_on
 CONFIG -= debug
 CONFIG -= qt
 unix:QMAKE_CXXFLAGS -= -O2
+
+NNFW = mkl
 
 !isEmpty( DEBUG ) {
     CONFIG -= release
@@ -30,15 +32,17 @@ unix:LIBS += -L/usr/lib -lgsl -lgslcblas -lm
 ####  - rpm -qa | grep mkl   =>  intel-mkl-8.0.2p-4
 ####  - rpm -ql intel-mkl-8.0.2p-4 | grep include$   => /usr2/intel/mkl/8.0.2/include
 unix {
-    message( Check if Intel Math Kernel Library is installed ... )
-    INTEL_MKL=$$system(rpm -qa | grep mkl)
-    MKL_PATH=$$system(rpm -ql $$INTEL_MKL | grep include$)
-    exists( $$MKL_PATH/mkl.h ) {
-        message( found ... configuring NNFW with Intel MKL )
-        INCLUDEPATH += $$MKL_PATH
-        DEFINES += NNFW_USE_MKL
-    } else {
-        message( not found ... configuring NNFW without MKL )
+    contains( NNFW, mkl ) {
+        message( Check if Intel Math Kernel Library is installed ... )
+        INTEL_MKL=$$system(rpm -qa | grep mkl)
+        MKL_PATH=$$system(rpm -ql $$INTEL_MKL | grep include$)
+        exists( $$MKL_PATH/mkl.h ) {
+            message( found ... configuring NNFW with Intel MKL )
+            INCLUDEPATH += $$MKL_PATH
+            DEFINES += NNFW_USE_MKL
+        } else {
+            message( not found ... configuring NNFW without MKL )
+        }
     }
 }
 

@@ -65,10 +65,8 @@ public:
     void disconnection( u_int from, u_int to );
 
 private:
-    //! Mask Matrix ( [column][row] )
-    bool **mask;
-    //! Memory allocated for the mask matrix
-    bool* memMask;
+    //! Mask Matrix
+    Matrix<bool> mask;
 };
 
 }

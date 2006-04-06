@@ -24,41 +24,26 @@
 namespace nnfw {
 
 SparseMatrixLinker::SparseMatrixLinker( Cluster* from, Cluster* to, const char* name )
-    : MatrixLinker( from, to, name ) {
-    // Mask Matrix Allocation procedure
-    //  Matrix[column][row]
-    memMask = new bool[nrows*ncols];
-    mask = new ( bool ( *[ncols] ) );
-    for ( u_int i = 0; i<ncols; i++ ) {
-        mask[i] = memMask + i*nrows;
-    }
-    // Set Full Connection
-    for( u_int i=0; i<ncols; i++ ) {
-        for( u_int j=0; j<nrows; j++ ) {
-            mask[i][j] = true;
+    : MatrixLinker( from, to, name ), mask(nrows, ncols) {
+    // Set a Connection with probability specified
+    for( u_int i=0; i<nrows; i++ ) {
+        for( u_int j=0; j<ncols; j++ ) {
+            mask.at(i, j) = true;
         }
     }
 }
 
 SparseMatrixLinker::SparseMatrixLinker( Real prob, Cluster* from, Cluster* to, const char* name )
-    : MatrixLinker( from, to, name ) {
-    // Mask Matrix Allocation procedure
-    //  Matrix[column][row]
-    memMask = new bool[nrows*ncols];
-    mask = new ( bool ( *[ncols] ) );
-    for ( u_int i = 0; i<ncols; i++ ) {
-        mask[i] = memMask + i*nrows;
-    }
+    : MatrixLinker( from, to, name ), mask(nrows, ncols) {
     // Set a Connection with probability specified
-    for( u_int i=0; i<ncols; i++ ) {
-        for( u_int j=0; j<nrows; j++ ) {
-            mask[i][j] = Random::boolean( prob );
+    for( u_int i=0; i<nrows; i++ ) {
+        for( u_int j=0; j<ncols; j++ ) {
+            mask.at(i, j) = Random::boolean( prob );
         }
     }
 }
 
 SparseMatrixLinker::~SparseMatrixLinker() {
-    delete []memMask;
 }
 
 void SparseMatrixLinker::setWeight( u_int from, u_int to, Real weight ) {
@@ -70,20 +55,20 @@ void SparseMatrixLinker::setWeight( u_int from, u_int to, Real weight ) {
         // Messaggio di errore !!!
         return;
     }
-    if ( mask[to][from] ) {
-        w[to][from] = weight;
+    if ( mask.at( from, to ) ) {
+        w.at( from, to ) = weight;
     } else {
-        w[to][from] = 0.0;
+        w.at( from, to ) = 0.0;
     }
 }
 
 void SparseMatrixLinker::randomize( Real min, Real max ) {
     for ( u_int i = 0; i<nrows; i++ ) {
         for ( u_int j = 0; j<ncols; j++ ) {
-            if ( mask[j][i] ) {
-                w[j][i] = Random::flatReal( min, max );
+            if ( mask.at( i, j ) ) {
+                w.at( i, j ) = Random::flatReal( min, max );
             } else {
-                w[j][i] = 0.0;
+                w.at( i, j ) = 0.0;
             }
         }
     }
@@ -98,7 +83,7 @@ void SparseMatrixLinker::connection( u_int from, u_int to ) {
         // Messaggio di errore !!!
         return;
     }
-    mask[to][from] = true;
+    mask.at( from, to ) = true;
 }
 
 void SparseMatrixLinker::disconnection( u_int from, u_int to ) {
@@ -110,8 +95,8 @@ void SparseMatrixLinker::disconnection( u_int from, u_int to ) {
         // Messaggio di errore !!!
         return;
     }
-    mask[to][from] = false;
-    w[to][from] = 0.0;
+    mask.at( from, to ) = false;
+    w.at( from, to ) = 0.0;
 }
 
 }

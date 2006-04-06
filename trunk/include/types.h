@@ -31,7 +31,10 @@
 #include <vector>
 #include <map>
 #include <string>
+
+#ifdef NNFW_DEBUG
 #include "messages.h"
+#endif
 
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {
@@ -50,6 +53,73 @@ typedef  unsigned int u_int;
 
 //! Abstraction on the type of real numbers
 typedef double Real;
+
+/*! \brief Template for Matrix data allocation and accessing
+ */
+template<class T>
+class Matrix {
+public:
+    //! Allocate memory for a data Matrix
+    Matrix( u_int rows, u_int cols ) {
+        nrows = rows;
+        ncols = cols;
+        // Weight Matrix Allocation procedure
+        //  Matrix[column][row]
+        mem = new T[nrows*ncols];
+        mat = new ( T ( *[ncols] ) );
+        for ( u_int i = 0; i<ncols; i++ ) {
+            mat[i] = mem + i*nrows;
+        }
+    };
+    //! Destructor
+    ~Matrix() {
+        delete []mem;
+    };
+    //! Return a reference to element at position (row, col)
+    T& at( u_int row, u_int col ) {
+#ifdef NNFW_DEBUG
+        if ( row >= nrows ) {
+            nnfwMessage( NNFW_ERROR, "Accessing an element beyond Row boundary of matrix" );
+            return mat[0][0];
+        }
+        if ( col >= ncols ) {
+            nnfwMessage( NNFW_ERROR, "Accessing an element beyond Column boundary of matrix" );
+            return mat[0][0];
+        }
+#endif
+        return mat[col][row];
+    };
+
+    //! Return a Const reference to element at position (row, col)
+    const T& at( u_int row, u_int col ) const {
+#ifdef NNFW_DEBUG
+        if ( row >= nrows ) {
+            nnfwMessage( NNFW_ERROR, "Accessing an element beyond Row boundary of matrix" );
+            return mat[0][0];
+        }
+        if ( col >= ncols ) {
+            nnfwMessage( NNFW_ERROR, "Accessing an element beyond Column boundary of matrix" );
+            return mat[0][0];
+        }
+#endif
+        return mat[col][row];
+    };
+
+    //! Return the raw data allocated
+    T* rawdata() {
+        return mem;
+    };
+
+private:
+    //! Data allocated (column major --- transparent to the user)
+    T* mem;
+    //! Pointers layout for fast accessing
+    T** mat;
+    //! Numbers of Rows
+    u_int nrows;
+    //! Numbers of Columns
+    u_int ncols;
+};
 
 }
 

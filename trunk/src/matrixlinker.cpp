@@ -29,24 +29,12 @@
 namespace nnfw {
 
 MatrixLinker::MatrixLinker( Cluster* from, Cluster* to, const char* name )
-    : Linker(name) {
-    nrows = from->size();
-    ncols = to->size();
-
-    // Weight Matrix Allocation procedure
-    //  Matrix[column][row]
-    memM = new Real[nrows*ncols];
-    w = new ( Real ( *[ncols] ) );
-    for ( u_int i = 0; i<ncols; i++ ) {
-        w[i] = memM + i*nrows;
-    }
-
+    : Linker(name), nrows(from->size()), ncols(to->size()), w(nrows, ncols) {
     this->from = from;
     this->to = to;
 }
 
 MatrixLinker::~MatrixLinker() {
-    delete []memM;
 }
 
 u_int MatrixLinker::getRows() {
@@ -64,7 +52,7 @@ u_int MatrixLinker::size() {
 void MatrixLinker::randomize( Real min, Real max ) {
     for ( u_int i = 0; i<nrows; i++ ) {
         for ( u_int j = 0; j<ncols; j++ ) {
-            w[j][i] = Random::flatReal( min, max );
+            w.at( i, j ) = Random::flatReal( min, max );
         }
     }
 }
@@ -78,7 +66,7 @@ void MatrixLinker::setWeight( u_int from, u_int to, Real weight ) {
         // Messaggio di errore !!!
         return;
     }
-    w[to][from] = weight;
+    w.at( from, to ) = weight;
 };
 
 Real MatrixLinker::getWeight( u_int from, u_int to ) {
@@ -90,7 +78,7 @@ Real MatrixLinker::getWeight( u_int from, u_int to ) {
         // Messaggio di errore !!!
         return 0.0;
     }
-    return w[to][from];
+    return w.at( from, to );
 };
 
 Cluster* MatrixLinker::getFrom() const {
@@ -107,11 +95,11 @@ void MatrixLinker::update() {
     // outgoing cluster inputs
     Real* inputsTo = to->inputs().rawdata();
 #ifdef NNFW_USE_MKL
-    cblas_dgemv(CblasColMajor, CblasTrans, nrows, ncols, 1.0, memM, nrows, outputsFrom, 1, 1.0, inputsTo, 1);
+    cblas_dgemv(CblasColMajor, CblasTrans, nrows, ncols, 1.0, w.rawdata(), nrows, outputsFrom, 1, 1.0, inputsTo, 1);
 #else
     for ( u_int i = 0; i<ncols; i++ ) {
         for ( u_int j = 0; j<nrows; j++ ) {
-            inputsTo[i] += outputsFrom[j] * w[i][j];
+            inputsTo[i] += outputsFrom[j] * w.at( j, i );
         }
     }
 #endif

@@ -65,7 +65,9 @@ private:
     //! Coefficient of equation
     RealVec coeff;
     //! Output Story
-    Vector<RealVec*> story;
+    RealVec* story;
+    //! index of current position of story
+    u_int idstory;
 };
 
 }
