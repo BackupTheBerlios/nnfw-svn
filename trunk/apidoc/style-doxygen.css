@@ -20,7 +20,7 @@ BODY,H1,H2,H3,H4,H5,H6,P,CENTER,TD,TH,UL,DL,DIV {
 BODY {
     font-size: 14px;
     background-color: white;
-    background: url(../../img/sfondo2.jpg);
+    background: url(../img/sfondo2.jpg);
 }
 H1 {
     text-align: center;
@@ -52,7 +52,7 @@ DIV.qindex {    font: bold italic 22px "Helvetica", "Verdana", sans-serif;
     font: 14px "Helvetica", "Verdana", sans-serif;
     color: black;
     padding: 4px 4px 4px 4px;
-    background: url(../../img/sfondo_menu.jpg);
+    background: url(../img/sfondo_menu.jpg);
     border-top: 1px solid #CCC;
     border-left: 1px solid #AAA;
     border-right: 1px solid #666;
