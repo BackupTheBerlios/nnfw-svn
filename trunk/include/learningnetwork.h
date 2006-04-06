@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA  *
  ********************************************************************************/
 
-#ifndef LearningNetwork_H
-#define LeadningNetwork_H
+#ifndef LEARNINGNETWORK_H
+#define LEARNINGNETWORK_H
 
 #include "types.h"
 #include "blockslearning.h"
