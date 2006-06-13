@@ -1,6 +1,6 @@
 TEMPLATE = lib
 TARGET   = ./lib/nnfw
-VERSION  = 0.3.0
+VERSION  = 0.3.1
 
 CONFIG += release staticlib rtti warn_on
 CONFIG -= debug
@@ -8,6 +8,10 @@ CONFIG -= qt
 unix:QMAKE_CXXFLAGS -= -O2
 
 NNFW = mkl
+
+win32:DEFINES += WIN32
+win32:DEFINES += _LIB
+win32:DEFINES += _MBCS
 
 !isEmpty( DEBUG ) {
     CONFIG -= release
@@ -55,7 +59,7 @@ DEPENDPATH  += ./include
 
 HEADERS		= ./include/nnfw.h \
 			  ./include/types.h \
-              ./include/realvector.h \
+              ./include/realvec.h \
               ./include/updatable.h \
 			  ./include/cluster.h \
               ./include/simplecluster.h \

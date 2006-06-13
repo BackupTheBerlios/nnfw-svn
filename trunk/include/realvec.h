@@ -137,6 +137,9 @@ public:
             delete []data;
             data = tmp;
         }
+        for( u_int i=vsize; i<newsize; i++ ) {
+            data[i] = 0.0f;
+        }
         vsize = newsize;
     };
 
