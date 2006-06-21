@@ -43,6 +43,12 @@ public:
      */
     static void setSeed( long int seed );
 
+	/*! \brief Return a real number in [0;1]
+     *
+     * Details..
+     */
+    static Real flatReal( );
+
     /*! \brief Return a real number in range [min,max]
      *
      * Details..
@@ -60,6 +66,12 @@ public:
      * Details..
      */
     static bool boolean( );
+
+    /*! \brief Return a random integer value in between 0 and x-1
+     *
+     * Details..
+     */
+    static int flatInt( int x );
 };
 
 }

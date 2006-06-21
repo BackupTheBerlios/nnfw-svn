@@ -40,11 +40,19 @@ void Random::setSeed( long int seed ) {
     return;
 }
 
+Real Random::flatReal( ) {
+#ifndef WIN32
+    return (Real)( gsl_ran_flat( rnd, 0.0, 1.0 ) ); //Is there a more appropriate function?
+#else
+    return (Real) rand() / RAND_MAX;
+#endif
+}
+
 Real Random::flatReal( Real min, Real max ) {
 #ifndef WIN32
     return (Real)( gsl_ran_flat( rnd, (double)min, (double)max ) );
 #else
-    return (Real)( (Real)( rand() )/RAND_MAX )*(max-min)+min;
+    return ( ( ( (Real) rand() ) / RAND_MAX ) * (max-min) ) + min;
 #endif
 }
 
@@ -62,6 +70,10 @@ bool Random::boolean( Real trueProb ) {
 #else
     return ( trueProb >  ( (Real)( rand() )/RAND_MAX ) );
 #endif
+}
+
+int Random::flatInt( int x ) {
+	return (int) ( (Real) (rand()-1) / RAND_MAX * x);
 }
 
 }
