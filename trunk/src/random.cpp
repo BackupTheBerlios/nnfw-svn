@@ -42,7 +42,7 @@ void Random::setSeed( long int seed ) {
 
 Real Random::flatReal( ) {
 #ifndef WIN32
-    return (Real)( gsl_ran_flat( rnd, 0.0, 1.0 ) ); //Is there a more appropriate function?
+    return (Real)( gsl_rng_uniform( rnd ) );
 #else
     return (Real) rand() / RAND_MAX;
 #endif
@@ -72,8 +72,12 @@ bool Random::boolean( Real trueProb ) {
 #endif
 }
 
-int Random::flatInt( int x ) {
+u_int Random::flatInt( u_int x ) {
+#ifndef WIN32
+    return (u_int)( gsl_rng_uniform_int( rng, x ) );
+#else
 	return (int) ( (Real) (rand()-1) / RAND_MAX * x);
+#endif
 }
 
 }

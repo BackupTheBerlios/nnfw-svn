@@ -43,13 +43,13 @@ public:
      */
     static void setSeed( long int seed );
 
-	/*! \brief Return a real number in [0;1]
+	/*! \brief Return a real number in [0;1)
      *
      * Details..
      */
     static Real flatReal( );
 
-    /*! \brief Return a real number in range [min,max]
+    /*! \brief Return a real number in range [min,max)
      *
      * Details..
      */
@@ -71,7 +71,7 @@ public:
      *
      * Details..
      */
-    static int flatInt( int x );
+    static u_int flatInt( u_int x );
 };
 
 }
