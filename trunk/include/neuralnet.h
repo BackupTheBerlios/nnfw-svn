@@ -174,9 +174,6 @@ public:
      *  Details
      */
     void step() {
-/*        for( u_int i=0; i<zeroclusters.size(); i++ ) {
-            zeroclusters[i]->resetInputs();
-        }*/
         for( u_int i=0; i<dimUps; i++ ) {
             if ( mask[i] ) {
                 ups[i]->update();
@@ -221,8 +218,6 @@ public:
 protected:
     //! Clusters
     ClusterVec clustersv;
-    //! Cluster da azzerrare prima dello step ( clusterv - inclusters )
-    ClusterVec zeroclusters;
     //! Input Clusters
     ClusterVec inclusters;
     //! Output Clusters

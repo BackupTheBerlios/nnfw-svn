@@ -50,8 +50,6 @@ void BaseNeuralNet::addCluster( Cluster* c, bool isInput, bool isOutput ) {
     clustersv.push_back( c );
     if ( isInput ) {
         inclusters.push_back( c );
-    } else {
-        zeroclusters.push_back( c );
     }
     if ( isOutput ) {
         outclusters.push_back( c );
@@ -70,9 +68,13 @@ bool BaseNeuralNet::removeCluster( Cluster* c ) {
         return false;
     }
     clustersv.erase( it );
-    it = std::find( zeroclusters.begin(), zeroclusters.end(), c );
-    if ( it != zeroclusters.end() ) {
-        zeroclusters.erase( it );        
+    it = std::find( inclusters.begin(), inclusters.end(), c );
+    if ( it != inclusters.end() ) {
+        inclusters.erase( it );
+    }
+    it = std::find( outclusters.begin(), outclusters.end(), c );
+    if ( it != outclusters.end() ) {
+        outclusters.erase( it );
     }
     return true;
 }
@@ -87,9 +89,10 @@ void BaseNeuralNet::markAsInput( Cluster* c ) {
         nnfwMessage( NNFW_ERROR, "attempt to mark a Cluster not present in this net!" );
         return;
     }
-    ClusterVec::iterator it = std::find( zeroclusters.begin(), zeroclusters.end(), c );
-    if ( it != zeroclusters.end() ) {
-        zeroclusters.erase( it );        
+    ClusterVec::iterator it = std::find( inclusters.begin(), inclusters.end(), c );
+    if ( it != inclusters.end() ) {
+        // --- already marked as Input
+        return;
     }
     inclusters.push_back( c );
 }
@@ -104,6 +107,11 @@ void BaseNeuralNet::markAsOutput( Cluster* c ) {
         nnfwMessage( NNFW_ERROR, "attempt to mark a Cluster not present in this net!" );
         return;
     }
+    ClusterVec::iterator it = std::find( outclusters.begin(), outclusters.end(), c );
+    if ( it != outclusters.end() ) {
+        // --- already marked as Output
+        return;
+    }
     outclusters.push_back( c );
 }
 
@@ -115,7 +123,6 @@ void BaseNeuralNet::unmark( Cluster* c ) {
     ClusterVec::iterator it = std::find( inclusters.begin(), inclusters.end(), c );
     if ( it != inclusters.end() ) {
         inclusters.erase( it );
-        zeroclusters.push_back( c );
     }
     it = std::find( outclusters.begin(), outclusters.end(), c );
     if ( it != outclusters.end() ) {
@@ -125,9 +132,6 @@ void BaseNeuralNet::unmark( Cluster* c ) {
 }
 
 void BaseNeuralNet::unmarkAll( ) {
-    for( u_int i=0; i<inclusters.size(); i++ ) {
-        zeroclusters.push_back( inclusters[i] );
-    }
     inclusters.clear();
     outclusters.clear();
     return;
