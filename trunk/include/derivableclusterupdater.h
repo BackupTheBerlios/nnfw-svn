@@ -43,12 +43,13 @@ public:
     DerivableClusterUpdater() : ClusterUpdater() { /* Nothing to do */ };
     //! Destructor
     virtual ~DerivableClusterUpdater() { /* Nothing to do */ };
-
+	
     /*! \brief Compute the derivate of the function represent
      *
      * Details...
      */
     virtual Real derivate( Real x ) const { return x; };
+	
 };
 
 }

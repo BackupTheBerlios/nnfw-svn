@@ -18,6 +18,7 @@
  ********************************************************************************/
 
 #include "random.h"
+#include "cmath"
 
 #ifndef WIN32
 #include "gsl/gsl_rng.h"
@@ -79,5 +80,16 @@ u_int Random::flatInt( u_int x ) {
 	return (int) ( (Real) (rand()-1) / RAND_MAX * x);
 #endif
 }
+
+Real Random::gauss( Real mean, Real stdev ) {
+  Real x1, x2, w;
+  do {
+    x1 = 2. * flatReal() - 1.;
+    x2 = 2. * flatReal() - 1.;
+    w = x1 * x1 + x2 * x2;
+  } while ( w >= 1. );          
+  w = sqrt( (-2. * log( w ) ) / w );
+  return (x1 * w) * sqrt(stdev) + mean;
+};
 
 }

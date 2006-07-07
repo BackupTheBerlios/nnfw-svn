@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2006 Gianluca Massera <emmegian@yahoo.it>                     *
+ *  Copyright (C) 2005-2006 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -104,7 +104,7 @@ class SupervisedTeachBlock : public BaseTeachBlock {
 public:
     /*! \brief Construct a SupervisedTeachBlock attached to specified BaseTeachBlock
      */
-    SupervisedTeachBlock( BaseTeachBlock* preBlock = 0, BaseTeachBlock* postBlock = 0, const char* name = "unnamed" );
+    SupervisedTeachBlock( BaseTeachBlock* preBlock = 0, BaseTeachBlock* postBlock = 0, bool modifiable = true, const char* name = "unnamed" );
     //! One step of the learning method implemented by subclasses
     virtual void learn() = 0;
     //! Return the Updatable
@@ -117,6 +117,14 @@ public:
     void addError( const RealVec& error );
     //! Return the last Errors values
     RealVec& getError();
+    //! Set the modifiability value
+	void isModifiable( bool value ) {
+		modifiability = value;	
+	};
+    //! Return true if the teachblock is modifiable
+	bool isModifiable() {
+		return modifiability;
+	};
 protected:
     //! the desired output values
     RealVec target;
@@ -126,6 +134,8 @@ protected:
     enum learnMode { targetMode = 1, errorMode = 2 };
     //! modalita' attuale
     learnMode mode;
+	//! chi deve essere modificato
+	bool modifiability;
 };
 
 /*! \brief Implements the gradient descent rule for a BiasedCluster
@@ -155,6 +165,8 @@ public:
     void setMomentum( Real m );
     //! Return Momentum
     Real getMomentum();
+    //! Set all the oldDeltas to 0
+    void resetOldDeltas();
 protected:
     //! BiasedCluster to learn
     BiasedCluster* cl;
@@ -162,8 +174,8 @@ protected:
     Real rate;
     //! Momentum
     Real momento;
-    //! Vecchio errore (per il calcolo del momento)
-    RealVec errorOld;
+    //! Vecchio delta (per il calcolo del momento)
+    RealVec oldDelta;
 };
 
 /*! \brief Implements the Gradient descent rule for a MatrixLinker
@@ -193,6 +205,8 @@ public:
     void setMomentum( Real m );
     //! Return Momentum
     Real getMomentum();
+    //! Set all the oldDeltas to 0
+    void resetOldDeltas();
 protected:
     //! MatrixLinker to learn
     MatrixLinker* ml;
@@ -200,8 +214,8 @@ protected:
     Real rate;
     //! Momentum
     Real momento;
-    //! Vecchio errore (per il calcolo del momento)
-    RealVec errorOld;
+    //! Vecchio delta (per il calcolo del momento)
+    Matrix<Real> oldDelta;
 };
 
 };

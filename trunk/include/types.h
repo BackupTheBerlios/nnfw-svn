@@ -52,7 +52,7 @@ namespace nnfw {
 typedef  unsigned int u_int;
 
 //! Abstraction on the type of real numbers
-typedef double Real;
+typedef float Real;
 
 /*! \brief Template for Matrix data allocation and accessing
  */

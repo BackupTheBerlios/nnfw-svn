@@ -26,9 +26,11 @@
  */
 
 #include <cstdio>
+#include <iostream>
 #ifdef NNFW_DEBUG
 #include "messages.h"
 #endif
+
 
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {
@@ -43,6 +45,10 @@ public:
     /*! \brief Construct an empty vector of dimension size
      */
     RealVec( u_int size );
+	
+    /*! \brief Construct a vector of dimension size with all values set to value
+     */
+    RealVec( u_int size, Real value );
 
     /*! \brief Construct an empty vector with dimesion zero
      */
@@ -73,6 +79,14 @@ public:
      */
     void zeroing() {
         memset( data, 0, sizeof(Real)*vsize );
+    };
+
+    /*! \brief Set all values to value
+     */
+    void setAll( Real value ) {
+		for( u_int i = 0; i < vsize; i++ ) {
+            data[i] = value;
+        }
     };
 
     /*! \brief Assign to first num element the value passed
@@ -137,9 +151,9 @@ public:
             delete []data;
             data = tmp;
         }
-        for( u_int i=vsize; i<newsize; i++ ) {
-            data[i] = 0.0f;
-        }
+		for( u_int i=vsize; i<newsize; i++ ) {
+			data[i] = 0.0f;       
+		}   
         vsize = newsize;
     };
 
@@ -293,6 +307,61 @@ public:
             data[i] = a/x[i];
         }
     };
+	
+    /*! \brief Calculate the square of each element
+     */
+	void square() {
+        for( u_int i=0; i<vsize; i++ ) {
+            data[i] *= data[i];
+        }
+    };
+	
+    /*! \brief Return the sum of the vector's elements
+     */
+	Real sum() {
+		Real s = 0.0;
+        for( u_int i=0; i<vsize; i++ ) {
+            s += data[i];
+        }
+		return s;
+    };
+	
+    /*! \brief Return the mean value of the vector's elements
+     */
+	Real mean() {
+		return this->sum() / vsize;
+    };
+
+	/*! \brief For each element i, data[i] = 0 if data[i] <= threshold; data[i] = 1 otherwise
+	 */
+	void step( Real threshold ) {
+		for ( u_int i = 0; i<vsize; i++ ) {
+		    ( data[i] > threshold ) ? data[i] = 1.0f : data[i] = 0.0f;
+		}
+	}
+	
+    /*! \brief Return 1 if the passed vector is equal, 0 otherwise
+     */
+	bool isEqualTo( const RealVec& src ) {
+#ifdef NNFW_DEBUG
+        if( vsize != src.vsize ) {
+            nnfwMessage( NNFW_ERROR, "Different numbers of elements" );
+            return (*this);
+        }
+#endif
+		for ( u_int i = 0; i < vsize; i++ ) {
+			if ( data[i] != src[i] ) return false;
+		}
+		return true;
+    };
+
+    /*! \brief Create all the binary vectors of a given dimension
+     */
+	static void createAllBinaries( RealVec* vector, unsigned long int pats, u_int dims );	
+
+    /*! \brief Return the mean square error of the vector's elements
+     */
+	static Real mse( const RealVec& target, const RealVec& actual );
 
 private:
     //! The actual size of RealVec
@@ -311,7 +380,14 @@ private:
     RealVec& operator=( const RealVec& src );
 };
 
+	//! Operator << with RealVec
+	std::ostream& operator<<(std::ostream& stream, const RealVec& v);
+	
+	//! Operator >> with RealVec
+	std::istream& operator>>(std::istream& stream, RealVec& v);
+
 }
+
 
 #endif
 

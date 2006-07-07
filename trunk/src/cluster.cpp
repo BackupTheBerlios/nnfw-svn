@@ -32,7 +32,7 @@ namespace nnfw {
  **********************************************/
 
 Cluster::Cluster( u_int numNeurons, const char* name )
-    : Updatable(name), inputdata(numNeurons), outputdata(numNeurons) {
+    : Updatable(name), inputdata(numNeurons), outputdata(numNeurons), oldInput(numNeurons) {
     this->numNeurons = numNeurons;
     outputdata.zeroing();
     inputdata.zeroing();
@@ -95,6 +95,10 @@ void Cluster::setInput( u_int neuron, Real value ) {
     inputdata[neuron] = value;
 }
 
+void Cluster::setInputs( const RealVec& inputs ) {
+	inputdata.assign( inputs );
+}
+
 void Cluster::setAllInputs( Real value ) {
     inputdata.assign( numNeurons, value );
 /*    for ( u_int i = 0; i<numNeurons; i++ ) {
@@ -125,6 +129,10 @@ void Cluster::setOutput( u_int neuron, Real value ) {
         return;
     }
     outputdata[neuron] = value;
+}
+
+void Cluster::setOutputs( const RealVec& outputs ) {
+	outputdata.assign( outputs );
 }
 
 Real Cluster::getOutput( u_int neuron ) const {

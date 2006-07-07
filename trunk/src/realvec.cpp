@@ -18,6 +18,7 @@
  ********************************************************************************/
 
 #include "types.h"
+#include "messages.h"
 
 #include <cmath>
 
@@ -36,8 +37,19 @@ int inutile = vmlSetMode( VML_LA );
 RealVec::RealVec( u_int size ) {
     vsize = size;
     allocated = size;
-    data = new Real[vsize];
+	data = new Real[vsize];
+	for ( u_int i = 0; i < size; i++)
+		data[i] = 0.0;
 }
+
+RealVec::RealVec( u_int size, Real value ) {
+	vsize = size;
+    allocated = size;
+	data = new Real[vsize];
+	for ( u_int i = 0; i < size; i++)
+		data[i] = value;
+}
+
 
 RealVec::RealVec() {
     data = 0;
@@ -94,6 +106,67 @@ RealVec& RealVec::operator=( const RealVec& ) {
 */
     return (*this);
 }
+
+void RealVec::createAllBinaries( RealVec* v, unsigned long int pats, u_int dims ) {
+//#ifdef NNFW_DEBUG
+	unsigned long int totPat = 1;
+	for (u_int x = 0; x < dims; x++)
+		totPat *= 2;
+	if ( totPat != pats ) {
+		nnfwMessage( NNFW_ERROR, "Error in createAllBinaries: total patterns are not how many you think they are" );
+		return;
+	}
+//#endif	
+	//Create the first string of all 0s
+	u_int i;
+	for (i = 0; i < dims; i++)
+		v[0][i] = 0.;
+	for (unsigned long int number = 1; number < pats; number++) {
+		//String n = string n - 1
+		for (i = 0; i < dims; i++)
+			v[ number ][i] = v[ number - 1 ][i];
+		//Add one to string n - 1
+		i = 0;
+		while ( v[ number ][i] == 1. ) {
+			v[ number ][i] = 0.;
+			i++;
+		}
+		v[ number ][i] = 1.;
+	}	
+};
+
+
+Real RealVec::mse( const RealVec& target, const RealVec& actual ) {
+#ifdef NNFW_DEBUG
+	if ( target.size() != actual.size() ) {
+		nnfwMessage( NNFW_ERROR, "Error in mse: target and actual vectors have different size" );
+		return;
+	}
+#endif
+	RealVec error( target.size() );
+	error.assign(target);
+	error -= actual;
+	error.square();
+	return error.mean();
+};
+
+
+std::ostream& operator<<(std::ostream& stream, const RealVec& v) {
+	for ( u_int i = 0; i < v.size(); i++ ) {
+		stream << v[i] << "\t";
+	}
+	stream << std::endl;
+	return stream;
+}
+
+
+std::istream& operator>>(std::istream& stream, RealVec& v) {
+	for ( u_int i = 0; i < v.size(); i++ ) {
+		stream >> (v[i]);
+	}
+	return stream;
+}
+
 
 }
 

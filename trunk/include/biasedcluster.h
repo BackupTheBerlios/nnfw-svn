@@ -67,12 +67,19 @@ public:
      */
     Real getBias( u_int neuron );
 
+	/*! \brief Get the array of biases
+     *  Return the array of biases, not a copy of biases; Then you can change biases by the pointer returned !!!
+     */
+    RealVec& biases() {
+        return biasesdata;
+    };
+
     /*! \brief Randomize the biases of BiasedCluster
      */
     void randomize( Real min, Real max );
 
 private:
-    RealVec biases;
+    RealVec biasesdata;
     //! temporary data
     RealVec tmpdata;
 };

@@ -48,8 +48,8 @@ void BaseTeachBlock::addPreBlock( BaseTeachBlock* preBlock ) {
     preVec.push_back( preBlock );
 }
 
-SupervisedTeachBlock::SupervisedTeachBlock( BaseTeachBlock* preBlock, BaseTeachBlock* postBlock, const char* name )
-    : BaseTeachBlock( preBlock, postBlock, name ), target(), error() {
+SupervisedTeachBlock::SupervisedTeachBlock( BaseTeachBlock* preBlock, BaseTeachBlock* postBlock, bool modifiable, const char* name )
+    : BaseTeachBlock( preBlock, postBlock, name ), target(), error(), modifiability(modifiable) {
 }
 
 void SupervisedTeachBlock::setTarget( const RealVec& target ) {
@@ -75,43 +75,54 @@ GradientBiasedCluster::GradientBiasedCluster( BiasedCluster* cl, BaseTeachBlock*
     this->cl = cl;
     target.resize( cl->size() );
     error.resize( cl->size() );
-    errorOld.resize( cl->size() );
-    errorOld.assign( errorOld.size(), 0.0f );
-    rate = 0.3;
-    momento = 0.0;
+    oldDelta.resize( cl->size() );
+    oldDelta.assign( oldDelta.size(), 0.0f );
+    rate = 0.3f;
+    momento = 0.0f;
 }
 
 void GradientBiasedCluster::learn() {
-    // Da implementare
     if ( mode == SupervisedTeachBlock::targetMode ) {
         //--- Calcolo l'errore
         error.assign( target );
         error -= cl->outputs();
     }
     // --- calcolo del delta; error * derivataFunzioneAttivazione( input_netto )
-    const RealVec& out = cl->outputs();
+    const RealVec& in = cl->oldInputs();
     for( u_int i=0; i<error.size(); i++ ) {
         const DerivableClusterUpdater* dup = dynamic_cast<const DerivableClusterUpdater*>( cl->getUpdater( i ) );
-        if ( dup == 0 ) {
-            error[i] *= out[i]*(1.0-out[i]);
-        } else {
-            error[i] *= dup->derivate( out[i] );
+#ifdef NNFW_DEBUG
+		if ( dup == 0 ) {
+			nnfwMessage( NNFW_ERROR, "Error: you are trying to do the derivative of an underivable function!" );
+            return;
         }
+#endif
+		error[i] *= dup->derivate( in[i] );
     }
     // --- 1. Propaga l'errore ai preBlocks che ereditano da SupervisedTeachBlock
     for( u_int i=0; i<preVec.size(); i++ ) {
         SupervisedTeachBlock* sb = dynamic_cast<SupervisedTeachBlock*>(preVec[i]);
         if ( sb != 0 ) {
-            sb->addError( error );
+            sb->addError( error ); //it sets the sb mode to errorMode
         }
     }
     // --- 2. Applica la regola del gradiente ai bias (pensati come pesi attaccati ad un neurone attivo a -1)
-    for( u_int i=0; i<error.size(); i++ ) {
-        Real deltaMoment = - (rate*error[i]) + momento*errorOld[i];
-        cl->setBias( i, cl->getBias(i) + deltaMoment );
-    }
-    errorOld.assign( error );
-    error.assign( error.size(), 0.0f );
+	if ( this->modifiability ) {
+		RealVec delta( error.size() ), momTerm( error.size() );
+		delta.assign_amulx( -rate, error );
+		momTerm.assign_amulx( momento, oldDelta );
+		delta += momTerm;
+		cl->biases() += delta;
+		/*
+		for( u_int i=0; i<error.size(); i++ ) {
+		    delta[i] = - (rate*error[i]) + momento*oldDelta[i];
+		    cl->setBias( i, cl->getBias(i) + delta[i] );
+		}
+		*/
+		oldDelta.assign( delta );
+	}
+    //error.assign( error.size(), 0.0f );
+    error.setAll( 0.0f );
 }
 
 BiasedCluster* GradientBiasedCluster::getUpdatable() {
@@ -134,15 +145,22 @@ Real GradientBiasedCluster::getMomentum() {
     return momento;
 }
 
+void GradientBiasedCluster::resetOldDeltas() {	
+    oldDelta.setAll( 0.0f );
+}
+
 GradientMatrixLinker::GradientMatrixLinker( MatrixLinker* ml, BaseTeachBlock* pre, BaseTeachBlock* post, const char* name )
-    : SupervisedTeachBlock( pre, post, name ) {
+: SupervisedTeachBlock( pre, post, name ), oldDelta(ml->getRows(), ml->getCols()) {
     this->ml = ml;
-    rate = 0.3;
-    momento = 0.0;
+    rate = 0.3f;
+    momento = 0.0f;
     target.resize( ml->getCols() );
     error.resize( ml->getCols() );
-    errorOld.resize( ml->getCols() );
-    errorOld.assign( errorOld.size(), 0.0f );
+	for(u_int r = 0; r < ml->getRows(); r++) {
+		for(u_int c = 0; c < ml->getCols(); c++) {
+			oldDelta.at( r, c ) = 0.0f;
+		}
+	}
 }
 
 void GradientMatrixLinker::learn() {
@@ -158,7 +176,7 @@ void GradientMatrixLinker::learn() {
     // (devo propagare solo l'errore moltiplicato per il peso relativo)
     u_int outS = ml->getCols();
     u_int inpS = ml->getRows();
-    RealVec errIn( inpS );
+    RealVec errIn( inpS, 0.0 );
     for( u_int c=0; c<outS; c++ ) {
         for( u_int r=0; r<inpS; r++ ) {
             errIn[r] += ml->getWeight( r, c )*error[c];
@@ -171,16 +189,20 @@ void GradientMatrixLinker::learn() {
         }
     }
 
-    // --- 2. Applica la regola del gradiente ai bias (pensati come pesi attaccati ad un neurone attivo a -1)
-    const RealVec& outIn = ml->getFrom()->outputs();
-    for( u_int c=0; c<outS; c++ ) {
-        for( u_int r=0; r<inpS; r++ ) {
-            Real deltaMoment = (rate*error[c]*outIn[r]) + momento*errorOld[c];
-            ml->setWeight( r, c, ml->getWeight(r,c) + deltaMoment );
-        }
-    }
-    errorOld.assign( error );
-    error.assign( error.size(), 0.0f );
+    // --- 2. Applica la regola del gradiente ai pesi
+	if ( this->modifiability ) {
+		const RealVec& outIn = ml->getFrom()->outputs();
+		Matrix<Real> delta( inpS, outS );
+		for( u_int c=0; c<outS; c++ ) {
+		    for( u_int r=0; r<inpS; r++ ) {
+				delta.at( r, c ) = ( rate * error[c] * outIn[r] ) + momento * oldDelta.at( r, c );
+				ml->setWeight( r, c, ml->getWeight( r, c ) + delta.at( r, c ) );
+				oldDelta.at( r, c ) = delta.at( r, c );
+		    }
+		}
+	}
+    //error.assign( error.size(), 0.0f );
+    error.setAll( 0.0f );
 }
 
 MatrixLinker* GradientMatrixLinker::getUpdatable() {
@@ -201,6 +223,14 @@ void GradientMatrixLinker::setMomentum( Real m ) {
 
 Real GradientMatrixLinker::getMomentum() {
     return momento;
+}
+
+void GradientMatrixLinker::resetOldDeltas() {
+	for(u_int c = 0; c < ml->getCols(); c++)
+		for(u_int r = 0; r < ml->getRows(); r++) { {
+			oldDelta.at( r, c ) = 0.0f;
+		}
+	}
 }
 
 };

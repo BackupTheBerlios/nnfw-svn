@@ -72,6 +72,12 @@ public:
      * Details..
      */
     static u_int flatInt( u_int x );
+
+    /*! \brief Return a random real value with a gaussian distribution
+     *
+     * Details..
+     */
+	static Real gauss( Real mean, Real stdev );
 };
 
 }

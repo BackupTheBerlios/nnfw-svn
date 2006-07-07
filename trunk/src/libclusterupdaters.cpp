@@ -63,7 +63,10 @@ void SigmoidUpdater::update( Real input, Real &output ) {
 }
 
 Real SigmoidUpdater::derivate( Real x ) const {
-    return x*(1.0-x);
+	Real y;
+	y = 1.0/( 1.0 + exp( -lambda*( x ) ) );
+	//this->update( x, y );
+    return lambda * y * ( 1.0 - y );
 }
 
 void FakeSigmoidUpdater::update( RealVec& inputs, RealVec& outputs ) {
@@ -85,7 +88,7 @@ void FakeSigmoidUpdater::update( RealVec& inputs, RealVec& outputs ) {
             outputs[i] = 0.0;
         } else {
             if ( x < x0 ) {
-                outputs[i] = .5 + .575 * x / ( 1 + fabs(x) );
+                outputs[i] = .5 + .575 * x / ( 1.0 + fabs(x) );
             } else {
                 outputs[i] = 1.0;
             }
@@ -110,7 +113,10 @@ void FakeSigmoidUpdater::update( Real x, Real &output ) {
 }
 
 Real FakeSigmoidUpdater::derivate( Real x ) const {
-    return x*(1.0-x);
+	Real y;
+	y = 1.0/( 1.0 + exp( -lambda*( x ) ) );
+	//this->update( x, y );
+    return lambda * y * ( 1.0 - y );
 }
 
 void ScaledSigmoidUpdater::update( RealVec& inputs, RealVec& outputs ) {
@@ -135,7 +141,10 @@ void ScaledSigmoidUpdater::update( Real input, Real &output ) {
 }
 
 Real ScaledSigmoidUpdater::derivate( Real x ) const {
-    return x*(1.0-x);
+	Real y;
+	y = 1.0/( 1.0 + exp( -lambda*( x ) ) );
+	//this->update( x, y );
+    return lambda * y * ( 1.0 - y );
 }
 
 void LinearUpdater::update( RealVec& inputs, RealVec& outputs ) {
@@ -177,7 +186,10 @@ Real LinearUpdater::derivate( Real x ) const {
     if ( x >= minX && x<= maxX ) {
         return ( maxY-minY )/( maxX-minX );
     } else {
-        return x*(1.0-x);
+		Real y;
+		y = 1.0/( 1.0 + exp( -x ) );
+		//this->update( x, y );
+		return y * ( 1.0 - y );
     }
 }
 
@@ -199,7 +211,10 @@ void BinaryUpdater::update( Real input, Real &output ) {
 }
 
 Real BinaryUpdater::derivate( Real x ) const {
-    return x*(1.0-x);
+	Real y;
+	y = 1.0/( 1.0 + exp( -x ) );
+	//this->update( x, y );
+    return y * ( 1.0 - y );
 }
 
 }

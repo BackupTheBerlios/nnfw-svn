@@ -43,7 +43,7 @@ void FakeCluster::update() {
 }
 
 void FakeCluster::randomize( Real , Real ) {
-    nnfwMessage( NNFW_INFORMATION, "What means 'randomize a Fake Cluster' ???" );
+    //nnfwMessage( NNFW_INFORMATION, "What means 'randomize a Fake Cluster' ???" );
     return;
 }
 

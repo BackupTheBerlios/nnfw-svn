@@ -96,6 +96,10 @@ public:
      */
     virtual void setInput( u_int neuron, Real value );
 
+    /*! \brief Set the inputs from the vector given
+     */
+    virtual void setInputs( const RealVec& inputs );
+
     /*! \brief Set all the inputs with the same value
      * Details...
      */
@@ -115,6 +119,10 @@ public:
      * Details...
      */
     virtual void setOutput( u_int neuron, Real value );
+
+    /*! \brief Set the outputs from the vector given
+     */
+    virtual void setOutputs( const RealVec& outputs );
 
     /*! \brief Get the output of neuron
      * Details...
@@ -161,12 +169,20 @@ public:
         return inputdata;
     };
 
-    /*! \brief Get the array of inputs
+    /*! \brief Get the array of outputs
      *
      *  Return the array of outputs, not a copy of outputs; Then you can change outputs by the pointer returned !!!
      */
     RealVec& outputs() {
         return outputdata;
+    };
+
+	/*! \brief Get the array of oldInputs
+     *
+     *  Return the array of oldInputs, not a copy of oldInputs; Then you can change oldInputs by the pointer returned !!!
+     */
+    RealVec& oldInputs() {
+        return oldInput;
     };
 
 protected:
@@ -188,6 +204,7 @@ private:
     u_int numNeurons;
     RealVec inputdata;
     RealVec outputdata;
+	RealVec oldInput;
     //! Updaters Object
     ClusterUpdater* singleUpdater;
     ClusterUpdater** poolUpdater;

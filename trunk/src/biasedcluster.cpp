@@ -28,33 +28,33 @@
 namespace nnfw {
 
 BiasedCluster::BiasedCluster( u_int numNeurons, const char* name )
-    : Cluster( numNeurons, name), biases(numNeurons), tmpdata(numNeurons) {
-    biases.zeroing();
+    : Cluster( numNeurons, name), biasesdata(numNeurons), tmpdata(numNeurons) {
+    biasesdata.zeroing();
     tmpdata.zeroing();
-/*    biases = new Real[numNeurons];
-    memset( biases, 0, sizeof(Real)*numNeurons );
+/*    biasesdata = new Real[numNeurons];
+    memset( biasesdata, 0, sizeof(Real)*numNeurons );
     tmpdata = new Real[numNeurons];
     memset( tmpdata, 0, sizeof(Real)*numNeurons );*/
 }
 
 BiasedCluster::~BiasedCluster() {
-/*    delete []biases;
+/*    delete []biasesdata;
     delete []tmpdata;*/
 }
 
 void BiasedCluster::update() {
     if ( isSingleUpdater() ) {
-/*        for ( u_int i = 0; i<size(); i++ ) {
-            tmpdata[i] = inputs()[i] - biases[i];
-        }*/
         tmpdata.assign( inputs() );
-        tmpdata -= biases;
+        tmpdata -= biasesdata;
         updaters()[0]->update( tmpdata, outputs() );
     } else {
         for ( u_int i = 0; i<size(); i++ ) {
-            updaters()[i]->update( inputs()[i] - biases[i], outputs()[i] );
+            updaters()[i]->update( inputs()[i] - biasesdata[i], outputs()[i] );
         }
-    }
+    }	
+	oldInputs().assign( inputs() );
+	oldInputs() -= biasesdata;
+	resetInputs();
 }
 
 void BiasedCluster::setBias( u_int neuron, Real bias ) {
@@ -64,21 +64,21 @@ void BiasedCluster::setBias( u_int neuron, Real bias ) {
         nnfwMessage( NNFW_ERROR, msg );
         return;
     }
-    biases[neuron] = bias;
+    biasesdata[neuron] = bias;
 }
 
 void BiasedCluster::setAllBiases( Real bias ) {
-    biases.assign( size(), bias );
+    biasesdata.assign( size(), bias );
 /*    for( u_int i=0; i<size(); i++ ) {
-        biases[i] = bias;
+        biasesdata[i] = bias;
     }*/
 }
 
 void BiasedCluster::setBiases( const RealVec& bias ) {
-    biases.assign( bias );
-/*    u_int dim = biases.size();
+    biasesdata.assign( bias );
+/*    u_int dim = biasesdata.size();
     for( u_int i=0; i<dim; i++ ) {
-        setBias( i, biases[i] );
+        setBias( i, biasesdata[i] );
     }*/
 }
 
@@ -89,12 +89,12 @@ Real BiasedCluster::getBias( u_int neuron ) {
         nnfwMessage( NNFW_ERROR, msg );
         return 0.0;
     }
-    return biases[neuron];
+    return biasesdata[neuron];
 }
 
 void BiasedCluster::randomize( Real min, Real max ) {
     for ( u_int i = 0; i < size(); i++ ) {
-        biases[i] = Random::flatReal( min, max );
+        biasesdata[i] = Random::flatReal( min, max );
     }
 }
 

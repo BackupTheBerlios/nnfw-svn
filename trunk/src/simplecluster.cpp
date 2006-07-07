@@ -46,6 +46,8 @@ void SimpleCluster::update() {
             updaters()[i]->update( inputs()[i], outputs()[i] );
         }
     }
+	oldInputs().assign( inputs() );
+	resetInputs();
 }
 
 }
