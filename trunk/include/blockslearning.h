@@ -104,7 +104,7 @@ class SupervisedTeachBlock : public BaseTeachBlock {
 public:
     /*! \brief Construct a SupervisedTeachBlock attached to specified BaseTeachBlock
      */
-    SupervisedTeachBlock( BaseTeachBlock* preBlock = 0, BaseTeachBlock* postBlock = 0, bool modifiable = true, const char* name = "unnamed" );
+    SupervisedTeachBlock( BaseTeachBlock* preBlock = 0, BaseTeachBlock* postBlock = 0, const char* name = "unnamed" );
     //! One step of the learning method implemented by subclasses
     virtual void learn() = 0;
     //! Return the Updatable

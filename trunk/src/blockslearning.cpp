@@ -48,8 +48,8 @@ void BaseTeachBlock::addPreBlock( BaseTeachBlock* preBlock ) {
     preVec.push_back( preBlock );
 }
 
-SupervisedTeachBlock::SupervisedTeachBlock( BaseTeachBlock* preBlock, BaseTeachBlock* postBlock, bool modifiable, const char* name )
-    : BaseTeachBlock( preBlock, postBlock, name ), target(), error(), modifiability(modifiable) {
+SupervisedTeachBlock::SupervisedTeachBlock( BaseTeachBlock* preBlock, BaseTeachBlock* postBlock, const char* name )
+    : BaseTeachBlock( preBlock, postBlock, name ), target(), error(), modifiability(true) {
 }
 
 void SupervisedTeachBlock::setTarget( const RealVec& target ) {
@@ -71,7 +71,7 @@ RealVec& SupervisedTeachBlock::getError() {
 }
 
 GradientBiasedCluster::GradientBiasedCluster( BiasedCluster* cl, BaseTeachBlock* pre, BaseTeachBlock* post, const char* name)
-    : SupervisedTeachBlock( pre, post, true, name ) {
+    : SupervisedTeachBlock( pre, post, name ) {
     this->cl = cl;
     target.resize( cl->size() );
     error.resize( cl->size() );
@@ -145,7 +145,7 @@ void GradientBiasedCluster::resetOldDeltas() {
 }
 
 GradientMatrixLinker::GradientMatrixLinker( MatrixLinker* ml, BaseTeachBlock* pre, BaseTeachBlock* post, const char* name )
-: SupervisedTeachBlock( pre, post, true, name ), oldDelta(ml->getRows(), ml->getCols()) {
+: SupervisedTeachBlock( pre, post, name ), oldDelta(ml->getRows(), ml->getCols()) {
     this->ml = ml;
     rate = 0.3f;
     momento = 0.0f;
