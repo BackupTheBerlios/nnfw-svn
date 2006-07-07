@@ -92,10 +92,19 @@ Cluster* MatrixLinker::getTo() const {
 void MatrixLinker::update() {
     // incoming cluster output
     Real* outputsFrom = from->outputs().rawdata();
+    // check if cluster 'To' needs a reset
+    if ( to->needReset() ) {
+        to->resetInputs();
+    }
     // outgoing cluster inputs
     Real* inputsTo = to->inputs().rawdata();
 #ifdef NNFW_USE_MKL
+#ifdef NNFW_SINGLE_PRECISION
+    cblas_sgemv(CblasColMajor, CblasTrans, nrows, ncols, 1.0, w.rawdata(), nrows, outputsFrom, 1, 1.0, inputsTo, 1);
+#endif
+#ifdef NNFW_DOUBLE_PRECISION
     cblas_dgemv(CblasColMajor, CblasTrans, nrows, ncols, 1.0, w.rawdata(), nrows, outputsFrom, 1, 1.0, inputsTo, 1);
+#endif
 #else
     for ( u_int i = 0; i<ncols; i++ ) {
         for ( u_int j = 0; j<nrows; j++ ) {

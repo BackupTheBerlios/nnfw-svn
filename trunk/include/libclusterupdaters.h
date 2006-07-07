@@ -59,7 +59,7 @@ public:
     void update( Real input, Real &output );
 
     //! return always 1 (an explain of why will be coming soon)
-    Real derivate( Real x ) const;
+    Real derivate( Real x, Real out ) const;
 };
 
 /*! \brief Sigmoid Updater
@@ -86,7 +86,7 @@ public:
     void update( Real input, Real &output );
 
     //! return the approximation commonly used in backpropagation learning: x(1-x)
-    Real derivate( Real x )  const;
+    Real derivate( Real x, Real out )  const;
 
     //! lambda is the slope of the curve
     Real lambda;
@@ -116,7 +116,7 @@ public:
     void update( Real input, Real &output );
 
     //! return the approximation commonly used in backpropagation learning: x(1-x)
-    Real derivate( Real x ) const;
+    Real derivate( Real x, Real out ) const;
 
     //! lambda is the slope of the curve
     Real lambda;
@@ -153,7 +153,7 @@ public:
     void update( Real input, Real &output );
 
     //! return the approximation commonly used in backpropagation learning: x(1-x)
-    Real derivate( Real x ) const;
+    Real derivate( Real x, Real out ) const;
 
     //! lambda is the slope of the curve
     Real lambda;
@@ -198,7 +198,7 @@ public:
     void update( Real input, Real &output );
 
     //! return the m coefficient if x is in [minX, maxX] and x(1-x) otherwise
-    Real derivate( Real x ) const;
+    Real derivate( Real x, Real out ) const;
 
     //! minX
     Real minX;
@@ -234,7 +234,7 @@ public:
     void update( Real input, Real &output );
 
     //! return the m coefficient if x is in [minX, maxX] and x(1-x) otherwise
-    Real derivate( Real x ) const;
+    Real derivate( Real x, Real out ) const;
 
     //! Threshold
     Real threshold;

@@ -25,7 +25,6 @@
  *  Details...
  */
 
-#include <cstdio>
 #include <iostream>
 #ifdef NNFW_DEBUG
 #include "messages.h"
@@ -84,7 +83,7 @@ public:
     /*! \brief Set all values to value
      */
     void setAll( Real value ) {
-		for( u_int i = 0; i < vsize; i++ ) {
+		for( u_int i=0; i<vsize; i++ ) {
             data[i] = value;
         }
     };
@@ -292,6 +291,30 @@ public:
      */
     void inv();
 
+    /*! \brief Equation: x-y
+     */
+    void assign_xminusy( const RealVec& x, const RealVec& y ) {
+        for( u_int i=0; i<vsize; i++ ) {
+            data[i] = x[i]-y[i];
+        }
+    };
+
+    /*! \brief Equation: -x
+     */
+    void assign_minusx( const RealVec& x ) {
+        for( u_int i=0; i<vsize; i++ ) {
+            data[i] = -x[i];
+        }
+    };
+
+    /*! \brief Equation: a-x
+     */
+    void assign_aminusx( Real a, const RealVec& x ) {
+        for( u_int i=0; i<vsize; i++ ) {
+            data[i] = a-x[i];
+        }
+    };
+
     /*! \brief Equation: a*x
      */
     void assign_amulx( const Real a, const RealVec& x ) {
@@ -346,7 +369,7 @@ public:
 #ifdef NNFW_DEBUG
         if( vsize != src.vsize ) {
             nnfwMessage( NNFW_ERROR, "Different numbers of elements" );
-            return (*this);
+            return false;
         }
 #endif
 		for ( u_int i = 0; i < vsize; i++ ) {

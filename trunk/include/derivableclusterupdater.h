@@ -48,7 +48,7 @@ public:
      *
      * Details...
      */
-    virtual Real derivate( Real x ) const { return x; };
+    virtual Real derivate( Real x, Real ) const { return x; };
 	
 };
 

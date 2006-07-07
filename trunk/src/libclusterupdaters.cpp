@@ -41,7 +41,7 @@ void DummyUpdater::update( Real input, Real &output ) {
     output = input;
 }
 
-Real DummyUpdater::derivate( Real ) const {
+Real DummyUpdater::derivate( Real, Real ) const {
     return 1.0;
 }
 
@@ -62,11 +62,8 @@ void SigmoidUpdater::update( Real input, Real &output ) {
     output = 1.0/( 1.0 + exp( -lambda*( input ) ) );
 }
 
-Real SigmoidUpdater::derivate( Real x ) const {
-	Real y;
-	y = 1.0/( 1.0 + exp( -lambda*( x ) ) );
-	//this->update( x, y );
-    return lambda * y * ( 1.0 - y );
+Real SigmoidUpdater::derivate( Real , Real out ) const {
+    return lambda * out * (1.0-out);
 }
 
 void FakeSigmoidUpdater::update( RealVec& inputs, RealVec& outputs ) {
@@ -112,11 +109,8 @@ void FakeSigmoidUpdater::update( Real x, Real &output ) {
     }
 }
 
-Real FakeSigmoidUpdater::derivate( Real x ) const {
-	Real y;
-	y = 1.0/( 1.0 + exp( -lambda*( x ) ) );
-	//this->update( x, y );
-    return lambda * y * ( 1.0 - y );
+Real FakeSigmoidUpdater::derivate( Real , Real out ) const {
+    return lambda * out * (1.0-out);
 }
 
 void ScaledSigmoidUpdater::update( RealVec& inputs, RealVec& outputs ) {
@@ -140,11 +134,8 @@ void ScaledSigmoidUpdater::update( Real input, Real &output ) {
     output = ( max - min ) * f + min ;
 }
 
-Real ScaledSigmoidUpdater::derivate( Real x ) const {
-	Real y;
-	y = 1.0/( 1.0 + exp( -lambda*( x ) ) );
-	//this->update( x, y );
-    return lambda * y * ( 1.0 - y );
+Real ScaledSigmoidUpdater::derivate( Real , Real out ) const {
+    return lambda * out * (1.0-out);
 }
 
 void LinearUpdater::update( RealVec& inputs, RealVec& outputs ) {
@@ -182,13 +173,12 @@ void LinearUpdater::update( Real input, Real &output ) {
     }
 }
 
-Real LinearUpdater::derivate( Real x ) const {
+Real LinearUpdater::derivate( Real x, Real ) const {
     if ( x >= minX && x<= maxX ) {
         return ( maxY-minY )/( maxX-minX );
     } else {
 		Real y;
 		y = 1.0/( 1.0 + exp( -x ) );
-		//this->update( x, y );
 		return y * ( 1.0 - y );
     }
 }
@@ -210,10 +200,9 @@ void BinaryUpdater::update( Real input, Real &output ) {
     ( input > threshold ) ? output = 1.0f : output = 0.0f;
 }
 
-Real BinaryUpdater::derivate( Real x ) const {
+Real BinaryUpdater::derivate( Real x, Real ) const {
 	Real y;
 	y = 1.0/( 1.0 + exp( -x ) );
-	//this->update( x, y );
     return y * ( 1.0 - y );
 }
 

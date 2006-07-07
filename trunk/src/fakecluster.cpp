@@ -39,6 +39,7 @@ FakeCluster::~FakeCluster() {
 
 void FakeCluster::update() {
     outputs().assign( inputs() );
+    setNeedReset( true );
     return;
 }
 

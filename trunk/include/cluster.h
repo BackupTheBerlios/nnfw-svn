@@ -177,15 +177,20 @@ public:
         return outputdata;
     };
 
-	/*! \brief Get the array of oldInputs
-     *
-     *  Return the array of oldInputs, not a copy of oldInputs; Then you can change oldInputs by the pointer returned !!!
+    /*! \brief Return true if inputs needs a reset
      */
-    RealVec& oldInputs() {
-        return oldInput;
+    bool needReset() {
+        return needRst;
     };
 
 protected:
+    /*! \brief Set the state of 'needReset'
+     *  Used by subclassed into update implementation
+     */
+    void setNeedReset( bool b ) {
+        needRst = b;
+    };
+
     /*! \brief Only for special needs during subclass implementation
      *  See the FakeCluster implemetation for an example
      */
@@ -204,11 +209,12 @@ private:
     u_int numNeurons;
     RealVec inputdata;
     RealVec outputdata;
-	RealVec oldInput;
     //! Updaters Object
     ClusterUpdater* singleUpdater;
     ClusterUpdater** poolUpdater;
     bool singleUpd;
+    //! True if the inputs needs a reset
+    bool needRst;
 };
 
 }

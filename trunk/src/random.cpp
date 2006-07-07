@@ -18,7 +18,7 @@
  ********************************************************************************/
 
 #include "random.h"
-#include "cmath"
+#include <cmath>
 
 #ifndef WIN32
 #include "gsl/gsl_rng.h"
@@ -75,21 +75,22 @@ bool Random::boolean( Real trueProb ) {
 
 u_int Random::flatInt( u_int x ) {
 #ifndef WIN32
-    return (u_int)( gsl_rng_uniform_int( rng, x ) );
+    return (u_int)( gsl_rng_uniform_int( rnd, x ) );
 #else
 	return (int) ( (Real) (rand()-1) / RAND_MAX * x);
 #endif
 }
 
 Real Random::gauss( Real mean, Real stdev ) {
-  Real x1, x2, w;
-  do {
-    x1 = 2. * flatReal() - 1.;
-    x2 = 2. * flatReal() - 1.;
-    w = x1 * x1 + x2 * x2;
-  } while ( w >= 1. );          
-  w = sqrt( (-2. * log( w ) ) / w );
-  return (x1 * w) * sqrt(stdev) + mean;
+    Real x1, x2, w;
+    do {
+        x1 = 2. * flatReal() - 1.;
+        x2 = 2. * flatReal() - 1.;
+        w = x1 * x1 + x2 * x2;
+    } while ( w >= 1. );
+    w = sqrt( (-2. * log( w ) ) / w );
+    return (x1 * w) * sqrt(stdev) + mean;
+}
+
 };
 
-}

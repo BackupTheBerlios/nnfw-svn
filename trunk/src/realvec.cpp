@@ -71,7 +71,12 @@ RealVec::~RealVec() {
 
 RealVec& RealVec::exp() {
 #ifdef NNFW_USE_MKL
+#ifdef NNFW_SINGLE_PRECISION
+    vsExp( vsize, data, data );
+#endif
+#ifdef NNFW_DOUBLE_PRECISION
     vdExp( vsize, data, data );
+#endif
 #else
     for( u_int i=0; i<vsize; i++ ) {
         data[i] = std::exp( data[i] );
@@ -82,7 +87,12 @@ RealVec& RealVec::exp() {
 
 void RealVec::inv() {
 #ifdef NNFW_USE_MKL
+#ifdef NNFW_SINGLE_PRECISION
+    vsInv( vsize, data, data );
+#endif
+#ifdef NNFW_DOUBLE_PRECISION
     vdInv( vsize, data, data );
+#endif
 #else
     for( u_int i=0; i<vsize; i++ ) {
         data[i] = 1.0/data[i];
@@ -140,7 +150,7 @@ Real RealVec::mse( const RealVec& target, const RealVec& actual ) {
 #ifdef NNFW_DEBUG
 	if ( target.size() != actual.size() ) {
 		nnfwMessage( NNFW_ERROR, "Error in mse: target and actual vectors have different size" );
-		return;
+		return 0.0;
 	}
 #endif
 	RealVec error( target.size() );

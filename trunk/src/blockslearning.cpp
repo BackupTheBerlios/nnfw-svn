@@ -71,13 +71,13 @@ RealVec& SupervisedTeachBlock::getError() {
 }
 
 GradientBiasedCluster::GradientBiasedCluster( BiasedCluster* cl, BaseTeachBlock* pre, BaseTeachBlock* post, const char* name)
-    : SupervisedTeachBlock( pre, post, name ) {
+    : SupervisedTeachBlock( pre, post, true, name ) {
     this->cl = cl;
     target.resize( cl->size() );
     error.resize( cl->size() );
     oldDelta.resize( cl->size() );
     oldDelta.assign( oldDelta.size(), 0.0f );
-    rate = 0.3f;
+    rate = 0.2f;
     momento = 0.0f;
 }
 
@@ -88,7 +88,7 @@ void GradientBiasedCluster::learn() {
         error -= cl->outputs();
     }
     // --- calcolo del delta; error * derivataFunzioneAttivazione( input_netto )
-    const RealVec& in = cl->oldInputs();
+    const RealVec& in = cl->inputs();
     for( u_int i=0; i<error.size(); i++ ) {
         const DerivableClusterUpdater* dup = dynamic_cast<const DerivableClusterUpdater*>( cl->getUpdater( i ) );
 #ifdef NNFW_DEBUG
@@ -97,7 +97,7 @@ void GradientBiasedCluster::learn() {
             return;
         }
 #endif
-		error[i] *= dup->derivate( in[i] );
+		error[i] *= dup->derivate( in[i], cl->outputs()[i] );
     }
     // --- 1. Propaga l'errore ai preBlocks che ereditano da SupervisedTeachBlock
     for( u_int i=0; i<preVec.size(); i++ ) {
@@ -113,12 +113,7 @@ void GradientBiasedCluster::learn() {
 		momTerm.assign_amulx( momento, oldDelta );
 		delta += momTerm;
 		cl->biases() += delta;
-		/*
-		for( u_int i=0; i<error.size(); i++ ) {
-		    delta[i] = - (rate*error[i]) + momento*oldDelta[i];
-		    cl->setBias( i, cl->getBias(i) + delta[i] );
-		}
-		*/
+
 		oldDelta.assign( delta );
 	}
     //error.assign( error.size(), 0.0f );
@@ -150,7 +145,7 @@ void GradientBiasedCluster::resetOldDeltas() {
 }
 
 GradientMatrixLinker::GradientMatrixLinker( MatrixLinker* ml, BaseTeachBlock* pre, BaseTeachBlock* post, const char* name )
-: SupervisedTeachBlock( pre, post, name ), oldDelta(ml->getRows(), ml->getCols()) {
+: SupervisedTeachBlock( pre, post, true, name ), oldDelta(ml->getRows(), ml->getCols()) {
     this->ml = ml;
     rate = 0.3f;
     momento = 0.0f;
@@ -226,8 +221,8 @@ Real GradientMatrixLinker::getMomentum() {
 }
 
 void GradientMatrixLinker::resetOldDeltas() {
-	for(u_int c = 0; c < ml->getCols(); c++)
-		for(u_int r = 0; r < ml->getRows(); r++) { {
+	for(u_int c = 0; c < ml->getCols(); c++) {
+		for(u_int r = 0; r < ml->getRows(); r++) {
 			oldDelta.at( r, c ) = 0.0f;
 		}
 	}

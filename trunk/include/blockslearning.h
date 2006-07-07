@@ -118,7 +118,7 @@ public:
     //! Return the last Errors values
     RealVec& getError();
     //! Set the modifiability value
-	void isModifiable( bool value ) {
+	void setModifiable( bool value ) {
 		modifiability = value;	
 	};
     //! Return true if the teachblock is modifiable

@@ -80,8 +80,8 @@ public:
 
 private:
     RealVec biasesdata;
-    //! temporary data
-    RealVec tmpdata;
+    //! tempdata
+    RealVec tempdata;
 };
 
 }

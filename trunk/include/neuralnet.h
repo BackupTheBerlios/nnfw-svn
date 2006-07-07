@@ -174,9 +174,9 @@ public:
      *  Details
      */
     void step() {
-        for( u_int i=0; i<zeroclusters.size(); i++ ) {
+/*        for( u_int i=0; i<zeroclusters.size(); i++ ) {
             zeroclusters[i]->resetInputs();
-        }
+        }*/
         for( u_int i=0; i<dimUps; i++ ) {
             if ( mask[i] ) {
                 ups[i]->update();
