@@ -36,9 +36,8 @@
 #include "messages.h"
 #endif
 
-// --- Select SINGLE (float) or DOUBLE precision of Real
-#define NNFW_SINGLE_PRECISION
-#undef  NNFW_DOUBLE_PRECISION
+// --- Define NNFW_DOUBLE_PRECISION for defining Real as double
+//#define  NNFW_DOUBLE_PRECISION
 
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {
@@ -56,10 +55,9 @@ namespace nnfw {
 typedef  unsigned int u_int;
 
 //! Abstraction on the type of real numbers
-#ifdef NNFW_SINGLE_PRECISION
+#ifndef NNFW_DOUBLE_PRECISION
 typedef float Real;
-#endif
-#ifdef NNFW_DOUBLE_PRECISION
+#else
 typedef double Real;
 #endif
 
@@ -72,6 +70,7 @@ public:
     Matrix( u_int rows, u_int cols ) {
         nrows = rows;
         ncols = cols;
+        tsize = nrows*ncols;
         // Matrix Allocation procedure
         //  Matrix[column][row]
         mem = new T[nrows*ncols];
@@ -85,12 +84,16 @@ public:
         delete []mem;
     };
     //! Returns the numbers of Row
-    u_int rows() {
+    u_int rows() const {
         return nrows;
     };
     //! Returns the numbers of Columns
-    u_int cols() {
+    u_int cols() const {
         return ncols;
+    };
+    //! Returns the total numbers of elements (Rows*Columns)
+    u_int size() const {
+        return tsize;
     };
     //! Return a reference to element at position (row, col)
     T& at( u_int row, u_int col ) {
@@ -124,7 +127,7 @@ public:
 
 //protected:
     //! Return the raw data allocated
-    T* rawdata() {
+    T* rawdata() const {
         return mem;
     };
 
@@ -137,11 +140,14 @@ private:
     u_int nrows;
     //! Numbers of Columns
     u_int ncols;
+    //! Size
+    u_int tsize;
 };
 
 }
 
 #include "realvec.h"
+#include "realmat.h"
 
 namespace nnfw {
 

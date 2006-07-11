@@ -53,6 +53,10 @@ public:
      */
     RealVec();
 
+    /*! \brief Construct a RealVec view
+     */
+    RealVec( RealVec& src, u_int idStart, u_int idEnd );
+
     /*! \brief Construct by copying data from const Real* vector
      */
     RealVec( const Real* r, u_int dim );
@@ -61,17 +65,16 @@ public:
      */
     ~RealVec();
 
-    /*! \brief Raw Data
-     * ======== QUESTO METODO NON DOVREBBE ESISTERE ?!?!? =========
-     */
-    Real* rawdata() {
-        return data;
-    };
-
     /*! \brief Return the size of RealVec
      */
     u_int size() const {
         return vsize;
+    };
+
+    /*! \brief Return True if it is a RealVec view
+     */
+    bool isView() {
+        return view;
     };
 
     /*! \brief Set all values to zero
@@ -90,7 +93,7 @@ public:
 
     /*! \brief Assign to first num element the value passed
      */
-    void assign( u_int num, Real value ) {
+    RealVec& assign( u_int num, Real value ) {
 #ifdef NNFW_DEBUG
         if ( num > vsize ) {
             nnfwMessage( NNFW_ERROR, "Wrong number of elements passed to assign method" );
@@ -100,11 +103,12 @@ public:
         for( u_int i=0; i<num; i++ ) {
             data[i] = value;
         }
+        return (*this);
     };
 
     /*! \brief Assignment method. The sizes of RealVec must be the same.
      */
-    void assign( const RealVec& src ) {
+    RealVec& assign( const RealVec& src ) {
 #ifdef NNFW_DEBUG
         if ( vsize != src.vsize ) {
             nnfwMessage( NNFW_ERROR, "Wrong number of elements between to assign method" );
@@ -112,6 +116,7 @@ public:
         }
 #endif
         memcpy( data, src.data, sizeof(Real)*vsize );
+        return (*this);
     };
 
     /*! \brief Indexing operator
@@ -142,33 +147,11 @@ public:
 
     /*! \brief Resize the RealVec
      */
-    void resize( u_int newsize ) {
-        if ( allocated < newsize ) {
-            allocated = newsize+20;
-            Real* tmp = new Real[allocated];
-            memcpy( tmp, data, sizeof(Real)*(vsize) );
-            delete []data;
-            data = tmp;
-        }
-		for( u_int i=vsize; i<newsize; i++ ) {
-			data[i] = 0.0f;       
-		}   
-        vsize = newsize;
-    };
+    void resize( u_int newsize );
 
     /*! \brief Append an element; the dimesion increase by one
      */
-    void append( const Real value ) {
-        if ( allocated < vsize+1 ) {
-            allocated += 21;
-            Real* tmp = new Real[allocated];
-            memcpy( tmp, data, sizeof(Real)*(vsize) );
-            delete []data;
-            data = tmp;
-        }
-        data[vsize] = value;
-        vsize += 1;
-    };
+    void append( const Real value );
 
     /*! \brief Append Operator
      */
@@ -289,7 +272,7 @@ public:
 
     /*! \brief Element Inversion
      */
-    void inv();
+    RealVec& inv();
 
     /*! \brief Equation: x-y
      */
@@ -380,11 +363,18 @@ public:
 
     /*! \brief Create all the binary vectors of a given dimension
      */
-	static void createAllBinaries( RealVec* vector, unsigned long int pats, u_int dims );	
+	static void createAllBinaries( RealVec* vector, unsigned long int pats, u_int dims );
 
     /*! \brief Return the mean square error of the vector's elements
      */
 	static Real mse( const RealVec& target, const RealVec& actual );
+
+//protected:
+    /*! \brief Raw Data
+     */
+    Real* rawdata() const {
+        return data;
+    };
 
 private:
     //! The actual size of RealVec
@@ -393,6 +383,19 @@ private:
     u_int allocated;
     //! Data
     Real* data;
+
+    //! Is View
+    bool view;
+    //! start index
+    u_int idstart;
+    //! end index
+    u_int idend;
+    //! Viewers
+    Vector<RealVec*> viewers;
+    //! Pointer to RealVec viewed
+    RealVec* viewed;
+    //! Notify to viewers that 'data' is changed
+    void datachanged();
 
     /*! \brief Copy-Constructor
      */

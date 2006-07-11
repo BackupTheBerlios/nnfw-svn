@@ -18,6 +18,7 @@
  ********************************************************************************/
 
 #include "matrixlinker.h"
+#include "messages.h"
 #include "random.h"
 #include <cstdio>
 
@@ -59,59 +60,42 @@ void MatrixLinker::randomize( Real min, Real max ) {
 
 void MatrixLinker::setWeight( u_int from, u_int to, Real weight ) {
     if ( from >= nrows ) {
-        // Messaggio di errore !!!
+        nnfwMessage( NNFW_ERROR, "Accessing out of Rows Boundary" );
         return;
     }
     if ( to >= ncols ) {
-        // Messaggio di errore !!!
+        nnfwMessage( NNFW_ERROR, "Accessing out of Columns Boundary" );
         return;
     }
     w.at( from, to ) = weight;
-};
+}
 
 Real MatrixLinker::getWeight( u_int from, u_int to ) {
     if ( from >= nrows ) {
-        // Messaggio di errore !!!
+        nnfwMessage( NNFW_ERROR, "Accessing out of Rows Boundary" );
         return 0.0;
     }
     if ( to >= ncols ) {
-        // Messaggio di errore !!!
+        nnfwMessage( NNFW_ERROR, "Accessing out of Columns Boundary" );
         return 0.0;
     }
     return w.at( from, to );
-};
+}
 
 Cluster* MatrixLinker::getFrom() const {
     return from;
-};
+}
 
 Cluster* MatrixLinker::getTo() const {
     return to;
-};
+}
 
 void MatrixLinker::update() {
-    // incoming cluster output
-    Real* outputsFrom = from->outputs().rawdata();
     // check if cluster 'To' needs a reset
     if ( to->needReset() ) {
         to->resetInputs();
     }
-    // outgoing cluster inputs
-    Real* inputsTo = to->inputs().rawdata();
-#ifdef NNFW_USE_MKL
-#ifdef NNFW_SINGLE_PRECISION
-    cblas_sgemv(CblasColMajor, CblasTrans, nrows, ncols, 1.0, w.rawdata(), nrows, outputsFrom, 1, 1.0, inputsTo, 1);
-#endif
-#ifdef NNFW_DOUBLE_PRECISION
-    cblas_dgemv(CblasColMajor, CblasTrans, nrows, ncols, 1.0, w.rawdata(), nrows, outputsFrom, 1, 1.0, inputsTo, 1);
-#endif
-#else
-    for ( u_int i = 0; i<ncols; i++ ) {
-        for ( u_int j = 0; j<nrows; j++ ) {
-            inputsTo[i] += outputsFrom[j] * w.at( j, i );
-        }
-    }
-#endif
+    RealMat::mul( to->inputs(), from->outputs(), w );
     return;
 }
 

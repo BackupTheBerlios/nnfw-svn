@@ -97,8 +97,8 @@ public:
 protected:
     //! Registers the dimensions of the matrix
     u_int nrows, ncols;
-    //! Weight Matrix --- In futuro sostituita da RealMat ---
-    Matrix<Real> w;
+    //! Weight Matrix
+    RealMat w;
     //! Registers the cluster from
     Cluster* from;
     //! Registers the cluster to

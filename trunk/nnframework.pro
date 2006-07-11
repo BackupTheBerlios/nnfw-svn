@@ -28,6 +28,11 @@ contains( CONFIG, release ) {
     unix:QMAKE_CXXFLAGS -= -O2
 }
 
+#### Configuration for using Double Precision
+contains( NNFW, double ) {
+    DEFINES += NNFW_DOUBLE_PRECISION
+}
+
 #### Definition for creating library under linux
 unix:LIBS += -L/usr/lib -lgsl -lgslcblas -lm
 
@@ -60,6 +65,7 @@ DEPENDPATH  += ./include
 HEADERS		= ./include/nnfw.h \
 			  ./include/types.h \
               ./include/realvec.h \
+              ./include/realmat.h \
               ./include/updatable.h \
 			  ./include/cluster.h \
               ./include/simplecluster.h \
@@ -94,6 +100,7 @@ SOURCES		= ./src/cluster.cpp \
               ./src/random.cpp \
               ./src/types.cpp \
               ./src/realvec.cpp \
+              ./src/realmat.cpp \
               ./src/blockslearning.cpp \
               ./src/learningnetwork.cpp
 
