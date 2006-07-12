@@ -40,6 +40,7 @@ CopyLinker::CopyLinker( Cluster* from, Cluster* to, CopyMode mode, const char* n
     // Follow initialization force setMode method to setting datas, otherwise strange automatic compile-time
     // initialization may results in unpredictable behaviour
     this->mode = (CopyMode)-1;
+    viewsIsInit = false;
     setMode( mode );
 }
 
@@ -48,26 +49,31 @@ CopyLinker::~CopyLinker() {
 
 void CopyLinker::setMode( CopyMode cm ) {
     if ( this->mode == cm ) return;
+    if ( viewsIsInit ) {
+        delete ptr_dataFrom;
+        delete ptr_dataTo;
+    }
 
     this->mode = cm;
     switch( mode ) {
     case In2In:
-        dataFrom = &Cluster::inputs;
-        dataTo = &Cluster::inputs;
+        ptr_dataFrom = new RealVec( from->inputs(), 0, dimData );
+        ptr_dataTo = new RealVec( to->inputs(), 0, dimData );
         break;
     case In2Out:
-        dataFrom = &Cluster::inputs;
-        dataTo = &Cluster::outputs;
+        ptr_dataFrom = new RealVec( from->inputs(), 0, dimData );
+        ptr_dataTo = new RealVec( to->outputs(), 0, dimData );
         break;
     case Out2In:
-        dataFrom = &Cluster::outputs;
-        dataTo = &Cluster::inputs;
+        ptr_dataFrom = new RealVec( from->outputs(), 0, dimData );
+        ptr_dataTo = new RealVec( to->inputs(), 0, dimData );
         break;
     case Out2Out:
-        dataFrom = &Cluster::outputs;
-        dataTo = &Cluster::outputs;
+        ptr_dataFrom = new RealVec( from->outputs(), 0, dimData );
+        ptr_dataFrom = new RealVec( from->outputs(), 0, dimData );
         break;
     }
+    viewsIsInit = true;
     return;
 }
 
@@ -76,7 +82,7 @@ CopyLinker::CopyMode CopyLinker::getMode() {
 }
 
 void CopyLinker::update() {
-    memcpy( (from->*dataFrom)().rawdata(), (to->*dataTo)().rawdata(), dimData*sizeof( Real ) );
+    ptr_dataFrom->assign( *ptr_dataTo );
     return;
 }
 

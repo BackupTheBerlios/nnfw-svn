@@ -141,7 +141,7 @@ Real GradientBiasedCluster::getMomentum() {
 }
 
 void GradientBiasedCluster::resetOldDeltas() {	
-    oldDelta.setAll( 0.0f );
+    oldDelta.zeroing();
 }
 
 GradientMatrixLinker::GradientMatrixLinker( MatrixLinker* ml, BaseTeachBlock* pre, BaseTeachBlock* post, const char* name )
@@ -151,11 +151,7 @@ GradientMatrixLinker::GradientMatrixLinker( MatrixLinker* ml, BaseTeachBlock* pr
     momento = 0.0f;
     target.resize( ml->getCols() );
     error.resize( ml->getCols() );
-	for(u_int r = 0; r < ml->getRows(); r++) {
-		for(u_int c = 0; c < ml->getCols(); c++) {
-			oldDelta.at( r, c ) = 0.0f;
-		}
-	}
+    oldDelta.zeroing();
 }
 
 void GradientMatrixLinker::learn() {
@@ -187,12 +183,11 @@ void GradientMatrixLinker::learn() {
     // --- 2. Applica la regola del gradiente ai pesi
 	if ( this->modifiability ) {
 		const RealVec& outIn = ml->getFrom()->outputs();
-		Matrix<Real> delta( inpS, outS );
 		for( u_int c=0; c<outS; c++ ) {
 		    for( u_int r=0; r<inpS; r++ ) {
-				delta.at( r, c ) = ( rate * error[c] * outIn[r] ) + momento * oldDelta.at( r, c );
-				ml->setWeight( r, c, ml->getWeight( r, c ) + delta.at( r, c ) );
-				oldDelta.at( r, c ) = delta.at( r, c );
+                Real delta = ( rate * error[c] * outIn[r] ) + momento * oldDelta.at( r, c );
+				ml->setWeight( r, c, ml->getWeight( r, c ) + delta );
+				oldDelta.at( r, c ) = delta;
 		    }
 		}
 	}
@@ -221,11 +216,7 @@ Real GradientMatrixLinker::getMomentum() {
 }
 
 void GradientMatrixLinker::resetOldDeltas() {
-	for(u_int c = 0; c < ml->getCols(); c++) {
-		for(u_int r = 0; r < ml->getRows(); r++) {
-			oldDelta.at( r, c ) = 0.0f;
-		}
-	}
+    oldDelta.zeroing();
 }
 
 };

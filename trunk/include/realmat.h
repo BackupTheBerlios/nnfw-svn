@@ -201,6 +201,10 @@ public:
     RealMat& inv();
 
 private:
+    //! RealVec view of rawdata
+    RealVec* memView;
+    //! Vector of RealVec views of rawdata
+    RealVec** rowView;
 
     /*! \brief Copy-Constructor
      */

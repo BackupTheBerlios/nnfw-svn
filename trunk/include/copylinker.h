@@ -101,11 +101,19 @@ public:
         // --- Do Nothing
     };
 private:
-    RealVec& (Cluster::*dataFrom)();
-    RealVec& (Cluster::*dataTo)();
+    //! View of source RealVec of copying
+    RealVec *ptr_dataFrom;
+    //! View of destination RealVec of copying
+    RealVec *ptr_dataTo;
+    //! True if RealVec views are been initialized
+    bool viewsIsInit;
+    //! Length of data to be copied
     u_int dimData;
+    //! From
     Cluster* from;
+    //! To
     Cluster* to;
+    //! Modality of Copy
     CopyMode mode;
 };
 

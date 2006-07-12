@@ -119,6 +119,26 @@ RealVec::~RealVec() {
     }
 }
 
+void RealVec::setView( u_int idStart, u_int idEnd ) {
+    if ( !view ) {
+        nnfwMessage( NNFW_ERROR, "setView can be called only if RealVec is a view" );
+        return;
+    }
+    if ( idStart > viewed->vsize || idEnd > viewed->vsize || idStart >= idEnd ) {
+        nnfwMessage( NNFW_ERROR, "Wrongs indexes specified in RealVec constructor; using 0 and viewed->size()" );
+        idstart = 0;
+        idend = viewed->size();
+    }
+    idstart = idStart;
+    idend = idEnd;
+    data = (viewed->data) + idstart;
+    vsize = idend - idstart;
+    // --- Propagate Notify to sub-viewers
+    for( u_int i=0; i<viewers.size(); i++ ) {
+        viewers[i]->datachanged();
+    }
+}
+
 void RealVec::resize( u_int newsize ) {
     if ( view ) {
         nnfwMessage( NNFW_ERROR, "It's not possible resize RealVec views" );

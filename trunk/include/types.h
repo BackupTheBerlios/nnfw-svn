@@ -71,12 +71,12 @@ public:
         nrows = rows;
         ncols = cols;
         tsize = nrows*ncols;
-        // Matrix Allocation procedure
-        //  Matrix[column][row]
+        // Matrix Allocation procedure --- Row Major
+        //  Matrix[row][column]
         mem = new T[nrows*ncols];
-        mat = new ( T ( *[ncols] ) );
-        for ( u_int i = 0; i<ncols; i++ ) {
-            mat[i] = mem + i*nrows;
+        mat = new ( T ( *[nrows] ) );
+        for ( u_int i = 0; i<nrows; i++ ) {
+            mat[i] = mem + i*ncols;
         }
     };
     //! Destructor
@@ -107,7 +107,7 @@ public:
             return mat[0][0];
         }
 #endif
-        return mat[col][row];
+        return mat[row][col];
     };
 
     //! Return a Const reference to element at position (row, col)
@@ -122,10 +122,10 @@ public:
             return mat[0][0];
         }
 #endif
-        return mat[col][row];
+        return mat[row][col];
     };
 
-//protected:
+protected:
     //! Return the raw data allocated
     T* rawdata() const {
         return mem;

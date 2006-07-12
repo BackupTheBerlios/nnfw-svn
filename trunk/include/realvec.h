@@ -77,6 +77,11 @@ public:
         return view;
     };
 
+    /*! \brief Configure the indexes of starting and ending of this RealVec view
+     *  If RealVec is not a view, then it will shows an error message
+     */
+    void setView( u_int idStart, u_int idEnd );
+
     /*! \brief Set all values to zero
      */
     void zeroing() {
@@ -111,7 +116,7 @@ public:
     RealVec& assign( const RealVec& src ) {
 #ifdef NNFW_DEBUG
         if ( vsize != src.vsize ) {
-            nnfwMessage( NNFW_ERROR, "Wrong number of elements between to assign method" );
+            nnfwMessage( NNFW_ERROR, "Wrong number of elements between RealVec to assign method" );
             return;
         }
 #endif
@@ -369,12 +374,13 @@ public:
      */
 	static Real mse( const RealVec& target, const RealVec& actual );
 
-//protected:
+protected:
     /*! \brief Raw Data
      */
     Real* rawdata() const {
         return data;
     };
+    friend class RealMat;
 
 private:
     //! The actual size of RealVec

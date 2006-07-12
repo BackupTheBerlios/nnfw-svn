@@ -1,17 +1,12 @@
 TEMPLATE = lib
 TARGET   = ./lib/nnfw
-VERSION  = 0.3.1
+VERSION  = 0.4.0
 
 CONFIG += release staticlib rtti warn_on
 CONFIG -= debug
 CONFIG -= qt
-unix:QMAKE_CXXFLAGS -= -O2
 
 NNFW = mkl
-
-win32:DEFINES += WIN32
-win32:DEFINES += _LIB
-win32:DEFINES += _MBCS
 
 !isEmpty( DEBUG ) {
     CONFIG -= release
@@ -36,6 +31,11 @@ contains( NNFW, double ) {
 #### Definition for creating library under linux
 unix:LIBS += -L/usr/lib -lgsl -lgslcblas -lm
 
+#### Definition for creating library under windows
+win32:DEFINES += WIN32
+win32:DEFINES += _LIB
+win32:DEFINES += _MBCS
+
 #### Intel Math Library configuration ----- UNIX MACHINES ONLY
 #### Controllo se le MKL sono installate
 ####  - rpm -qa | grep mkl   =>  intel-mkl-8.0.2p-4
@@ -54,9 +54,6 @@ unix {
         }
     }
 }
-
-#### Definition for creating library under windows
-#########  NOThing
 
 INCLUDEPATH += ./include
 

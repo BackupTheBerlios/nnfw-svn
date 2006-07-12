@@ -46,9 +46,9 @@ RealMat::~RealMat() {
 RealVec& RealMat::mul( RealVec& y, const RealVec& x, const RealMat& m ) {
 #ifdef NNFW_USE_MKL
 #ifndef NNFW_DOUBLE_PRECISION
-    cblas_sgemv(CblasColMajor, CblasTrans, m.rows(), m.cols(), 1.0, m.rawdata(), m.rows(), x.rawdata(), 1, 1.0f, y.rawdata(), 1);
+    cblas_sgemv(CblasRowMajor, CblasTrans, m.rows(), m.cols(), 1.0, m.rawdata(), m.cols(), x.rawdata(), 1, 1.0f, y.rawdata(), 1);
 #else
-    cblas_dgemv(CblasColMajor, CblasTrans, m.rows(), m.cols(), 1.0, m.rawdata(), m.rows(), x.rawdata(), 1, 1.0, y.rawdata(), 1);
+    cblas_dgemv(CblasRowMajor, CblasTrans, m.rows(), m.cols(), 1.0, m.rawdata(), m.cols(), x.rawdata(), 1, 1.0, y.rawdata(), 1);
 #endif
 #else
     for ( u_int i = 0; i<m.cols(); i++ ) {
@@ -63,9 +63,9 @@ RealVec& RealMat::mul( RealVec& y, const RealVec& x, const RealMat& m ) {
 RealVec& RealMat::mul( RealVec& y, const RealMat& m, const RealVec& x ) {
 #ifdef NNFW_USE_MKL
 #ifndef NNFW_DOUBLE_PRECISION
-    cblas_sgemv(CblasColMajor, CblasNoTrans, m.rows(), m.cols(), 1.0, m.rawdata(), m.rows(), x.rawdata(), 1, 1.0f, y.rawdata(), 1);
+    cblas_sgemv(CblasRowMajor, CblasNoTrans, m.rows(), m.cols(), 1.0, m.rawdata(), m.cols(), x.rawdata(), 1, 1.0f, y.rawdata(), 1);
 #else
-    cblas_dgemv(CblasColMajor, CblasNoTrans, m.rows(), m.cols(), 1.0, m.rawdata(), m.rows(), x.rawdata(), 1, 1.0, y.rawdata(), 1);
+    cblas_dgemv(CblasRowMajor, CblasNoTrans, m.rows(), m.cols(), 1.0, m.rawdata(), m.cols(), x.rawdata(), 1, 1.0, y.rawdata(), 1);
 #endif
 #else
     for ( u_int i = 0; i<m.cols(); i++ ) {

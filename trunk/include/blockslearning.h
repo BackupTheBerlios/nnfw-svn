@@ -215,7 +215,7 @@ protected:
     //! Momentum
     Real momento;
     //! Vecchio delta (per il calcolo del momento)
-    Matrix<Real> oldDelta;
+    RealMat oldDelta;
 };
 
 };
