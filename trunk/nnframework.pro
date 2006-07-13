@@ -1,6 +1,6 @@
 TEMPLATE = lib
 TARGET   = ./lib/nnfw
-VERSION  = 0.4.0
+VERSION  = 0.4.1
 
 CONFIG += release staticlib rtti warn_on
 CONFIG -= debug

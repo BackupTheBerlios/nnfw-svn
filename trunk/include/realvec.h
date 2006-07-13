@@ -117,7 +117,7 @@ public:
 #ifdef NNFW_DEBUG
         if ( vsize != src.vsize ) {
             nnfwMessage( NNFW_ERROR, "Wrong number of elements between RealVec to assign method" );
-            return;
+            return (*this);
         }
 #endif
         memcpy( data, src.data, sizeof(Real)*vsize );
@@ -265,7 +265,7 @@ public:
 #ifdef NNFW_DEBUG
         if( vsize != r.vsize ) {
             nnfwMessage( NNFW_ERROR, "Different numbers of element" );
-            return (*this);
+            return 0.0;
         }
 #endif
         Real ret = 0.0;

@@ -65,11 +65,11 @@ public:
 #ifdef NNFW_DEBUG
         if ( row >= nrows ) {
             nnfwMessage( NNFW_ERROR, "Accessing an element beyond Row boundary of matrix" );
-            return 0.0;
+            return data[0];
         }
         if ( col >= ncols ) {
             nnfwMessage( NNFW_ERROR, "Accessing an element beyond Column boundary of matrix" );
-            return 0.0;
+            return data[0];
         }
 #endif
         return rowView[row][col];
@@ -80,11 +80,11 @@ public:
 #ifdef NNFW_DEBUG
         if ( row >= nrows ) {
             nnfwMessage( NNFW_ERROR, "Accessing an element beyond Row boundary of matrix" );
-            return 0.0;
+            return data[0];
         }
         if ( col >= ncols ) {
             nnfwMessage( NNFW_ERROR, "Accessing an element beyond Column boundary of matrix" );
-            return 0.0;
+            return data[0];
         }
 #endif
         return rowView[row][col];
