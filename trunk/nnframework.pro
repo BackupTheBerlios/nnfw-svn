@@ -6,7 +6,7 @@ CONFIG += release staticlib rtti warn_on
 CONFIG -= debug
 CONFIG -= qt
 
-NNFW = mkl
+#NNFW = mkl
 
 !isEmpty( DEBUG ) {
     CONFIG -= release

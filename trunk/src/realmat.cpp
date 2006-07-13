@@ -31,8 +31,18 @@
 namespace nnfw {
 
 RealMat::RealMat( u_int rows, u_int cols )
-    : Matrix<Real>( rows, cols ) {
-    zeroing();
+    : data(rows*cols) {
+    data.zeroing();
+    nrows = rows;
+    ncols = cols;
+    tsize = nrows*ncols;
+    // --- Constructing the view of rows
+    //rowView = new ( RealVec ( *[nrows] ) );
+    rowView = new RealVec[nrows];
+    for( u_int i=0; i<nrows; i++ ) {
+        //rowViews[i] = new RealVec( data, i*ncols, (i+1)*ncols );
+        rowView[i].convertToView( data, i*ncols, (i+1)*ncols );
+    }
 }
 
 RealMat::~RealMat() {
@@ -51,9 +61,9 @@ RealVec& RealMat::mul( RealVec& y, const RealVec& x, const RealMat& m ) {
     cblas_dgemv(CblasRowMajor, CblasTrans, m.rows(), m.cols(), 1.0, m.rawdata(), m.cols(), x.rawdata(), 1, 1.0, y.rawdata(), 1);
 #endif
 #else
-    for ( u_int i = 0; i<m.cols(); i++ ) {
-        for ( u_int j = 0; j<m.rows(); j++ ) {
-            y[i] += x[j] * m.at( j, i );
+    for ( u_int j = 0; j<m.rows(); j++ ) {
+        for ( u_int i = 0; i<m.cols(); i++ ) {
+            y[i] += x[j] * m[j][i];
         }
     }
 #endif
@@ -68,9 +78,9 @@ RealVec& RealMat::mul( RealVec& y, const RealMat& m, const RealVec& x ) {
     cblas_dgemv(CblasRowMajor, CblasNoTrans, m.rows(), m.cols(), 1.0, m.rawdata(), m.cols(), x.rawdata(), 1, 1.0, y.rawdata(), 1);
 #endif
 #else
-    for ( u_int i = 0; i<m.cols(); i++ ) {
-        for ( u_int j = 0; j<m.rows(); j++ ) {
-            y[j] += m.at( j, i ) * x[i];
+    for ( u_int j = 0; j<m.rows(); j++ ) {
+        for ( u_int i = 0; i<m.cols(); i++ ) {
+            y[j] += m[j][i] * x[i];
         }
     }
 #endif
@@ -112,15 +122,14 @@ RealMat& RealMat::inv() {
     return (*this);
 }
 
-RealMat::RealMat( const RealMat& orig )
-    : Matrix<Real>( orig.rows(), orig.cols() ) {
+RealMat::RealMat( const RealMat& ) {
     // --- Never Called
-    this->assign( orig );
+    //this->assign( orig );
 }
 
-RealMat& RealMat::operator=( const RealMat& src ) {
+RealMat& RealMat::operator=( const RealMat& ) {
     // --- Never Called
-    this->assign( src );
+    //this->assign( src );
     return (*this);
 }
 

@@ -226,6 +226,38 @@ RealVec& RealVec::inv() {
     return (*this);
 }
 
+void RealVec::convertToView( RealVec& src, u_int idStart, u_int idEnd ) {
+    if ( viewed == (&src) ) {
+        nnfwMessage( NNFW_ERROR, "Already view of RealVec passed to convertToView; method ignored" );
+        return;
+    }
+    if ( view ) {
+        // detach previous view
+        Vector<RealVec*>::iterator it = std::find( viewed->viewers.begin(), viewed->viewers.end(), this );
+        if ( it != viewed->viewers.end() ) {
+            viewed->viewers.erase( it );
+        }
+    } else if ( allocated > 0 ) {
+        // remove previous data allocated
+        delete []data;
+    }
+
+    if ( idStart > src.vsize || idEnd > src.vsize || idStart >= idEnd ) {
+        nnfwMessage( NNFW_ERROR, "Wrongs indexes specified in convertToView; using 0 and src.size()" );
+        idstart = 0;
+        idend = src.size();
+    } else {
+        idstart = idStart;
+        idend = idEnd;
+    }
+    data = (src.data) + idstart;
+    vsize = idend - idstart;
+    allocated = 0;
+    view = true;
+    src.viewers.push_back( this );
+    viewed = &src;
+}
+
 RealVec::RealVec( const RealVec& ) {
 /*    vsize = orig.vsize;
     allocated = orig.allocated;

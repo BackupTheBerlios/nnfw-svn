@@ -37,7 +37,7 @@ namespace nnfw {
  *  \par Description
  *  \par Warnings
  */
-class RealMat : public Matrix<Real> {
+class RealMat {
 public:
     /*! \brief Construct an empty matrix of dimension size
      */
@@ -46,6 +46,75 @@ public:
     /*! \brief Destructor
      */
     ~RealMat();
+
+    //! Returns the numbers of Row
+    u_int rows() const {
+        return nrows;
+    };
+    //! Returns the numbers of Columns
+    u_int cols() const {
+        return ncols;
+    };
+    //! Returns the total numbers of elements (Rows*Columns)
+    u_int size() const {
+        return tsize;
+    };
+
+    //! Return a reference to element at position (row, col)
+    Real& at( u_int row, u_int col ) {
+#ifdef NNFW_DEBUG
+        if ( row >= nrows ) {
+            nnfwMessage( NNFW_ERROR, "Accessing an element beyond Row boundary of matrix" );
+            return 0.0;
+        }
+        if ( col >= ncols ) {
+            nnfwMessage( NNFW_ERROR, "Accessing an element beyond Column boundary of matrix" );
+            return 0.0;
+        }
+#endif
+        return rowView[row][col];
+    };
+
+    //! Return a Const reference to element at position (row, col)
+    const Real& at( u_int row, u_int col ) const {
+#ifdef NNFW_DEBUG
+        if ( row >= nrows ) {
+            nnfwMessage( NNFW_ERROR, "Accessing an element beyond Row boundary of matrix" );
+            return 0.0;
+        }
+        if ( col >= ncols ) {
+            nnfwMessage( NNFW_ERROR, "Accessing an element beyond Column boundary of matrix" );
+            return 0.0;
+        }
+#endif
+        return rowView[row][col];
+    };
+
+    /*! \brief Indexing operator
+     *  Boundary check activated only when DEBUG if defined
+     */
+    RealVec& operator[]( u_int row ) {
+#ifdef NNFW_DEBUG
+        if( row >= nrows ) {
+            nnfwMessage( NNFW_ERROR, "Accessing elements outside boundary" );
+            return rowView[0];
+        }
+#endif
+        return rowView[row];
+    };
+
+    /*! \brief Indexing operator (Const Version)
+     *  Boundary check activated only when DEBUG if defined
+     */
+    const RealVec& operator[]( u_int row ) const {
+#ifdef NNFW_DEBUG
+        if( row >= nrows ) {
+            nnfwMessage( NNFW_ERROR, "Accessing elements outside boundary" );
+            return rowView[0];
+        }
+#endif
+        return rowView[row];
+    };
 
     /*! \brief Assign elements
      */
@@ -58,7 +127,7 @@ public:
 #endif
         memcpy( rawdata(), src.rawdata(), sizeof(Real)*size() );
         return (*this);
-    }
+    };
 
     /*! \brief Set all values to zero
      */
@@ -200,11 +269,24 @@ public:
      */
     RealMat& inv();
 
+protected:
+    /*! \brief Row Data allocated
+     */
+    Real* rawdata() const {
+        return data.rawdata();
+    };
+
 private:
-    //! RealVec view of rawdata
-    RealVec* memView;
-    //! Vector of RealVec views of rawdata
-    RealVec** rowView;
+    //! Numbers of Rows
+    u_int nrows;
+    //! Numbers of Columns
+    u_int ncols;
+    //! Size
+    u_int tsize;
+    //! RealVec of data
+    RealVec data;
+    //! Vector of RealVec views of data
+    RealVec* rowView;
 
     /*! \brief Copy-Constructor
      */

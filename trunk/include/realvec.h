@@ -260,6 +260,21 @@ public:
         return (*this);
     };
 
+    //! Dot product
+    Real dot( const RealVec& r ) {
+#ifdef NNFW_DEBUG
+        if( vsize != r.vsize ) {
+            nnfwMessage( NNFW_ERROR, "Different numbers of element" );
+            return (*this);
+        }
+#endif
+        Real ret = 0.0;
+        for( u_int i=0; i<vsize; i++ ) {
+            ret += data[i] * r.data[i];
+        }
+        return ret;
+    };
+
     // ****************************
     // *** MATH FUNCTION **********
     // ****************************
@@ -380,6 +395,10 @@ protected:
     Real* rawdata() const {
         return data;
     };
+    /*! \brief Convert this RealVec to a view of RealVec src passed
+     */
+    void convertToView( RealVec& src, u_int idStart, u_int idEnd );
+
     friend class RealMat;
 
 private:

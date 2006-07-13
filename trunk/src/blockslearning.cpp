@@ -168,8 +168,8 @@ void GradientMatrixLinker::learn() {
     u_int outS = ml->getCols();
     u_int inpS = ml->getRows();
     RealVec errIn( inpS, 0.0 );
-    for( u_int c=0; c<outS; c++ ) {
-        for( u_int r=0; r<inpS; r++ ) {
+    for( u_int r=0; r<inpS; r++ ) {
+        for( u_int c=0; c<outS; c++ ) {
             errIn[r] += ml->getWeight( r, c )*error[c];
         }
     }
@@ -183,11 +183,11 @@ void GradientMatrixLinker::learn() {
     // --- 2. Applica la regola del gradiente ai pesi
 	if ( this->modifiability ) {
 		const RealVec& outIn = ml->getFrom()->outputs();
-		for( u_int c=0; c<outS; c++ ) {
-		    for( u_int r=0; r<inpS; r++ ) {
-                Real delta = ( rate * error[c] * outIn[r] ) + momento * oldDelta.at( r, c );
+        for( u_int r=0; r<inpS; r++ ) {
+		  for( u_int c=0; c<outS; c++ ) {
+                Real delta = ( rate * error[c] * outIn[r] ) + momento * oldDelta[r][c];
 				ml->setWeight( r, c, ml->getWeight( r, c ) + delta );
-				oldDelta.at( r, c ) = delta;
+				oldDelta[r][c] = delta;
 		    }
 		}
 	}
