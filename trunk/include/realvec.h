@@ -61,6 +61,10 @@ public:
      */
     RealVec( const Real* r, u_int dim );
 
+    /*! \brief Copy-Constructor
+     */
+    RealVec( const RealVec& orig );
+
     /*! \brief Destructor
      */
     ~RealVec();
@@ -73,7 +77,7 @@ public:
 
     /*! \brief Return True if it is a RealVec view
      */
-    bool isView() {
+    bool isView() const {
         return view;
     };
 
@@ -399,8 +403,6 @@ protected:
      */
     void convertToView( RealVec& src, u_int idStart, u_int idEnd );
 
-    friend class RealMat;
-
 private:
     //! The actual size of RealVec
     u_int vsize;
@@ -422,13 +424,11 @@ private:
     //! Notify to viewers that 'data' is changed
     void datachanged();
 
-    /*! \brief Copy-Constructor
-     */
-    RealVec( const RealVec& orig );
-
     /*! \brief Assignment Operator
      */
-    RealVec& operator=( const RealVec& src );
+//    RealVec& operator=( const RealVec& src );
+
+    friend class RealMat;
 };
 
 	//! Operator << with RealVec

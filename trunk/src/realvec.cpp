@@ -119,6 +119,24 @@ RealVec::~RealVec() {
     }
 }
 
+RealVec::RealVec( const RealVec& src ) {
+    if ( src.isView() ) {
+        view = true;
+        viewed = src.viewed;
+        viewed->viewers.push_back( this );
+        idstart = src.idstart;
+        idend = src.idend;
+        data = (viewed->data) + idstart;
+        vsize = idend - idstart;
+        allocated = 0;
+    } else {
+        vsize = src.vsize;
+        allocated = src.allocated;
+        data = new Real[allocated];
+        memcpy( data, src.data, sizeof(Real)*allocated );
+    }
+}
+
 void RealVec::setView( u_int idStart, u_int idEnd ) {
     if ( !view ) {
         nnfwMessage( NNFW_ERROR, "setView can be called only if RealVec is a view" );
@@ -258,22 +276,11 @@ void RealVec::convertToView( RealVec& src, u_int idStart, u_int idEnd ) {
     viewed = &src;
 }
 
-RealVec::RealVec( const RealVec& ) {
-/*    vsize = orig.vsize;
-    allocated = orig.allocated;
-    data = new Real[allocated];
-    memcpy( data, orig.data, sizeof(Real)*vsize );*/
-}
-
+/*
 RealVec& RealVec::operator=( const RealVec& ) {
-    // delete []data;  <-- DA PROBLEMI... Perche??? Non capisco !! :-(
-/*    vsize = src.vsize;
-    allocated = src.allocated;
-    data = new Real[allocated];
-    memcpy( data, src.data, sizeof(Real)*vsize );
-*/
     return (*this);
 }
+*/
 
 void RealVec::createAllBinaries( RealVec* v, unsigned long int pats, u_int dims ) {
 //#ifdef NNFW_DEBUG

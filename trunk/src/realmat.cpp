@@ -31,14 +31,14 @@
 namespace nnfw {
 
 RealMat::RealMat( u_int rows, u_int cols )
-    : data(rows*cols) {
+    : data(rows*cols), rowView( rows ) {
     data.zeroing();
     nrows = rows;
     ncols = cols;
     tsize = nrows*ncols;
     // --- Constructing the view of rows
     //rowView = new ( RealVec ( *[nrows] ) );
-    rowView = new RealVec[nrows];
+    //rowView = new RealVec[nrows];
     for( u_int i=0; i<nrows; i++ ) {
         //rowViews[i] = new RealVec( data, i*ncols, (i+1)*ncols );
         rowView[i].convertToView( data, i*ncols, (i+1)*ncols );
@@ -48,6 +48,23 @@ RealMat::RealMat( u_int rows, u_int cols )
 RealMat::~RealMat() {
     // --- Nothing to do
 }
+
+void RealMat::resize( u_int rows, u_int cols ) {
+    nrows = rows;
+    ncols = cols;
+    tsize = nrows*ncols;
+    data.resize( tsize );
+    rowView.resize( nrows );
+    // --- Adjust the view of rows
+    for( u_int i=0; i<nrows; i++ ) {
+        if ( rowView[i].isView() ) {
+            rowView[i].setView( i*ncols, (i+1)*ncols );
+        } else {
+            rowView[i].convertToView( data, i*ncols, (i+1)*ncols );
+        }
+    }
+}
+
 
     // ***********************************
     // *** VECTOR-MATRIX OPERATORS *******

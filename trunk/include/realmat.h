@@ -60,6 +60,9 @@ public:
         return tsize;
     };
 
+    //! Resize the matrix
+    void resize( u_int rows, u_int cols );
+
     //! Return a reference to element at position (row, col)
     Real& at( u_int row, u_int col ) {
 #ifdef NNFW_DEBUG
@@ -286,7 +289,7 @@ private:
     //! RealVec of data
     RealVec data;
     //! Vector of RealVec views of data
-    RealVec* rowView;
+    Vector<RealVec> rowView;
 
     /*! \brief Copy-Constructor
      */
