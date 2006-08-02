@@ -32,9 +32,9 @@ virtual DDECluster::~DDECluster() {
 }
 
 void DDECluster::setCoeff( const RealVec& c ) {
-    coeff.resize( c.size() );
+/*    coeff.resize( c.size() );
     coeff.assign( c );
-    story.resize( );
+    story.resize( );*/
 }
 
 void DDECluster::update() {

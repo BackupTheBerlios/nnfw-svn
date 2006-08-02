@@ -61,6 +61,8 @@ DEPENDPATH  += ./include
 
 HEADERS		= ./include/nnfw.h \
 			  ./include/types.h \
+              ./include/observ.h \
+              ./include/vectordata.h \
               ./include/realvec.h \
               ./include/realmat.h \
               ./include/updatable.h \

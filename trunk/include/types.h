@@ -43,7 +43,14 @@
 namespace nnfw {
 
 //! Generic Vector
-#define Vector std::vector
+//#define Vector std::vector
+// template<class T>
+// class Vector : public std::vector<T> {
+// public:
+//     Vector() : std::vector<T>() { };
+//     Vector( int i ) : std::vector<T>(i) { };
+// };
+#define Vector VectorData
 
 //! Generic Map
 #define Map std::map
@@ -146,6 +153,9 @@ private:
 
 }
 
+#include "observ.h"
+#include "vectordata.h"
+
 #include "realvec.h"
 #include "realmat.h"
 
@@ -154,52 +164,52 @@ namespace nnfw {
 //! Array of Unsigned Integer
 typedef  Vector<u_int> U_IntVec;
 //! Operator <<
-inline U_IntVec& operator<<(U_IntVec& vec, u_int v ) {
-    vec.push_back( v );
-    return vec;
-};
+// inline U_IntVec& operator<<(U_IntVec& vec, u_int v ) {
+//     vec.push_back( v );
+//     return vec;
+// };
 
 class Updatable;
 //! Array of Updatable
 typedef  Vector<Updatable*> UpdatableVec;
 //! Operator <<
-inline UpdatableVec& operator<<(UpdatableVec& vec, Updatable* v ) {
-    vec.push_back( v );
-    return vec;
-};
+// inline UpdatableVec& operator<<(UpdatableVec& vec, Updatable* v ) {
+//     vec.push_back( v );
+//     return vec;
+// };
 
 class Cluster;
 //! Array of Clusters
 typedef  Vector<Cluster*> ClusterVec;
 //! Operator <<
-inline ClusterVec& operator<<(ClusterVec& vec, Cluster* v ) {
-    vec.push_back( v );
-    return vec;
-};
+// inline ClusterVec& operator<<(ClusterVec& vec, Cluster* v ) {
+//     vec.push_back( v );
+//     return vec;
+// };
 
 class Linker;
 //! Array of Linkers
 typedef  Vector<Linker*> LinkerVec;
 //! Operator <<
-inline LinkerVec& operator<<(LinkerVec& vec, Linker* v ) {
-    vec.push_back( v );
-    return vec;
-};
+// inline LinkerVec& operator<<(LinkerVec& vec, Linker* v ) {
+//     vec.push_back( v );
+//     return vec;
+// };
 
 //! Empty LinkerVec constant
- extern const LinkerVec emptyLinkerVec;
+extern const LinkerVec emptyLinkerVec;
 
 //! Empty ClusterVec constant
- extern const ClusterVec emptyClusterVec;
+extern const ClusterVec emptyClusterVec;
 
 class BaseTeachBlock;
 //! Array of Updatable
 typedef  Vector<BaseTeachBlock*> TeachBlockVec;
 //! Operator <<
-inline TeachBlockVec& operator<<(TeachBlockVec& vec, BaseTeachBlock* v ) {
-    vec.push_back( v );
-    return vec;
-};
+// inline TeachBlockVec& operator<<(TeachBlockVec& vec, BaseTeachBlock* v ) {
+//     vec.push_back( v );
+//     return vec;
+// };
 
 }
 
