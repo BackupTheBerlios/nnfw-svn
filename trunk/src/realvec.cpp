@@ -35,183 +35,28 @@ int inutile = vmlSetMode( VML_LA );
 #endif
 
 RealVec::RealVec( u_int size )
-    : viewers(0) {
-    vsize = size;
-    allocated = size;
-	data = new Real[vsize];
-	for(u_int i = 0; i<size; i++) {
-	   data[i] = 0.0;
-    }
-    // --- view attribute
-    view = false;
-    viewed = 0;
-    idstart = 0;
-    idend = 0;
+    : VectorData<Real>( size ) {
 }
 
 RealVec::RealVec( u_int size, Real value )
-    : viewers(0) {
-	vsize = size;
-    allocated = size;
-	data = new Real[vsize];
-	for(u_int i = 0; i<size; i++) {
-		data[i] = value;
-    }
-    // --- view attribute
-    view = false;
-    viewed = 0;
-    idstart = 0;
-    idend = 0;
+    : VectorData<Real>(size, value) {
 }
 
 
 RealVec::RealVec()
-    : viewers(0) {
-    data = 0;
-    vsize = 0;
-    allocated = 0;
-    // --- view attribute
-    view = false;
-    viewed = 0;
-    idstart = 0;
-    idend = 0;
+    : VectorData<Real>() {
 }
 
 RealVec::RealVec( const Real* r, u_int dim )
-    : viewers(0) {
-    data = new Real[dim];
-    vsize = dim;
-    allocated = dim;
-    memcpy( data, r, sizeof(Real)*dim );
-    // --- view attribute
-    view = false;
-    viewed = 0;
-    idstart = 0;
-    idend = 0;
+    : VectorData<Real>(r, dim) {
 }
 
 RealVec::RealVec( RealVec& src, u_int idStart, u_int idEnd )
-    : viewers(0) {
-    if ( idStart > src.vsize || idEnd > src.vsize || idStart >= idEnd ) {
-        nnfwMessage( NNFW_ERROR, "Wrongs indexes specified in RealVec constructor; using 0 and src.size()" );
-        idstart = 0;
-        idend = src.size();
-    } else {
-        idstart = idStart;
-        idend = idEnd;
-    }
-    data = (src.data) + idstart;
-    vsize = idend - idstart;
-    allocated = 0;
-    view = true;
-    src.viewers.push_back( this );
-    viewed = &src;
+    : VectorData<Real>(src, idStart, idEnd) {
 }
 
-RealVec::~RealVec() {
-    // ---- QUESTO DELETE DA PROBLEMI ... PERCHE' ????
-    //delete []data;
-    if ( view ) {
-        Vector<RealVec*>::iterator it = std::find( viewed->viewers.begin(), viewed->viewers.end(), this );
-        if ( it != viewed->viewers.end() ) {
-            viewed->viewers.erase( it );
-        }
-    }
-}
-
-RealVec::RealVec( const RealVec& src ) {
-    if ( src.isView() ) {
-        view = true;
-        viewed = src.viewed;
-        viewed->viewers.push_back( this );
-        idstart = src.idstart;
-        idend = src.idend;
-        data = (viewed->data) + idstart;
-        vsize = idend - idstart;
-        allocated = 0;
-    } else {
-        vsize = src.vsize;
-        allocated = src.allocated;
-        data = new Real[allocated];
-        memcpy( data, src.data, sizeof(Real)*allocated );
-    }
-}
-
-void RealVec::setView( u_int idStart, u_int idEnd ) {
-    if ( !view ) {
-        nnfwMessage( NNFW_ERROR, "setView can be called only if RealVec is a view" );
-        return;
-    }
-    if ( idStart > viewed->vsize || idEnd > viewed->vsize || idStart >= idEnd ) {
-        nnfwMessage( NNFW_ERROR, "Wrongs indexes specified in RealVec constructor; using 0 and viewed->size()" );
-        idstart = 0;
-        idend = viewed->size();
-    }
-    idstart = idStart;
-    idend = idEnd;
-    data = (viewed->data) + idstart;
-    vsize = idend - idstart;
-    // --- Propagate Notify to sub-viewers
-    for( u_int i=0; i<viewers.size(); i++ ) {
-        viewers[i]->datachanged();
-    }
-}
-
-void RealVec::resize( u_int newsize ) {
-    if ( view ) {
-        nnfwMessage( NNFW_ERROR, "It's not possible resize RealVec views" );
-        return;
-    }
-    if ( allocated < newsize ) {
-        allocated = newsize+20;
-        Real* tmp = new Real[allocated];
-        memcpy( tmp, data, sizeof(Real)*(vsize) );
-        delete []data;
-        data = tmp;
-    }
-    for( u_int i=vsize; i<newsize; i++ ) {
-        data[i] = 0.0f;
-    }
-    vsize = newsize;
-    // --- Notify the viewers
-    for( u_int i=0; i<viewers.size(); i++ ) {
-        viewers[i]->datachanged();
-    }
-}
-
-void RealVec::append( const Real value ) {
-    if ( view ) {
-        nnfwMessage( NNFW_ERROR, "It's not possible append a value to RealVec views" );
-        return;
-    }
-    if ( allocated < vsize+1 ) {
-        allocated += 21;
-        Real* tmp = new Real[allocated];
-        memcpy( tmp, data, sizeof(Real)*(vsize) );
-        delete []data;
-        data = tmp;
-    }
-    data[vsize] = value;
-    vsize += 1;
-    // --- Notify the viewers
-    for( u_int i=0; i<viewers.size(); i++ ) {
-        viewers[i]->datachanged();
-    }
-}
-
-void RealVec::datachanged() {
-    if ( idstart > viewed->vsize || idend > viewed->vsize ) {
-        nnfwMessage( NNFW_ERROR, "Indexes become invalid after data changing; using 0 and viewed->size()" );
-        idstart = 0;
-        idend = viewed->size();
-    }
-    data = (viewed->data) + idstart;
-    vsize = idend - idstart;
-    allocated = 0;
-    // --- Propagate Notify to sub-viewers
-    for( u_int i=0; i<viewers.size(); i++ ) {
-        viewers[i]->datachanged();
-    }
+RealVec::RealVec( const RealVec& src )
+    : VectorData<Real>(src) {
 }
 
 RealVec& RealVec::exp() {
@@ -243,44 +88,6 @@ RealVec& RealVec::inv() {
 #endif
     return (*this);
 }
-
-void RealVec::convertToView( RealVec& src, u_int idStart, u_int idEnd ) {
-    if ( viewed == (&src) ) {
-        nnfwMessage( NNFW_ERROR, "Already view of RealVec passed to convertToView; method ignored" );
-        return;
-    }
-    if ( view ) {
-        // detach previous view
-        Vector<RealVec*>::iterator it = std::find( viewed->viewers.begin(), viewed->viewers.end(), this );
-        if ( it != viewed->viewers.end() ) {
-            viewed->viewers.erase( it );
-        }
-    } else if ( allocated > 0 ) {
-        // remove previous data allocated
-        delete []data;
-    }
-
-    if ( idStart > src.vsize || idEnd > src.vsize || idStart >= idEnd ) {
-        nnfwMessage( NNFW_ERROR, "Wrongs indexes specified in convertToView; using 0 and src.size()" );
-        idstart = 0;
-        idend = src.size();
-    } else {
-        idstart = idStart;
-        idend = idEnd;
-    }
-    data = (src.data) + idstart;
-    vsize = idend - idstart;
-    allocated = 0;
-    view = true;
-    src.viewers.push_back( this );
-    viewed = &src;
-}
-
-/*
-RealVec& RealVec::operator=( const RealVec& ) {
-    return (*this);
-}
-*/
 
 void RealVec::createAllBinaries( RealVec* v, unsigned long int pats, u_int dims ) {
 //#ifdef NNFW_DEBUG

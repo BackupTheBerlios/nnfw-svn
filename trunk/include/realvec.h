@@ -39,12 +39,14 @@ namespace nnfw {
  *  \par Description
  *  \par Warnings
  */
-class RealVec {
+class RealVec : public VectorData<Real> {
 public:
+    /*! \name Constructors */
+
     /*! \brief Construct an empty vector of dimension size
      */
     RealVec( u_int size );
-	
+    
     /*! \brief Construct a vector of dimension size with all values set to value
      */
     RealVec( u_int size, Real value );
@@ -65,113 +67,8 @@ public:
      */
     RealVec( const RealVec& orig );
 
-    /*! \brief Destructor
-     */
-    ~RealVec();
+    /*! \name Unary Operators */
 
-    /*! \brief Return the size of RealVec
-     */
-    u_int size() const {
-        return vsize;
-    };
-
-    /*! \brief Return True if it is a RealVec view
-     */
-    bool isView() const {
-        return view;
-    };
-
-    /*! \brief Configure the indexes of starting and ending of this RealVec view
-     *  If RealVec is not a view, then it will shows an error message
-     */
-    void setView( u_int idStart, u_int idEnd );
-
-    /*! \brief Set all values to zero
-     */
-    void zeroing() {
-        memset( data, 0, sizeof(Real)*vsize );
-    };
-
-    /*! \brief Set all values to value
-     */
-    void setAll( Real value ) {
-		for( u_int i=0; i<vsize; i++ ) {
-            data[i] = value;
-        }
-    };
-
-    /*! \brief Assign to first num element the value passed
-     */
-    RealVec& assign( u_int num, Real value ) {
-#ifdef NNFW_DEBUG
-        if ( num > vsize ) {
-            nnfwMessage( NNFW_ERROR, "Wrong number of elements passed to assign method" );
-            num = vsize;
-        }
-#endif
-        for( u_int i=0; i<num; i++ ) {
-            data[i] = value;
-        }
-        return (*this);
-    };
-
-    /*! \brief Assignment method. The sizes of RealVec must be the same.
-     */
-    RealVec& assign( const RealVec& src ) {
-#ifdef NNFW_DEBUG
-        if ( vsize != src.vsize ) {
-            nnfwMessage( NNFW_ERROR, "Wrong number of elements between RealVec to assign method" );
-            return (*this);
-        }
-#endif
-        memcpy( data, src.data, sizeof(Real)*vsize );
-        return (*this);
-    };
-
-    /*! \brief Indexing operator
-     *  Boundary check activated only when DEBUG if defined
-     */
-    Real& operator[]( u_int index ) {
-#ifdef NNFW_DEBUG
-        if( index >= vsize ) {
-            nnfwMessage( NNFW_ERROR, "Accessing elements outside boundary" );
-            return data[0];
-        }
-#endif
-        return data[index];
-    };
-
-    /*! \brief Indexing operator (Const Version)
-     *  Boundary check activated only when DEBUG if defined
-     */
-    const Real& operator[]( u_int index ) const {
-#ifdef NNFW_DEBUG
-        if( index >= vsize ) {
-            nnfwMessage( NNFW_ERROR, "Accessing elements outside boundary" );
-            return data[0];
-        }
-#endif
-        return data[index];
-    };
-
-    /*! \brief Resize the RealVec
-     */
-    void resize( u_int newsize );
-
-    /*! \brief Append an element; the dimesion increase by one
-     */
-    void append( const Real value );
-
-    /*! \brief Append Operator
-     */
-    RealVec& operator<<( const Real value ) {
-        append( value );
-        return (*this);
-    };
-
-    // ****************************
-    // *** UNARY OPERATORS ********
-    // ****************************
     //! Operator -
     RealVec& operator-() {
         for( u_int i=0; i<vsize; i++ ) {
@@ -180,9 +77,8 @@ public:
         return (*this);
     };
 
-    // ****************************
-    // *** BINARY OPERATORS *******
-    // ****************************
+    /*! \brief BINARY OPERATORS */
+
     //! Operator += with RealVec
     RealVec& operator+=(const RealVec& r ) {
 #ifdef NNFW_DEBUG
@@ -279,9 +175,8 @@ public:
         return ret;
     };
 
-    // ****************************
-    // *** MATH FUNCTION **********
-    // ****************************
+    /*! \brief MATH FUNCTION */
+
     /*! \brief Exponential
      */
     RealVec& exp();
@@ -370,21 +265,6 @@ public:
 		}
 	}
 	
-    /*! \brief Return 1 if the passed vector is equal, 0 otherwise
-     */
-	bool isEqualTo( const RealVec& src ) {
-#ifdef NNFW_DEBUG
-        if( vsize != src.vsize ) {
-            nnfwMessage( NNFW_ERROR, "Different numbers of elements" );
-            return false;
-        }
-#endif
-		for ( u_int i = 0; i < vsize; i++ ) {
-			if ( data[i] != src[i] ) return false;
-		}
-		return true;
-    };
-
     /*! \brief Create all the binary vectors of a given dimension
      */
 	static void createAllBinaries( RealVec* vector, unsigned long int pats, u_int dims );
@@ -393,49 +273,14 @@ public:
      */
 	static Real mse( const RealVec& target, const RealVec& actual );
 
-protected:
-    /*! \brief Raw Data
-     */
-    Real* rawdata() const {
-        return data;
-    };
-    /*! \brief Convert this RealVec to a view of RealVec src passed
-     */
-    void convertToView( RealVec& src, u_int idStart, u_int idEnd );
-
-private:
-    //! The actual size of RealVec
-    u_int vsize;
-    //! The allocated space
-    u_int allocated;
-    //! Data
-    Real* data;
-
-    //! Is View
-    bool view;
-    //! start index
-    u_int idstart;
-    //! end index
-    u_int idend;
-    //! Viewers
-    Vector<RealVec*> viewers;
-    //! Pointer to RealVec viewed
-    RealVec* viewed;
-    //! Notify to viewers that 'data' is changed
-    void datachanged();
-
-    /*! \brief Assignment Operator
-     */
-//    RealVec& operator=( const RealVec& src );
-
     friend class RealMat;
 };
 
-	//! Operator << with RealVec
-	std::ostream& operator<<(std::ostream& stream, const RealVec& v);
-	
-	//! Operator >> with RealVec
-	std::istream& operator>>(std::istream& stream, RealVec& v);
+//! Operator << with RealVec
+std::ostream& operator<<(std::ostream& stream, const RealVec& v);
+
+//! Operator >> with RealVec
+std::istream& operator>>(std::istream& stream, RealVec& v);
 
 }
 

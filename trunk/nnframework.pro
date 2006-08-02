@@ -61,6 +61,7 @@ DEPENDPATH  += ./include
 
 HEADERS		= ./include/nnfw.h \
 			  ./include/types.h \
+              ./include/memutils.h \
               ./include/observ.h \
               ./include/vectordata.h \
               ./include/realvec.h \

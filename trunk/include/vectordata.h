@@ -25,41 +25,12 @@
  *  Details...
  */
 
+#include "memutils.h"
 #include <vector>
 #include "messages.h"
 
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {
-
-/*! \brief template for memory copy of data
- */
-template<class T>
-void memoryCopy( T* dest, const T* src, unsigned int size ) {
-    for( unsigned int i=0; i<size; i++ ) {
-        dest[i] = src[i];
-    };
-};
-
-/*! \brief specialization of memoryCopy for Real data
- */
-void memoryCopy( Real* dest, const Real* src, unsigned int size ) {
-    memcpy( dest, src, sizeof(Real)*size );
-};
-
-/*! \brief template for memory zeroing of data
- */
-template<class T>
-void memoryZeroing( T* data, unsigned int size ) {
-    for( unsigned int i=0; i<size; i++ ) {
-        data[i] = T();
-    };
-};
-
-/*! \brief specialization of memoryZeroing for Real data
- */
-void memoryZeroing( Real* data, unsigned int size ) {
-    memset( data, 0, sizeof(Real)*size );
-};
 
 /*! \brief VectorData Class
  *  \par Motivation
@@ -305,7 +276,9 @@ public:
             delete []data;
             data = tmp;
         }
-        memoryZeroing( data+vsize, newsize-vsize );
+        if ( newsize > vsize ) {
+            memoryZeroing( data+vsize, newsize-vsize );
+        }
         vsize = newsize;
         // --- Notify the viewers
         notifyAll();
