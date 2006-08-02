@@ -232,8 +232,8 @@ protected:
     LinkVecMap outLinks;
 
     //! Array of Updateables ordered as specified
-    Vector<Updatable*> ups;
-    Vector<bool> mask;
+    UpdatableVec ups;
+    BoolVec mask;
     unsigned int dimUps;
 };
 

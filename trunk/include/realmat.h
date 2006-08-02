@@ -289,7 +289,7 @@ private:
     //! RealVec of data
     RealVec data;
     //! Vector of RealVec views of data
-    Vector<RealVec> rowView;
+    VectorData<RealVec> rowView;
 
     /*! \brief Copy-Constructor
      */

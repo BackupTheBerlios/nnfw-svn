@@ -107,7 +107,7 @@ protected:
 
     //! Array of Updateables ordered as specified
     TeachBlockVec bls;
-    Vector<bool> mask;
+    BoolVec mask;
     unsigned int dimBls;
 };
 

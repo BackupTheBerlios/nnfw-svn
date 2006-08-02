@@ -60,6 +60,7 @@ INCLUDEPATH += ./include
 DEPENDPATH  += ./include
 
 HEADERS		= ./include/nnfw.h \
+              ./include/primtypes.h \
 			  ./include/types.h \
               ./include/memutils.h \
               ./include/observ.h \

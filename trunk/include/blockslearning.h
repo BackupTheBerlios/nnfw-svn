@@ -69,9 +69,9 @@ public:
     };
 protected:
     //! Pre BaseTeachBlock Vector
-    Vector<BaseTeachBlock*> preVec;
+    TeachBlockVec preVec;
     //! Post BaseTeachBlock Vector
-    Vector<BaseTeachBlock*> postVec;
+    TeachBlockVec postVec;
     //! Method for automatically creation of postVec
     void addPostBlock( BaseTeachBlock* postBlock );
     //! Method for automatically creation of preVec

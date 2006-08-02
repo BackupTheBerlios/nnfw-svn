@@ -39,34 +39,47 @@
 // --- Define NNFW_DOUBLE_PRECISION for defining Real as double
 //#define  NNFW_DOUBLE_PRECISION
 
+//! Generic Map --- FIXME non dovrebbe essere una define
+#define Map std::map
+//! Generic Pair --- FIXME non dovrebbe essere una define
+#define Pair std::pair
+
+#include "primtypes.h"
+#include "observ.h"
+#include "vectordata.h"
+#include "realvec.h"
+#include "realmat.h"
+
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {
 
-//! Generic Vector
-//#define Vector std::vector
-// template<class T>
-// class Vector : public std::vector<T> {
-// public:
-//     Vector() : std::vector<T>() { };
-//     Vector( int i ) : std::vector<T>(i) { };
-// };
-#define Vector VectorData
+//! Array of Boolean
+typedef  VectorData<bool> BoolVec;
 
-//! Generic Map
-#define Map std::map
+//! Array of Unsigned Integer
+typedef  VectorData<u_int> U_IntVec;
 
-//! Generic Pair
-#define Pair std::pair
+class Updatable;
+//! Array of Updatable
+typedef  VectorData<Updatable*> UpdatableVec;
 
-//! Unsigned integer
-typedef  unsigned int u_int;
+class Cluster;
+//! Array of Clusters
+typedef  VectorData<Cluster*> ClusterVec;
 
-//! Abstraction on the type of real numbers
-#ifndef NNFW_DOUBLE_PRECISION
-typedef float Real;
-#else
-typedef double Real;
-#endif
+class Linker;
+//! Array of Linkers
+typedef  VectorData<Linker*> LinkerVec;
+
+//! Empty LinkerVec constant
+extern const LinkerVec emptyLinkerVec;
+
+//! Empty ClusterVec constant
+extern const ClusterVec emptyClusterVec;
+
+class BaseTeachBlock;
+//! Array of Updatable
+typedef  VectorData<BaseTeachBlock*> TeachBlockVec;
 
 /*! \brief Template for Matrix data allocation and accessing
  */
@@ -150,66 +163,6 @@ private:
     //! Size
     u_int tsize;
 };
-
-}
-
-#include "observ.h"
-#include "vectordata.h"
-
-#include "realvec.h"
-#include "realmat.h"
-
-namespace nnfw {
-
-//! Array of Unsigned Integer
-typedef  Vector<u_int> U_IntVec;
-//! Operator <<
-// inline U_IntVec& operator<<(U_IntVec& vec, u_int v ) {
-//     vec.push_back( v );
-//     return vec;
-// };
-
-class Updatable;
-//! Array of Updatable
-typedef  Vector<Updatable*> UpdatableVec;
-//! Operator <<
-// inline UpdatableVec& operator<<(UpdatableVec& vec, Updatable* v ) {
-//     vec.push_back( v );
-//     return vec;
-// };
-
-class Cluster;
-//! Array of Clusters
-typedef  Vector<Cluster*> ClusterVec;
-//! Operator <<
-// inline ClusterVec& operator<<(ClusterVec& vec, Cluster* v ) {
-//     vec.push_back( v );
-//     return vec;
-// };
-
-class Linker;
-//! Array of Linkers
-typedef  Vector<Linker*> LinkerVec;
-//! Operator <<
-// inline LinkerVec& operator<<(LinkerVec& vec, Linker* v ) {
-//     vec.push_back( v );
-//     return vec;
-// };
-
-//! Empty LinkerVec constant
-extern const LinkerVec emptyLinkerVec;
-
-//! Empty ClusterVec constant
-extern const ClusterVec emptyClusterVec;
-
-class BaseTeachBlock;
-//! Array of Updatable
-typedef  Vector<BaseTeachBlock*> TeachBlockVec;
-//! Operator <<
-// inline TeachBlockVec& operator<<(TeachBlockVec& vec, BaseTeachBlock* v ) {
-//     vec.push_back( v );
-//     return vec;
-// };
 
 }
 
