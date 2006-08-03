@@ -29,7 +29,6 @@
  */
 
 #include <vector>
-#include <map>
 #include <string>
 
 #ifdef NNFW_DEBUG
@@ -38,11 +37,6 @@
 
 // --- Define NNFW_DOUBLE_PRECISION for defining Real as double
 //#define  NNFW_DOUBLE_PRECISION
-
-//! Generic Map --- FIXME non dovrebbe essere una define
-#define Map std::map
-//! Generic Pair --- FIXME non dovrebbe essere una define
-#define Pair std::pair
 
 #include "primtypes.h"
 #include "observ.h"

@@ -33,6 +33,7 @@
 #include "cluster.h"
 #include "linker.h"
 #include "messages.h"
+#include <map>
 
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {
@@ -225,7 +226,7 @@ protected:
     //! Linkers
     LinkerVec  linkersv;
 
-    typedef Map<Cluster*, LinkerVec> LinkVecMap;
+    typedef std::map<Cluster*, LinkerVec> LinkVecMap;
     //! mappa dei linkers entranti (cluster -> vettore linkers entranti)
     LinkVecMap inLinks;
     //! map of outgoing linkers (cluster -> vettore linkers uscenti)

@@ -18,17 +18,17 @@ BODY,H1,H2,H3,H4,H5,H6,P,CENTER,TD,TH,UL,DL,DIV {
 	font-family: "Helvetica", "Verdana", sans-serif;
 }
 BODY {
-    font-size: 14px;
+    font-size: 10px;
     background-color: white;
     background: url(../img/sfondo2.jpg);
 }
 H1 {
     text-align: center;
-    font-size: 26px;
+    font-size: 16px;
     color: #005AF6;
 }
 H2 {
-    font: bold italic 22px "Helvetica", "Verdana", sans-serif;
+    font: bold italic 16px "Helvetica", "Verdana", sans-serif;
     color: #005AF6;
     padding-left: 8px;
     text-align: left;
@@ -36,20 +36,20 @@ H2 {
 }
 H3 {
     text-align: left;
-    font-size: 18px;
+    font-size: 14px;
     color: #005AF6;
     border-bottom: 1px solid #888;
     padding-left: 16px;
 }
 CAPTION { font-weight: bold }
-DIV.qindex {    font: bold italic 22px "Helvetica", "Verdana", sans-serif;
+DIV.qindex {
+    font: bold italic 14px "Helvetica", "Verdana", sans-serif;
     color: #005AF6;
     padding-left: 8px;
     text-align: left;
     border-bottom: 2px solid #888;
 
 	width: 100%;
-    font: 14px "Helvetica", "Verdana", sans-serif;
     color: black;
     padding: 4px 4px 4px 4px;
     background: url(../img/sfondo_menu.jpg);
@@ -158,7 +158,7 @@ TD.md {
 TD.mdPrefix {
     background-color: #F4F4FB;
     color: #606060;
-	font-size: 10px;
+	font-size: 6px;
 }
 TD.mdname1 { 
     background-color: #F4F4FB; 
@@ -176,11 +176,12 @@ DIV.groupHeader {
     margin-top: 12px;
     margin-bottom: 6px;
     font-weight: bold;
+    font-size: 14px;
 }
 DIV.groupText { 
     margin-left: 16px; 
     font-style: italic; 
-    font-size: 12px 
+    font-size: 8px 
 }
 TD.indexkey {
 	background-color: #eeeeff;
@@ -194,7 +195,7 @@ TD.indexkey {
 	margin-top     : 2px;
 	margin-bottom  : 2px;
 	border: 1px solid #CCCCCC;
-    font-size: 14px;
+    font-size: 10px;
 }
 TD.indexvalue {
 	background-color: #eeeeff;
@@ -208,7 +209,7 @@ TD.indexvalue {
 	margin-top     : 2px;
 	margin-bottom  : 2px;
 	border: 1px solid #CCCCCC;
-    font-size: 14px;
+    font-size: 10px;
 }
 TR.memlist {
    background-color: #f0f0f0; 
@@ -237,7 +238,7 @@ SPAN.charliteral   { color: #008080 }
 }
 .mdescLeft {
     padding: 0px 8px 4px 8px;
-	font-size: 14px;
+	font-size: 10px;
 	font-style: italic;
 	background-color: #FAFAFA;
 	border-top: 1px none #E0E0E0;
@@ -248,7 +249,7 @@ SPAN.charliteral   { color: #008080 }
 }
 .mdescRight {
     padding: 0px 8px 4px 8px;
-	font-size: 14px;
+	font-size: 10px;
 	font-style: italic;
 	background-color: #FAFAFA;
 	border-top: 1px none #E0E0E0;
@@ -273,7 +274,7 @@ SPAN.charliteral   { color: #008080 }
 	border-bottom-style: none;
 	border-left-style: none;
 	background-color: #FAFAFA;
-	font-size: 14px;
+	font-size: 10px;
 }
 .memItemRight {
 	padding: 1px 8px 0px 8px;
@@ -291,7 +292,7 @@ SPAN.charliteral   { color: #008080 }
 	border-bottom-style: none;
 	border-left-style: none;
 	background-color: #FAFAFA;
-	font-size: 14px;
+	font-size: 10px;
 }
 .memTemplItemLeft {
 	padding: 1px 0px 0px 8px;
@@ -309,7 +310,7 @@ SPAN.charliteral   { color: #008080 }
 	border-bottom-style: none;
 	border-left-style: none;
 	background-color: #FAFAFA;
-	font-size: 14px;
+	font-size: 10px;
 }
 .memTemplItemRight {
 	padding: 1px 8px 0px 8px;
@@ -327,7 +328,7 @@ SPAN.charliteral   { color: #008080 }
 	border-bottom-style: none;
 	border-left-style: none;
 	background-color: #FAFAFA;
-	font-size: 14px;
+	font-size: 10px;
 }
 .memTemplParams {
 	padding: 1px 0px 0px 8px;
@@ -346,7 +347,7 @@ SPAN.charliteral   { color: #008080 }
 	border-left-style: none;
     color: #606060;
 	background-color: #FAFAFA;
-	font-size: 14px;
+	font-size: 10px;
 }
 .search { 
     color: #003399;
@@ -357,13 +358,13 @@ FORM.search {
     margin-top: 0px;
 }
 INPUT.search { 
-    font-size: 9px;
+    font-size: 5px;
     color: #000080;
     font-weight: normal;
     background-color: #eeeeff;
 }
 TD.tiny { 
-    font-size: 9px;
+    font-size: 5px;
 }
 a {
 	color: #252E78;

@@ -2,11 +2,11 @@
 body {
     background-color: white;
     background: url(img/sfondo2.jpg);
-    font: 14px "Helvetica", "Tahoma", "Verdana", sans-serif;
+    font: 10px "Helvetica", "Tahoma", "Verdana", sans-serif;
 }
 
 p, span {
-    font: 14px "Helvetica", "Tahoma", "Verdana", sans-serif;
+    font: 10px "Helvetica", "Tahoma", "Verdana", sans-serif;
 }
 
 #page {

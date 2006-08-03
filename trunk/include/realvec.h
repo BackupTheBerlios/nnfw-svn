@@ -42,6 +42,7 @@ namespace nnfw {
 class RealVec : public VectorData<Real> {
 public:
     /*! \name Constructors */
+    //@{
 
     /*! \brief Construct an empty vector of dimension size
      */
@@ -67,7 +68,9 @@ public:
      */
     RealVec( const RealVec& orig );
 
+    //@}
     /*! \name Unary Operators */
+    //@{
 
     //! Operator -
     RealVec& operator-() {
@@ -77,7 +80,9 @@ public:
         return (*this);
     };
 
-    /*! \brief BINARY OPERATORS */
+    //@}
+    /*! \name Binary Operators */
+    //@{
 
     //! Operator += with RealVec
     RealVec& operator+=(const RealVec& r ) {
@@ -175,7 +180,9 @@ public:
         return ret;
     };
 
-    /*! \brief MATH FUNCTION */
+    //@}
+    /*! \name Math Functions */
+    //@{
 
     /*! \brief Exponential
      */
@@ -264,6 +271,8 @@ public:
 		    ( data[i] > threshold ) ? data[i] = 1.0f : data[i] = 0.0f;
 		}
 	}
+
+    //@}
 	
     /*! \brief Create all the binary vectors of a given dimension
      */

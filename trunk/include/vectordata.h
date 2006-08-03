@@ -34,7 +34,7 @@ namespace nnfw {
 
 /*! \brief VectorData Class
  *  \par Motivation
- *  Create a VectorData abstract type for storing data in dynamic and efficient vector without care about data allocation
+ *  Create a VectorData abstract type for storing data in dynamic and efficient way
  *  \par Description
  *  \par Warnings
  */
@@ -42,6 +42,7 @@ template<class T>
 class VectorData : private Observer, private Observable {
 public:
     /*! \name Constructors */
+    //@{
 
     /*! \brief Default Constructor
      */
@@ -158,8 +159,9 @@ public:
             //delete []data;
         }
     }
-
+    //@}
     /*! \name Informations about VectorData */
+    //@{
 
     /*! \brief Return the size of VectorData
      */
@@ -191,8 +193,9 @@ public:
     bool operator!=( const VectorData<T>& b ) {
         return !( *this == b );
     };
-
+    //@}
     /*! \name Operations on VectorData */
+    //@{
 
     /*! \brief Set all values to default value of T, in other words to T()
      */
@@ -297,8 +300,9 @@ public:
         append( value );
         return (*this);
     };
-
+    //@}
     /*! \name Operations on VectorData views */
+    //@{
 
     /*! \brief Configure the indexes of starting and ending of this VectorData view
      *  If VectorData is not a view, then it will shows an error message
@@ -319,9 +323,10 @@ public:
         vsize = idend - idstart;
         // --- Propagate Notify to sub-viewers
         notifyAll();
-    }
-
+    };
+    //@}
     /*! \name STL compatibility */
+    //@{
 
     class vectordataIterator;
     friend class vectordataIterator;
@@ -469,8 +474,10 @@ public:
         //! current index
         u_int id;
     };
+    //@}
 
 protected:
+
     /*! \brief Raw Data
      */
     T* rawdata() const {
