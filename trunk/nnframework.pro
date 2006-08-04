@@ -81,6 +81,7 @@ HEADERS		= ./include/nnfw.h \
               ./include/sparsematrixlinker.h \
 			  ./include/neuralnet.h \
 			  ./include/utils.h \
+              ./include/nnfwfactory.h \
 			  ./include/messages.h \
 			  ./include/random.h \
               ./include/blockslearning.h \
@@ -97,6 +98,7 @@ SOURCES		= ./src/cluster.cpp \
               ./src/copylinker.cpp \
 			  ./src/neuralnet.cpp \
               ./src/utils.cpp \
+              ./src/nnfwfactory.cpp \
 			  ./src/messages.cpp \
               ./src/random.cpp \
               ./src/types.cpp \

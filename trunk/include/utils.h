@@ -39,15 +39,15 @@ class LearningNetwork;
  *  all'ultimo valore di layers sara' l'output. Gli altri, in ordine, saranno i SimpleCluster nascosti.
  *  \param layers il vettore che specifica le dimensioni dei SimpleCluster
  */
- BaseNeuralNet* feedForwardNet( U_IntVec layers );
+ BaseNeuralNet* feedForwardNet( U_IntVec layers, const char* clusterType = "BiasedCluster", const char* linkerType = "MatrixLinker" );
 
 /*! \brief Function to quickly construct a Backpropagation Learning Network
- *  It only use GradientSimpleCluster and GradientMatrixLinker
+ *  It only use GradientBiasedCluster and GradientMatrixLinker
  *  WARNINGS: Questa funzione non controlla la struttura della rete neurale, quindi e' cura di chi la usa
  *   assicurarsi che la rete neurale soddisfi i seguenti requisiti:<br>
  *   a) Deve essere una struttura FeedForward senza MatrixLinker a formare ricorrenze<br>
  *   b) Devono esistere Cluster di inputs e di outputs<br>
- *   c) La struttura principale della rete deve essere composta da SimpleCluster e MatrixLinker
+ *   c) La struttura principale della rete deve essere composta da BiasedCluster e MatrixLinker
  */
  LearningNetwork* backpropagationFor( BaseNeuralNet* net );
 

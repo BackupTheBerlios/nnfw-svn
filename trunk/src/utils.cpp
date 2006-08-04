@@ -24,22 +24,23 @@
 #include "matrixlinker.h"
 #include "blockslearning.h"
 #include "learningnetwork.h"
+#include "nnfwfactory.h"
 #include <stack>
 
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {
 
-BaseNeuralNet* feedForwardNet( U_IntVec layers ) {
+BaseNeuralNet* feedForwardNet( U_IntVec layers, const char* clusterType, const char* linkerType ) {
     BaseNeuralNet* net = new BaseNeuralNet();
-    BiasedCluster* prec = 0;
-    BiasedCluster* curr = 0;
+    Cluster* prec = 0;
+    Cluster* curr = 0;
     UpdatableVec ord;
     char buf[50];
     u_int clCount = 1;
     u_int mlCount = 1;
     for( u_int i=0; i<layers.size(); i++ ) {
-        sprintf( buf, "BiasedCluster%d", clCount );
-        curr = new BiasedCluster( layers[i], buf );
+        sprintf( buf, "%s%d", clusterType, clCount );
+        curr = Factory::createCluster( clusterType, layers[i], buf );
         if ( i == 0 ) {
             net->addCluster( curr, true );
         } else if ( i == (layers.size()-1) ) {
@@ -50,8 +51,8 @@ BaseNeuralNet* feedForwardNet( U_IntVec layers ) {
         clCount++;
         ord << curr;
         if ( prec != 0 ) {
-            sprintf( buf, "MatrixLinker%d", mlCount );
-            MatrixLinker* ml = new MatrixLinker( prec, curr, buf );
+            sprintf( buf, "%s%d", linkerType, mlCount );
+            Linker* ml = Factory::createLinker( linkerType, prec, curr, buf );
             net->addLinker( ml );
             Updatable* tmp = ord[ord.size()-1];
             ord[ord.size()-1] = ml;
