@@ -20,7 +20,7 @@
 #include "random.h"
 #include <cmath>
 
-#ifndef WIN32
+#ifdef NNFW_USE_GSL
 #include "gsl/gsl_rng.h"
 #include "gsl/gsl_randist.h"
 #endif
@@ -28,12 +28,12 @@
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {
 
-#ifndef WIN32
+#ifdef NNFW_USE_GSL
 gsl_rng* rnd = gsl_rng_alloc( gsl_rng_taus2 );
 #endif
 
 void Random::setSeed( long int seed ) {
-#ifndef WIN32
+#ifdef NNFW_USE_GSL
     gsl_rng_set( rnd, seed );
 #else
     srand( seed );
@@ -42,7 +42,7 @@ void Random::setSeed( long int seed ) {
 }
 
 Real Random::flatReal( ) {
-#ifndef WIN32
+#ifdef NNFW_USE_GSL
     return (Real)( gsl_rng_uniform( rnd ) );
 #else
     return (Real) rand() / RAND_MAX;
@@ -50,7 +50,7 @@ Real Random::flatReal( ) {
 }
 
 Real Random::flatReal( Real min, Real max ) {
-#ifndef WIN32
+#ifdef NNFW_USE_GSL
     return (Real)( gsl_ran_flat( rnd, (double)min, (double)max ) );
 #else
     return ( ( ( (Real) rand() ) / RAND_MAX ) * (max-min) ) + min;
@@ -58,7 +58,7 @@ Real Random::flatReal( Real min, Real max ) {
 }
 
 bool Random::boolean( ) {
-#ifndef WIN32
+#ifdef NNFW_USE_GSL
     return ( gsl_rng_get( rnd )%2 );
 #else
     return ( rand()%2 );
@@ -66,7 +66,7 @@ bool Random::boolean( ) {
 }
 
 bool Random::boolean( Real trueProb ) {
-#ifndef WIN32
+#ifdef NNFW_USE_GSL
     return ( trueProb > gsl_rng_uniform( rnd ) );
 #else
     return ( trueProb >  ( (Real)( rand() )/RAND_MAX ) );
@@ -74,7 +74,7 @@ bool Random::boolean( Real trueProb ) {
 }
 
 u_int Random::flatInt( u_int x ) {
-#ifndef WIN32
+#ifdef NNFW_USE_GSL
     return (u_int)( gsl_rng_uniform_int( rnd, x ) );
 #else
 	return (int) ( (Real) (rand()-1) / RAND_MAX * x);

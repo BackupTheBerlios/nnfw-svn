@@ -6,7 +6,8 @@ CONFIG += release staticlib rtti warn_on
 CONFIG -= debug
 CONFIG -= qt
 
-#NNFW = mkl
+### default gsl activated
+NNFW += gsl
 
 !isEmpty( DEBUG ) {
     CONFIG -= release
@@ -23,13 +24,17 @@ contains( CONFIG, release ) {
     unix:QMAKE_CXXFLAGS -= -O2
 }
 
+### Configuration with GSL library
+contains( NNFW, gsl ) {
+    DEFINES += NNFW_USE_GSL
+    #### Definition for creating library under linux
+    unix:LIBS += -L/usr/lib -lgsl -lgslcblas -lm
+}
+
 #### Configuration for using Double Precision
 contains( NNFW, double ) {
     DEFINES += NNFW_DOUBLE_PRECISION
 }
-
-#### Definition for creating library under linux
-unix:LIBS += -L/usr/lib -lgsl -lgslcblas -lm
 
 #### Definition for creating library under windows
 win32:DEFINES += WIN32
