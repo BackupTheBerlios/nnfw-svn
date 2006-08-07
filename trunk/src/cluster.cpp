@@ -37,10 +37,6 @@ Cluster::Cluster( u_int numNeurons, const char* name )
     outputdata.zeroing();
     inputdata.zeroing();
     setNeedReset( false );
-/*    outputdata = new Real[this->numNeurons];
-    inputdata = new Real[this->numNeurons];
-    memset( inputdata, 0, sizeof(Real)*this->numNeurons );
-    memset( outputdata, 0, sizeof(Real)*this->numNeurons );*/
 
     //! Allocation for poolUpdater
     poolUpdater = new ( ClusterUpdater ( *[this->numNeurons] ) );
@@ -49,8 +45,6 @@ Cluster::Cluster( u_int numNeurons, const char* name )
 }
 
 Cluster::~Cluster() {
-/*    delete []outputdata;
-    delete []inputdata;*/
     delete []poolUpdater;
 }
 
@@ -78,10 +72,9 @@ void Cluster::setUpdater( ClusterUpdater* up, u_int neuron ) {
 const ClusterUpdater* Cluster::getUpdater( u_int neuron ) const {
     if ( neuron >= numNeurons ) {
         char msg[100];
-        sprintf( msg, "The neuron %u doesn't exists! The operation setInput will be ignored", neuron );
+        sprintf( msg, "The neuron %u doesn't exists! The operation getUpdater will return null-pointer", neuron );
         nnfwMessage( NNFW_ERROR, msg );
-        // ---- FIXME returning reference to temporary object !! (NON E' vero che e' temporary... e un memory leak)
-        return new DummyUpdater();
+        return 0;
     }
     return poolUpdater[ neuron ];
 }
@@ -103,15 +96,11 @@ void Cluster::setInputs( const RealVec& inputs ) {
 void Cluster::setAllInputs( Real value ) {
     inputdata.assign( numNeurons, value );
     setNeedReset( false );
-/*    for ( u_int i = 0; i<numNeurons; i++ ) {
-        inputdata[i] = value;
-    }*/
 }
 
 void Cluster::resetInputs() {
     inputdata.zeroing();
     setNeedReset( false );
-    //memset( inputdata, 0, numNeurons*sizeof( Real ) );
 }
 
 Real Cluster::getInput( u_int neuron ) const {

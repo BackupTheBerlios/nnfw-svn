@@ -13,9 +13,23 @@ div.menuItem a {
     padding-right: 6px;
 }
 
+li {
+    font-size: 12px;
+    list-style-type: square;
+}
+
+dt {
+    text-align: left;
+    font-size: 12px;
+    color: #005AF6;
+    border-bottom: 1px solid #888;
+    padding-left: 14px;
+}
+
 /* Modified default settings of Doxygen */
 BODY,H1,H2,H3,H4,H5,H6,P,CENTER,TD,TH,UL,DL,DIV {
 	font-family: "Helvetica", "Verdana", sans-serif;
+    font-size: 10px;
 }
 BODY {
     font-size: 10px;
@@ -364,7 +378,7 @@ INPUT.search {
     background-color: #eeeeff;
 }
 TD.tiny { 
-    font-size: 5px;
+    font-size: 6px;
 }
 a {
 	color: #252E78;

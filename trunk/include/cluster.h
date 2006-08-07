@@ -42,8 +42,7 @@ namespace nnfw {
  *    class represent a group of neurons as two arrays: inputs and outputs. The inputs array represent the
  *    inputs of the neurons 'contained' in the cluster, and the outputs of this neurons are calculated by
  *    appling the function provided by ClusterUpdater.<br>
- *    The number of neuron returned by size() method is also the dimension of inputs and outputs arrays
- *    \par
+ *    The number of neuron returned by size() method is also the dimension of inputs and outputs arrays<br>
  *    You can sets one subclasses of ClusterUpdater by setUpdater methods. If you don't specify an index when
  *    set a ClusterUpdater then this ClusterUpdater will be used to update the output of all neurons. Otherwise,
  *    you can specifiy different ClusterUpdater for different neuron.
@@ -64,16 +63,14 @@ namespace nnfw {
  *    The getInputs and getOutputs returns a valid array of internal data, and not simply a copy
  *    of the internal data. Look at the following code:
  *    \code
- * Real* in = cluster->inputs();
+ * RealVec& in = cluster->inputs();
  * in[2] = 3.0;   // This statement will be changes the inputs of third neuron.
  * // the above statements must be equivalent with the following
  * cluster->setInput( 2, 3.0 );
  *    \endcode
  *    The reasons behind this kind of behaviour its the efficiency!! When another class must do heavy calculation
  *    on all inputs of a Cluster (as MatrixLinker do), then its more efficient that it takes the array returned
- *    by inputs (or outputs) and works over them.<br>
- *    <b>DON'T</b> copy the value of inputs and outputs in local attributes of other classes because these
- *    pointers may changes during the lifetime of a Cluster<br>
+ *    by inputs (or outputs) and works over them.
  */
 class  Cluster : public Updatable
 {
