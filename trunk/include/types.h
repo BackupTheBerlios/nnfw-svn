@@ -41,6 +41,8 @@
 #include "primtypes.h"
 #include "observ.h"
 #include "vectordata.h"
+#include "matrixdata.h"
+
 #include "realvec.h"
 #include "realmat.h"
 

@@ -31,40 +31,12 @@
 namespace nnfw {
 
 RealMat::RealMat( u_int rows, u_int cols )
-    : data(rows*cols), rowView( rows ) {
-    data.zeroing();
-    nrows = rows;
-    ncols = cols;
-    tsize = nrows*ncols;
-    // --- Constructing the view of rows
-    //rowView = new ( RealVec ( *[nrows] ) );
-    //rowView = new RealVec[nrows];
-    for( u_int i=0; i<nrows; i++ ) {
-        //rowViews[i] = new RealVec( data, i*ncols, (i+1)*ncols );
-        rowView[i].convertToView( data, i*ncols, (i+1)*ncols );
-    }
+    : MatrixData<Real, RealVec>( rows, cols ) {
 }
 
 RealMat::~RealMat() {
     // --- Nothing to do
 }
-
-void RealMat::resize( u_int rows, u_int cols ) {
-    nrows = rows;
-    ncols = cols;
-    tsize = nrows*ncols;
-    data.resize( tsize );
-    rowView.resize( nrows );
-    // --- Adjust the view of rows
-    for( u_int i=0; i<nrows; i++ ) {
-        if ( rowView[i].isView() ) {
-            rowView[i].setView( i*ncols, (i+1)*ncols );
-        } else {
-            rowView[i].convertToView( data, i*ncols, (i+1)*ncols );
-        }
-    }
-}
-
 
     // ***********************************
     // *** VECTOR-MATRIX OPERATORS *******
@@ -72,10 +44,13 @@ void RealMat::resize( u_int rows, u_int cols ) {
 
 RealVec& RealMat::mul( RealVec& y, const RealVec& x, const RealMat& m ) {
 #ifdef NNFW_USE_MKL
+    Real* mRaw = m.rawdata().rawdata();
+    Real* xRaw = x.rawdata();
+    Real* yRaw = y.rawdata();
 #ifndef NNFW_DOUBLE_PRECISION
-    cblas_sgemv(CblasRowMajor, CblasTrans, m.rows(), m.cols(), 1.0, m.rawdata(), m.cols(), x.rawdata(), 1, 1.0f, y.rawdata(), 1);
+    cblas_sgemv(CblasRowMajor, CblasTrans, m.rows(), m.cols(), 1.0, mRaw, m.cols(), xRaw, 1, 1.0f, yRaw, 1);
 #else
-    cblas_dgemv(CblasRowMajor, CblasTrans, m.rows(), m.cols(), 1.0, m.rawdata(), m.cols(), x.rawdata(), 1, 1.0, y.rawdata(), 1);
+    cblas_dgemv(CblasRowMajor, CblasTrans, m.rows(), m.cols(), 1.0, mRaw, m.cols(), xRaw, 1, 1.0, yRaw, 1);
 #endif
 #else
     for ( u_int j = 0; j<m.rows(); j++ ) {
@@ -89,10 +64,13 @@ RealVec& RealMat::mul( RealVec& y, const RealVec& x, const RealMat& m ) {
 
 RealVec& RealMat::mul( RealVec& y, const RealMat& m, const RealVec& x ) {
 #ifdef NNFW_USE_MKL
+    Real* mRaw = m.rawdata().rawdata();
+    Real* xRaw = x.rawdata();
+    Real* yRaw = y.rawdata();
 #ifndef NNFW_DOUBLE_PRECISION
-    cblas_sgemv(CblasRowMajor, CblasNoTrans, m.rows(), m.cols(), 1.0, m.rawdata(), m.cols(), x.rawdata(), 1, 1.0f, y.rawdata(), 1);
+    cblas_sgemv(CblasRowMajor, CblasNoTrans, m.rows(), m.cols(), 1.0, mRaw, m.cols(), xRaw, 1, 1.0f, yRaw, 1);
 #else
-    cblas_dgemv(CblasRowMajor, CblasNoTrans, m.rows(), m.cols(), 1.0, m.rawdata(), m.cols(), x.rawdata(), 1, 1.0, y.rawdata(), 1);
+    cblas_dgemv(CblasRowMajor, CblasNoTrans, m.rows(), m.cols(), 1.0, mRaw, m.cols(), xRaw, 1, 1.0, yRaw, 1);
 #endif
 #else
     for ( u_int j = 0; j<m.rows(); j++ ) {
@@ -110,43 +88,12 @@ RealVec& RealMat::mul( RealVec& y, const RealMat& m, const RealVec& x ) {
     // ****************************
 
 RealMat& RealMat::exp() {
-#ifdef NNFW_USE_MKL
-#ifndef NNFW_DOUBLE_PRECISION
-    vsExp( size(), rawdata(), rawdata() );
-#else
-    vdExp( size(), rawdata(), rawdata() );
-#endif
-#else
-    for( u_int i=0; i<size(); i++ ) {
-        rawdata()[i] = std::exp( rawdata()[i] );
-    };
-#endif
+    rawdata().exp();
     return (*this);
 }
 
 RealMat& RealMat::inv() {
-#ifdef NNFW_USE_MKL
-#ifndef NNFW_DOUBLE_PRECISION
-    vsInv( size(), rawdata(), rawdata() );
-#else
-    vdInv( size(), rawdata(), rawdata() );
-#endif
-#else
-    for( u_int i=0; i<size(); i++ ) {
-        rawdata()[i] = 1.0/rawdata()[i];
-    };
-#endif
-    return (*this);
-}
-
-RealMat::RealMat( const RealMat& ) {
-    // --- Never Called
-    //this->assign( orig );
-}
-
-RealMat& RealMat::operator=( const RealMat& ) {
-    // --- Never Called
-    //this->assign( src );
+    rawdata().inv();
     return (*this);
 }
 

@@ -70,6 +70,7 @@ HEADERS		= ./include/nnfw.h \
               ./include/memutils.h \
               ./include/observ.h \
               ./include/vectordata.h \
+              ./include/matrixdata.h \
               ./include/realvec.h \
               ./include/realmat.h \
               ./include/updatable.h \

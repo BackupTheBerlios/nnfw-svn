@@ -25,6 +25,8 @@
  *  Details...
  */
 
+#include "matrixdata.h"
+
 #ifdef NNFW_DEBUG
 #include "messages.h"
 #endif
@@ -37,8 +39,11 @@ namespace nnfw {
  *  \par Description
  *  \par Warnings
  */
-class RealMat {
+class RealMat : public MatrixData<Real, RealVec> {
 public:
+    /*! \name Constructors */
+    //@{
+
     /*! \brief Construct an empty matrix of dimension size
      */
     RealMat( u_int rows, u_int cols );
@@ -47,111 +52,20 @@ public:
      */
     ~RealMat();
 
-    //! Returns the numbers of Row
-    u_int rows() const {
-        return nrows;
-    };
-    //! Returns the numbers of Columns
-    u_int cols() const {
-        return ncols;
-    };
-    //! Returns the total numbers of elements (Rows*Columns)
-    u_int size() const {
-        return tsize;
-    };
+    //@}
+    /*! \name Unary Operators */
+    //@{
 
-    //! Resize the matrix
-    void resize( u_int rows, u_int cols );
-
-    //! Return a reference to element at position (row, col)
-    Real& at( u_int row, u_int col ) {
-#ifdef NNFW_DEBUG
-        if ( row >= nrows ) {
-            nnfwMessage( NNFW_ERROR, "Accessing an element beyond Row boundary of matrix" );
-            return data[0];
-        }
-        if ( col >= ncols ) {
-            nnfwMessage( NNFW_ERROR, "Accessing an element beyond Column boundary of matrix" );
-            return data[0];
-        }
-#endif
-        return rowView[row][col];
-    };
-
-    //! Return a Const reference to element at position (row, col)
-    const Real& at( u_int row, u_int col ) const {
-#ifdef NNFW_DEBUG
-        if ( row >= nrows ) {
-            nnfwMessage( NNFW_ERROR, "Accessing an element beyond Row boundary of matrix" );
-            return data[0];
-        }
-        if ( col >= ncols ) {
-            nnfwMessage( NNFW_ERROR, "Accessing an element beyond Column boundary of matrix" );
-            return data[0];
-        }
-#endif
-        return rowView[row][col];
-    };
-
-    /*! \brief Indexing operator
-     *  Boundary check activated only when DEBUG if defined
-     */
-    RealVec& operator[]( u_int row ) {
-#ifdef NNFW_DEBUG
-        if( row >= nrows ) {
-            nnfwMessage( NNFW_ERROR, "Accessing elements outside boundary" );
-            return rowView[0];
-        }
-#endif
-        return rowView[row];
-    };
-
-    /*! \brief Indexing operator (Const Version)
-     *  Boundary check activated only when DEBUG if defined
-     */
-    const RealVec& operator[]( u_int row ) const {
-#ifdef NNFW_DEBUG
-        if( row >= nrows ) {
-            nnfwMessage( NNFW_ERROR, "Accessing elements outside boundary" );
-            return rowView[0];
-        }
-#endif
-        return rowView[row];
-    };
-
-    /*! \brief Assign elements
-     */
-    RealMat& assign( const RealMat& src ) {
-#ifdef NNFW_DEBUG
-        if( rows() != src.rows() || cols() != src.cols() ) {
-            nnfwMessage( NNFW_ERROR, "Different dimension" );
-            return (*this);
-        }
-#endif
-        memcpy( rawdata(), src.rawdata(), sizeof(Real)*size() );
-        return (*this);
-    };
-
-    /*! \brief Set all values to zero
-     */
-    void zeroing() {
-        memset( rawdata(), 0, sizeof(Real)*size() );
-    };
-
-    // ****************************
-    // *** UNARY OPERATORS ********
-    // ****************************
     //! Operator -
     RealMat& operator-() {
-        for( u_int i=0; i<size(); i++ ) {
-            rawdata()[i] = -rawdata()[i];
-        }
+        -rawdata();
         return (*this);
     };
 
-    // ****************************
-    // *** BINARY OPERATORS *******
-    // ****************************
+    //@}
+    /*! \name Binary Operators */
+    //@{
+
     //! Operator += with RealMat
     RealMat& operator+=(const RealMat& r ) {
 #ifdef NNFW_DEBUG
@@ -160,16 +74,12 @@ public:
             return (*this);
         }
 #endif
-        for( u_int i=0; i<size(); i++ ) {
-            rawdata()[i] += r.rawdata()[i];
-        }
+        rawdata() += r.rawdata();
         return (*this);
     };
     //! Operator += with Real
     RealMat& operator+=(const Real& r ) {
-        for( u_int i=0; i<size(); i++ ) {
-            rawdata()[i] += r;
-        }
+        rawdata() += r;
         return (*this);
     };
     //! Operator -= with RealMat
@@ -180,16 +90,12 @@ public:
             return (*this);
         }
 #endif
-        for( u_int i=0; i<size(); i++ ) {
-            rawdata()[i] -= r.rawdata()[i];
-        }
+        rawdata() -= r.rawdata();
         return (*this);
     };
     //! Operator -= with Real
     RealMat& operator-=(const Real& r ) {
-        for( u_int i=0; i<size(); i++ ) {
-            rawdata()[i] -= r;
-        }
+        rawdata() -= r;
         return (*this);
     };
     //! Operator *= with RealMat
@@ -200,16 +106,12 @@ public:
             return (*this);
         }
 #endif
-        for( u_int i=0; i<size(); i++ ) {
-            rawdata()[i] *= r.rawdata()[i];
-        }
+        rawdata() *= r.rawdata();
         return (*this);
     };
     //! Operator *= with Real
     RealMat& operator*=(const Real& r ) {
-        for( u_int i=0; i<size(); i++ ) {
-            rawdata()[i] *= r;
-        }
+        rawdata() *= r;
         return (*this);
     };
     //! Operator /= with RealMat
@@ -220,22 +122,19 @@ public:
             return (*this);
         }
 #endif
-        for( u_int i=0; i<size(); i++ ) {
-            rawdata()[i] /= r.rawdata()[i];
-        }
+        rawdata() /= r.rawdata();
         return (*this);
     };
     //! Operator /= with Real
     RealMat& operator/=(const Real& r ) {
-        for( u_int i=0; i<size(); i++ ) {
-            rawdata()[i] /= r;
-        }
+        rawdata() /= r;
         return (*this);
     };
 
-    // ***********************************
-    // *** VECTOR-MATRIX OPERATORS *******
-    // ***********************************
+    //@}
+    /*! \name Vector-Matrix Operators */
+    //@{
+
     /*! \brief Right Multiplication: y += x*m
      *  \param y the result of multiplication
      *  \param x the vector
@@ -272,32 +171,6 @@ public:
      */
     RealMat& inv();
 
-protected:
-    /*! \brief Row Data allocated
-     */
-    Real* rawdata() const {
-        return data.rawdata();
-    };
-
-private:
-    //! Numbers of Rows
-    u_int nrows;
-    //! Numbers of Columns
-    u_int ncols;
-    //! Size
-    u_int tsize;
-    //! RealVec of data
-    RealVec data;
-    //! Vector of RealVec views of data
-    VectorData<RealVec> rowView;
-
-    /*! \brief Copy-Constructor
-     */
-    RealMat( const RealMat& orig );
-
-    /*! \brief Assignment Operator
-     */
-    RealMat& operator=( const RealMat& src );
 };
 
 }

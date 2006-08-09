@@ -282,7 +282,16 @@ public:
      */
 	static Real mse( const RealVec& target, const RealVec& actual );
 
+protected:
+
     friend class RealMat;
+
+    /*! \brief return the rawdata
+     */
+    Real* rawdata() const {
+        return VectorData<Real>::rawdata();
+    };
+
 };
 
 //! Operator << with RealVec

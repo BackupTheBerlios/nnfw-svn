@@ -324,6 +324,38 @@ public:
         // --- Propagate Notify to sub-viewers
         notifyAll();
     };
+
+    /*! \brief Convert this VectorData to a view of VectorData src passed
+     */
+    void convertToView( VectorData<T>& src, u_int idStart, u_int idEnd ) {
+        if ( observed == (&src) ) {
+            nnfwMessage( NNFW_ERROR, "Already view of VectorData passed to convertToView; method ignored" );
+            return;
+        }
+        if ( view ) {
+            // detach previous view
+            observed->delObserver( this );
+        } else if ( allocated > 0 ) {
+            // remove previous data allocated
+            delete []data;
+        }
+    
+        if ( idStart > src.vsize || idEnd > src.vsize || idStart >= idEnd ) {
+            nnfwMessage( NNFW_ERROR, "Wrongs indexes specified in convertToView; using 0 and src.size()" );
+            idstart = 0;
+            idend = src.size();
+        } else {
+            idstart = idStart;
+            idend = idEnd;
+        }
+        data = (src.data) + idstart;
+        vsize = idend - idstart;
+        allocated = 0;
+        view = true;
+        observed = &src;
+        observed->addObserver( this );
+    };
+
     //@}
     /*! \name STL compatibility */
     //@{
@@ -479,40 +511,10 @@ public:
 protected:
 
     /*! \brief Raw Data
+     *   Ma Viene USATO ????
      */
     T* rawdata() const {
         return data;
-    };
-
-    /*! \brief Convert this VectorData to a view of VectorData src passed
-     */
-    void convertToView( VectorData<T>& src, u_int idStart, u_int idEnd ) {
-        if ( observed == (&src) ) {
-            nnfwMessage( NNFW_ERROR, "Already view of VectorData passed to convertToView; method ignored" );
-            return;
-        }
-        if ( view ) {
-            // detach previous view
-            observed->delObserver( this );
-        } else if ( allocated > 0 ) {
-            // remove previous data allocated
-            delete []data;
-        }
-    
-        if ( idStart > src.vsize || idEnd > src.vsize || idStart >= idEnd ) {
-            nnfwMessage( NNFW_ERROR, "Wrongs indexes specified in convertToView; using 0 and src.size()" );
-            idstart = 0;
-            idend = src.size();
-        } else {
-            idstart = idStart;
-            idend = idEnd;
-        }
-        data = (src.data) + idstart;
-        vsize = idend - idstart;
-        allocated = 0;
-        view = true;
-        observed = &src;
-        observed->addObserver( this );
     };
 
     //! The actual size of VectorData
