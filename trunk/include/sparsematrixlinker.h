@@ -66,7 +66,7 @@ public:
 
 private:
     //! Mask Matrix
-    Matrix<bool> mask;
+    MatrixData<bool> mask;
 };
 
 }

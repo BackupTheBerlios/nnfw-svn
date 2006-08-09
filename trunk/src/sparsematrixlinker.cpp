@@ -25,10 +25,10 @@ namespace nnfw {
 
 SparseMatrixLinker::SparseMatrixLinker( Cluster* from, Cluster* to, const char* name )
     : MatrixLinker( from, to, name ), mask(nrows, ncols) {
-    // Set a Connection with probability specified
+    // --- Init data
     for( u_int i=0; i<nrows; i++ ) {
         for( u_int j=0; j<ncols; j++ ) {
-            mask.at(i, j) = true;
+            mask[i][j] = true;
         }
     }
 }
@@ -38,7 +38,7 @@ SparseMatrixLinker::SparseMatrixLinker( Real prob, Cluster* from, Cluster* to, c
     // Set a Connection with probability specified
     for( u_int i=0; i<nrows; i++ ) {
         for( u_int j=0; j<ncols; j++ ) {
-            mask.at(i, j) = Random::boolean( prob );
+            mask[i][j] = Random::boolean( prob );
         }
     }
 }
@@ -55,20 +55,20 @@ void SparseMatrixLinker::setWeight( u_int from, u_int to, Real weight ) {
         // Messaggio di errore !!!
         return;
     }
-    if ( mask.at( from, to ) ) {
-        w.at( from, to ) = weight;
+    if ( mask[from][to] ) {
+        w[from][to] = weight;
     } else {
-        w.at( from, to ) = 0.0;
+        w[from][to] = 0.0;
     }
 }
 
 void SparseMatrixLinker::randomize( Real min, Real max ) {
     for ( u_int i = 0; i<nrows; i++ ) {
         for ( u_int j = 0; j<ncols; j++ ) {
-            if ( mask.at( i, j ) ) {
-                w.at( i, j ) = Random::flatReal( min, max );
+            if ( mask[i][j] ) {
+                w[i][j] = Random::flatReal( min, max );
             } else {
-                w.at( i, j ) = 0.0;
+                w[i][j] = 0.0;
             }
         }
     }
@@ -83,7 +83,7 @@ void SparseMatrixLinker::connection( u_int from, u_int to ) {
         // Messaggio di errore !!!
         return;
     }
-    mask.at( from, to ) = true;
+    mask[from][to] = true;
 }
 
 void SparseMatrixLinker::disconnection( u_int from, u_int to ) {
@@ -95,8 +95,8 @@ void SparseMatrixLinker::disconnection( u_int from, u_int to ) {
         // Messaggio di errore !!!
         return;
     }
-    mask.at( from, to ) = false;
-    w.at( from, to ) = 0.0;
+    mask[from][to] = false;
+    w[from][to] = 0.0;
 }
 
 }
