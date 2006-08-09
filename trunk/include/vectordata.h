@@ -478,22 +478,22 @@ public:
         };
         //! Forward movement
         vectordataIterator& operator++() {
-            id = (id+1 > vecdata.size()) ? vecdata.size() : id+1;
+            id = (id < vecdata.size()) ? id+1 : vecdata.size();
             return (*this);
         };
         //! Forward movement
         const vectordataIterator& operator++() const {
-            id = (id+1 > vecdata.size()) ? vecdata.size() : id+1;
+            id = (id < vecdata.size()) ? id+1 : vecdata.size();
             return (*this);
         };
         //! Backward movement
         vectordataIterator& operator--() {
-            id = id-1;
+            id = ( id > 0 ) ? id-1 : 0;
             return (*this);
         };
         //! Backward movement
         const vectordataIterator& operator--() const {
-            id = id-1;
+            id = ( id > 0 ) ? id-1 : 0;
             return (*this);
         };
         //! Return the id (used by VectorData for accessing)
