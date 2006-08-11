@@ -20,6 +20,7 @@
 #include "nnfwfactory.h"
 #include "simplecluster.h"
 #include "biasedcluster.h"
+#include "ddecluster.h"
 #include "matrixlinker.h"
 
 namespace nnfw {
@@ -47,6 +48,19 @@ public:
     };
     virtual ClusterCreator* clone() const {
         return (new BiasedClusterCreator(*this));
+    };
+};
+
+class DDEClusterCreator : public ClusterCreator {
+public:
+    virtual Cluster* create( u_int numNeurons, const char* name ) const {
+        return (new DDECluster( RealVec(), numNeurons, name ));
+    };
+    virtual Cluster* create( u_int numNeurons, const CreatorParameters& ) const {
+        return (new DDECluster( RealVec(), numNeurons ));
+    };
+    virtual ClusterCreator* clone() const {
+        return (new DDEClusterCreator(*this));
     };
 };
 
@@ -104,6 +118,7 @@ bool Factory::registerLinker( const LinkerCreator& c, const char* type ) {
 void Factory::initFactory() {
     clustertypes["SimpleCluster"] = new SimpleClusterCreator();
     clustertypes["BiasedCluster"] = new BiasedClusterCreator();
+    clustertypes["DDECluster"] = new BiasedClusterCreator();
     linkertypes["MatrixLinker"] = new MatrixLinkerCreator();
     isInit = true;
 }
