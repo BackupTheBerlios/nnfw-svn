@@ -69,6 +69,17 @@ public:
     RealVec( const RealVec& orig );
 
     //@}
+    /*! \name Operations on RealVec */
+    //@{
+
+    /*! \brief Append Operator
+     */
+    RealVec& operator<<( const Real& value ) {
+        append( value );
+        return (*this);
+    };
+
+    //@}
     /*! \name Unary Operators */
     //@{
 
@@ -281,6 +292,7 @@ public:
     /*! \brief Return the mean square error of the vector's elements
      */
 	static Real mse( const RealVec& target, const RealVec& actual );
+
 
 protected:
 

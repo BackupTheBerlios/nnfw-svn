@@ -31,8 +31,11 @@ namespace nnfw {
  *    Create a Cluster where the outputs dependes on previous value, or in other words on derivative of outputs
  *  \par Description
  *    This Cluster calculate the outputs accordlying with follow equation:<br>
- *    a0 + a1 * f(x) + a2 * x + a3 * y + a4 * y' + a5 * y'' + ... + aN * y^(n-3) <br>
- *    
+ *    y(t) <- a0 + a1*f(x) + a2*x(t) + a3*y(t-1) + a4*y'(t-1) + a5*y''(t-1) + a6*y'''(t-1) + ... <br>
+ *    Note: L'attivazione delta alla 'Stefano' e' possibile ottenerla configurando i coefficienti nel seguente modo:<br>
+ *    a0 <- 0.0 ; a1 <- delta ; a2 <- 0.0 ; a3 <- 1.0-delta <br>
+ *    ottenendo: <br>
+ *    y(t) <- (delta)*f(x) + (1.0-delta)*y(t-1)
  *  \par Warnings
  */
 class  DDECluster : public Cluster {
@@ -64,10 +67,18 @@ public:
 private:
     //! Coefficient of equation
     RealVec coeff;
-    //! Output Story
-    RealVec* story;
-    //! index of current position of story
-    u_int idstory;
+    //! Derivates of output
+    VectorData< RealVec > ds;
+    //! temporary data for calculation
+    RealVec tmpdata;
+    //! temporary data for calculation
+    RealVec tmpdata2;
+
+    //! Update the derivates of output
+    void updateDs();
+    //! Break the update calculates
+    void breakUpdate();
+
 };
 
 }

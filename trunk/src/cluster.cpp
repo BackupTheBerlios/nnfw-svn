@@ -36,6 +36,7 @@ Cluster::Cluster( u_int numNeurons, const char* name )
     this->numNeurons = numNeurons;
     outputdata.zeroing();
     inputdata.zeroing();
+    accOff = true;
     setNeedReset( false );
 
     //! Allocation for poolUpdater

@@ -29,7 +29,7 @@ namespace nnfw {
  **********************************************/
 
 CopyLinker::CopyLinker( Cluster* from, Cluster* to, CopyMode mode, const char* name )
-    : Linker(name) {
+    : Linker(name), dataFrom(), dataTo() {
     if ( from->size() < to->size() ) {
         dimData = from->size();
     } else {
@@ -40,7 +40,6 @@ CopyLinker::CopyLinker( Cluster* from, Cluster* to, CopyMode mode, const char* n
     // Follow initialization force setMode method to setting datas, otherwise strange automatic compile-time
     // initialization may results in unpredictable behaviour
     this->mode = (CopyMode)-1;
-    viewsIsInit = false;
     setMode( mode );
 }
 
@@ -49,31 +48,26 @@ CopyLinker::~CopyLinker() {
 
 void CopyLinker::setMode( CopyMode cm ) {
     if ( this->mode == cm ) return;
-    if ( viewsIsInit ) {
-        delete ptr_dataFrom;
-        delete ptr_dataTo;
-    }
 
     this->mode = cm;
     switch( mode ) {
     case In2In:
-        ptr_dataFrom = new RealVec( from->inputs(), 0, dimData );
-        ptr_dataTo = new RealVec( to->inputs(), 0, dimData );
+        dataFrom.convertToView( from->inputs(), 0, dimData );
+        dataTo.convertToView( to->inputs(), 0, dimData );
         break;
     case In2Out:
-        ptr_dataFrom = new RealVec( from->inputs(), 0, dimData );
-        ptr_dataTo = new RealVec( to->outputs(), 0, dimData );
+        dataFrom.convertToView( from->inputs(), 0, dimData );
+        dataTo.convertToView( to->outputs(), 0, dimData );
         break;
     case Out2In:
-        ptr_dataFrom = new RealVec( from->outputs(), 0, dimData );
-        ptr_dataTo = new RealVec( to->inputs(), 0, dimData );
+        dataFrom.convertToView( from->outputs(), 0, dimData );
+        dataTo.convertToView( to->inputs(), 0, dimData );
         break;
     case Out2Out:
-        ptr_dataFrom = new RealVec( from->outputs(), 0, dimData );
-        ptr_dataFrom = new RealVec( from->outputs(), 0, dimData );
+        dataFrom.convertToView( from->outputs(), 0, dimData );
+        dataTo.convertToView( to->outputs(), 0, dimData );
         break;
     }
-    viewsIsInit = true;
     return;
 }
 
@@ -82,7 +76,12 @@ CopyLinker::CopyMode CopyLinker::getMode() {
 }
 
 void CopyLinker::update() {
-    ptr_dataFrom->assign( *ptr_dataTo );
+    // check if cluster 'To' needs a reset
+    if ( to->needReset() ) {
+        dataTo.assign( dataFrom );
+    } else {
+        dataTo += dataFrom;
+    }
     return;
 }
 

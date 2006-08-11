@@ -23,22 +23,107 @@
 namespace nnfw {
 
 DDECluster::DDECluster( const RealVec& c, u_int numNeurons, const char* name )
-    : Cluster( numNeurons, name ) {
+    : Cluster( numNeurons, name ), tmpdata(numNeurons), tmpdata2(numNeurons) {
     setCoeff( c );
 }
 
-virtual DDECluster::~DDECluster() {
+DDECluster::~DDECluster() {
     /* Nothing to do */
 }
 
 void DDECluster::setCoeff( const RealVec& c ) {
-/*    coeff.resize( c.size() );
+    coeff.resize( c.size() );
     coeff.assign( c );
-    story.resize( );*/
+    ds.resize( (c.size()>3) ? c.size()-3 : 0 );
+    for( u_int i=0; i<ds.size(); i++ ) {
+        ds[i].resize( size() );
+        ds[i].zeroing();
+    }
 }
 
 void DDECluster::update() {
-    /* Complicato da Implementare !! :-) */
+    u_int csize = coeff.size();
+    if ( csize == 0 ) {
+        // uscita un po' strana!
+        outputs().zeroing();
+        setNeedReset( true );
+        return;
+    }
+
+    // --- tmp <- a0
+    tmpdata.assign( tmpdata.size(), coeff[0] );
+    if ( csize == 1 ) {
+        breakUpdate();
+        return;
+    }
+
+    // --- tmp <- a0 + a1*f(x)
+    if ( isSingleUpdater() ) {
+        updaters()[0]->update( inputs(), tmpdata2 );
+    } else {
+        for ( u_int i = 0; i<size(); i++ ) {
+            updaters()[i]->update( inputs()[i], tmpdata2[i] );
+        }
+    }
+    tmpdata2 *= coeff[1];
+    tmpdata += tmpdata2;
+    if ( csize == 2 ) {
+        breakUpdate();
+        return;
+    }
+
+    // --- tmp <- a0 + a1*f(x) + a2*x
+    tmpdata2.assign_amulx( coeff[2], inputs() );
+    tmpdata += tmpdata2;
+    if ( csize == 3 ) {
+        breakUpdate();
+        return;
+    }
+
+    // --- tmp <- a0 + a1*f(x) + a2*x + a3*y ... aN*y^(n-3)
+    for( u_int i=0; i<ds.size(); i++ ) {
+        tmpdata2.assign_amulx( coeff[i+3], ds[i] );
+        tmpdata += tmpdata2;
+    }
+    breakUpdate();
+    return;
+}
+
+void DDECluster::breakUpdate() {
+    outputs().assign( tmpdata );
+    updateDs();
+    setNeedReset( true );
+}
+
+void DDECluster::updateDs() {
+    if ( ds.size() == 0 ) return;
+    // --- Le derivate sono semplici differenze:
+    // --- y'  = y(t) - y(t-1)
+    // --- y'' = y'(t) - y'(t-1)
+    // ---  ... and so on
+    if ( ds.size() == 1 ) {
+        ds[0].assign( outputs() );
+    } else if ( ds.size() == 2 ) {
+        ds[1].assign_xminusy( outputs(), ds[0] );
+        ds[0].assign( outputs() );
+    } else {
+        // ----- Problemi di questo tipo di calcolo:
+        // *** calcola, cmq, anche la derivata ds.size()+1... l'ultimo tmpdata calcolato prima di uscire.
+        tmpdata.assign( outputs() );
+        for( u_int i=0; i<ds.size(); i++ ) {
+            if ( i%2 == 0 ) {
+                // calcola la derivata i+1 per il ciclo successivo
+                tmpdata2.assign_xminusy( tmpdata, ds[i] );
+                // memorizza il valore della derivata i calcolata al ciclo precedente i-1
+                ds[i].assign( tmpdata );
+            } else {
+                // calcola la derivata i+1 per il ciclo successivo
+                tmpdata.assign_xminusy( tmpdata2, ds[i] );
+                // memorizza il valore della derivata i calcolata al ciclo precedente i-1
+                ds[i].assign( tmpdata2 );
+            }
+        }
+    }
 }
 
 }

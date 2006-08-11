@@ -329,7 +329,8 @@ public:
      */
     void convertToView( VectorData<T>& src, u_int idStart, u_int idEnd ) {
         if ( observed == (&src) ) {
-            nnfwMessage( NNFW_ERROR, "Already view of VectorData passed to convertToView; method ignored" );
+            setView( idStart, idEnd );
+            //nnfwMessage( NNFW_ERROR, "Already view of VectorData passed to convertToView; method ignored" );
             return;
         }
         if ( view ) {

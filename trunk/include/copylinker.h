@@ -102,9 +102,9 @@ public:
     };
 private:
     //! View of source RealVec of copying
-    RealVec *ptr_dataFrom;
+    RealVec dataFrom;
     //! View of destination RealVec of copying
-    RealVec *ptr_dataTo;
+    RealVec dataTo;
     //! True if RealVec views are been initialized
     bool viewsIsInit;
     //! Length of data to be copied

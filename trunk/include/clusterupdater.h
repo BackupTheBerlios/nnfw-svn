@@ -37,20 +37,16 @@ namespace nnfw {
  *
  *  Details...
  */
-class ClusterUpdater
-{
+class ClusterUpdater {
 public:
     //! Destructor
     virtual ~ClusterUpdater() { /* Nothing to do */ };
+
     /*! \brief Calculate the outputs of neurons by the inputs given
-     *
-     *  Details...
      */
     virtual void update( RealVec& inputs, RealVec& outputs );
 
     /*! \brief Calculate the outputs of a single neuron
-     *
-     *  Details...
      */
     virtual void update( Real input, Real &output );
 };

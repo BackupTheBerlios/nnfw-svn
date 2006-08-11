@@ -180,27 +180,21 @@ public:
         return needRst;
     };
 
+    /*! \brief Enable/Disable accumulation mode
+     *  if accumulation is enabled (true) then linkers attached to this Cluster will never resetInput and accumulates data,
+     *  otherwise the inputs will be resetted at each step of neural network
+     */
+    void accumulate( bool mode ) {
+        accOff = !mode;
+    };
+
 protected:
     /*! \brief Set the state of 'needReset'
      *  Used by subclassed into update implementation
      */
     void setNeedReset( bool b ) {
-        needRst = b;
+        needRst = accOff && b;
     };
-
-    /*! \brief Only for special needs during subclass implementation
-     *  See the FakeCluster implemetation for an example
-     */
-//     void changeInputPointerData( Real* newPointer ) {
-//         inputdata = newPointer;
-//     };
-
-    /*! \brief Only for special needs during subclass implementation
-     *  See the FakeCluster implemetation for an example
-     */
-//     void changeOutputPointerData( Real* newPointer ) {
-//         outputdata = newPointer;
-//     };
 
 private:
     u_int numNeurons;
@@ -212,6 +206,10 @@ private:
     bool singleUpd;
     //! True if the inputs needs a reset
     bool needRst;
+    /*! In Accumulated mode the needRst is always false, and then linkers attached to this will never resetInputs
+     *  --- Warns for developers --- accOff == true means NO-ACCUMULATION
+     */
+    bool accOff;
 };
 
 }

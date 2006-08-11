@@ -1,6 +1,6 @@
 TEMPLATE = lib
 TARGET   = ./lib/nnfw
-VERSION  = 0.4.3
+VERSION  = 0.4.5
 
 CONFIG += release staticlib rtti warn_on
 CONFIG -= debug
@@ -78,6 +78,7 @@ HEADERS		= ./include/nnfw.h \
               ./include/simplecluster.h \
               ./include/biasedcluster.h \
               ./include/fakecluster.h \
+              ./include/ddecluster.h \
 			  ./include/clusterupdater.h \
               ./include/derivableclusterupdater.h \
 			  ./include/libclusterupdaters.h \
@@ -97,6 +98,7 @@ SOURCES		= ./src/cluster.cpp \
               ./src/simplecluster.cpp \
               ./src/biasedcluster.cpp \
               ./src/fakecluster.cpp \
+              ./src/ddecluster.cpp \
               ./src/clusterupdater.cpp \
               ./src/libclusterupdaters.cpp \
               ./src/matrixlinker.cpp \

@@ -137,7 +137,6 @@ std::ostream& operator<<(std::ostream& stream, const RealVec& v) {
 	for ( u_int i = 0; i < v.size(); i++ ) {
 		stream << v[i] << "\t";
 	}
-	stream << std::endl;
 	return stream;
 }
 
