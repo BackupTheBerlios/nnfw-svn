@@ -155,8 +155,7 @@ public:
         if ( view ) {
             observed->delObserver( this );
         } else {
-            // ---- QUESTO DELETE DA PROBLEMI ... PERCHE' ????
-            //delete []data;
+            delete []data;
         }
     }
     //@}
