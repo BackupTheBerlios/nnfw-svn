@@ -62,6 +62,20 @@ public:
         return (*this);
     };
 
+    //! \brief Transpose this RealMat
+    RealMat& transpose() {
+        Real tmp;
+        RealMat& self = *this;
+        for( u_int i=0; i<rows(); i++ ) {
+            for( u_int j=i+1; j<cols(); j++ ) {
+                tmp = self[i][j];
+                self[i][j] = self[j][i];
+                self[j][i] = tmp;
+            }
+        }
+        return (*this);
+    };
+
     //@}
     /*! \name Binary Operators */
     //@{
@@ -151,9 +165,15 @@ public:
      */
     static RealVec& mul( RealVec& y, const RealMat& m, const RealVec& x );
 
-    // ****************************
-    // *** MATH FUNCTION **********
-    // ****************************
+    //@}
+    /*! \name Matrix-Matrix Operators */
+    //@{
+
+
+    //@}
+    /*! \name Math Functions */
+    //@{
+
     /*! \brief Exponential
      */
     RealMat& exp();
@@ -170,6 +190,8 @@ public:
     /*! \brief Element Inversion
      */
     RealMat& inv();
+
+    //@}
 
 };
 

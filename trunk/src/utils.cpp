@@ -40,7 +40,7 @@ BaseNeuralNet* feedForwardNet( U_IntVec layers, const char* clusterType, const c
     u_int mlCount = 1;
     for( u_int i=0; i<layers.size(); i++ ) {
         sprintf( buf, "%s%d", clusterType, clCount );
-        curr = Factory::createCluster( clusterType, layers[i], buf );
+        curr = Factory::createCluster( clusterType, ClusterCreatorParameters( layers[i], buf ) );
         if ( i == 0 ) {
             net->addCluster( curr, true );
         } else if ( i == (layers.size()-1) ) {
@@ -52,7 +52,7 @@ BaseNeuralNet* feedForwardNet( U_IntVec layers, const char* clusterType, const c
         ord << curr;
         if ( prec != 0 ) {
             sprintf( buf, "%s%d", linkerType, mlCount );
-            Linker* ml = Factory::createLinker( linkerType, prec, curr, buf );
+            Linker* ml = Factory::createLinker( linkerType, LinkerCreatorParameters( prec, curr, buf ) );
             net->addLinker( ml );
             Updatable* tmp = ord[ord.size()-1];
             ord[ord.size()-1] = ml;

@@ -21,6 +21,7 @@
 #define NNFWFACTORY_H
 
 #include "types.h"
+#include "clonable.h"
 #include <map>
 #include <string>
 
@@ -33,25 +34,53 @@
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {
 
-/*! \brief Class for encapsulate special parameter to pass to Creator subclasses
+/*! \brief Class for encapsulate special parameter to pass to ClusterCreator class and its subclasses
  */
-class CreatorParameters {
+class ClusterCreatorParameters {
+public:
+    //! Constructor
+    ClusterCreatorParameters( u_int numN, const char* name ) {
+        this->numNeurons = numN;
+        u_int size = strlen(name);
+        this->name = new char[size+1];
+        strcpy( this->name, name );
+    };
+    //! \brief Number of neurons
+    u_int numNeurons;
+    //! \brief Name of Cluster
+    char* name;
+};
+
+/*! \brief Class for encapsulate special parameter to pass to LinkerCreator class and its subclasses
+ */
+class LinkerCreatorParameters {
+public:
+    //! Constructor
+    LinkerCreatorParameters( Cluster* from, Cluster* to, const char* name ) {
+        this->from = from;
+        this->to = to;
+        u_int size = strlen(name);
+        this->name = new char[size+1];
+        strcpy( this->name, name );
+    };
+    //! \brief Cluster 'from'
+    Cluster* from;
+    //! \brief Cluster 'to'
+    Cluster* to;
+    //! \brief Name of Linker
+    char* name;
 };
 
 /*! \brief ClusterCreator base class
  */
-class ClusterCreator {
+class ClusterCreator : public Clonable {
 public:
     //! \brief for suppresing annoying warnings ;-)
     virtual ~ClusterCreator() { };
 
-    /*! \brief create a new Cluster with default parameters
+    /*! \brief create a new Cluster
      */
-    virtual Cluster* create( u_int numNeurons, const char* name = "unnamed" ) const = 0;
-
-    /*! \brief create a new Cluster with specified parameters
-     */
-    virtual Cluster* create( u_int numNeurons, const CreatorParameters& param ) const = 0;
+    virtual Cluster* create( const ClusterCreatorParameters& param ) const = 0;
 
     /*! \brief Virtual Copy-Constructor
      */
@@ -60,18 +89,14 @@ public:
 
 /*! \brief LinkerCreator base class
  */
-class LinkerCreator {
+class LinkerCreator : public Clonable {
 public:
     //! \brief for suppresing annoying warnings ;-)
     virtual ~LinkerCreator() { };
 
-    /*! \brief create a new Cluster with default parameters
+    /*! \brief create a new Linker
      */
-    virtual Linker* create( Cluster* from, Cluster* to, const char* name = "unnamed" ) const = 0;
-
-    /*! \brief create a new Cluster with specified parameters
-     */
-    virtual Linker* create( Cluster* from, Cluster* to, const CreatorParameters& param ) const = 0;
+    virtual Linker* create( const LinkerCreatorParameters& param ) const = 0;
 
     /*! \brief Virtual Copy-Constructor
      */
@@ -85,19 +110,21 @@ public:
 
     /*! \brief Create a Cluster of class type
      */
-    static Cluster* createCluster( const char* type, u_int numNeurons, const char* name = "unnamed" );
+    static Cluster* createCluster( const char* type, const ClusterCreatorParameters& param );
 
     /*! \brief Create a Linker of class type
      */
-    static Linker* createLinker( const char* type, Cluster* from, Cluster* to, const char* name = "unnamed" );
+    static Linker* createLinker( const char* type, const LinkerCreatorParameters& param );
 
     /*! \brief Register a new Cluster type
+     *
      *  Return true on successuful insertion<br>
      *  It use the clone() method for copying the ClusterCreator
      */
     static bool registerCluster( const ClusterCreator& c, const char* type );
 
     /*! \brief Register a new Linker type
+     *
      *  Return true on successuful insertion<br>
      *  It use the clone() method for copying the LinkerCreator
      */

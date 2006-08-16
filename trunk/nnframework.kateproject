@@ -32,7 +32,7 @@ Files=test2.cpp/test2.pro
 
 [Dir include]
 Dirs=
-Files=clusterupdater.h/libclusterupdaters.h/messages.h/neuralnet.h/nnfw.h/random.h/types.h/utils.h/cluster.h/fakecluster.h/simplecluster.h/linker.h/copylinker.h/matrixlinker.h/updatable.h/derivableclusterupdater.h/blockslearning.h/learningnetwork.h/biasedcluster.h/realvec.h/ddecluster.h/sparsematrixlinker.h/realmat.h/vectordata.h/observ.h/memutils.h/nnfwfactory.h/primtypes.h/matrixdata.h
+Files=clusterupdater.h/libclusterupdaters.h/messages.h/neuralnet.h/nnfw.h/random.h/types.h/utils.h/cluster.h/fakecluster.h/simplecluster.h/linker.h/copylinker.h/matrixlinker.h/updatable.h/derivableclusterupdater.h/blockslearning.h/learningnetwork.h/biasedcluster.h/realvec.h/ddecluster.h/sparsematrixlinker.h/realmat.h/vectordata.h/observ.h/memutils.h/nnfwfactory.h/primtypes.h/matrixdata.h/clonable.h
 
 [Dir src]
 Dirs=

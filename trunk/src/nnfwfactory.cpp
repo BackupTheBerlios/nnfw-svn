@@ -27,11 +27,8 @@ namespace nnfw {
 
 class SimpleClusterCreator : public ClusterCreator {
 public:
-    virtual Cluster* create( u_int numNeurons, const char* name ) const {
-        return (new SimpleCluster( numNeurons, name ));
-    };
-    virtual Cluster* create( u_int numNeurons, const CreatorParameters& ) const {
-        return (new SimpleCluster( numNeurons ));
+    virtual Cluster* create( const ClusterCreatorParameters& p ) const {
+        return (new SimpleCluster( p.numNeurons, p.name ));
     };
     virtual ClusterCreator* clone() const {
         return (new SimpleClusterCreator(*this));
@@ -40,11 +37,8 @@ public:
 
 class BiasedClusterCreator : public ClusterCreator {
 public:
-    virtual Cluster* create( u_int numNeurons, const char* name ) const {
-        return (new BiasedCluster( numNeurons, name ));
-    };
-    virtual Cluster* create( u_int numNeurons, const CreatorParameters& ) const {
-        return (new BiasedCluster( numNeurons ));
+    virtual Cluster* create( const ClusterCreatorParameters& p ) const {
+        return (new BiasedCluster( p.numNeurons, p.name ));
     };
     virtual ClusterCreator* clone() const {
         return (new BiasedClusterCreator(*this));
@@ -53,11 +47,8 @@ public:
 
 class DDEClusterCreator : public ClusterCreator {
 public:
-    virtual Cluster* create( u_int numNeurons, const char* name ) const {
-        return (new DDECluster( RealVec(), numNeurons, name ));
-    };
-    virtual Cluster* create( u_int numNeurons, const CreatorParameters& ) const {
-        return (new DDECluster( RealVec(), numNeurons ));
+    virtual Cluster* create( const ClusterCreatorParameters& p ) const {
+        return (new DDECluster( RealVec(), p.numNeurons, p.name ));
     };
     virtual ClusterCreator* clone() const {
         return (new DDEClusterCreator(*this));
@@ -66,31 +57,28 @@ public:
 
 class MatrixLinkerCreator : public LinkerCreator {
 public:
-    virtual Linker* create( Cluster* from, Cluster* to, const char* name ) const {
-        return (new MatrixLinker( from, to, name ));
-    };
-    virtual Linker* create( Cluster* from, Cluster* to, const CreatorParameters& ) const {
-        return (new MatrixLinker( from, to ));
+    virtual Linker* create( const LinkerCreatorParameters& p ) const {
+        return (new MatrixLinker( p.from, p.to, p.name ));
     };
     virtual LinkerCreator* clone() const {
         return (new MatrixLinkerCreator(*this));
     };
 };
 
-Cluster* Factory::createCluster( const char* type, u_int numNeurons, const char* name ) {
+Cluster* Factory::createCluster( const char* type, const ClusterCreatorParameters& p ) {
     if ( !isInit ) { initFactory(); };
     std::string key(type);
     if ( clustertypes.count( key ) ) {
-        return clustertypes[key]->create( numNeurons, name );
+        return clustertypes[key]->create( p );
     }
     return 0;
 }
 
-Linker* Factory::createLinker( const char* type, Cluster* from, Cluster* to, const char* name ) {
+Linker* Factory::createLinker( const char* type, const LinkerCreatorParameters& p ) {
     if ( !isInit ) { initFactory(); };
     std::string key(type);
     if( linkertypes.count( key ) ) {
-        return linkertypes[key]->create( from, to, name );
+        return linkertypes[key]->create( p );
     }
     return 0;
 }
@@ -118,7 +106,7 @@ bool Factory::registerLinker( const LinkerCreator& c, const char* type ) {
 void Factory::initFactory() {
     clustertypes["SimpleCluster"] = new SimpleClusterCreator();
     clustertypes["BiasedCluster"] = new BiasedClusterCreator();
-    clustertypes["DDECluster"] = new BiasedClusterCreator();
+    clustertypes["DDECluster"] = new DDEClusterCreator();
     linkertypes["MatrixLinker"] = new MatrixLinkerCreator();
     isInit = true;
 }
