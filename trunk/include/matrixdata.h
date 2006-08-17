@@ -328,7 +328,7 @@ private:
     MatrixData* observed;
 
     //! Notify to viewers that 'data' is changed
-    virtual void notify() {
+    virtual void notify( const NotifyEvent& ) {
         // --- Propagate Notify to sub-viewers
         notifyAll();
     };

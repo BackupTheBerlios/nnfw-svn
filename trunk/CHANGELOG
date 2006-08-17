@@ -1,0 +1,25 @@
+==== Legend of this File ====
+ - Each SVN commit is highlighted by an entry row of following template:
+
+    ==> #revision - dd/mm/yyyy <==
+
+ - Each change comment starts with a symbols indicating the type, followed by
+    author name within brakets and the comment:
+
+S <mave> comment goes here
+
+   where S can be one of the following symbols:
+    '+' : means that something has been added to NNFW
+    '-' : means that something has been dropped from NNFW
+    'B' : means a BugFix
+    'C' : means that something has been changed (e.g. implementation of a Class or a signature method)
+==== End of Legend ====
+
+    ==> 82 - 17/08/2006 <==
+
+B <mave> data inconsistence after destroying a VectorData before its views
+C <mave> Observer/Observable pattern now can notify different events
++ <mave> CMake project file CMakeLists.txt
++ <mave> this CHANGELOG
+
+    ==> 81 - 16/08/2006 <==

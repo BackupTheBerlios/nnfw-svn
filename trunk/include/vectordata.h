@@ -152,6 +152,7 @@ public:
     /*! \brief Destructor
      */
     ~VectorData() {
+        notifyAll( NotifyEvent( datadestroying ) );
         if ( view ) {
             observed->delObserver( this );
         } else {
@@ -283,7 +284,7 @@ public:
         }
         vsize = newsize;
         // --- Notify the viewers
-        notifyAll();
+        notifyAll( NotifyEvent( datachanged ) );
     };
 
     /*! \brief Append an element; the dimesion increase by one
@@ -321,7 +322,7 @@ public:
         data = (observed->data) + idstart;
         vsize = idend - idstart;
         // --- Propagate Notify to sub-viewers
-        notifyAll();
+        notifyAll( NotifyEvent( datachanged ) );
     };
 
     /*! \brief Convert this VectorData to a view of VectorData src passed
@@ -430,7 +431,7 @@ public:
                 data[id] = data[id+1];
             }
             vsize = vsize-1;
-            notifyAll();
+            notifyAll( NotifyEvent( datachanged ) );
         }
         return (pos);
     };
@@ -442,7 +443,7 @@ public:
             nnfwMessage( NNFW_ERROR, "you can't clear a VectorData view" );
         } else {
             vsize = 0;
-            notifyAll();
+            notifyAll( NotifyEvent( datachanged ) );
         }
     };
 
@@ -511,11 +512,13 @@ public:
 protected:
 
     /*! \brief Raw Data
-     *   Ma Viene USATO ????
      */
     T* rawdata() const {
         return data;
     };
+
+    //! Type of Notification
+    typedef enum { datachanged = 1, datadestroying = 2 } t_notify;
 
     //! The actual size of VectorData
     u_int vsize;
@@ -534,17 +537,34 @@ protected:
     VectorData* observed;
 
     //! Notify to viewers that 'data' is changed
-    virtual void notify() {
-        if ( idstart > observed->vsize || idend > observed->vsize ) {
-            nnfwMessage( NNFW_ERROR, "Indexes become invalid after data changing; using 0 and viewed->size()" );
+    virtual void notify( const NotifyEvent& event ) {
+        switch( event.type() ) {
+        case datachanged:
+            if ( idstart > observed->vsize || idend > observed->vsize ) {
+                nnfwMessage( NNFW_ERROR, "Indexes become invalid after data changing; using 0 and viewed->size()" );
+                idstart = 0;
+                idend = observed->size();
+            }
+            data = (observed->data) + idstart;
+            vsize = idend - idstart;
+            allocated = 0;
+            break;
+        case datadestroying:
+            nnfwMessage( NNFW_WARNING, "Destroying a VectorData before its views!!!" );
+            // --- reconvert to a regular VectorData with size zero
+            view = false;
+            data = 0;
+            vsize = 0;
+            allocated = 0;
+            observed = 0;
             idstart = 0;
-            idend = observed->size();
+            idend = 0;
+            break;
+        default:
+            break;
         }
-        data = (observed->data) + idstart;
-        vsize = idend - idstart;
-        allocated = 0;
         // --- Propagate Notify to sub-viewers
-        notifyAll();
+        notifyAll( NotifyEvent( datachanged ) );
     };
 
 };

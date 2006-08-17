@@ -31,6 +31,25 @@
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {
 
+/*! \brief Event Class
+ *  \par Motivation
+ *  Incapsulate information about 'the why of notification to Observer by Observable'
+ *  \par Description
+ *  \par Warnings
+ */
+class NotifyEvent {
+public:
+    //! Constructor
+    NotifyEvent( int type = 0 ) : etype(type) { /* Nothing to do */ };
+    //! Return the type of this Notification Event 
+    int type() const {
+        return etype;
+    };
+protected:
+    //! type of event
+    int etype;
+};
+
 /*! \brief Observer Class
  *  \par Motivation
  *  \par Description
@@ -48,7 +67,7 @@ public:
 
     /*! \brief called when the Observable notifies changes
      */
-    virtual void notify() = 0;
+    virtual void notify( const NotifyEvent& ) = 0;
 };
 
 
@@ -87,11 +106,11 @@ public:
 
     /*! \brief Notify the event i-th
      */
-    void notifyAll() {
+    void notifyAll( const NotifyEvent& event = NotifyEvent() ) {
         std::list<Observer*>::iterator it = observers.begin();
         std::list<Observer*>::iterator end = observers.end();
         while( it != end ) {
-            (*it)->notify();
+            (*it)->notify( event );
             it++;
         }
     };
