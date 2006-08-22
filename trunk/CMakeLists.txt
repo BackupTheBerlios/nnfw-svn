@@ -35,11 +35,11 @@ IF (UNIX)
     ENDIF ( NNFW_CONFIG MATCHES gsl )
 
     ### --- mkl check
-    SET( MKL_PATH "" CACHE INTERNAL "MKL_PATH" )
     IF ( NNFW_CONFIG MATCHES mkl )
         IF ( NOT MKL_CACHED )
             EXEC_PROGRAM( "rpm -qa | grep mkl" OUTPUT_VARIABLE INTEL_MKL )
-            EXEC_PROGRAM( "rpm -ql ${INTEL_MKL} | grep include$" OUTPUT_VARIABLE MKL_PATH )
+            EXEC_PROGRAM( "rpm -ql ${INTEL_MKL} | grep include$" OUTPUT_VARIABLE MKL_INC )
+            SET( MKL_PATH ${MKL_INC} CACHE INTERNAL "MKL_PATH" )
             SET( MKL_CACHED TRUE CACHE INTERNAL "MKL_CACHED" )
         ENDIF ( NOT MKL_CACHED )
         ADD_DEFINITIONS( "-DNNFW_USE_MKL" )
