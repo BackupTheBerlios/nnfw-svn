@@ -1,12 +1,15 @@
 Copyright 2005-2006 Gianluca Massera <gmassera@istc.cnr.it>
 
 Current Maintainers:
-    * Gianluca Massera <gmassera@istc.cnr.it>
+    * Gianluca Massera <mave@mail.berlios.de>
 
-Thanks: (surname alphabetically sorted)
+Thanks: ( randomly ordered ;-) )
     * Federico Cecconi,
     * Marco Mirolli:     for consulting about project design and developing windows library
+    * Francesco Mannella: implementation of RealVec::norm()
+    * Eduardo Coutinho: feedback about real usage of NNFW in research
 
 Thanks to all people involved in follow projects:
+    * CMake: very useful tool for cross-platform compiling
     * trolltech QT library: a must for developing cross-platform application
         ( http://www.trolltech.com )

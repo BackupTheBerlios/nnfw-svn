@@ -89,6 +89,23 @@ RealVec& RealVec::inv() {
     return (*this);
 }
 
+Real RealVec::norm() {
+#ifdef NNFW_USE_MKL
+#ifndef NNFW_DOUBLE_PRECISION
+    return cblas_snrm2( vsize, data, 1 );
+#else
+    return cblas_dnrm2( vsize, data, 1 );
+#endif
+#else
+    Real res = 0.0;
+    for( u_int i=0; i<vsize; i++ ) {
+        res += data[i]*data[i];
+    }
+    res = std::sqrt( res );
+    return res;
+#endif
+}
+
 void RealVec::createAllBinaries( RealVec* v, unsigned long int pats, u_int dims ) {
 //#ifdef NNFW_DEBUG
 	unsigned long int totPat = 1;

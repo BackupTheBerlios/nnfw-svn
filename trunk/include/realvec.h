@@ -211,6 +211,10 @@ public:
      */
     RealVec& inv();
 
+    /*! \brief vector norm: ||x||
+     */
+    Real norm();
+
     /*! \brief Equation: x-y
      */
     void assign_xminusy( const RealVec& x, const RealVec& y ) {

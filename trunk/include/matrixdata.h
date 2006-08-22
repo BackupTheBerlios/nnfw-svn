@@ -59,6 +59,40 @@ public:
         view = false;
     };
 
+    /*! \brief Construct a Matrix view from VectorData passed
+     *  \param src is the VectorData from which this method constructs a Matrix view.
+     *         The VectorData must be the same as specified in template constructing ( class Vec template parameters )
+     *
+     *  The view represent the piece of src delimited by rstart and rend as a MatrixData with nrows and ncols.
+     *  So, the follow assert must be accomplished: rend-rstart == nrows*ncols
+     *  \par Warnings:
+     *  When a VectorData vec is viewed through a MatrixData mat, then a resizing of vec can lead to some strange results;
+     *  In fact, the automatic adjustment of mat after a vec resizing is a bit ambiguous because is not clear which dimensions
+     *  sets. So, for diambiguous the mat view will be adjusted mantaining the same numbers of the rows and adding or removing
+     *  columns trying to fit the new dimension of vec. If is not possibile this can lead to views that doesn't represent
+     *  the whole vec.
+     */
+    MatrixData( Vec& src, u_int rstart, u_int rend, u_int rows, u_int cols )
+        : Observer(), Observable(), data(src, rstart, rend), rowView() {
+        // --- Check the validity of dimensions
+        if ( data.size() != rows*cols ) {
+            nnfwMessage( NNFW_ERROR, "Wrongs dimensions specified in MatrixData view constructor; This MatrixData will be invalidate" );
+            rows = 0;
+            cols = 0;
+        }
+        // --- view constructing
+        view = true;
+        // the local variable data is observed by this object
+        data.addObserver( this );
+        nrows = rows;
+        ncols = cols;
+        tsize = nrows*ncols;
+        rowView.resize( tsize );
+        for( u_int i=0; i<nrows; i++ ) {
+            rowView[i].convertToView( data, i*ncols, (i+1)*ncols );
+        }
+    };
+
     /*! \brief Destructor
      */
     ~MatrixData() {
@@ -82,8 +116,39 @@ public:
         return tsize;
     };
 
+    /*! \brief Return True if it is a MatrixData view
+     */
+    bool isView() const {
+        return view;
+    };
+
+    /*! \brief Equal Operator
+     */
+    bool operator==( const MatrixData<T,Vec>& b ) {
+        // --- WARNING: don't implement this method using the operator== of private data vector
+        // ---    perche' se la MatrixData e' una view, dopo un resizing sbagliato del vettore origine
+        // ---    potrebbe rimanere una inconsistenza critica nei dati
+        if ( this->size() != b.size() ) return false;
+        for( u_int i=0; i<size(); i++ ) {
+            if ( this->data[i] != b.data[i] ) {
+                return false;
+            }
+        }
+        return true;
+    };
+
+    /*! \brief Not-Equal Operator
+     */
+    bool operator!=( const VectorData<T>& b ) {
+        return !( *this == b );
+    };
+
     //! Resize the matrix
     void resize( u_int rows, u_int cols ) {
+        if ( view ) {
+            nnfwMessage( NNFW_ERROR, "you can't resize a MatrixData view - use setView instead" );
+            return;
+        }
         nrows = rows;
         ncols = cols;
         tsize = nrows*ncols;
@@ -97,7 +162,15 @@ public:
                 rowView[i].convertToView( data, i*ncols, (i+1)*ncols );
             }
         }
+        // --- Notify the viewers
+        // at this time, the notification has been launched by data.resize calling
+        // the following methods will make sense only when Matrix-to-Matrix view will be implemented
+        //notifyAll( NotifyEvent( datachanged ) );
     };
+
+    //@}
+    /*! \name Accessing Operators */
+    //@{
 
     //! Return a reference to element at position (row, col)
     T& at( u_int row, u_int col ) {
@@ -113,10 +186,6 @@ public:
 #endif
         return rowView[row][col];
     };
-
-    //@}
-    /*! \name Accessing Operators */
-    //@{
 
     //! Return a Const reference to element at position (row, col)
     const T& at( u_int row, u_int col ) const {
@@ -168,7 +237,7 @@ public:
             return (*this);
         }
 #endif
-        data.assign( src.data );
+        data.assign( src.data, tsize );
         return (*this);
     };
 
@@ -216,7 +285,11 @@ public:
     /*! \brief Clear: reduce the dimension to zero-zero matrix
      */
     void clear() {
-        resize( 0, 0 );
+        if ( view ) {
+            nnfwMessage( NNFW_ERROR, "you can't clear a MatrixData view" );
+        } else {
+            resize( 0, 0 );
+        }
     };
 
     /*! \brief Iterator at initial position
@@ -246,13 +319,14 @@ public:
     class matrixdataIterator : public std::iterator<std::bidirectional_iterator_tag,T,ptrdiff_t> {
     public:
         //! create the iterator
-        matrixdataIterator( MatrixData& data, u_int startId = 0 ) : vecdata(data.data), id(startId) { /*nothing to do*/ };
+        matrixdataIterator( MatrixData& data, u_int startId = 0 ) : vecdata(data.data), id(startId), tsize(data.tsize) { /*nothing to do*/ };
         //! Copy-Constructor
-        matrixdataIterator( const matrixdataIterator& src ) : vecdata(src.vecdata), id(src.id) { /* nothing to do */  };
+        matrixdataIterator( const matrixdataIterator& src ) : vecdata(src.vecdata), id(src.id), tsize(src.tsize) { /* nothing to do */  };
         //! Assignement operator
         matrixdataIterator& operator=( const matrixdataIterator& src ) {
             vecdata = src.vecdata;
             id = src.id;
+            tsize = src.tsize;
             return (*this);
         };
         //! equal operator
@@ -273,12 +347,12 @@ public:
         };
         //! Forward movement
         matrixdataIterator& operator++() {
-            id = (id < vecdata.size()) ? id+1 : vecdata.size();
+            id = (id < tsize) ? id+1 : tsize;
             return (*this);
         };
         //! Forward movement
         const matrixdataIterator& operator++() const {
-            id = (id < vecdata.size()) ? id+1 : vecdata.size();
+            id = (id < tsize) ? id+1 : tsize;
             return (*this);
         };
         //! Backward movement
@@ -300,6 +374,8 @@ public:
         Vec& vecdata;
         //! current index
         u_int id;
+        //! Dimension of data - same as MatrixData::size()
+        u_int tsize;
     };
     //@}
 
@@ -324,13 +400,41 @@ private:
 
     //! if is a MatrixData view
     bool view;
-    //! Observed MatrixData
-    MatrixData* observed;
 
     //! Notify to viewers that 'data' is changed
-    virtual void notify( const NotifyEvent& ) {
+    virtual void notify( const NotifyEvent& event ) {
+        switch( event.type() ) {
+        case Vec::datachanged:
+            nnfwMessage( NNFW_INFORMATION, "Arrange a MatrixData view after a VectorData resizing can lead to inconsistent settings - see documentation if you not sure" );
+            ncols = data.size() / nrows ;
+            if ( ncols == 0 ) {
+                nrows = 0;
+                ncols = 0;
+                tsize = 0;
+                rowView.clear();
+            } else {
+                tsize = ncols*nrows;
+                // --- Adjust the view of rows
+                for( u_int i=0; i<nrows; i++ ) {
+                    rowView[i].setView( i*ncols, (i+1)*ncols );
+                }
+            }
+            break;
+        case Vec::datadestroying:
+            nnfwMessage( NNFW_WARNING, "Destroying a VectorData before its views!!!" );
+            // --- reconvert to a regular MatrixData with size zero
+            view = false;
+            nrows = 0;
+            ncols = 0;
+            tsize = 0;
+            rowView.clear();
+            break;
+        default:
+            break;
+        }
         // --- Propagate Notify to sub-viewers
-        notifyAll();
+        // --- Inutile fino a che non si implementano le viste tra Matrici
+        //notifyAll( matdatachanged );
     };
 
 };

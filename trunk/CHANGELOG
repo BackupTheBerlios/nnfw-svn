@@ -15,6 +15,14 @@ S <mave> comment goes here
     'C' : means that something has been changed (e.g. implementation of a Class or a signature method)
 ==== End of Legend ====
 
+    ==> 83 - 22/08/2006 <==
+
+C <mave> Improved CMakeLists.txt
++ <mave> Added MatrixData view functionality for viewing VectorData as MatrixData
+C <mave> VectorData inherit publically from Observable now
++ <mave> Added a VectorData::assign() method for copying data between VectorData with different sizes
++ <mave> Added RealVec::norm() method, thanks to Francesco
+
     ==> 82 - 17/08/2006 <==
 
 B <mave> data inconsistence after destroying a VectorData before its views

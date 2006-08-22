@@ -34,6 +34,10 @@ RealMat::RealMat( u_int rows, u_int cols )
     : MatrixData<Real, RealVec>( rows, cols ) {
 }
 
+RealMat::RealMat( RealVec& src, u_int rstart, u_int rend, u_int rows, u_int cols )
+    : MatrixData<Real, RealVec>(src, rstart, rend, rows, cols) {
+}
+
 RealMat::~RealMat() {
     // --- Nothing to do
 }

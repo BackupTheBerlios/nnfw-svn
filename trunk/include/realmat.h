@@ -48,6 +48,12 @@ public:
      */
     RealMat( u_int rows, u_int cols );
 
+    /*! \brief Construct a Matrix view from VectorData passed
+     *  \param src is the RealVec from which this method constructs a RealMat view.
+     *  <b>See Documentation about MatrixData view constructor</b>
+     */
+    RealMat( RealVec& src, u_int rstart, u_int rend, u_int rows, u_int cols );
+
     /*! \brief Destructor
      */
     ~RealMat();

@@ -39,8 +39,11 @@ namespace nnfw {
  *  \par Warnings
  */
 template<class T>
-class VectorData : private Observer, private Observable {
+class VectorData : private Observer, public Observable {
 public:
+    //! Type of Notification
+    typedef enum { datachanged = 1, datadestroying = 2 } t_notify;
+
     /*! \name Constructors */
     //@{
 
@@ -193,6 +196,7 @@ public:
     bool operator!=( const VectorData<T>& b ) {
         return !( *this == b );
     };
+
     //@}
     /*! \name Operations on VectorData */
     //@{
@@ -236,6 +240,21 @@ public:
         }
 #endif
         memoryCopy( data, src.data, vsize );
+        return (*this);
+    };
+
+    /*! \brief Assignment method. The size of data to be assigned is specified by size parameter.
+     *
+     *  This method allow to copy data from a VectorData to another VectorData with different size.
+     */
+    VectorData<T>& assign( const VectorData<T>& src, u_int sizec ) {
+#ifdef NNFW_DEBUG
+        if ( vsize < sizec || src.size() < sizec ) {
+            nnfwMessage( NNFW_ERROR, "Wrong size specified in assign method" );
+            return (*this);
+        }
+#endif
+        memoryCopy( data, src.data, sizec );
         return (*this);
     };
 
@@ -516,9 +535,6 @@ protected:
     T* rawdata() const {
         return data;
     };
-
-    //! Type of Notification
-    typedef enum { datachanged = 1, datadestroying = 2 } t_notify;
 
     //! The actual size of VectorData
     u_int vsize;

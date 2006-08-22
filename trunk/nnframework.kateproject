@@ -68,7 +68,7 @@ Files=test6.cpp/test6.pro
 
 [Project Dir]
 Dirs=include/src/apidoc
-Files=Doxyfile/nnframework.pro/GPL.txt/CREDITS/INSTALL/README
+Files=Doxyfile/nnframework.pro/GPL.txt/CREDITS/INSTALL/README/CHANGELOG/CMakeLists.txt
 
 [Project File]
 Name=NNFramework
