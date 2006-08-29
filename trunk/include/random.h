@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA  *
  ********************************************************************************/
 
-#ifndef nnfwRANDOM_H
-#define nnfwRANDOM_H
+#ifndef NNFWRANDOM_H
+#define NNFWRANDOM_H
 
 /*! \file
  *  \brief This file contains the Random Class

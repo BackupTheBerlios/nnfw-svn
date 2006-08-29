@@ -90,7 +90,7 @@ void GradientBiasedCluster::learn() {
     // --- calcolo del delta; error * derivataFunzioneAttivazione( input_netto )
     const RealVec& in = cl->inputs();
     for( u_int i=0; i<error.size(); i++ ) {
-        const DerivableClusterUpdater* dup = dynamic_cast<const DerivableClusterUpdater*>( cl->getUpdater( i ) );
+        const DerivableClusterUpdater* dup = dynamic_cast<const DerivableClusterUpdater*>( cl->getUpdater() );
 #ifdef NNFW_DEBUG
 		if ( dup == 0 ) {
 			nnfwMessage( NNFW_ERROR, "Error: you are trying to do the derivative of an underivable function!" );

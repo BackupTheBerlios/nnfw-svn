@@ -58,13 +58,7 @@ void DDECluster::update() {
     }
 
     // --- tmp <- a0 + a1*f(x)
-    if ( isSingleUpdater() ) {
-        updaters()[0]->update( inputs(), tmpdata2 );
-    } else {
-        for ( u_int i = 0; i<size(); i++ ) {
-            updaters()[i]->update( inputs()[i], tmpdata2[i] );
-        }
-    }
+    getUpdater()->update( inputs(), tmpdata2 );
     tmpdata2 *= coeff[1];
     tmpdata += tmpdata2;
     if ( csize == 2 ) {

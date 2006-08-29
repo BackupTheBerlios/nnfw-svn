@@ -39,45 +39,17 @@ Cluster::Cluster( u_int numNeurons, const char* name )
     accOff = true;
     setNeedReset( false );
 
-    //! Allocation for poolUpdater
-    poolUpdater = new ( ClusterUpdater ( *[this->numNeurons] ) );
     //! SigmoidUpdater as Default Updater
-    setUpdater( new SigmoidUpdater( 1.0 ) );
+    updater = new SigmoidUpdater( 1.0 );
 }
 
 Cluster::~Cluster() {
-    delete []poolUpdater;
+    delete updater;
 }
 
-void Cluster::setUpdater( ClusterUpdater* up ) {
-    singleUpdater = up;
-    singleUpd = true;
-    // Copy this updater to poolUpdater for future settings by setUpdater( up, numNeuron )
-    //  and for simpler implementation of getUpdater
-    for( u_int i = 0; i<numNeurons; i++ ) {
-        poolUpdater[i] = singleUpdater;
-    }
-}
-
-void Cluster::setUpdater( ClusterUpdater* up, u_int neuron ) {
-    if ( neuron >= numNeurons ) {
-        char msg[100];
-        sprintf( msg, "The neuron %u doesn't exists! The operation setUpdater will be ignored", neuron );
-        nnfwMessage( NNFW_ERROR, msg );
-        return;
-    }
-    poolUpdater[neuron] = up;
-    singleUpd = false;
-}
-
-const ClusterUpdater* Cluster::getUpdater( u_int neuron ) const {
-    if ( neuron >= numNeurons ) {
-        char msg[100];
-        sprintf( msg, "The neuron %u doesn't exists! The operation getUpdater will return null-pointer", neuron );
-        nnfwMessage( NNFW_ERROR, msg );
-        return 0;
-    }
-    return poolUpdater[ neuron ];
+void Cluster::setUpdater( const ClusterUpdater& up ) {
+    delete updater;
+    updater = up.clone();
 }
 
 void Cluster::setInput( u_int neuron, Real value ) {

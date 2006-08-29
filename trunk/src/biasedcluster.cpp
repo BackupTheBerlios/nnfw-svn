@@ -38,13 +38,7 @@ BiasedCluster::~BiasedCluster() {
 
 void BiasedCluster::update() {
     tempdata.assign_xminusy( inputs(), biases() );
-    if ( isSingleUpdater() ) {
-        updaters()[0]->update( tempdata, outputs() );
-    } else {
-        for ( u_int i = 0; i<size(); i++ ) {
-           updaters()[i]->update( tempdata[i], outputs()[i] );
-        }
-    }	
+    getUpdater()->update( tempdata, outputs() );
     setNeedReset( true );
 }
 

@@ -17,46 +17,23 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA  *
  ********************************************************************************/
 
-#ifndef CLUSTERUPDATER_H
-#define CLUSTERUPDATER_H
-
-/*! \file
- *  \brief This file contains the declaration of the abstract ClusterUpdater Class
- *
- *  Details...
- *
- *  \todo What are the needs of className() methods ???
- */
-
-#include "types.h"
-#include "clonable.h"
+#include "propertized.h"
 
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {
 
-/*! \brief Cluster Updater Class
- *
- *  Details...
- */
-class ClusterUpdater : public Clonable {
-public:
-    //! Destructor
-    virtual ~ClusterUpdater() { /* Nothing to do */ };
-
-    /*! \brief Calculate the outputs of neurons by the inputs given
-     */
-    virtual void update( RealVec& inputs, RealVec& outputs );
-
-    /*! \brief Calculate the outputs of a single neuron
-     */
-    virtual void update( Real input, Real &output );
-
-    /*! \brief Clone this object
-     */
-    virtual ClusterUpdater* clone() const;
-
-};
-
+Propertized::Propertized()
+    : props() {
 }
 
-#endif
+void Propertized::addProperty( const char* name, PolyType& data ) {
+    props[name] = data;
+}
+
+PolyType& Propertized::property( const char* name ) {
+    if ( props.contains( name ) ) {
+        return props[name];
+    }
+    // --- se non c'e' che ritorno ?!?!
+}
+

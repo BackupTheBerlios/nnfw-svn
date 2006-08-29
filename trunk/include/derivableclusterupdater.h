@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA  *
  ********************************************************************************/
 
-#ifndef DerivableClusterUpdater_H
-#define DerivableClusterUpdater_H
+#ifndef DERIVABLECLUSTERUPDATER_H
+#define DERIVABLECLUSTERUPDATER_H
 
 /*! \file
  *  \brief This file contains the declaration of the abstract DerivableClusterUpdater Class

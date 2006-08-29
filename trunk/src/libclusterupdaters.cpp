@@ -45,6 +45,10 @@ Real DummyUpdater::derivate( Real, Real ) const {
     return 1.0;
 }
 
+DummyUpdater* DummyUpdater::clone() const {
+    return new DummyUpdater();
+}
+
 void SigmoidUpdater::update( RealVec& inputs, RealVec& outputs ) {
 #ifdef NNFW_DEBUG
     if ( inputs.size() != outputs.size() ) {
@@ -64,6 +68,10 @@ void SigmoidUpdater::update( Real input, Real &output ) {
 
 Real SigmoidUpdater::derivate( Real , Real out ) const {
     return lambda * out * (1.0-out);
+}
+
+SigmoidUpdater* SigmoidUpdater::clone() const {
+    return new SigmoidUpdater( lambda );
 }
 
 void FakeSigmoidUpdater::update( RealVec& inputs, RealVec& outputs ) {
@@ -113,6 +121,10 @@ Real FakeSigmoidUpdater::derivate( Real , Real out ) const {
     return lambda * out * (1.0-out);
 }
 
+FakeSigmoidUpdater* FakeSigmoidUpdater::clone() const {
+    return new FakeSigmoidUpdater( lambda );
+}
+
 void ScaledSigmoidUpdater::update( RealVec& inputs, RealVec& outputs ) {
 #ifdef NNFW_DEBUG
     if ( inputs.size() != outputs.size() ) {
@@ -136,6 +148,10 @@ void ScaledSigmoidUpdater::update( Real input, Real &output ) {
 
 Real ScaledSigmoidUpdater::derivate( Real , Real out ) const {
     return lambda * out * (1.0-out);
+}
+
+ScaledSigmoidUpdater* ScaledSigmoidUpdater::clone() const {
+    return new ScaledSigmoidUpdater( lambda, min, max );
 }
 
 void LinearUpdater::update( RealVec& inputs, RealVec& outputs ) {
@@ -183,6 +199,10 @@ Real LinearUpdater::derivate( Real x, Real ) const {
     }
 }
 
+LinearUpdater* LinearUpdater::clone() const {
+    return new LinearUpdater( minX, maxX, minY, maxY );
+}
+
 void BinaryUpdater::update( RealVec& inputs, RealVec& outputs ) {
     u_int size = inputs.size();
 #ifdef NNFW_DEBUG
@@ -204,6 +224,55 @@ Real BinaryUpdater::derivate( Real x, Real ) const {
 	Real y;
 	y = 1.0/( 1.0 + exp( -x ) );
     return y * ( 1.0 - y );
+}
+
+BinaryUpdater* BinaryUpdater::clone() const {
+    return new BinaryUpdater( threshold );
+}
+
+
+PoolUpdater::PoolUpdater( const ClusterUpdater& prototype, u_int dim )
+    : ClusterUpdater(), ups(dim) {
+    for( u_int i=0; i<dim; i++ ) {
+        ups[i] = prototype.clone();
+    }
+    // --- if dimension is zero, set at least one element to ClusterUpdater
+    if ( dim == 0 ) {
+        nnfwMessage( NNFW_ERROR, "The dimension of PoolUpdater must be at least one" );
+        ups.resize( 1 );
+        ups[0] = new ClusterUpdater();
+    }
+}
+
+PoolUpdater::~PoolUpdater() {
+    for( u_int i=0; i<ups.size(); i++ ) {
+        delete (ups[i]);
+    }
+}
+
+void PoolUpdater::setClusterUpdater( u_int i, const ClusterUpdater& prototype ) {
+    if ( i >= ups.size() ) {
+        nnfwMessage( NNFW_ERROR, "Setting a ClusterUpdater beyond boundary of this PoolUpdater" );
+        return;
+    }
+    delete (ups[i]);
+    ups[i] = prototype.clone();
+    return;
+}
+
+void PoolUpdater::update( RealVec& inputs, RealVec& outputs ) {
+    u_int dim = ups.size();
+    for( u_int i=0; i<dim; i++ ) {
+        ups[i]->update( inputs[i], outputs[i] );
+    }
+}
+
+void PoolUpdater::update( Real input, Real &output ) {
+    ups[0]->update( input, output );
+}
+
+PoolUpdater* PoolUpdater::clone() const {
+    return new PoolUpdater( *(ups[0]), ups.size() );
 }
 
 }

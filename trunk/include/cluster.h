@@ -51,10 +51,6 @@ namespace nnfw {
  * SimpleCluster* simple = new SimpleCluster( 10 ); // this cluster contains 10 neurons
  * // set the SigmoidUpdater for all neurons
  * simple->setUpdater( new SigmoidUpdater( 1.0 ) );
- * // If you want that neuron 2 will be updated by a Linear function then type:
- * simple->setUpdater( new LinearUpdater(), 2 );
- * // After this statement only neuron 2 will be updated by Linear function and the others
- * //  will be updated with Sigmoidal function
  *    \endcode
  *  \par Warnings
  *    <b>For whose want to implement a subclass of Cluster: </b>
@@ -132,31 +128,16 @@ public:
     virtual void randomize( Real min, Real max ) = 0;
 
     /*! \brief Set the update function for all neurons contained
-     * ATTENTION: This function delete the previous updater class registered !!! <br>
+     *
+     *  This method create an internal copy of the ClusterUpdater passed <br>
+     *  ATTENTION: This function delete the previous updater class registered !!! <br>
      */
-    void setUpdater( ClusterUpdater* up );
+    void setUpdater( const ClusterUpdater& up );
 
-    /*! \brief Set the update function for the neuron specified
-     * Details...
+    /*! \brief Get the update function
      */
-    void setUpdater( ClusterUpdater* up, u_int neuron );
-
-    /*! \brief Get the update function for the neuron specified
-     */
-    const ClusterUpdater* getUpdater( u_int neuron ) const;
-
-    /*! \brief Get the array of updaters
-     *  It's a pointer to const data. You can't change ClusterUpdater via this pointer.
-     *  Instead, use the setUpdater method()
-     */
-    ClusterUpdater** updaters() const {
-        return poolUpdater;
-    };
-
-    /*! \brief Return true if all neuron share the same ClusterUpdater
-     */
-    bool isSingleUpdater() const {
-        return singleUpd;
+    ClusterUpdater* const getUpdater() {
+        return updater;
     };
 
     /*! \brief Get the array of inputs
@@ -197,13 +178,15 @@ protected:
     };
 
 private:
+    //! Number of neurons
     u_int numNeurons;
+    //! Input of neurons
     RealVec inputdata;
+    //! Output of neurons
     RealVec outputdata;
-    //! Updaters Object
-    ClusterUpdater* singleUpdater;
-    ClusterUpdater** poolUpdater;
-    bool singleUpd;
+    //! ClusterUpdater Object
+    ClusterUpdater* updater;
+
     //! True if the inputs needs a reset
     bool needRst;
     /*! In Accumulated mode the needRst is always false, and then linkers attached to this will never resetInputs

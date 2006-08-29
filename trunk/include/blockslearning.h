@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA  *
  ********************************************************************************/
 
-#ifndef BlocksLearning_H
-#define BlocksLearning_H
+#ifndef BLOCKSLEARNING_H
+#define BLOCKSLEARNING_H
 
 /*! \file
  *  \brief This file contains the declaration of building blocks for learning algorithms

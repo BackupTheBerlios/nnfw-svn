@@ -15,6 +15,16 @@ S <mave> comment goes here
     'C' : means that something has been changed (e.g. implementation of a Class or a signature method)
 ==== End of Legend ====
 
++ <mave> a draft of future support of properties of class
+C <mave> setUpdater() method of Cluster is changed; now it requires only a reference to ClusterUpdater
+        and it'll create an internal copy of ClusterUpdater via clone() method; so it's possible to
+        pass temporary object to setUpdater() now
+C <mave> ClusterUpdater inherits from Clonable too
++ <mave> added the PoolUpdater, a special ClusterUpdater that allow to set different ClusterUpdater for
+        different neurons; it implements the capability below dropped from Cluster
+C <mave> from Cluster was dropped the possibility to set different ClusterUpdater for different neurons,
+        this simplify the subclasses implementation
+
     ==> 84 - 22/08/2006 <==
 
 B <mave> in CMakeLists.txt, fixed routing for searching MKL path on Linux

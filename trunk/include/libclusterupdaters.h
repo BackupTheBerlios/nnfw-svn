@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA  *
  ********************************************************************************/
 
-#ifndef LibClusterUpdaters_H
-#define LibClusterUpdaters_H
+#ifndef LIBCLUSTERUPDATERS_H
+#define LIBCLUSTERUPDATERS_H
 
 /*! \file
  *  \brief Library of Common Updaters
@@ -45,9 +45,7 @@ namespace nnfw {
 class  DummyUpdater : public DerivableClusterUpdater {
 public:
     //! Construct a dummy updater
-    DummyUpdater( ) {
-        // --- Nothing To Do
-    };
+    DummyUpdater( ) { /* Nothing To Do */ };
 
     //! Destructor
     virtual ~DummyUpdater() { /* Nothing to do */ };
@@ -60,6 +58,10 @@ public:
 
     //! return always 1 (an explain of why will be coming soon)
     Real derivate( Real x, Real out ) const;
+
+    /*! \brief Clone this object
+     */
+    virtual DummyUpdater* clone() const;
 };
 
 /*! \brief Sigmoid Updater
@@ -84,6 +86,10 @@ public:
 
     //! Single neuron update
     void update( Real input, Real &output );
+
+    /*! \brief Clone this object
+     */
+    virtual SigmoidUpdater* clone() const;
 
     //! return the approximation commonly used in backpropagation learning: x(1-x)
     Real derivate( Real x, Real out )  const;
@@ -114,6 +120,10 @@ public:
 
     //! Single neuron update
     void update( Real input, Real &output );
+
+    /*! \brief Clone this object
+     */
+    virtual FakeSigmoidUpdater* clone() const;
 
     //! return the approximation commonly used in backpropagation learning: x(1-x)
     Real derivate( Real x, Real out ) const;
@@ -151,6 +161,10 @@ public:
 
     //! Single neuron update
     void update( Real input, Real &output );
+
+    /*! \brief Clone this object
+     */
+    virtual ScaledSigmoidUpdater* clone() const;
 
     //! return the approximation commonly used in backpropagation learning: x(1-x)
     Real derivate( Real x, Real out ) const;
@@ -197,6 +211,10 @@ public:
     //! Single neuron update
     void update( Real input, Real &output );
 
+    /*! \brief Clone this object
+     */
+    virtual LinearUpdater* clone() const;
+
     //! return the m coefficient if x is in [minX, maxX] and x(1-x) otherwise
     Real derivate( Real x, Real out ) const;
 
@@ -233,11 +251,58 @@ public:
     //! Single neuron update
     void update( Real input, Real &output );
 
+    /*! \brief Clone this object
+     */
+    virtual BinaryUpdater* clone() const;
+
     //! return the m coefficient if x is in [minX, maxX] and x(1-x) otherwise
     Real derivate( Real x, Real out ) const;
 
     //! Threshold
     Real threshold;
+};
+
+/*! \brief Pool of Updaters
+ *
+ *  Further Details coming soon ;-)
+ *  \par Warnings
+ *  The dimension of PoolUpdater must be at least one.
+ */
+class  PoolUpdater : public ClusterUpdater {
+public:
+    /*! \brief Constructor
+     *
+     *  Construct a PoolUpdater contains dim elements all equal to prototype passed
+     */
+    PoolUpdater( const ClusterUpdater& prototype, u_int dim );
+
+    /*! \brief Destructor
+     */
+    ~PoolUpdater();
+
+    /*! \brief Set the i-th element of this Pool to a ClusterUpdater of type prototype
+     */
+    void setClusterUpdater( u_int i, const ClusterUpdater& prototype );
+
+    /*! \brief Implement the updating method
+     *
+     *  Apply ClusterUpdaters setted by setClusterUpdater to elements of RealVec inputs
+     */
+    void update( RealVec& inputs, RealVec& outputs );
+
+    /*! \brief Single value update
+     *
+     *  Apply the first (zero) ClusterUpdater of this PoolUpdater to Real value passed
+     */
+    void update( Real input, Real &output );
+
+    /*! \brief Clone this object
+     */
+    virtual PoolUpdater* clone() const;
+
+private:
+    //! Vector of ClusterUpdater
+    VectorData<ClusterUpdater*> ups;
 };
 
 }

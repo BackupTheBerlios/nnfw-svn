@@ -39,13 +39,7 @@ SimpleCluster::~SimpleCluster() {
 }
 
 void SimpleCluster::update() {
-    if ( isSingleUpdater() ) {
-        updaters()[0]->update( inputs(), outputs() );
-    } else {
-        for ( u_int i = 0; i<size(); i++ ) {
-            updaters()[i]->update( inputs()[i], outputs()[i] );
-        }
-    }
+    getUpdater()->update( inputs(), outputs() );
     setNeedReset( true );
 }
 
