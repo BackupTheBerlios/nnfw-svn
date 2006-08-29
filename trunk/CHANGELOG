@@ -15,6 +15,12 @@ S <mave> comment goes here
     'C' : means that something has been changed (e.g. implementation of a Class or a signature method)
 ==== End of Legend ====
 
+    ==> 86 - 29/08/2006 <==
+
+'B' <mave> fixes in Propertized compiling
+
+    ==> 85 - 29/08/2006 <==
+
 + <mave> a draft of future support of properties of class
 C <mave> setUpdater() method of Cluster is changed; now it requires only a reference to ClusterUpdater
         and it'll create an internal copy of ClusterUpdater via clone() method; so it's possible to

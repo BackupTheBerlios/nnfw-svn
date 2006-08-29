@@ -31,9 +31,10 @@ void Propertized::addProperty( const char* name, PolyType& data ) {
 }
 
 PolyType& Propertized::property( const char* name ) {
-    if ( props.contains( name ) ) {
+//    if ( props.contains( name ) ) {
         return props[name];
-    }
+//    }
     // --- se non c'e' che ritorno ?!?!
 }
 
+}

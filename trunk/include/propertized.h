@@ -32,17 +32,22 @@ namespace nnfw {
 class PolyType {
 public:
     //! type of data registrable
-    typedef enum { t_real=0, t_int, t_uint, t_char, t_uchar, t_bool,
+    typedef enum { t_none=0, t_real, t_int, t_uint, t_char, t_uchar, t_bool,
                 t_realvec, t_realmat, t_propertized } types;
 
     //! \brief Constructor
-    PolyType( Real& d ) {
+    PolyType() {
+        dtype = t_none;
+    };
+
+    //! \brief Constructor
+    PolyType( Real d ) {
         dtype = t_real;
         data.dreal = d;
     };
 
     //! \brief Constructor
-    PolyType( int& d ) {
+    PolyType( int d ) {
         dtype = t_int;
         data.dint = d;
     };
@@ -57,9 +62,9 @@ public:
         case t_char: data.dchar = src.data.dchar; break;
         case t_uchar: data.duchar = src.data.duchar; break;
         case t_bool: data.dbool = src.data.dbool; break;
-        case t_realvec: data.drealvec = src.data.drealvec; break;
-        case t_realmat: data.drealmat = src.data.drealmat; break;
-        case t_propertized: data.dprop = src.data.dprop; break;
+//        case t_realvec: data.drealvec = src.data.drealvec; break;
+//        case t_realmat: data.drealmat = src.data.drealmat; break;
+//        case t_propertized: data.dprop = src.data.dprop; break;
         }
     };
 
@@ -70,7 +75,7 @@ public:
     };
 
     //! return the reference to Real
-    Real& getReal() {
+    Real getReal() {
         checkType( t_real );
         return data.dreal;
     };
@@ -80,15 +85,15 @@ private:
     types dtype;
     //! union
     union {
-        Real&    dreal,
-        int&     dint,
-        u_int&   duint,
-        char&    dchar,
-        unsigned char&   duchar,
-        bool&            dbool,
-        RealVec&         drealvec,
-        RealMat&         drealmat,
-        Propertized&     dprop
+        Real    dreal;
+        int     dint;
+        u_int   duint;
+        char    dchar;
+        unsigned char   duchar;
+        bool            dbool;
+//        RealVec         drealvec;
+//        RealMat         drealmat;
+//        Propertized     dprop;
     } data;
 
     //! Check type
