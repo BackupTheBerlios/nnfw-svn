@@ -22,19 +22,19 @@
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {
 
+const char* Variant::typen[t_propertized+1] = { "Null", "Real", "int", "unsigned int", "char", "unsigned char", "bool",
+    "RealVec*", "RealMat*", "Propertized*" };
+
 Propertized::Propertized()
     : props() {
 }
 
-void Propertized::addProperty( const char* name, PolyType& data ) {
-    props[name] = data;
-}
-
-PolyType& Propertized::property( const char* name ) {
-//    if ( props.contains( name ) ) {
-        return props[name];
-//    }
-    // --- se non c'e' che ritorno ?!?!
+Propertized::~Propertized() {
+    props.clear();
+    for( u_int i=0; i<vecProps.size(); i++ ) {
+        delete (vecProps[i]);
+    }
+    vecProps.clear();
 }
 
 }

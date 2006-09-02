@@ -17,37 +17,40 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA  *
  ********************************************************************************/
 
-#ifndef UPDATEABLE_H
-#define UPDATEABLE_H
+#ifndef IONNFW_H
+#define IONNFW_H
+
+#include "types.h"
+#include "propertized.h"
+#include <iostream>
 
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {
 
-/*! \brief Updateables objects
- *
- *  The Updatable objects has a name.
- */
-class  Updatable {
-public:
-    //! Constructor
-    Updatable( const char* name = "unnamed" ) {
-        u_int size = strlen(name);
-        this->name = new char[size+1];
-        strcpy( this->name, name );
-    };
-    //! Destructor
-    virtual ~Updatable() {
-        delete []name;
-    };
-    //! Update the object
-    virtual void update() = 0;
-    //! Return the name associated
-    const char* getName() {
-        return name;
-    };
-protected:
-    char* name;
-};
+//! Operator << with RealVec
+std::ostream& operator<<(std::ostream& stream, const RealVec& v);
+//! Operator >> with RealVec
+std::istream& operator>>(std::istream& stream, RealVec& v);
+
+//! Operator << with RealMat
+std::ostream& operator<<(std::ostream& stream, const RealMat& m);
+//! Operator >> with RealMat
+std::istream& operator>>(std::istream& stream, RealMat& m);
+
+//! Operator << with Variant::types
+std::ostream& operator<<(std::ostream& stream, const Variant::types t);
+//! Operator >> with Variant::types
+std::istream& operator>>(std::istream& stream, Variant::types& t);
+
+//! Operator << with Variant (print the value)
+std::ostream& operator<<(std::ostream& stream, const Variant var);
+//! Operator >> with Variant (read the value)
+std::istream& operator>>(std::istream& stream, Variant& var);
+
+//! Operator << with Propertized
+std::ostream& operator<<(std::ostream& stream, const Propertized& p);
+//! Operator >> with Propertized
+std::istream& operator>>(std::istream& stream, Propertized& p);
 
 }
 

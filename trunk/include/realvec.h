@@ -25,7 +25,6 @@
  *  Details...
  */
 
-#include <iostream>
 #ifdef NNFW_DEBUG
 #include "messages.h"
 #endif
@@ -309,12 +308,6 @@ protected:
     };
 
 };
-
-//! Operator << with RealVec
-std::ostream& operator<<(std::ostream& stream, const RealVec& v);
-
-//! Operator >> with RealVec
-std::istream& operator>>(std::istream& stream, RealVec& v);
 
 }
 

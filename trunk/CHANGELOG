@@ -15,9 +15,20 @@ S <mave> comment goes here
     'C' : means that something has been changed (e.g. implementation of a Class or a signature method)
 ==== End of Legend ====
 
+    ==> 88 - 02/09/2006 <==
+
++ <mave> added ionnfw.h module that contains all functions regarding input/output operation;
+        it contains overloaded operators << for almost all types of NNFW; not yet full implemented
+B <mave> fixed memory leak in Updatable and BaseTeachBlock implementations
+C <mave> continuing developing of Property feature
+
+    ==> 87 - 29/08/2006 <==
+
+B <mave> fixes in Propertized compiling
+
     ==> 86 - 29/08/2006 <==
 
-'B' <mave> fixes in Propertized compiling
+B <marco> fix observ.h 
 
     ==> 85 - 29/08/2006 <==
 

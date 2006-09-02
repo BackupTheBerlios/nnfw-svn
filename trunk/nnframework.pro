@@ -93,7 +93,8 @@ HEADERS		= ./include/nnfw.h \
 			  ./include/messages.h \
 			  ./include/random.h \
               ./include/blockslearning.h \
-              ./include/learningnetwork.h
+              ./include/learningnetwork.h \
+              ./include/ionnfw.h
 
 SOURCES		= ./src/cluster.cpp \
               ./src/simplecluster.cpp \
@@ -114,7 +115,8 @@ SOURCES		= ./src/cluster.cpp \
               ./src/realvec.cpp \
               ./src/realmat.cpp \
               ./src/blockslearning.cpp \
-              ./src/learningnetwork.cpp
+              ./src/learningnetwork.cpp \
+              ./src/ionnfw.cpp
 
 OBJECTS_DIR =   ./.obj
 

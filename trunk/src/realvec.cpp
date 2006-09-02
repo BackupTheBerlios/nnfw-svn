@@ -150,21 +150,5 @@ Real RealVec::mse( const RealVec& target, const RealVec& actual ) {
 };
 
 
-std::ostream& operator<<(std::ostream& stream, const RealVec& v) {
-	for ( u_int i = 0; i < v.size(); i++ ) {
-		stream << v[i] << "\t";
-	}
-	return stream;
-}
-
-
-std::istream& operator>>(std::istream& stream, RealVec& v) {
-	for ( u_int i = 0; i < v.size(); i++ ) {
-		stream >> (v[i]);
-	}
-	return stream;
-}
-
-
 }
 

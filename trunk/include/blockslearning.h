@@ -58,7 +58,9 @@ public:
      */
     BaseTeachBlock( BaseTeachBlock* preBlock = 0, BaseTeachBlock* postBlock = 0, const char* name = "unnamed" );
     //! Destructor
-    virtual ~BaseTeachBlock() { /* Nothing to do */ };
+    virtual ~BaseTeachBlock() {
+        delete []name;
+    };
     //! One step of the learning method implemented by subclasses
     virtual void learn() = 0;
     //! Return the Updatable
