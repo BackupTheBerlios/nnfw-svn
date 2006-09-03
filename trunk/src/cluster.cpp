@@ -41,6 +41,10 @@ Cluster::Cluster( u_int numNeurons, const char* name )
 
     //! SigmoidUpdater as Default Updater
     updater = new SigmoidUpdater( 1.0 );
+
+    //! Properties definition
+    addProperty( "inputs", Variant::t_realvec, this, &Cluster::inputsP, &Cluster::setInputsP );
+    addProperty( "outputs", Variant::t_realvec, this, &Cluster::outputsP, &Cluster::setOutputsP );
 }
 
 Cluster::~Cluster() {

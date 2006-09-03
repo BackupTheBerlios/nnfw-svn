@@ -276,6 +276,12 @@ public:
      */
     PoolUpdater( const ClusterUpdater& prototype, u_int dim );
 
+    /*! \brief Constructor
+     *
+     *  Construct a PoolUpdater with dimension dim, but with <b>unintialized</b> ClusterUpdater
+     */
+    PoolUpdater( u_int dim );
+
     /*! \brief Destructor
      */
     ~PoolUpdater();

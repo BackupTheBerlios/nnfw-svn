@@ -20,6 +20,8 @@
 #ifndef UPDATEABLE_H
 #define UPDATEABLE_H
 
+#include "propertized.h"
+
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {
 
@@ -27,13 +29,14 @@ namespace nnfw {
  *
  *  The Updatable objects has a name.
  */
-class  Updatable {
+class  Updatable : public Propertized {
 public:
     //! Constructor
     Updatable( const char* name = "unnamed" ) {
         u_int size = strlen(name);
         this->name = new char[size+1];
         strcpy( this->name, name );
+        addProperty( "name", Variant::t_string, this, &Updatable::getNameV );
     };
     //! Destructor
     virtual ~Updatable() {
@@ -44,6 +47,10 @@ public:
     //! Return the name associated
     const char* getName() {
         return name;
+    };
+    //! Return the name (version that use Variant for property)
+    Variant getNameV() {
+        return Variant( name );
     };
 protected:
     char* name;

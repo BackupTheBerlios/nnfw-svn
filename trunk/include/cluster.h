@@ -71,11 +71,18 @@ namespace nnfw {
 class  Cluster : public Updatable
 {
 public:
+    /*! \name Constructors */
+    //@{
+
     //! Construct a Cluster
     Cluster( u_int numNeurons, const char* name = "unnamed" );
 
     //! Destructor
     virtual ~Cluster();
+
+    //@}
+    /*! \name Methods affecting whole Cluster */
+    //@{
 
     /*! \brief Return the number of neurons (the length of input and output arrays)
      * Details...
@@ -83,6 +90,29 @@ public:
     u_int size() const {
         return numNeurons;
     };
+
+    /*! \brief Return true if inputs needs a reset
+     */
+    bool needReset() {
+        return needRst;
+    };
+
+    /*! \brief Enable/Disable accumulation mode
+     *  if accumulation is enabled (true) then linkers attached to this Cluster will never resetInput and accumulates data,
+     *  otherwise the inputs will be resetted at each step of neural network
+     */
+    void accumulate( bool mode ) {
+        accOff = !mode;
+    };
+
+    /*! \brief Randomize the parameters of the Cluster
+     * The parameters randomized by this method will be specified by sub-classes
+     */
+    virtual void randomize( Real min, Real max ) = 0;
+
+    //@}
+    /*! \name Operations on Input's vector */
+    //@{
 
     /*! \brief Set the input of neuron
      * Details...
@@ -108,6 +138,28 @@ public:
      */
     virtual Real getInput( u_int neuron ) const;
 
+    /*! \brief Get the array of inputs
+     *  Return the array of inputs, not a copy of inputs; Then you can change inputs by the pointer returned !!!
+     */
+    RealVec& inputs() {
+        return inputdata;
+    };
+
+    //! For property 'outputs'
+    Variant inputsP() {
+        return Variant( &inputdata );
+    };
+
+    //! setting the property 'outputs'
+    bool setInputsP( const Variant& v ) {
+        inputdata.assign( *(v.getRealVec()) );
+        return true;
+    };
+
+    //@}
+    /*! \name Operations on Output's vector */
+    //@{
+
     /*! \brief Force the output of the neuron at value specified
      * Details...
      */
@@ -122,10 +174,28 @@ public:
      */
     virtual Real getOutput( u_int neuron ) const;
 
-    /*! \brief Randomize the parameters of the Cluster
-     * The parameters randomized by this method will be specified by sub-classes
+    /*! \brief Get the array of outputs
+     *
+     *  Return the array of outputs, not a copy of outputs; Then you can change outputs by the pointer returned !!!
      */
-    virtual void randomize( Real min, Real max ) = 0;
+    RealVec& outputs() {
+        return outputdata;
+    };
+
+    //! For property 'outputs'
+    Variant outputsP() {
+        return Variant( &outputdata );
+    };
+
+    //! setting the property 'outputs'
+    bool setOutputsP( const Variant& v ) {
+        outputdata.assign( *(v.getRealVec()) );
+        return true;
+    };
+
+    //@}
+    /*! \name Operations on ClusterUpdater */
+    //@{
 
     /*! \brief Set the update function for all neurons contained
      *
@@ -139,35 +209,7 @@ public:
     ClusterUpdater* const getUpdater() {
         return updater;
     };
-
-    /*! \brief Get the array of inputs
-     *  Return the array of inputs, not a copy of inputs; Then you can change inputs by the pointer returned !!!
-     */
-    RealVec& inputs() {
-        return inputdata;
-    };
-
-    /*! \brief Get the array of outputs
-     *
-     *  Return the array of outputs, not a copy of outputs; Then you can change outputs by the pointer returned !!!
-     */
-    RealVec& outputs() {
-        return outputdata;
-    };
-
-    /*! \brief Return true if inputs needs a reset
-     */
-    bool needReset() {
-        return needRst;
-    };
-
-    /*! \brief Enable/Disable accumulation mode
-     *  if accumulation is enabled (true) then linkers attached to this Cluster will never resetInput and accumulates data,
-     *  otherwise the inputs will be resetted at each step of neural network
-     */
-    void accumulate( bool mode ) {
-        accOff = !mode;
-    };
+    //@}
 
 protected:
     /*! \brief Set the state of 'needReset'

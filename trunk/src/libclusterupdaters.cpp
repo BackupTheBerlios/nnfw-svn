@@ -244,6 +244,15 @@ PoolUpdater::PoolUpdater( const ClusterUpdater& prototype, u_int dim )
     }
 }
 
+PoolUpdater::PoolUpdater( u_int dim )
+    : ClusterUpdater(), ups(dim) {
+    // --- if dimension is zero, set at least one element to ClusterUpdater
+    if ( dim == 0 ) {
+        nnfwMessage( NNFW_ERROR, "The dimension of PoolUpdater must be at least one" );
+        ups.resize( 1 );
+    }
+}
+
 PoolUpdater::~PoolUpdater() {
     for( u_int i=0; i<ups.size(); i++ ) {
         delete (ups[i]);
@@ -272,7 +281,11 @@ void PoolUpdater::update( Real input, Real &output ) {
 }
 
 PoolUpdater* PoolUpdater::clone() const {
-    return new PoolUpdater( *(ups[0]), ups.size() );
+    PoolUpdater* pool = new PoolUpdater( ups.size() );
+    for( u_int i=0; i<ups.size(); i++ ) {
+        pool->ups[i] = this->ups[i]->clone();
+    }
+    return pool;
 }
 
 }

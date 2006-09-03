@@ -39,7 +39,7 @@ typedef VectorData<AbstractPropertyAccess*> PropertyAccessVec;
 class Variant {
 public:
     //! type of registrable data
-    typedef enum { t_null=0, t_real, t_int, t_uint, t_char, t_uchar, t_bool,
+    typedef enum { t_null=0, t_real, t_int, t_uint, t_char, t_uchar, t_bool, t_string,
                 t_realvec, t_realmat, t_propertized } types;
 
     /*! \name Constructors */
@@ -61,6 +61,7 @@ public:
         case t_char: dchar = src.dchar; break;
         case t_uchar: duchar = src.duchar; break;
         case t_bool: dbool = src.dbool; break;
+        case t_string: dstring = src.dstring; break;
         case t_realvec: drealvec = src.drealvec; break;
         case t_realmat: drealmat = src.drealmat; break;
         case t_propertized: dprop = src.dprop; break;
@@ -104,6 +105,12 @@ public:
     };
 
     //! \brief Constructor
+    Variant( const char* d ) {
+        dtype = t_string;
+        dstring = d;
+    };
+
+    //! \brief Constructor
     Variant( RealVec* d ) {
         dtype = t_realvec;
         drealvec = d;
@@ -136,6 +143,7 @@ public:
         case t_char: dchar = src.dchar; break;
         case t_uchar: duchar = src.duchar; break;
         case t_bool: dbool = src.dbool; break;
+        case t_string: dstring = src.dstring; break;
         case t_realvec: drealvec = src.drealvec; break;
         case t_realmat: drealmat = src.drealmat; break;
         case t_propertized: dprop = src.dprop; break;
@@ -199,18 +207,23 @@ public:
         checkType( t_bool );
         return dbool;
     };
+    //! return the const char* (constant string) value
+    const char* getString() const {
+        checkType( t_string );
+        return dstring;
+    };
     //! return the RealVec value
-    RealVec* getRealVec() const {
+    const RealVec* getRealVec() const {
         checkType( t_realvec );
         return drealvec;
     };
     //! return the RealMat value
-    RealMat* getRealMat() const {
+    const RealMat* getRealMat() const {
         checkType( t_realmat );
         return drealmat;
     };
     //! return the Propertized value
-    Propertized* getPropertized() const {
+    const Propertized* getPropertized() const {
         checkType( t_propertized );
         return dprop;
     };
@@ -228,6 +241,7 @@ private:
     char    dchar;
     unsigned char   duchar;
     bool            dbool;
+    const char*     dstring;
     RealVec*         drealvec;
     RealMat*         drealmat;
     Propertized*     dprop;

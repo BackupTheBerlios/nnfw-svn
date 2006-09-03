@@ -15,6 +15,15 @@ S <mave> comment goes here
     'C' : means that something has been changed (e.g. implementation of a Class or a signature method)
 ==== End of Legend ====
 
+    ==> 89 - 03/09/2006 <==
+
+B <mave> fixed errors in PoolUpdater::clone() implementation
++ <mave> added Properties 'inputs' and 'outputs' to Cluster class
+C <mave> re-arranging method declaration in Cluster.h using doxygen groups
++ <mave> added Property 'name' to Updtable class
+C <mave> Updatable inherits from Propertized now
++ <mave> added const char* (constant string) type support to Variant; changed ionnfw for handling the new type
+
     ==> 88 - 02/09/2006 <==
 
 + <mave> added ionnfw.h module that contains all functions regarding input/output operation;

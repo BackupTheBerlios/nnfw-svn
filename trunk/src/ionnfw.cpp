@@ -68,6 +68,7 @@ std::ostream& operator<<(std::ostream& stream, const Variant var) {
     case Variant::t_char: stream << var.getChar(); break;
     case Variant::t_uchar: stream << var.getUChar(); break;
     case Variant::t_bool: stream << var.getBool(); break;
+    case Variant::t_string: stream << var.getString(); break;
     case Variant::t_realvec: stream << *(var.getRealVec()); break;
     case Variant::t_realmat: stream << *(var.getRealMat()); break;
     case Variant::t_propertized: stream << *(var.getPropertized()); break;
