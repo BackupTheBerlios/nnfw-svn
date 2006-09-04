@@ -43,6 +43,8 @@ Cluster::Cluster( u_int numNeurons, const char* name )
     updater = new SigmoidUpdater( 1.0 );
 
     //! Properties definition
+    addProperty( "size", Variant::t_uint, this, &Cluster::sizeP );
+    addProperty( "accumulate", Variant::t_bool, this, &Cluster::accumP, &Cluster::setAccumP );
     addProperty( "inputs", Variant::t_realvec, this, &Cluster::inputsP, &Cluster::setInputsP );
     addProperty( "outputs", Variant::t_realvec, this, &Cluster::outputsP, &Cluster::setOutputsP );
 }

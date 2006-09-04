@@ -67,6 +67,7 @@ namespace nnfw {
  *    The reasons behind this kind of behaviour its the efficiency!! When another class must do heavy calculation
  *    on all inputs of a Cluster (as MatrixLinker do), then its more efficient that it takes the array returned
  *    by inputs (or outputs) and works over them.
+ * \nosubgrouping
  */
 class  Cluster : public Updatable
 {
@@ -105,10 +106,35 @@ public:
         accOff = !mode;
     };
 
+    /*! \brief return true if the Cluster will accumulates inputs
+     */
+    bool isAccumulate() {
+        return !accOff;
+    };
+
     /*! \brief Randomize the parameters of the Cluster
      * The parameters randomized by this method will be specified by sub-classes
      */
     virtual void randomize( Real min, Real max ) = 0;
+
+    /*! \brief Read Access to property 'size'
+     */
+    Variant sizeP() {
+        return Variant( size() );
+    };
+
+    /*! \brief Read Access to property 'accumulate'
+     */
+    Variant accumP() {
+        return Variant( isAccumulate() );
+    };
+
+    /*! \brief Write Access to property 'accumulate'
+     */
+    bool setAccumP( const Variant& b ) {
+        accumulate( b.getBool() );
+        return true;
+    };
 
     //@}
     /*! \name Operations on Input's vector */

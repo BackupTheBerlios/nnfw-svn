@@ -15,6 +15,14 @@ S <mave> comment goes here
     'C' : means that something has been changed (e.g. implementation of a Class or a signature method)
 ==== End of Legend ====
 
+    ==> 90 - 04/09/2006 <==
+
+C <mave> prettified printing of boolean values of Variant
+B <mave> fixed error in boolean constructor of Variant
++ <mave> property 'size' and 'accumulate' to Cluster class
++ <mave> method for getting the value of Accumulate flag
+C <mave> re-organization of doxygen groups
+
     ==> 89 - 03/09/2006 <==
 
 B <mave> fixed errors in PoolUpdater::clone() implementation

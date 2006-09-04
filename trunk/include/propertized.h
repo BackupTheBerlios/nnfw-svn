@@ -35,6 +35,7 @@ class AbstractPropertyAccess;
 typedef VectorData<AbstractPropertyAccess*> PropertyAccessVec;
 
 /*! \brief Incapsulate values of different types/classes in a unified way (like union)
+ *  \nosubgrouping
  */
 class Variant {
 public:
@@ -42,7 +43,8 @@ public:
     typedef enum { t_null=0, t_real, t_int, t_uint, t_char, t_uchar, t_bool, t_string,
                 t_realvec, t_realmat, t_propertized } types;
 
-    /*! \name Constructors */
+    /*! \name Constructors
+     */
     //@{
 
     //! \brief Constructor
@@ -100,7 +102,7 @@ public:
 
     //! \brief Constructor
     Variant( bool d ) {
-        dtype = t_int;
+        dtype = t_bool;
         dbool = d;
     };
 
@@ -152,7 +154,7 @@ public:
     };
 
     //@}
-    /*! \name Informations about data contained */
+    /*!  \name Informations about data contained */
     //@{
 
     /*! \brief Type of data
@@ -165,12 +167,6 @@ public:
      */
     const char* typeName() const {
         return typen[dtype];
-    };
-
-    /*! \brief Return the name of type passed by argument
-     */
-    static const char* typeName( types t ) {
-        return typen[t];
     };
 
     //@}
@@ -229,6 +225,12 @@ public:
     };
 
     //@}
+
+    /*! \brief Return the name of type passed by argument
+     */
+    static const char* typeName( types t ) {
+        return typen[t];
+    };
 
 private:
     //! type registered

@@ -60,6 +60,7 @@ std::istream& operator>>(std::istream& stream, Variant::types& t) {
 }
 
 std::ostream& operator<<(std::ostream& stream, const Variant var) {
+    bool b;
     switch( var.type() ) {
     case Variant::t_null: stream << "Null"; break;
     case Variant::t_real: stream << var.getReal(); break;
@@ -67,7 +68,10 @@ std::ostream& operator<<(std::ostream& stream, const Variant var) {
     case Variant::t_uint: stream << var.getUInt(); break;
     case Variant::t_char: stream << var.getChar(); break;
     case Variant::t_uchar: stream << var.getUChar(); break;
-    case Variant::t_bool: stream << var.getBool(); break;
+    case Variant::t_bool:
+        b = var.getBool();
+        stream << (b ? "TRUE" : "FALSE" );
+        break;
     case Variant::t_string: stream << var.getString(); break;
     case Variant::t_realvec: stream << *(var.getRealVec()); break;
     case Variant::t_realmat: stream << *(var.getRealMat()); break;
