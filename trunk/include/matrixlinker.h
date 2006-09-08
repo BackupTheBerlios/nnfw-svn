@@ -89,6 +89,14 @@ public:
      */
     Cluster* getTo() const;
 
+    /*! \brief Return the weight matrix
+     *
+     * Details
+     */
+	RealMat& matrix() {
+		return w;
+	}
+
     /*! \brief Update the Linker
      * Details...
      */

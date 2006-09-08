@@ -149,6 +149,7 @@ public:
      * Details..
      */
     void setOrder( Updatable* updatables[], u_int dim );
+
     //! \brief Set the order
     void setOrder( UpdatableVec& );
 

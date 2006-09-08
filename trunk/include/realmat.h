@@ -83,7 +83,8 @@ public:
     };
 
     //@}
-    /*! \name Binary Operators */
+    
+	/*! \name Binary Operators */
     //@{
 
     //! Operator += with RealMat
@@ -97,12 +98,14 @@ public:
         rawdata() += r.rawdata();
         return (*this);
     };
-    //! Operator += with Real
+    
+	//! Operator += with Real
     RealMat& operator+=(const Real& r ) {
         rawdata() += r;
         return (*this);
     };
-    //! Operator -= with RealMat
+    
+	//! Operator -= with RealMat
     RealMat& operator-=(const RealMat& r ) {
 #ifdef NNFW_DEBUG
         if( rows() != r.rows() || cols() != r.cols() ) {
@@ -113,12 +116,14 @@ public:
         rawdata() -= r.rawdata();
         return (*this);
     };
-    //! Operator -= with Real
+    
+	//! Operator -= with Real
     RealMat& operator-=(const Real& r ) {
         rawdata() -= r;
         return (*this);
     };
-    //! Operator *= with RealMat
+    
+	//! Operator *= with RealMat
     RealMat& operator*=(const RealMat& r ) {
 #ifdef NNFW_DEBUG
         if( rows() != r.rows() || cols() != r.cols() ) {
@@ -129,12 +134,14 @@ public:
         rawdata() *= r.rawdata();
         return (*this);
     };
-    //! Operator *= with Real
+    
+	//! Operator *= with Real
     RealMat& operator*=(const Real& r ) {
         rawdata() *= r;
         return (*this);
     };
-    //! Operator /= with RealMat
+    
+	//! Operator /= with RealMat
     RealMat& operator/=(const RealMat& r ) {
 #ifdef NNFW_DEBUG
         if( rows() != r.rows() || cols() != r.cols() ) {
@@ -145,14 +152,16 @@ public:
         rawdata() /= r.rawdata();
         return (*this);
     };
-    //! Operator /= with Real
+    
+	//! Operator /= with Real
     RealMat& operator/=(const Real& r ) {
         rawdata() /= r;
         return (*this);
     };
 
     //@}
-    /*! \name Vector-Matrix Operators */
+    
+	/*! \name Vector-Matrix Operators */
     //@{
 
     /*! \brief Right Multiplication: y += x*m

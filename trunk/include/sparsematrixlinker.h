@@ -56,13 +56,19 @@ public:
      */
     virtual void randomize( Real min, Real max );
 
-    /*! \brief Connect two neuron
+    /*! \brief Connect two neurons
      */
-    void connection( u_int from, u_int to );
+    void connect( u_int from, u_int to );
 
-    /*! \brief Disconnect the two neuron
+    /*! \brief Disconnect the two neurons
      */
-    void disconnection( u_int from, u_int to );
+    void disconnect( u_int from, u_int to );
+
+    /*! \brief Get the mask
+     */
+    MatrixData<bool>& getMask() { 
+		return mask;
+	};
 
 private:
     //! Mask Matrix

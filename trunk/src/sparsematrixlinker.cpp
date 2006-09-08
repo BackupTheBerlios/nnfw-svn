@@ -74,7 +74,7 @@ void SparseMatrixLinker::randomize( Real min, Real max ) {
     }
 }
 
-void SparseMatrixLinker::connection( u_int from, u_int to ) {
+void SparseMatrixLinker::connect( u_int from, u_int to ) {
     if ( from >= nrows ) {
         // Messaggio di errore !!!
         return;
@@ -86,7 +86,7 @@ void SparseMatrixLinker::connection( u_int from, u_int to ) {
     mask[from][to] = true;
 }
 
-void SparseMatrixLinker::disconnection( u_int from, u_int to ) {
+void SparseMatrixLinker::disconnect( u_int from, u_int to ) {
     if ( from >= nrows ) {
         // Messaggio di errore !!!
         return;

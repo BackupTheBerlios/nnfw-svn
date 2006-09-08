@@ -258,7 +258,58 @@ public:
         return (*this);
     };
 
-    /*! \brief Indexing operator
+	/*! \name Functions that assume that T has define standard operations (+, !, ==...) */
+    //@{
+
+	/*! \brief Compare two vectors. The sizes of VectorData must be the same.
+	 *
+	 *  Element-by-element comparison between the two arrays. 
+	 *  It returns a boolean array of the same size, with elements set to true (1) where the values are the same,
+	 *  and elements set to false (0) where they are not.
+     */
+    VectorData<int>& compare( const VectorData<T>& b, VectorData<int>& comparison ) {
+#ifdef NNFW_DEBUG
+        if ( vsize != b.vsize ) {
+            nnfwMessage( NNFW_ERROR, "Wrong number of elements between VectorData to compare method" );
+            return (*this);
+        }
+#endif
+        VectorData<T>& self = *this;
+		comparison.resize(size());
+        for( u_int i=0; i<size(); i++ ) {
+            if ( self[i] == b[i] ) {
+                comparison[i] = true;
+            }
+			else {
+				comparison[i] = false;
+			}
+        }
+		return comparison;
+    };
+
+	/*! \brief Not operation.
+     */
+    VectorData<int>& not( VectorData<int>& result ) {
+		result.resize(size());
+        for( u_int i=0; i<size(); i++ ) {
+			result = !(*this)[i];
+        }
+		return result;
+    };
+
+	/*! \brief Sum up the values of the vector.
+     */
+    int sum() {
+		int s = 0;
+        for( u_int i=0; i<size(); i++ ) {
+			s += (*this)[i];
+		}
+		return s;
+    };
+	
+    //@}
+
+	/*! \brief Indexing operator
      *  Boundary check activated only when DEBUG if defined
      */
     T& operator[]( u_int index ) {

@@ -228,19 +228,21 @@ public:
     Real maxY;
 };
 
-/*! \brief Binary thresholded Updater
+/*! \brief Step Updater
  *
  * Further Details coming soon ;-)
  */
-class  BinaryUpdater : public DerivableClusterUpdater {
+class  StepUpdater : public DerivableClusterUpdater {
 public:
-    //! Construct a binary updater
-    BinaryUpdater( Real threshold = 0.0f ) {
-        this->threshold = threshold;
+    //! Construct a step updater
+    StepUpdater( Real min = 0.0f, Real max = 1.0f, Real threshold = 0.0f ) {
+        this->min = min;
+		this->max = max;
+		this->threshold = threshold;
     };
 
     //! Destructor
-    virtual ~BinaryUpdater() { /* Nothing to do */ };
+    virtual ~StepUpdater() { /* Nothing to do */ };
 
     /*! \brief Implement the updating method
      *
@@ -253,11 +255,15 @@ public:
 
     /*! \brief Clone this object
      */
-    virtual BinaryUpdater* clone() const;
+    virtual StepUpdater* clone() const;
 
-    //! return the m coefficient if x is in [minX, maxX] and x(1-x) otherwise
+    //! Using the derivate of the sigmoid function!!! 
     Real derivate( Real x, Real out ) const;
 
+    //! Minimum value 
+    Real min;
+    //! Maximum value
+    Real max;
     //! Threshold
     Real threshold;
 };

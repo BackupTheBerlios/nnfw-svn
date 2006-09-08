@@ -44,8 +44,11 @@ std::ostream& operator<<(std::ostream& stream, const RealMat& m) {
     return stream;
 }
 
-std::istream& operator>>(std::istream& stream, RealMat& ) {
-    nnfwMessage( NNFW_ERROR, "Reading Variant not yet implemented" );
+std::istream& operator>>(std::istream& stream, RealMat& m) {
+    //nnfwMessage( NNFW_ERROR, "Reading Variant not yet implemented" );
+	for( u_int i=0; i<m.rows(); i++ ) {
+        stream >> m[i];
+    }
     return stream;
 }
 

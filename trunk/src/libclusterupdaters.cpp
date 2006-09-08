@@ -203,7 +203,7 @@ LinearUpdater* LinearUpdater::clone() const {
     return new LinearUpdater( minX, maxX, minY, maxY );
 }
 
-void BinaryUpdater::update( RealVec& inputs, RealVec& outputs ) {
+void StepUpdater::update( RealVec& inputs, RealVec& outputs ) {
     u_int size = inputs.size();
 #ifdef NNFW_DEBUG
     if ( inputs.size() != outputs.size() ) {
@@ -212,22 +212,22 @@ void BinaryUpdater::update( RealVec& inputs, RealVec& outputs ) {
     }
 #endif
     for ( u_int i = 0; i<size; i++ ) {
-        ( inputs[i] > threshold ) ? outputs[i] = 1.0f : outputs[i] = 0.0f;
+        ( inputs[i] > threshold ) ? outputs[i] = max : outputs[i] = min;
     }
 }
 
-void BinaryUpdater::update( Real input, Real &output ) {
-    ( input > threshold ) ? output = 1.0f : output = 0.0f;
+void StepUpdater::update( Real input, Real &output ) {
+    ( input > threshold ) ? output = max : output = min;
 }
 
-Real BinaryUpdater::derivate( Real x, Real ) const {
+Real StepUpdater::derivate( Real x, Real ) const {
 	Real y;
 	y = 1.0/( 1.0 + exp( -x ) );
     return y * ( 1.0 - y );
 }
 
-BinaryUpdater* BinaryUpdater::clone() const {
-    return new BinaryUpdater( threshold );
+StepUpdater* StepUpdater::clone() const {
+    return new StepUpdater( min, max, threshold );
 }
 
 
