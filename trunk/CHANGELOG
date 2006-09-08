@@ -15,12 +15,15 @@ S <mave> comment goes here
     'C' : means that something has been changed (e.g. implementation of a Class or a signature method)
 ==== End of Legend ====
 
-    ==> 91 - 07/09/2006 <==
+    ==> 92 - 07/09/2006 <==
 
 + <marmir> Added three headers and 1 cpp: 
-			modifier.h (abstract classes: Modifier, MatrixModifier and VectorModifier), 
-			libmatrixmodifiers.h/cpp (with three matrixmodifiers), and 
-			learningalgorithm.h (abstract learning algorithm)
+            modifier.h (abstract classes: Modifier, MatrixModifier and VectorModifier), 
+            libmatrixmodifiers.h/cpp (with three matrixmodifiers), and 
+            learningalgorithm.h (abstract learning algorithm)
+
+    ==> 91 - 07/09/2006 <==
+
 + <marmir> Added functions compare, sum, and not for VectorData in vectordata.h
 + <marmir> Added implementation of >> operator for RealMat in ionnfw.cpp
 + <marmir> Added matrix() function to MatrixLinker
