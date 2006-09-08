@@ -15,6 +15,10 @@ S <mave> comment goes here
     'C' : means that something has been changed (e.g. implementation of a Class or a signature method)
 ==== End of Legend ====
 
+    ==> 95 - 08/09/2006 <==
+
+C <mave> CREDITS file
+
     ==> 94 - 08/09/2006 <==
 
 B <mave> in result accessing in VectorData::neg()
