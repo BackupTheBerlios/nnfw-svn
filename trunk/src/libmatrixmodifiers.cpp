@@ -28,7 +28,7 @@ void BasicMatrixModifier::modify() {
 	u_int cols = m.cols();
 	for ( u_int r = 0; r < rows; r++ ) {
 		for ( u_int c = 0; c < cols; c++ ) {
-			m[ r, c ] += lr * inp[r] * out[c];
+			m[r][c] += lr * inp[r] * out[c];
 		}
 	}
 }

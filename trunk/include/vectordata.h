@@ -66,9 +66,11 @@ public:
         : Observer(), Observable() {
         vsize = size;
         allocated = size;
-        (vsize==0) ? (data = 0) : (data = new T[vsize]);
-        for(u_int i = 0; i<size; i++) {
-            data[i] = T();
+        if ( vsize == 0 ) {
+            data = 0;
+        } else {
+            data = new T[vsize];
+            memoryZeroing( data, vsize );
         }
         // --- view attribute
         view = false;
@@ -289,10 +291,10 @@ public:
 
 	/*! \brief Not operation.
      */
-    VectorData<int>& not( VectorData<int>& result ) {
+    VectorData<int>& neg( VectorData<int>& result ) {
 		result.resize(size());
         for( u_int i=0; i<size(); i++ ) {
-			result = !(*this)[i];
+			result[i] = ! (*this)[i] ;
         }
 		return result;
     };
@@ -343,11 +345,16 @@ public:
             return;
         }
         if ( allocated < newsize ) {
-            allocated = newsize+20;
-            T* tmp = new T[allocated];
-            memoryCopy( tmp, data, vsize );
-            delete []data;
-            data = tmp;
+            if ( allocated == 0 ) {
+                allocated = newsize+20;
+                data = new T[allocated];
+            } else {
+                allocated = newsize+20;
+                T* tmp = new T[allocated];
+                memoryCopy( tmp, data, vsize );
+                delete []data;
+                data = tmp;
+            }
         }
         if ( newsize > vsize ) {
             memoryZeroing( data+vsize, newsize-vsize );
