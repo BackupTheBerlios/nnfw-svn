@@ -362,6 +362,9 @@ private:
     Variant (T::*getPtm)();
 };
 
+/*! \brief PropertySettings
+ */
+typedef std::map< std::string, Variant > PropertySettings;
 
 /*! \brief Implements the capability to access internal data via properties
  *

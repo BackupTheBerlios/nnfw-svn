@@ -15,6 +15,10 @@ S <mave> comment goes here
     'C' : means that something has been changed (e.g. implementation of a Class or a signature method)
 ==== End of Legend ====
 
+    ==> 96 - 11/09/2006 <==
+
++ <mave> PropertySettings type: the base type for configuring object via Properties
+
     ==> 95 - 08/09/2006 <==
 
 C <mave> CREDITS file
