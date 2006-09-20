@@ -19,7 +19,7 @@
 
 #include "blockslearning.h"
 #include "cluster.h"
-#include "derivableclusterupdater.h"
+#include "derivableoutputfunction.h"
 #include "biasedcluster.h"
 #include "matrixlinker.h"
 
@@ -89,15 +89,15 @@ void GradientBiasedCluster::learn() {
     }
     // --- calcolo del delta; error * derivataFunzioneAttivazione( input_netto )
     const RealVec& in = cl->inputs();
-    for( u_int i=0; i<error.size(); i++ ) {
-        const DerivableClusterUpdater* dup = dynamic_cast<const DerivableClusterUpdater*>( cl->getUpdater() );
+    RealVec tmp( error.size() );
+    const DerivableOutputFunction* dup = dynamic_cast<const DerivableOutputFunction*>( cl->getFunction() );
+    if ( dup == 0 ) {
 #ifdef NNFW_DEBUG
-		if ( dup == 0 ) {
-			nnfwMessage( NNFW_ERROR, "Error: you are trying to do the derivative of an underivable function!" );
-            return;
-        }
+        nnfwMessage( NNFW_ERROR, "Error: you are trying to do the derivative of an underivable function!" );
 #endif
-		error[i] *= dup->derivate( in[i], cl->outputs()[i] );
+    } else {
+        dup->derivate( in, cl->outputs(), tmp );
+        error *= tmp;
     }
     // --- 1. Propaga l'errore ai preBlocks che ereditano da SupervisedTeachBlock
     for( u_int i=0; i<preVec.size(); i++ ) {

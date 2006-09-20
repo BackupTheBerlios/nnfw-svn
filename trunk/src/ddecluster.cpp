@@ -58,7 +58,7 @@ void DDECluster::update() {
     }
 
     // --- tmp <- a0 + a1*f(x)
-    getUpdater()->update( inputs(), tmpdata2 );
+    getFunction()->apply( inputs(), tmpdata2 );
     tmpdata2 *= coeff[1];
     tmpdata += tmpdata2;
     if ( csize == 2 ) {

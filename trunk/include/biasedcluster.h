@@ -21,17 +21,13 @@
 #define BIASEDCLUSTER_H
 
 #include "cluster.h"
-#include "clusterupdater.h"
+#include "outputfunction.h"
 
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {
 
 /*! \brief BiasedCluster Class. In this cluster a neuron have an input, a output and a bias value.
  *
- *  The BiasedCluster update the neurons contained using an object of type ClusterUpdater. The ClusterUpdater calculate the outputs
- *  of neuron as function of inputs of the neurons. <br>
- *  <em> I know... I know that the name ClusterUpdater is confusing... but for now I haven't a better idea !! </em>
- *  Further Details coming soon ... :-)
  */
 class  BiasedCluster : public Cluster {
 public:

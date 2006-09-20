@@ -18,7 +18,7 @@
  ********************************************************************************/
 
 #include "biasedcluster.h"
-#include "libclusterupdaters.h"
+#include "liboutputfunctions.h"
 #include "messages.h"
 #include "random.h"
 #include <cstdio>
@@ -38,7 +38,7 @@ BiasedCluster::~BiasedCluster() {
 
 void BiasedCluster::update() {
     tempdata.assign_xminusy( inputs(), biases() );
-    getUpdater()->update( tempdata, outputs() );
+    getFunction()->apply( tempdata, outputs() );
     setNeedReset( true );
 }
 

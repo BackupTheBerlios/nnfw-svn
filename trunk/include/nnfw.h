@@ -45,7 +45,8 @@
 #include "cluster.h"
 #include "linker.h"
 #include "neuralnet.h"
-#include "libclusterupdaters.h"
+#include "liboutputfunctions.h"
+#include "ionnfw.h"
 
 #endif
 

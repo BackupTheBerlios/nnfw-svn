@@ -26,7 +26,7 @@
 
 #include "types.h"
 #include "updatable.h"
-#include "clusterupdater.h"
+#include "outputfunction.h"
 
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {
@@ -41,11 +41,11 @@ namespace nnfw {
  *    The Cluster class represent an abstract group of neurons. There isn't a neuron class. The Cluster
  *    class represent a group of neurons as two arrays: inputs and outputs. The inputs array represent the
  *    inputs of the neurons 'contained' in the cluster, and the outputs of this neurons are calculated by
- *    appling the function provided by ClusterUpdater.<br>
+ *    appling the function provided by OutputFunction.<br>
  *    The number of neuron returned by size() method is also the dimension of inputs and outputs arrays<br>
- *    You can sets one subclasses of ClusterUpdater by setUpdater methods. If you don't specify an index when
- *    set a ClusterUpdater then this ClusterUpdater will be used to update the output of all neurons. Otherwise,
- *    you can specifiy different ClusterUpdater for different neuron.
+ *    You can sets one subclasses of OutputFunction by setUpdater methods. If you don't specify an index when
+ *    set a OutputFunction then this OutputFunction will be used to update the output of all neurons. Otherwise,
+ *    you can specifiy different OutputFunction for different neuron.
  *    \code
  * // create a SimpleCluster, a specialized subclass of Cluster
  * SimpleCluster* simple = new SimpleCluster( 10 ); // this cluster contains 10 neurons
@@ -220,19 +220,19 @@ public:
     };
 
     //@}
-    /*! \name Operations on ClusterUpdater */
+    /*! \name Operations on OutputFunction */
     //@{
 
-    /*! \brief Set the update function for all neurons contained
+    /*! \brief Set the output function for all neurons contained
      *
-     *  This method create an internal copy of the ClusterUpdater passed <br>
+     *  This method create an internal copy of the OutputFunction passed <br>
      *  ATTENTION: This function delete the previous updater class registered !!! <br>
      */
-    void setUpdater( const ClusterUpdater& up );
+    void setFunction( const OutputFunction& up );
 
-    /*! \brief Get the update function
+    /*! \brief Get the Output function
      */
-    ClusterUpdater* const getUpdater() {
+    OutputFunction* const getFunction() {
         return updater;
     };
     //@}
@@ -252,8 +252,8 @@ private:
     RealVec inputdata;
     //! Output of neurons
     RealVec outputdata;
-    //! ClusterUpdater Object
-    ClusterUpdater* updater;
+    //! OutputFunction Object
+    OutputFunction* updater;
 
     //! True if the inputs needs a reset
     bool needRst;

@@ -18,7 +18,7 @@
  ********************************************************************************/
 
 #include "fakecluster.h"
-#include "libclusterupdaters.h"
+#include "liboutputfunctions.h"
 #include "messages.h"
 #include "random.h"
 #include <cstdio>

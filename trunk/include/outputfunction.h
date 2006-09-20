@@ -17,15 +17,14 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA  *
  ********************************************************************************/
 
-#ifndef CLUSTERUPDATER_H
-#define CLUSTERUPDATER_H
+#ifndef OUTPUTFUNCTION_H
+#define OUTPUTFUNCTION_H
 
 /*! \file
- *  \brief This file contains the declaration of the abstract ClusterUpdater Class
+ *  \brief This file contains the declaration of the abstract OutputFunction Class
  *
  *  Details...
  *
- *  \todo What are the needs of className() methods ???
  */
 
 #include "types.h"
@@ -34,27 +33,47 @@
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {
 
-/*! \brief Cluster Updater Class
+/*! \brief OutputFunction Class
  *
  *  Details...
  */
-class ClusterUpdater : public Clonable {
+class OutputFunction : public Clonable {
 public:
-    //! Destructor
-    virtual ~ClusterUpdater() { /* Nothing to do */ };
+    /*! \name Constructors */
+    //@{
+    //! Constructor
+    OutputFunction() : tmp1(1), tmp2(1) { /* Nothing else to do */ };
 
-    /*! \brief Calculate the outputs of neurons by the inputs given
+    //! Destructor
+    virtual ~OutputFunction() { /* Nothing to do */ };
+
+    //@}
+    /*! \name Interface */
+    //@{
+
+    /*! \brief Calculate the outputs of neurons by the net inputs given
      */
-    virtual void update( RealVec& inputs, RealVec& outputs );
+    virtual void apply( RealVec& inputs, RealVec& outputs );
 
     /*! \brief Calculate the outputs of a single neuron
      */
-    virtual void update( Real input, Real &output );
+    Real apply( Real input ) {
+        tmp1[0] = input;
+        apply( tmp1, tmp2 );
+        return tmp2[0];
+    };
 
     /*! \brief Clone this object
      */
-    virtual ClusterUpdater* clone() const;
+    virtual OutputFunction* clone() const;
 
+    //@}
+
+private:
+    //! temporary RealVec for speed-up apply with a single value
+    RealVec tmp1;
+    //! temporary RealVec for speed-up apply with a single value
+    RealVec tmp2;
 };
 
 }

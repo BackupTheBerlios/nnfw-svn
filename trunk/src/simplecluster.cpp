@@ -18,7 +18,7 @@
  ********************************************************************************/
 
 #include "simplecluster.h"
-#include "libclusterupdaters.h"
+#include "liboutputfunctions.h"
 #include "messages.h"
 #include "random.h"
 #include <cstdio>
@@ -39,7 +39,7 @@ SimpleCluster::~SimpleCluster() {
 }
 
 void SimpleCluster::update() {
-    getUpdater()->update( inputs(), outputs() );
+    getFunction()->apply( inputs(), outputs() );
     setNeedReset( true );
 }
 

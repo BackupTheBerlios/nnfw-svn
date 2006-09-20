@@ -18,7 +18,7 @@
  ********************************************************************************/
 
 #include "cluster.h"
-#include "libclusterupdaters.h"
+#include "liboutputfunctions.h"
 #include "messages.h"
 #include "random.h"
 #include <cstdio>
@@ -39,8 +39,8 @@ Cluster::Cluster( u_int numNeurons, const char* name )
     accOff = true;
     setNeedReset( false );
 
-    //! SigmoidUpdater as Default Updater
-    updater = new SigmoidUpdater( 1.0 );
+    //! SigmoidFunction as Default
+    updater = new SigmoidFunction( 1.0 );
 
     //! Properties definition
     addProperty( "size", Variant::t_uint, this, &Cluster::sizeP );
@@ -53,7 +53,7 @@ Cluster::~Cluster() {
     delete updater;
 }
 
-void Cluster::setUpdater( const ClusterUpdater& up ) {
+void Cluster::setFunction( const OutputFunction& up ) {
     delete updater;
     updater = up.clone();
 }

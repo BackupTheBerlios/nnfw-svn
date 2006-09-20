@@ -21,7 +21,7 @@
 #define DDECLUSTER_H
 
 #include "cluster.h"
-#include "clusterupdater.h"
+#include "outputfunction.h"
 
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {

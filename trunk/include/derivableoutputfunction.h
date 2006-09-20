@@ -17,38 +17,50 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA  *
  ********************************************************************************/
 
-#ifndef DERIVABLECLUSTERUPDATER_H
-#define DERIVABLECLUSTERUPDATER_H
+#ifndef DERIVABLEOUTPUTFUNCTION_H
+#define DERIVABLEOUTPUTFUNCTION_H
 
 /*! \file
- *  \brief This file contains the declaration of the abstract DerivableClusterUpdater Class
+ *  \brief This file contains the declaration of the abstract DerivableOutputFunction Class
  *
  *  Details...
  *
  */
 
 #include "types.h"
-#include "clusterupdater.h"
+#include "outputfunction.h"
 
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {
 
-/*! \brief Derivable Cluster Updater Class
+/*! \brief DerivableOutputFunction Class
  *
  *  Details...
  */
-class  DerivableClusterUpdater : public ClusterUpdater {
+class  DerivableOutputFunction : public OutputFunction {
 public:
+    /*! \name Constructors */
+    //@{
+
     //! Constructor
-    DerivableClusterUpdater() : ClusterUpdater() { /* Nothing to do */ };
+    DerivableOutputFunction() : OutputFunction() { /* Nothing to do */ };
     //! Destructor
-    virtual ~DerivableClusterUpdater() { /* Nothing to do */ };
-	
+    virtual ~DerivableOutputFunction() { /* Nothing to do */ };
+
+    //@}
+    /*! \name Interface */
+    //@{
+
     /*! \brief Compute the derivate of the function represent
      *
-     * Details...
+     *  Given the input of neurons and the corresponding output of neurons, it calculate
+     *  the derivate
      */
-    virtual Real derivate( Real x, Real ) const { return x; };
+    virtual void derivate( const RealVec& inputs, const RealVec&, RealVec& derivates ) const {
+        derivates.assign( inputs );
+    };
+
+    //@}
 	
 };
 

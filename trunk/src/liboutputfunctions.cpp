@@ -17,7 +17,7 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA  *
  ********************************************************************************/
 
-#include "libclusterupdaters.h"
+#include "liboutputfunctions.h"
 
 #include <cmath>
 
@@ -33,23 +33,19 @@
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {
 
-void DummyUpdater::update( RealVec& inputs, RealVec& outputs ) {
+void IdentityFunction::apply( RealVec& inputs, RealVec& outputs ) {
     outputs.assign( inputs );
 }
 
-void DummyUpdater::update( Real input, Real &output ) {
-    output = input;
+void IdentityFunction::derivate( const RealVec&, const RealVec&, RealVec& derivates ) const {
+    derivates.assign( derivates.size(), 1.0f );
 }
 
-Real DummyUpdater::derivate( Real, Real ) const {
-    return 1.0;
+IdentityFunction* IdentityFunction::clone() const {
+    return new IdentityFunction();
 }
 
-DummyUpdater* DummyUpdater::clone() const {
-    return new DummyUpdater();
-}
-
-void SigmoidUpdater::update( RealVec& inputs, RealVec& outputs ) {
+void SigmoidFunction::apply( RealVec& inputs, RealVec& outputs ) {
 #ifdef NNFW_DEBUG
     if ( inputs.size() != outputs.size() ) {
         nnfwMessage( NNFW_ERROR, "The output dimension doesn't match the input dimension" );
@@ -62,19 +58,18 @@ void SigmoidUpdater::update( RealVec& inputs, RealVec& outputs ) {
     outputs.inv();
 }
 
-void SigmoidUpdater::update( Real input, Real &output ) {
-    output = 1.0/( 1.0 + exp( -lambda*( input ) ) );
+void SigmoidFunction::derivate( const RealVec&, const RealVec& outputs, RealVec& derivates ) const {
+    // derivates <- lambda * out * (1.0-out)
+    derivates.assign_aminusx( 1.0, outputs );
+    derivates *= outputs;
+    derivates *= lambda;
 }
 
-Real SigmoidUpdater::derivate( Real , Real out ) const {
-    return lambda * out * (1.0-out);
+SigmoidFunction* SigmoidFunction::clone() const {
+    return new SigmoidFunction( lambda );
 }
 
-SigmoidUpdater* SigmoidUpdater::clone() const {
-    return new SigmoidUpdater( lambda );
-}
-
-void FakeSigmoidUpdater::update( RealVec& inputs, RealVec& outputs ) {
+void FakeSigmoidFunction::apply( RealVec& inputs, RealVec& outputs ) {
 #ifdef NNFW_DEBUG
     if ( inputs.size() != outputs.size() ) {
         nnfwMessage( NNFW_ERROR, "The output dimension doesn't match the input dimension" );
@@ -101,31 +96,18 @@ void FakeSigmoidUpdater::update( RealVec& inputs, RealVec& outputs ) {
     }
 }
 
-void FakeSigmoidUpdater::update( Real x, Real &output ) {
-    Real x0 = 6. + 2./3.;
-    Real zero = 0.5;
-    x *= lambda;
-    x -= (.5 - zero) / (.075 + zero);
-    if ( x <= -x0 ) {
-        output = 0.0;
-    } else {
-        if ( x < x0 ) {
-            output = .5 + .575 * x / ( 1 + fabs(x) );
-        } else {
-            output = 1.0;
-        }
-    }
+void FakeSigmoidFunction::derivate( const RealVec&, const RealVec& outputs, RealVec& derivates ) const {
+    // derivates <- lambda * out * (1.0-out)
+    derivates.assign_aminusx( 1.0, outputs );
+    derivates *= outputs;
+    derivates *= lambda;
 }
 
-Real FakeSigmoidUpdater::derivate( Real , Real out ) const {
-    return lambda * out * (1.0-out);
+FakeSigmoidFunction* FakeSigmoidFunction::clone() const {
+    return new FakeSigmoidFunction( lambda );
 }
 
-FakeSigmoidUpdater* FakeSigmoidUpdater::clone() const {
-    return new FakeSigmoidUpdater( lambda );
-}
-
-void ScaledSigmoidUpdater::update( RealVec& inputs, RealVec& outputs ) {
+void ScaledSigmoidFunction::apply( RealVec& inputs, RealVec& outputs ) {
 #ifdef NNFW_DEBUG
     if ( inputs.size() != outputs.size() ) {
         nnfwMessage( NNFW_ERROR, "The output dimension doesn't match the input dimension" );
@@ -140,21 +122,18 @@ void ScaledSigmoidUpdater::update( RealVec& inputs, RealVec& outputs ) {
     }
 }
 
-void ScaledSigmoidUpdater::update( Real input, Real &output ) {
-    Real f;
-    f = 1.0/( 1.0 + exp( -lambda*( input ) ) );
-    output = ( max - min ) * f + min ;
+void ScaledSigmoidFunction::derivate( const RealVec&, const RealVec& outputs, RealVec& derivates ) const {
+    // derivates <- lambda * out * (1.0-out)
+    derivates.assign_aminusx( 1.0, outputs );
+    derivates *= outputs;
+    derivates *= lambda;
 }
 
-Real ScaledSigmoidUpdater::derivate( Real , Real out ) const {
-    return lambda * out * (1.0-out);
+ScaledSigmoidFunction* ScaledSigmoidFunction::clone() const {
+    return new ScaledSigmoidFunction( lambda, min, max );
 }
 
-ScaledSigmoidUpdater* ScaledSigmoidUpdater::clone() const {
-    return new ScaledSigmoidUpdater( lambda, min, max );
-}
-
-void LinearUpdater::update( RealVec& inputs, RealVec& outputs ) {
+void LinearFunction::apply( RealVec& inputs, RealVec& outputs ) {
 #ifdef NNFW_DEBUG
     if ( inputs.size() != outputs.size() ) {
         nnfwMessage( NNFW_ERROR, "The output dimension doesn't match the input dimension" );
@@ -176,34 +155,23 @@ void LinearUpdater::update( RealVec& inputs, RealVec& outputs ) {
     }
 }
 
-void LinearUpdater::update( Real input, Real &output ) {
-    Real m = ( maxY-minY )/( maxX-minX );
-    Real q = minY - m*minX;
-    Real ret = m*(input) + q;
-    if (ret < minY) {
-        output = minY;
-    } else if (ret > maxY) {
-        output = maxY;
-    } else {
-        output = ret;
+void LinearFunction::derivate( const RealVec& inputs, const RealVec&, RealVec& derivates ) const {
+    for( u_int i=0; i<inputs.size(); i++ ) {
+        if ( inputs[i] >= minX && inputs[i] <= maxX ) {
+            derivates[i] = ( maxY-minY )/( maxX-minX );
+        } else {
+            Real y;
+            y = 1.0/( 1.0 + exp( -inputs[i] ) );
+            derivates[i] = y * ( 1.0 - y );
+        }
     }
 }
 
-Real LinearUpdater::derivate( Real x, Real ) const {
-    if ( x >= minX && x<= maxX ) {
-        return ( maxY-minY )/( maxX-minX );
-    } else {
-		Real y;
-		y = 1.0/( 1.0 + exp( -x ) );
-		return y * ( 1.0 - y );
-    }
+LinearFunction* LinearFunction::clone() const {
+    return new LinearFunction( minX, maxX, minY, maxY );
 }
 
-LinearUpdater* LinearUpdater::clone() const {
-    return new LinearUpdater( minX, maxX, minY, maxY );
-}
-
-void StepUpdater::update( RealVec& inputs, RealVec& outputs ) {
+void StepFunction::apply( RealVec& inputs, RealVec& outputs ) {
     u_int size = inputs.size();
 #ifdef NNFW_DEBUG
     if ( inputs.size() != outputs.size() ) {
@@ -216,52 +184,50 @@ void StepUpdater::update( RealVec& inputs, RealVec& outputs ) {
     }
 }
 
-void StepUpdater::update( Real input, Real &output ) {
-    ( input > threshold ) ? output = max : output = min;
+void StepFunction::derivate( const RealVec& inputs, const RealVec&, RealVec& derivates ) const {
+    for( u_int i=0; i<inputs.size(); i++ ) {
+        Real y;
+        y = 1.0/( 1.0 + exp( -inputs[i] ) );
+        derivates[i] = y * ( 1.0 - y );
+    }
 }
 
-Real StepUpdater::derivate( Real x, Real ) const {
-	Real y;
-	y = 1.0/( 1.0 + exp( -x ) );
-    return y * ( 1.0 - y );
-}
-
-StepUpdater* StepUpdater::clone() const {
-    return new StepUpdater( min, max, threshold );
+StepFunction* StepFunction::clone() const {
+    return new StepFunction( min, max, threshold );
 }
 
 
-PoolUpdater::PoolUpdater( const ClusterUpdater& prototype, u_int dim )
-    : ClusterUpdater(), ups(dim) {
+PoolFunction::PoolFunction( const OutputFunction& prototype, u_int dim )
+    : OutputFunction(), ups(dim) {
     for( u_int i=0; i<dim; i++ ) {
         ups[i] = prototype.clone();
     }
-    // --- if dimension is zero, set at least one element to ClusterUpdater
+    // --- if dimension is zero, set at least one element to OutputFunction
     if ( dim == 0 ) {
-        nnfwMessage( NNFW_ERROR, "The dimension of PoolUpdater must be at least one" );
+        nnfwMessage( NNFW_ERROR, "The dimension of PoolFunction must be at least one" );
         ups.resize( 1 );
-        ups[0] = new ClusterUpdater();
+        ups[0] = new OutputFunction();
     }
 }
 
-PoolUpdater::PoolUpdater( u_int dim )
-    : ClusterUpdater(), ups(dim) {
-    // --- if dimension is zero, set at least one element to ClusterUpdater
+PoolFunction::PoolFunction( u_int dim )
+    : OutputFunction(), ups(dim) {
+    // --- if dimension is zero, set at least one element to OutputFunction
     if ( dim == 0 ) {
-        nnfwMessage( NNFW_ERROR, "The dimension of PoolUpdater must be at least one" );
+        nnfwMessage( NNFW_ERROR, "The dimension of PoolFunction must be at least one" );
         ups.resize( 1 );
     }
 }
 
-PoolUpdater::~PoolUpdater() {
+PoolFunction::~PoolFunction() {
     for( u_int i=0; i<ups.size(); i++ ) {
         delete (ups[i]);
     }
 }
 
-void PoolUpdater::setClusterUpdater( u_int i, const ClusterUpdater& prototype ) {
+void PoolFunction::setOutputFunction( u_int i, const OutputFunction& prototype ) {
     if ( i >= ups.size() ) {
-        nnfwMessage( NNFW_ERROR, "Setting a ClusterUpdater beyond boundary of this PoolUpdater" );
+        nnfwMessage( NNFW_ERROR, "Setting a OutputFunction beyond boundary of this PoolFunction" );
         return;
     }
     delete (ups[i]);
@@ -269,19 +235,15 @@ void PoolUpdater::setClusterUpdater( u_int i, const ClusterUpdater& prototype ) 
     return;
 }
 
-void PoolUpdater::update( RealVec& inputs, RealVec& outputs ) {
+void PoolFunction::apply( RealVec& inputs, RealVec& outputs ) {
     u_int dim = ups.size();
     for( u_int i=0; i<dim; i++ ) {
-        ups[i]->update( inputs[i], outputs[i] );
+        outputs[i] = ups[i]->apply( inputs[i] );
     }
 }
 
-void PoolUpdater::update( Real input, Real &output ) {
-    ups[0]->update( input, output );
-}
-
-PoolUpdater* PoolUpdater::clone() const {
-    PoolUpdater* pool = new PoolUpdater( ups.size() );
+PoolFunction* PoolFunction::clone() const {
+    PoolFunction* pool = new PoolFunction( ups.size() );
     for( u_int i=0; i<ups.size(); i++ ) {
         pool->ups[i] = this->ups[i]->clone();
     }
