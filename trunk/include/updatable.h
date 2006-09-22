@@ -31,19 +31,42 @@ namespace nnfw {
  */
 class  Updatable : public Propertized {
 public:
+    /*! \name Constructors */
+    //@{
+
     //! Constructor
     Updatable( const char* name = "unnamed" ) {
-        u_int size = strlen(name);
-        this->name = new char[size+1];
-        strcpy( this->name, name );
-        addProperty( "name", Variant::t_string, this, &Updatable::getNameV );
+        setName( name );
+        addProperty( "name", Variant::t_string, this, &Updatable::getNameV, &Updatable::setName );
     };
+
+    //! Constructor with PropertySettings
+    Updatable( PropertySettings& prop ) {
+        setName( prop["name"].getString() );
+    };
+
     //! Destructor
     virtual ~Updatable() {
         delete []name;
     };
+
+    //@}
+    /*! \name Interface */
+    //@{
+
     //! Update the object
     virtual void update() = 0;
+    //! Set the name of Updatable
+    void setName( const char* name ) {
+        u_int size = strlen(name);
+        this->name = new char[size+1];
+        strcpy( this->name, name );
+    };
+    //! Set the name of Updatable (Varian version)
+    bool setName( const Variant& nv ) {
+        setName( nv.getString() );
+        return true;
+    };
     //! Return the name associated
     const char* getName() {
         return name;
@@ -52,6 +75,9 @@ public:
     Variant getNameV() {
         return Variant( name );
     };
+
+    //@}
+
 protected:
     char* name;
 };

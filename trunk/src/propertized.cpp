@@ -23,7 +23,7 @@
 namespace nnfw {
 
 const char* Variant::typen[t_propertized+1] = { "Null", "Real", "int", "unsigned int", "char", "unsigned char", "bool",
-    "String (const char*)", "RealVec*", "RealMat*", "Propertized*" };
+    "String (const char*)", "RealVec*", "RealMat*", "OutputFunction*", "Propertized*" };
 
 Propertized::Propertized()
     : props() {

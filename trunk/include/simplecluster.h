@@ -31,17 +31,28 @@ namespace nnfw {
  */
 class  SimpleCluster : public Cluster {
 public:
+    /*! \name Constructors */
+    //@{
+
     /*! \brief Construct a Cluster that contains numNeurons neuron
      *
      *  Details...
      */
     SimpleCluster( u_int numNeurons, const char* name = "unnamed" );
 
+    /*! \brief Construct by a PropertySettings
+     */
+    SimpleCluster( PropertySettings& prop );
+
     /*! \brief Destructor
      *
      * Details..
      */
     virtual ~SimpleCluster();
+
+    //@}
+    /*! \name Interface */
+    //@{
 
     /*! \brief Update the outputs of neurons
      *
@@ -53,6 +64,7 @@ public:
      */
     void randomize( Real, Real ) { /* Nothing To Do */ };
 
+    //@}
 };
 
 }

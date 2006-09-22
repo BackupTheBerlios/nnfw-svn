@@ -69,14 +69,16 @@ namespace nnfw {
  *    by inputs (or outputs) and works over them.
  * \nosubgrouping
  */
-class  Cluster : public Updatable
-{
+class  Cluster : public Updatable {
 public:
     /*! \name Constructors */
     //@{
 
     //! Construct a Cluster
     Cluster( u_int numNeurons, const char* name = "unnamed" );
+
+    //! Construct a Cluster with PropertySettings
+    Cluster( PropertySettings& prop );
 
     //! Destructor
     virtual ~Cluster();
@@ -171,12 +173,12 @@ public:
         return inputdata;
     };
 
-    //! For property 'outputs'
+    //! For property 'inputs'
     Variant inputsP() {
         return Variant( &inputdata );
     };
 
-    //! setting the property 'outputs'
+    //! setting the property 'inputs'
     bool setInputsP( const Variant& v ) {
         inputdata.assign( *(v.getRealVec()) );
         return true;
@@ -235,6 +237,18 @@ public:
     OutputFunction* const getFunction() {
         return updater;
     };
+
+    //! read property 'outfunction'
+    Variant getFunctionP() {
+        return Variant( updater );
+    };
+
+    //! sets the property 'outfunction'
+    bool setFunction( const Variant& outf ) {
+        setFunction( *(outf.getOutputFunction()) );
+        return true;
+    };
+
     //@}
 
 protected:
@@ -261,6 +275,9 @@ private:
      *  --- Warns for developers --- accOff == true means NO-ACCUMULATION
      */
     bool accOff;
+
+    //! define properties
+    void propdefs();
 };
 
 }

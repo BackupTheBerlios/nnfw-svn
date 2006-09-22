@@ -35,6 +35,11 @@ SimpleCluster::SimpleCluster( u_int numNeurons, const char* name )
     : Cluster( numNeurons, name) {
 }
 
+SimpleCluster::SimpleCluster( PropertySettings& prop )
+    : Cluster( prop ) {
+    /* nothing else to do */
+}
+
 SimpleCluster::~SimpleCluster() {
 }
 

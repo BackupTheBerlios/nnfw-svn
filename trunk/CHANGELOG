@@ -15,13 +15,21 @@ S <mave> comment goes here
     'C' : means that something has been changed (e.g. implementation of a Class or a signature method)
 ==== End of Legend ====
 
+    ==> 98 - 20/09/2006 <==
+
+C <mave> BiasedCluster propertized
+C <mave> SimpleCluster propertized
+C <mave> Cluster propertized
+C <mave> Updatable propertized
++ <mave> Variant now support OutputFunction pointers
+
     ==> 97 - 20/09/2006 <==
 
-'C' <mave> nnfw.h also includes ionnfw header, now
-'C' <mave> the method Cluster::setUpdater has been renamed to setFunction
-'C' <mave> all subclasses of ClusterUpdater are changed accordlying;
-            i.e. SigmoidUpdater to SigmoidFunction, etc
-'C' <mave> ClusterUpdater class has been renamed to OutputFunction
+C <mave> nnfw.h also includes ionnfw header, now
+C <mave> the method Cluster::setUpdater has been renamed to setFunction
+C <mave> all subclasses of ClusterUpdater are changed accordlying;
+           i.e. SigmoidUpdater to SigmoidFunction, etc
+C <mave> ClusterUpdater class has been renamed to OutputFunction
 
     ==> 96 - 11/09/2006 <==
 

@@ -31,17 +31,28 @@ namespace nnfw {
  */
 class  BiasedCluster : public Cluster {
 public:
+    /*! \name Constructors */
+    //@{
+
     /*! \brief Construct a Cluster that contains numNeurons neuron
      *
      *  Details...
      */
     BiasedCluster( u_int numNeurons, const char* name = "unnamed" );
 
+    /*! \brief Construct by a PropertySettings
+     */
+    BiasedCluster( PropertySettings& prop );
+
     /*! \brief Destructor
      *
      * Details..
      */
     virtual ~BiasedCluster();
+
+    //@}
+    /*! \name Interface */
+    //@{
 
     /*! \brief Update the outputs of neurons
      */
@@ -70,14 +81,30 @@ public:
         return biasesdata;
     };
 
+    //! read property 'biases'
+    Variant getBiases() {
+        return Variant( &biasesdata );
+    };
+
+    //! set property 'biases'
+    bool setBiases( const Variant& v ) {
+        setBiases( *( v.getRealVec() ) );
+        return true;
+    };
+
     /*! \brief Randomize the biases of BiasedCluster
      */
     void randomize( Real min, Real max );
+
+    //@}
 
 private:
     RealVec biasesdata;
     //! tempdata
     RealVec tempdata;
+
+    //! define properties
+    void propdefs();
 };
 
 }

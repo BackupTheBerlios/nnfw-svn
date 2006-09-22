@@ -28,6 +28,7 @@
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {
 
+class OutputFunction;
 class Propertized;
 class AbstractPropertyAccess;
 
@@ -41,7 +42,7 @@ class Variant {
 public:
     //! type of registrable data
     typedef enum { t_null=0, t_real, t_int, t_uint, t_char, t_uchar, t_bool, t_string,
-                t_realvec, t_realmat, t_propertized } types;
+                t_realvec, t_realmat, t_outfunction, t_propertized } types;
 
     /*! \name Constructors
      */
@@ -66,6 +67,7 @@ public:
         case t_string: dstring = src.dstring; break;
         case t_realvec: drealvec = src.drealvec; break;
         case t_realmat: drealmat = src.drealmat; break;
+        case t_outfunction: doutfun = src.doutfun; break;
         case t_propertized: dprop = src.dprop; break;
         }
     };
@@ -125,6 +127,12 @@ public:
     };
 
     //! \brief Constructor
+    Variant( OutputFunction* d ) {
+        dtype = t_outfunction;
+        doutfun = d;
+    };
+
+    //! \brief Constructor
     Variant( Propertized* d ) {
         dtype = t_propertized;
         dprop = d;
@@ -148,6 +156,7 @@ public:
         case t_string: dstring = src.dstring; break;
         case t_realvec: drealvec = src.drealvec; break;
         case t_realmat: drealmat = src.drealmat; break;
+        case t_outfunction: doutfun = src.doutfun; break;
         case t_propertized: dprop = src.dprop; break;
         }
         return (*this);
@@ -167,6 +176,12 @@ public:
      */
     const char* typeName() const {
         return typen[dtype];
+    };
+
+    /*! \brief Return true if the Variant is Null
+     */
+    bool isNull() {
+        return ( dtype == t_null );
     };
 
     //@}
@@ -218,6 +233,11 @@ public:
         checkType( t_realmat );
         return drealmat;
     };
+    //! return the OutputFunction value
+    const OutputFunction* getOutputFunction() const {
+        checkType( t_outfunction );
+        return doutfun;
+    };
     //! return the Propertized value
     const Propertized* getPropertized() const {
         checkType( t_propertized );
@@ -246,6 +266,7 @@ private:
     const char*     dstring;
     RealVec*         drealvec;
     RealMat*         drealmat;
+    OutputFunction*  doutfun;
     Propertized*     dprop;
 
     //! Check type

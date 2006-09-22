@@ -31,6 +31,18 @@ BiasedCluster::BiasedCluster( u_int numNeurons, const char* name )
     : Cluster( numNeurons, name), biasesdata(numNeurons), tempdata(numNeurons) {
     biasesdata.zeroing();
     tempdata.zeroing();
+    propdefs();
+}
+
+BiasedCluster::BiasedCluster( PropertySettings& prop )
+    : Cluster( prop ), biasesdata( size() ) {
+    Variant& v = prop["biases"];
+    if ( v.isNull() ) {
+        biasesdata.zeroing();
+    } else {
+        setBiases( v );
+    }
+    propdefs();
 }
 
 BiasedCluster::~BiasedCluster() {
@@ -74,6 +86,10 @@ void BiasedCluster::randomize( Real min, Real max ) {
     for ( u_int i = 0; i < size(); i++ ) {
         biasesdata[i] = Random::flatReal( min, max );
     }
+}
+
+void BiasedCluster::propdefs() {
+    addProperty( "biases", Variant::t_realvec, this, &BiasedCluster::getBiases, &BiasedCluster::setBiases );
 }
 
 }

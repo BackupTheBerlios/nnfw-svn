@@ -43,10 +43,37 @@ Cluster::Cluster( u_int numNeurons, const char* name )
     updater = new SigmoidFunction( 1.0 );
 
     //! Properties definition
-    addProperty( "size", Variant::t_uint, this, &Cluster::sizeP );
-    addProperty( "accumulate", Variant::t_bool, this, &Cluster::accumP, &Cluster::setAccumP );
-    addProperty( "inputs", Variant::t_realvec, this, &Cluster::inputsP, &Cluster::setInputsP );
-    addProperty( "outputs", Variant::t_realvec, this, &Cluster::outputsP, &Cluster::setOutputsP );
+    propdefs();
+}
+
+Cluster::Cluster( PropertySettings& prop )
+    : Updatable(), inputdata(0), outputdata(0) {
+    // --- Configuring Name
+    Variant& v = prop["name"];
+    if ( !v.isNull() ) {
+        setName( prop["name"].getString() );
+    }
+    // --- Configuring Dimension
+    this->numNeurons = prop["size"].getUInt();
+    inputdata.resize( numNeurons );
+    outputdata.resize( numNeurons );
+    // --- Configuring Accumulate modality
+    v = prop["accumulate"];
+    if ( v.isNull() ) {
+        accOff = true;
+    } else {
+        accOff = !( prop["accumulate"].getBool() );
+    }
+    setNeedReset( false );
+    // --- Configuring OutputFunction
+    v = prop["outfunction"];
+    if ( v.isNull() ) {
+        updater = new SigmoidFunction( 1.0 );
+    } else {
+        updater = v.getOutputFunction()->clone();
+    }
+    //! Properties definition
+    propdefs();
 }
 
 Cluster::~Cluster() {
@@ -114,6 +141,14 @@ Real Cluster::getOutput( u_int neuron ) const {
         return 0.0;
     }
     return outputdata[neuron];
+}
+
+void Cluster::propdefs() {
+    addProperty( "size", Variant::t_uint, this, &Cluster::sizeP );
+    addProperty( "accumulate", Variant::t_bool, this, &Cluster::accumP, &Cluster::setAccumP );
+    addProperty( "inputs", Variant::t_realvec, this, &Cluster::inputsP, &Cluster::setInputsP );
+    addProperty( "outputs", Variant::t_realvec, this, &Cluster::outputsP, &Cluster::setOutputsP );
+    addProperty( "outfunction", Variant::t_outfunction, this, &Cluster::getFunctionP, &Cluster::setFunction );
 }
 
 }
