@@ -75,18 +75,6 @@ public:
      */
     void update();
 
-    /*! \brief Return the Cluster From
-     *
-     * Details
-     */
-    Cluster* getFrom() const;
-
-    /*! \brief Return the Cluster to
-     *
-     * Details
-     */
-    Cluster* getTo() const;
-
     /*! \brief Returns the number of neurons connected
      *
      * Details
@@ -100,6 +88,7 @@ public:
     void randomize( Real , Real ) {
         // --- Do Nothing
     };
+
 private:
     //! View of source RealVec of copying
     RealVec dataFrom;
@@ -109,10 +98,6 @@ private:
     bool viewsIsInit;
     //! Length of data to be copied
     u_int dimData;
-    //! From
-    Cluster* from;
-    //! To
-    Cluster* to;
     //! Modality of Copy
     CopyMode mode;
 };

@@ -15,6 +15,18 @@ S <mave> comment goes here
     'C' : means that something has been changed (e.g. implementation of a Class or a signature method)
 ==== End of Legend ====
 
+    ==> 99 - 20/09/2006 <==
+
+C <mave> SparseMatrixLinker propertized
+C <mave> MatrixLinker propertized
+C <mave> Linker propertized
+C <mave> add Cluster* type to Variant
+C <mave> in the Linker hierarchy, clusters from and to are now attributes of base class Linker;
+            subclasses changed accordlying
+C <mave> DDECluster propertized
+C <mave> using VectorData views for speed-up implementation of FakeCluster
+C <mave> FakeCluster propertized
+
     ==> 98 - 20/09/2006 <==
 
 C <mave> BiasedCluster propertized

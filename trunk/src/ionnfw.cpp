@@ -79,6 +79,7 @@ std::ostream& operator<<(std::ostream& stream, const Variant var) {
     case Variant::t_realvec: stream << *(var.getRealVec()); break;
     case Variant::t_realmat: stream << *(var.getRealMat()); break;
     case Variant::t_outfunction: stream << "print of OutputFunction not yet implemented" ; break;
+    case Variant::t_cluster: stream << "print of Cluster not yet implemented" ; break;
     case Variant::t_propertized: stream << *(var.getPropertized()); break;
     }
     return stream;

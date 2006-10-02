@@ -30,9 +30,17 @@
 namespace nnfw {
 
 MatrixLinker::MatrixLinker( Cluster* from, Cluster* to, const char* name )
-    : Linker(name), nrows(from->size()), ncols(to->size()), w(nrows, ncols) {
-    this->from = from;
-    this->to = to;
+    : Linker(from, to, name), nrows(from->size()), ncols(to->size()), w(nrows, ncols) {
+    addProperty( "weights", Variant::t_realmat, this, &MatrixLinker::matrixP, &MatrixLinker::setMatrix );
+}
+
+MatrixLinker::MatrixLinker( PropertySettings& prop )
+    : Linker( prop ), nrows( from()->size() ), ncols( to()->size() ), w(nrows, ncols) {
+    Variant& v = prop["weights"];
+    if ( ! v.isNull() ) {
+        setMatrix( v );
+    }
+    addProperty( "weights", Variant::t_realmat, this, &MatrixLinker::matrixP, &MatrixLinker::setMatrix );
 }
 
 MatrixLinker::~MatrixLinker() {
@@ -53,7 +61,7 @@ u_int MatrixLinker::size() {
 void MatrixLinker::randomize( Real min, Real max ) {
     for ( u_int i = 0; i<nrows; i++ ) {
         for ( u_int j = 0; j<ncols; j++ ) {
-            w.at( i, j ) = Random::flatReal( min, max );
+            w[i][j] = Random::flatReal( min, max );
         }
     }
 }
@@ -67,7 +75,7 @@ void MatrixLinker::setWeight( u_int from, u_int to, Real weight ) {
         nnfwMessage( NNFW_ERROR, "Accessing out of Columns Boundary" );
         return;
     }
-    w.at( from, to ) = weight;
+    w[from][to] = weight;
 }
 
 Real MatrixLinker::getWeight( u_int from, u_int to ) {
@@ -79,23 +87,24 @@ Real MatrixLinker::getWeight( u_int from, u_int to ) {
         nnfwMessage( NNFW_ERROR, "Accessing out of Columns Boundary" );
         return 0.0;
     }
-    return w.at( from, to );
+    return w[from][to];
 }
 
-Cluster* MatrixLinker::getFrom() const {
-    return from;
+void MatrixLinker::setMatrix( const RealMat& mat ) {
+    w.assign( mat );
 }
 
-Cluster* MatrixLinker::getTo() const {
-    return to;
+bool MatrixLinker::setMatrix( const Variant& v ) {
+    w.assign( *( v.getRealMat() ) );
+    return true;
 }
 
 void MatrixLinker::update() {
     // check if cluster 'To' needs a reset
-    if ( to->needReset() ) {
-        to->resetInputs();
+    if ( to()->needReset() ) {
+        to()->resetInputs();
     }
-    RealMat::mul( to->inputs(), from->outputs(), w );
+    RealMat::mul( to()->inputs(), from()->outputs(), w );
     return;
 }
 

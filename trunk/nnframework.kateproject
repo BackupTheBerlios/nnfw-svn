@@ -36,7 +36,7 @@ Files=messages.h/neuralnet.h/nnfw.h/random.h/types.h/utils.h/cluster.h/fakeclust
 
 [Dir src]
 Dirs=
-Files=messages.cpp/neuralnet.cpp/random.cpp/types.cpp/fakecluster.cpp/simplecluster.cpp/copylinker.cpp/matrixlinker.cpp/blockslearning.cpp/learningnetwork.cpp/utils.cpp/biasedcluster.cpp/cluster.cpp/realvec.cpp/sparsematrixlinker.cpp/realmat.cpp/ddecluster.cpp/nnfwfactory.cpp/propertized.cpp/ionnfw.cpp/libmatrixmodifiers.cpp/liboutputfunctions.cpp/outputfunction.cpp
+Files=messages.cpp/neuralnet.cpp/random.cpp/types.cpp/fakecluster.cpp/simplecluster.cpp/copylinker.cpp/matrixlinker.cpp/blockslearning.cpp/learningnetwork.cpp/utils.cpp/biasedcluster.cpp/cluster.cpp/realvec.cpp/sparsematrixlinker.cpp/realmat.cpp/ddecluster.cpp/nnfwfactory.cpp/propertized.cpp/ionnfw.cpp/libmatrixmodifiers.cpp/liboutputfunctions.cpp/outputfunction.cpp/linker.cpp
 
 [Dir tests]
 Dirs=test1/test2/test3/test4/test5/test6

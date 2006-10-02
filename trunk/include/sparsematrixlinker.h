@@ -32,6 +32,9 @@ namespace nnfw {
  */
 class  SparseMatrixLinker : public MatrixLinker {
 public:
+    /*! \name Constructors */
+    //@{
+
     /*! \brief Connect clusters with complete connections
      * Details
      */
@@ -41,10 +44,18 @@ public:
      */
     SparseMatrixLinker( Real prob, Cluster* from, Cluster* to, const char* name = "unnamed" );
 
+    /*! \brief Construct by PropertySettings
+     */
+    SparseMatrixLinker( PropertySettings& prop );
+
     /*! \brief Destructor
      * Details
      */
     virtual ~SparseMatrixLinker();
+
+    //@}
+    /*! \name Interface */
+    //@{
 
     /*! \brief Set the weight of the connection specified
      * Details
@@ -66,9 +77,11 @@ public:
 
     /*! \brief Get the mask
      */
-    MatrixData<bool>& getMask() { 
+    MatrixData<bool>& getMask() {
 		return mask;
 	};
+
+    //@}
 
 private:
     //! Mask Matrix

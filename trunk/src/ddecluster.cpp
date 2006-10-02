@@ -25,10 +25,26 @@ namespace nnfw {
 DDECluster::DDECluster( const RealVec& c, u_int numNeurons, const char* name )
     : Cluster( numNeurons, name ), tmpdata(numNeurons), tmpdata2(numNeurons) {
     setCoeff( c );
+    propdefs();
+}
+
+DDECluster::DDECluster( PropertySettings& prop )
+    : Cluster( prop ), tmpdata( size() ), tmpdata2( size() ) {
+    Variant& v = prop["coeff"];
+    if ( v.isNull() ) {
+        setCoeff( RealVec() );
+    } else {
+        setCoeff( v );
+    }
+    propdefs();
 }
 
 DDECluster::~DDECluster() {
     /* Nothing to do */
+}
+
+void DDECluster::propdefs() {
+    addProperty( "coeff", Variant::t_realvec, this, &DDECluster::getCoeffP, &DDECluster::setCoeff );
 }
 
 void DDECluster::setCoeff( const RealVec& c ) {
@@ -39,6 +55,15 @@ void DDECluster::setCoeff( const RealVec& c ) {
         ds[i].resize( size() );
         ds[i].zeroing();
     }
+}
+
+bool DDECluster::setCoeff( const Variant& v ) {
+    setCoeff( *(v.getRealVec()) );
+    return true;
+}
+
+Variant DDECluster::getCoeffP() {
+    return Variant( &coeff );
 }
 
 void DDECluster::update() {

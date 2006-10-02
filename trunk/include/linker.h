@@ -43,22 +43,63 @@ namespace nnfw {
  */
 class  Linker : public Updatable {
 public:
+    /*! \name Constructors */
+    //@{
+
     //! Construct
-    Linker( const char* name = "unnamed" ) : Updatable(name) {
-        // nothing to do
+    Linker( Cluster* from, Cluster* to, const char* name = "unnamed" );
+
+    /*! \brief Construct by PropertySettings
+     */
+    Linker( PropertySettings& );
+
+    //@}
+    /*! \name Deprecated Methods */
+    //@{
+
+    /*! \brief Return the Cluster From -- Deprecated ( use from() )
+     *
+     * Details
+     */
+    Cluster* getFrom() const {
+        return fromc;
     };
 
-    /*! \brief Return the Cluster From
+    /*! \brief Return the Cluster to -- Deprecated ( use to() )
      *
      * Details
      */
-    virtual Cluster* getFrom() const = 0;
+    Cluster* getTo() const {
+        return toc;
+    };
+
+    //@}
+    /*! \name Interface */
+    //@{
+
+    /*! \brief Return the Cluster From
+     */
+    Cluster* from() const {
+        return fromc;
+    };
 
     /*! \brief Return the Cluster to
-     *
-     * Details
      */
-    virtual Cluster* getTo() const = 0;
+    Cluster* to() const {
+        return toc;
+    };
+
+    /*! \brief Return Cluster from (Variant version)
+     */
+    Variant fromP() {
+        return Variant( fromc );
+    };
+
+    /*! \brief Return Cluster to (Variant version)
+     */
+    Variant toP() {
+        return Variant( toc );
+    };
 
     /*! \brief Returns the 'size' of the linker
      *
@@ -71,6 +112,14 @@ public:
      * The parameters randomized by this method will be specified by sub-classes
      */
     virtual void randomize( Real min, Real max ) = 0;
+
+    //@}
+
+private:
+    //! incoming Cluster
+    Cluster* fromc;
+    //! outgoing Cluster
+    Cluster* toc;
 };
 
 }

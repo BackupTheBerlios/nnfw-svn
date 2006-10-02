@@ -46,14 +46,32 @@ public:
      */
     DDECluster( const RealVec& coeff, u_int numNeurons, const char* name = "unnamed" );
 
+    /*! \brief Construct by PropertySettings
+     */
+    DDECluster( PropertySettings& prop );
+
     /*! \brief Destructor
      * Details..
      */
     virtual ~DDECluster();
 
-    /*! \brief Set the Coeffiecients
+    /*! \brief Set the coeffiecients
      */
     void setCoeff( const RealVec& coef );
+
+    /*! \brief Return coeffiecients
+     */
+    const RealVec& getCoeff() {
+        return coeff;
+    };
+
+    /*! \brief Set Coefficeients (Variant version)
+     */
+    bool setCoeff( const Variant& );
+
+    /*! \brief Return coeffiecients (Variant version)
+     */
+    Variant getCoeffP();
 
     /*! \brief Update the outputs of neurons
      * Details
@@ -79,6 +97,8 @@ private:
     //! Break the update calculates
     void breakUpdate();
 
+    //! property definitions
+    void propdefs();
 };
 
 }

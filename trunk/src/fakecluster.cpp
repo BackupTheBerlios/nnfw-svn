@@ -29,16 +29,21 @@ namespace nnfw {
 
 FakeCluster::FakeCluster( u_int size, const char* name )
     : Cluster( size, name) {
-    // Merge the two array of data, and free one of them
-/*    changeOutputPointerData( inputs() );
-    delete []( outputs() );*/
+    // Set the outputs as a View of inputs
+    outputs().convertToView( inputs(), 0, size );
 }
+
+FakeCluster::FakeCluster( PropertySettings& prop )
+    : Cluster( prop ) {
+    // Set the outputs as a View of inputs
+    outputs().convertToView( inputs(), 0, size() );
+}
+    
 
 FakeCluster::~FakeCluster() {
 }
 
 void FakeCluster::update() {
-    outputs().assign( inputs() );
     setNeedReset( true );
     return;
 }

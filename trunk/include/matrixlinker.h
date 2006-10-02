@@ -32,17 +32,28 @@ namespace nnfw {
  */
 class  MatrixLinker : public Linker {
 public:
+    /*! \name Constructors */
+    //@{
+
     /*! \brief Connect clusters with a complete connections
      *
      * Details
      */
     MatrixLinker( Cluster* from, Cluster* to, const char* name = "unnamed" );
 
+    /*! \brief Construct by PropertySettings
+     */
+    MatrixLinker( PropertySettings& prop );
+
     /*! \brief Destructor
      *
      * Details
      */
     virtual ~MatrixLinker();
+
+    //@}
+    /*! \name Interface */
+    //@{
 
     /*! \brief Get the number of rows
      *
@@ -77,18 +88,6 @@ public:
      */
     virtual Real getWeight( u_int from, u_int to );
 
-    /*! \brief Return the Cluster From
-     *
-     * Details
-     */
-    Cluster* getFrom() const;
-
-    /*! \brief Return the Cluster to
-     *
-     * Details
-     */
-    Cluster* getTo() const;
-
     /*! \brief Return the weight matrix
      *
      * Details
@@ -97,20 +96,32 @@ public:
 		return w;
 	}
 
+    /*! \brief Return the weight matrix (Variant ver)
+     */
+    Variant matrixP() {
+        return Variant( &w );
+    };
+
+    /*! \brief Set the whole weight matrix
+     */
+    void setMatrix( const RealMat& mat );
+
+    /*! \brief Set the whole weight matrix (Variant ver)
+     */
+    bool setMatrix( const Variant& v );
+
     /*! \brief Update the Linker
      * Details...
      */
     void update();
+
+    //@}
 
 protected:
     //! Registers the dimensions of the matrix
     u_int nrows, ncols;
     //! Weight Matrix
     RealMat w;
-    //! Registers the cluster from
-    Cluster* from;
-    //! Registers the cluster to
-    Cluster* to;
 };
 
 }

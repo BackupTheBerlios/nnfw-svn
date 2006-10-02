@@ -43,6 +43,11 @@ SparseMatrixLinker::SparseMatrixLinker( Real prob, Cluster* from, Cluster* to, c
     }
 }
 
+SparseMatrixLinker::SparseMatrixLinker( PropertySettings& prop )
+    : MatrixLinker( prop ), mask(nrows, ncols) {
+}
+
+
 SparseMatrixLinker::~SparseMatrixLinker() {
 }
 

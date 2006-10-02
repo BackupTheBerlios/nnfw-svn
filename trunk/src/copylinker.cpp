@@ -29,14 +29,12 @@ namespace nnfw {
  **********************************************/
 
 CopyLinker::CopyLinker( Cluster* from, Cluster* to, CopyMode mode, const char* name )
-    : Linker(name), dataFrom(), dataTo() {
+    : Linker(from, to, name), dataFrom(), dataTo() {
     if ( from->size() < to->size() ) {
         dimData = from->size();
     } else {
         dimData = to->size(); 
     }
-    this->from = from;
-    this->to = to;
     // Follow initialization force setMode method to setting datas, otherwise strange automatic compile-time
     // initialization may results in unpredictable behaviour
     this->mode = (CopyMode)-1;
@@ -52,20 +50,20 @@ void CopyLinker::setMode( CopyMode cm ) {
     this->mode = cm;
     switch( mode ) {
     case In2In:
-        dataFrom.convertToView( from->inputs(), 0, dimData );
-        dataTo.convertToView( to->inputs(), 0, dimData );
+        dataFrom.convertToView( from()->inputs(), 0, dimData );
+        dataTo.convertToView( to()->inputs(), 0, dimData );
         break;
     case In2Out:
-        dataFrom.convertToView( from->inputs(), 0, dimData );
-        dataTo.convertToView( to->outputs(), 0, dimData );
+        dataFrom.convertToView( from()->inputs(), 0, dimData );
+        dataTo.convertToView( to()->outputs(), 0, dimData );
         break;
     case Out2In:
-        dataFrom.convertToView( from->outputs(), 0, dimData );
-        dataTo.convertToView( to->inputs(), 0, dimData );
+        dataFrom.convertToView( from()->outputs(), 0, dimData );
+        dataTo.convertToView( to()->inputs(), 0, dimData );
         break;
     case Out2Out:
-        dataFrom.convertToView( from->outputs(), 0, dimData );
-        dataTo.convertToView( to->outputs(), 0, dimData );
+        dataFrom.convertToView( from()->outputs(), 0, dimData );
+        dataTo.convertToView( to()->outputs(), 0, dimData );
         break;
     }
     return;
@@ -77,20 +75,12 @@ CopyLinker::CopyMode CopyLinker::getMode() {
 
 void CopyLinker::update() {
     // check if cluster 'To' needs a reset
-    if ( to->needReset() ) {
+    if ( to()->needReset() ) {
         dataTo.assign( dataFrom );
     } else {
         dataTo += dataFrom;
     }
     return;
-}
-
-Cluster* CopyLinker::getFrom() const {
-    return from;
-}
-
-Cluster* CopyLinker::getTo() const {
-    return to;
 }
 
 u_int CopyLinker::size() {

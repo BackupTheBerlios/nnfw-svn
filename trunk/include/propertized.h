@@ -42,7 +42,7 @@ class Variant {
 public:
     //! type of registrable data
     typedef enum { t_null=0, t_real, t_int, t_uint, t_char, t_uchar, t_bool, t_string,
-                t_realvec, t_realmat, t_outfunction, t_propertized } types;
+                t_realvec, t_realmat, t_outfunction, t_cluster, t_propertized } types;
 
     /*! \name Constructors
      */
@@ -68,6 +68,7 @@ public:
         case t_realvec: drealvec = src.drealvec; break;
         case t_realmat: drealmat = src.drealmat; break;
         case t_outfunction: doutfun = src.doutfun; break;
+        case t_cluster: dcluster = src.dcluster; break;
         case t_propertized: dprop = src.dprop; break;
         }
     };
@@ -133,6 +134,12 @@ public:
     };
 
     //! \brief Constructor
+    Variant( Cluster* d ) {
+        dtype = t_cluster;
+        dcluster = d;
+    };
+
+    //! \brief Constructor
     Variant( Propertized* d ) {
         dtype = t_propertized;
         dprop = d;
@@ -157,6 +164,7 @@ public:
         case t_realvec: drealvec = src.drealvec; break;
         case t_realmat: drealmat = src.drealmat; break;
         case t_outfunction: doutfun = src.doutfun; break;
+        case t_cluster: dcluster = src.dcluster; break;
         case t_propertized: dprop = src.dprop; break;
         }
         return (*this);
@@ -238,6 +246,11 @@ public:
         checkType( t_outfunction );
         return doutfun;
     };
+    //! return the OutputFunction value
+    const Cluster* getCluster() const {
+        checkType( t_cluster );
+        return dcluster;
+    };
     //! return the Propertized value
     const Propertized* getPropertized() const {
         checkType( t_propertized );
@@ -267,6 +280,7 @@ private:
     RealVec*         drealvec;
     RealMat*         drealmat;
     OutputFunction*  doutfun;
+    Cluster*         dcluster;
     Propertized*     dprop;
 
     //! Check type

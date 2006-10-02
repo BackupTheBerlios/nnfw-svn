@@ -1,5 +1,6 @@
 
 PROJECT( NNFW )
+SET( CMAKE_COLOR_MAKEFILE ON )
 
 ### Configure of Library
 ### a string variable that contains configuration keys separated by with spaces:
@@ -49,7 +50,7 @@ IF (UNIX)
     STRING( REPLACE ";" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} )
 ENDIF (UNIX)
 
-SET( NNFW_SRCS ./src/propertized.cpp ./src/cluster.cpp ./src/simplecluster.cpp ./src/biasedcluster.cpp ./src/fakecluster.cpp ./src/ddecluster.cpp ./src/outputfunction.cpp ./src/liboutputfunctions.cpp ./src/matrixlinker.cpp ./src/sparsematrixlinker.cpp ./src/copylinker.cpp ./src/neuralnet.cpp ./src/utils.cpp ./src/nnfwfactory.cpp ./src/messages.cpp ./src/random.cpp ./src/types.cpp ./src/realvec.cpp ./src/realmat.cpp ./src/blockslearning.cpp ./src/learningnetwork.cpp ./src/ionnfw.cpp ./src/libmatrixmodifiers.cpp )
+SET( NNFW_SRCS ./src/propertized.cpp ./src/cluster.cpp ./src/linker.cpp ./src/simplecluster.cpp ./src/biasedcluster.cpp ./src/fakecluster.cpp ./src/ddecluster.cpp ./src/outputfunction.cpp ./src/liboutputfunctions.cpp ./src/matrixlinker.cpp ./src/sparsematrixlinker.cpp ./src/copylinker.cpp ./src/neuralnet.cpp ./src/utils.cpp ./src/nnfwfactory.cpp ./src/messages.cpp ./src/random.cpp ./src/types.cpp ./src/realvec.cpp ./src/realmat.cpp ./src/blockslearning.cpp ./src/learningnetwork.cpp ./src/ionnfw.cpp ./src/libmatrixmodifiers.cpp )
 
 SET( NNFW_HDRS ./include/nnfw.h ./include/primtypes.h ./include/types.h ./include/memutils.h ./include/observ.h ./include/clonable.h ./include/propertized.h ./include/vectordata.h ./include/matrixdata.h ./include/realvec.h ./include/realmat.h ./include/updatable.h ./include/cluster.h ./include/simplecluster.h ./include/biasedcluster.h ./include/fakecluster.h ./include/ddecluster.h ./include/outputfunction.h ./include/derivableoutputfunction.h ./include/liboutputfunctions.h ./include/linker.h ./include/copylinker.h ./include/matrixlinker.h ./include/sparsematrixlinker.h ./include/neuralnet.h ./include/utils.h ./include/nnfwfactory.h ./include/messages.h ./include/random.h ./include/blockslearning.h ./include/learningnetwork.h ./include/ionnfw.h ./include/libmatrixmodifiers.h ./include/learningalgorithm.h ./include/modifier.h )
 

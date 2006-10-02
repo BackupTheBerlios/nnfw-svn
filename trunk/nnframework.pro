@@ -97,6 +97,7 @@ HEADERS		= ./include/nnfw.h \
               ./include/ionnfw.h
 
 SOURCES		= ./src/cluster.cpp \
+              ./src/linker.cpp \
               ./src/simplecluster.cpp \
               ./src/biasedcluster.cpp \
               ./src/fakecluster.cpp \
