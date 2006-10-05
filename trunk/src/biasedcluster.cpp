@@ -35,7 +35,7 @@ BiasedCluster::BiasedCluster( u_int numNeurons, const char* name )
 }
 
 BiasedCluster::BiasedCluster( PropertySettings& prop )
-    : Cluster( prop ), biasesdata( size() ) {
+    : Cluster( prop ), biasesdata( size() ), tempdata( size() ) {
     Variant& v = prop["biases"];
     if ( v.isNull() ) {
         biasesdata.zeroing();

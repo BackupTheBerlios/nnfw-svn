@@ -51,11 +51,15 @@ namespace nnfw {
 class  CopyLinker : public Linker {
 public:
     //! Modality of Data Copying
-    typedef enum { In2In = 0, In2Out = 2, Out2In = 4, Out2Out = 8 } CopyMode;
+    typedef enum { In2In = 0, In2Out = 1, Out2In = 2, Out2Out = 3 } CopyMode;
 
     /*! \brief Constructor
      */
     CopyLinker( Cluster* from, Cluster* to, CopyMode mode, const char* name = "unnamed" );
+
+    /*! \brief Construct by PropertySettings
+     */
+    CopyLinker( PropertySettings& prop );
 
     /*! \brief Destructor
      */
@@ -68,7 +72,15 @@ public:
     /*! \brief Return the Modality of Data Copying
      */
     CopyMode getMode();
+
+    /*! \brief Change the Modality of Data Copying (Variant version)
+     */
+    bool setMode( const Variant& v );
     
+    /*! \brief Return the Modality of Data Copying (Variant version)
+     */
+    Variant getModeP();
+
     /*! \brief Update the linker
      *
      * Details...

@@ -47,7 +47,7 @@ Cluster::Cluster( u_int numNeurons, const char* name )
 }
 
 Cluster::Cluster( PropertySettings& prop )
-    : Updatable(), inputdata(0), outputdata(0) {
+    : Updatable(prop), inputdata(0), outputdata(0) {
     // --- Configuring Name
     Variant& v = prop["name"];
     if ( !v.isNull() ) {

@@ -112,7 +112,9 @@ public:
     //! \brief Constructor
     Variant( const char* d ) {
         dtype = t_string;
-        dstring = d;
+        u_int size = strlen(d);
+        dstring = new char[size+1];
+        strcpy( dstring, d );
     };
 
     //! \brief Constructor
@@ -276,7 +278,7 @@ private:
     char    dchar;
     unsigned char   duchar;
     bool            dbool;
-    const char*     dstring;
+    char*           dstring;
     RealVec*         drealvec;
     RealMat*         drealmat;
     OutputFunction*  doutfun;

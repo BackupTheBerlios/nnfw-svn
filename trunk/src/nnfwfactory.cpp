@@ -21,69 +21,32 @@
 #include "simplecluster.h"
 #include "biasedcluster.h"
 #include "ddecluster.h"
+#include "fakecluster.h"
 #include "matrixlinker.h"
+#include "sparsematrixlinker.h"
+#include "copylinker.h"
 
 namespace nnfw {
 
-class SimpleClusterCreator : public ClusterCreator {
-public:
-    virtual Cluster* create( const ClusterCreatorParameters& p ) const {
-        return (new SimpleCluster( p.numNeurons, p.name ));
-    };
-    virtual ClusterCreator* clone() const {
-        return (new SimpleClusterCreator(*this));
-    };
-};
-
-class BiasedClusterCreator : public ClusterCreator {
-public:
-    virtual Cluster* create( const ClusterCreatorParameters& p ) const {
-        return (new BiasedCluster( p.numNeurons, p.name ));
-    };
-    virtual ClusterCreator* clone() const {
-        return (new BiasedClusterCreator(*this));
-    };
-};
-
-class DDEClusterCreator : public ClusterCreator {
-public:
-    virtual Cluster* create( const ClusterCreatorParameters& p ) const {
-        return (new DDECluster( RealVec(), p.numNeurons, p.name ));
-    };
-    virtual ClusterCreator* clone() const {
-        return (new DDEClusterCreator(*this));
-    };
-};
-
-class MatrixLinkerCreator : public LinkerCreator {
-public:
-    virtual Linker* create( const LinkerCreatorParameters& p ) const {
-        return (new MatrixLinker( p.from, p.to, p.name ));
-    };
-    virtual LinkerCreator* clone() const {
-        return (new MatrixLinkerCreator(*this));
-    };
-};
-
-Cluster* Factory::createCluster( const char* type, const ClusterCreatorParameters& p ) {
+Cluster* Factory::createCluster( const char* type, PropertySettings& p ) {
     if ( !isInit ) { initFactory(); };
     std::string key(type);
     if ( clustertypes.count( key ) ) {
-        return clustertypes[key]->create( p );
+        return (Cluster*)( clustertypes[key]->create( p ) );
     }
     return 0;
 }
 
-Linker* Factory::createLinker( const char* type, const LinkerCreatorParameters& p ) {
+Linker* Factory::createLinker( const char* type, PropertySettings& p ) {
     if ( !isInit ) { initFactory(); };
     std::string key(type);
     if( linkertypes.count( key ) ) {
-        return linkertypes[key]->create( p );
+        return (Linker*)( linkertypes[key]->create( p ) );
     }
     return 0;
 }
 
-bool Factory::registerCluster( const ClusterCreator& c, const char* type ) {
+bool Factory::registerCluster( const AbstractCreator& c, const char* type ) {
     if ( !isInit ) { initFactory(); };
     std::string key(type);
     if ( clustertypes.count( key ) == 0 ) {
@@ -93,7 +56,7 @@ bool Factory::registerCluster( const ClusterCreator& c, const char* type ) {
     return false;
 }
 
-bool Factory::registerLinker( const LinkerCreator& c, const char* type ) {
+bool Factory::registerLinker( const AbstractCreator& c, const char* type ) {
     if ( !isInit ) { initFactory(); };
     std::string key(type);
     if ( linkertypes.count( key ) == 0 ) {
@@ -104,16 +67,19 @@ bool Factory::registerLinker( const LinkerCreator& c, const char* type ) {
 }
 
 void Factory::initFactory() {
-    clustertypes["SimpleCluster"] = new SimpleClusterCreator();
-    clustertypes["BiasedCluster"] = new BiasedClusterCreator();
-    clustertypes["DDECluster"] = new DDEClusterCreator();
-    linkertypes["MatrixLinker"] = new MatrixLinkerCreator();
+    clustertypes["SimpleCluster"] = new Creator<SimpleCluster>();
+    clustertypes["BiasedCluster"] = new Creator<BiasedCluster>();
+    clustertypes["DDECluster"] = new Creator<DDECluster>();
+    clustertypes["FakeCluster"] = new Creator<FakeCluster>();
+    linkertypes["MatrixLinker"] = new Creator<MatrixLinker>();
+    linkertypes["SparseMatrixLinker"] = new Creator<SparseMatrixLinker>();
+    linkertypes["CopyLinker"] = new Creator<CopyLinker>();
     isInit = true;
 }
 
 bool Factory::isInit = false;
-std::map<std::string, ClusterCreator*> Factory::clustertypes;
-std::map<std::string, LinkerCreator*> Factory::linkertypes;
+std::map<std::string, AbstractCreator*> Factory::clustertypes;
+std::map<std::string, AbstractCreator*> Factory::linkertypes;
 
 }
 

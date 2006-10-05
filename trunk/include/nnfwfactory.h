@@ -21,6 +21,7 @@
 #define NNFWFACTORY_H
 
 #include "types.h"
+#include "propertized.h"
 #include "clonable.h"
 #include <map>
 #include <string>
@@ -34,101 +35,77 @@
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {
 
-/*! \brief Class for encapsulate special parameter to pass to ClusterCreator class and its subclasses
+/*! \brief Abstract Creator of Propertized objects
  */
-class ClusterCreatorParameters {
+class AbstractCreator : public Clonable {
 public:
-    //! Constructor
-    ClusterCreatorParameters( u_int numN, const char* name ) {
-        this->numNeurons = numN;
-        u_int size = strlen(name);
-        this->name = new char[size+1];
-        strcpy( this->name, name );
-    };
-    //! \brief Number of neurons
-    u_int numNeurons;
-    //! \brief Name of Cluster
-    char* name;
-};
+    /*! \name Interface */
+    //@{
 
-/*! \brief Class for encapsulate special parameter to pass to LinkerCreator class and its subclasses
- */
-class LinkerCreatorParameters {
-public:
-    //! Constructor
-    LinkerCreatorParameters( Cluster* from, Cluster* to, const char* name ) {
-        this->from = from;
-        this->to = to;
-        u_int size = strlen(name);
-        this->name = new char[size+1];
-        strcpy( this->name, name );
-    };
-    //! \brief Cluster 'from'
-    Cluster* from;
-    //! \brief Cluster 'to'
-    Cluster* to;
-    //! \brief Name of Linker
-    char* name;
-};
-
-/*! \brief ClusterCreator base class
- */
-class ClusterCreator : public Clonable {
-public:
-    //! \brief for suppresing annoying warnings ;-)
-    virtual ~ClusterCreator() { };
-
-    /*! \brief create a new Cluster
+    /*! \brief create a new Variant
      */
-    virtual Cluster* create( const ClusterCreatorParameters& param ) const = 0;
+    virtual Propertized* create( PropertySettings& param ) const = 0;
 
     /*! \brief Virtual Copy-Constructor
      */
-    virtual ClusterCreator* clone() const = 0;
+    virtual AbstractCreator* clone() const = 0;
+    //@}
 };
 
-/*! \brief LinkerCreator base class
+/*! \brief Template facility to create Creator specialization
  */
-class LinkerCreator : public Clonable {
-public:
-    //! \brief for suppresing annoying warnings ;-)
-    virtual ~LinkerCreator() { };
+template<class T>
+class Creator : public AbstractCreator {
+    /*! \name Interface */
+    //@{
 
-    /*! \brief create a new Linker
+    /*! \brief create a new Variant
      */
-    virtual Linker* create( const LinkerCreatorParameters& param ) const = 0;
+    virtual Propertized* create( PropertySettings& param ) const {
+        return ( new T(param) );
+    };
 
     /*! \brief Virtual Copy-Constructor
      */
-    virtual LinkerCreator* clone() const = 0;
+    virtual Creator* clone() const {
+        return new Creator();
+    };
+    //@}
 };
 
 /*! \brief Factory Class
+ *
+ *  \par Motivation
+ *  \par Description
+ *  \par Warnings
+ *   the methods that creates object (createCluster, createLinker, etc) doesn't check if the Creator registered
+ *   returns the right type of object... so, pay attention to register the right kind of Creator,
+ *   otherwise you will get an runtime object when you try to use them
  */
 class Factory {
 public:
 
     /*! \brief Create a Cluster of class type
      */
-    static Cluster* createCluster( const char* type, const ClusterCreatorParameters& param );
+    static Cluster* createCluster( const char* type, PropertySettings& param );
 
     /*! \brief Create a Linker of class type
      */
-    static Linker* createLinker( const char* type, const LinkerCreatorParameters& param );
+    static Linker* createLinker( const char* type, PropertySettings& param );
 
     /*! \brief Register a new Cluster type
      *
      *  Return true on successuful insertion<br>
      *  It use the clone() method for copying the ClusterCreator
      */
-    static bool registerCluster( const ClusterCreator& c, const char* type );
+    static bool registerCluster( const AbstractCreator& c, const char* type );
 
     /*! \brief Register a new Linker type
      *
      *  Return true on successuful insertion<br>
      *  It use the clone() method for copying the LinkerCreator
      */
-    static bool registerLinker( const LinkerCreator& c, const char* type );
+    static bool registerLinker( const AbstractCreator& c, const char* type );
 
 private:
     /*! \brief The constructor is private, because there is no reason to instantiate this class
@@ -147,11 +124,11 @@ private:
 
     /*! \brief Map of registered Cluster types
      */
-    static std::map<std::string, ClusterCreator*> clustertypes;
+    static std::map<std::string, AbstractCreator*> clustertypes;
 
     /*! \brief Map of registered Linker types
      */
-    static std::map<std::string, LinkerCreator*> linkertypes;
+    static std::map<std::string, AbstractCreator*> linkertypes;
 };
 
 }

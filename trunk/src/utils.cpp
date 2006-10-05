@@ -25,6 +25,7 @@
 #include "blockslearning.h"
 #include "learningnetwork.h"
 #include "nnfwfactory.h"
+#include "propertized.h"
 #include <stack>
 
 //! Namespace that contains all classes of Neural Network Framework
@@ -34,13 +35,17 @@ BaseNeuralNet* feedForwardNet( U_IntVec layers, const char* clusterType, const c
     BaseNeuralNet* net = new BaseNeuralNet();
     Cluster* prec = 0;
     Cluster* curr = 0;
+    Linker* ml = 0;
     UpdatableVec ord;
     char buf[50];
     u_int clCount = 1;
     u_int mlCount = 1;
     for( u_int i=0; i<layers.size(); i++ ) {
         sprintf( buf, "%s%d", clusterType, clCount );
-        curr = Factory::createCluster( clusterType, ClusterCreatorParameters( layers[i], buf ) );
+        PropertySettings prop;
+        prop["size"] = layers[i];
+        prop["name"] = buf;
+        curr = Factory::createCluster( clusterType, prop );
         if ( i == 0 ) {
             net->addCluster( curr, true );
         } else if ( i == (layers.size()-1) ) {
@@ -49,16 +54,21 @@ BaseNeuralNet* feedForwardNet( U_IntVec layers, const char* clusterType, const c
             net->addCluster( curr );
         }
         clCount++;
-        ord << curr;
+        //ord << curr;
         if ( prec != 0 ) {
             sprintf( buf, "%s%d", linkerType, mlCount );
-            Linker* ml = Factory::createLinker( linkerType, LinkerCreatorParameters( prec, curr, buf ) );
+            PropertySettings prop;
+            prop["from"] = prec;
+            prop["to"]   = curr;
+            prop["name"] = buf;
+            ml = Factory::createLinker( linkerType, prop );
             net->addLinker( ml );
-            Updatable* tmp = ord[ord.size()-1];
+/*            Updatable* tmp = ord[ord.size()-1];
             ord[ord.size()-1] = ml;
-            ord.push_back(tmp);
+            ord.push_back(tmp);*/
             mlCount++;
         }
+        ord << ml << curr;
         prec = curr;
     }
     net->setOrder( ord );

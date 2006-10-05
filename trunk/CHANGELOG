@@ -15,6 +15,13 @@ S <mave> comment goes here
     'C' : means that something has been changed (e.g. implementation of a Class or a signature method)
 ==== End of Legend ====
 
+    ==> 100 - 05/10/2006 <==
+
+C <mave> CopyLinker propertized
+B <mave> various bugfixes in the library
+C <mave> Factory is now integrated with Propertized classes and use PropertySettings as
+            creators' parameters
+
     ==> 99 - 20/09/2006 <==
 
 C <mave> SparseMatrixLinker propertized
