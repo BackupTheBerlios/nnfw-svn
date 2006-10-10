@@ -29,6 +29,7 @@
 
 #include "types.h"
 #include "clonable.h"
+#include "propertized.h"
 
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {
@@ -37,15 +38,15 @@ namespace nnfw {
  *
  *  Details...
  */
-class OutputFunction : public Clonable {
+class OutputFunction : public Clonable, public Propertized {
 public:
     /*! \name Constructors */
     //@{
     //! Constructor
-    OutputFunction() : tmp1(1), tmp2(1) { /* Nothing else to do */ };
+    OutputFunction();
 
     //! Destructor
-    virtual ~OutputFunction() { /* Nothing to do */ };
+    virtual ~OutputFunction();
 
     //@}
     /*! \name Interface */

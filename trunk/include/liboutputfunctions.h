@@ -82,6 +82,7 @@ public:
     //! Construct a sigmoid updater with parameter l
     SigmoidFunction( Real l = 1.0 ) {
         lambda = l;
+        addProperty( "lambda", Variant::t_real, this, &SigmoidFunction::getLambda, &SigmoidFunction::setLambda );
     };
 
     //! Destructor
@@ -90,6 +91,14 @@ public:
     //@}
     /*! \name Interface */
     //@{
+
+    /*! \brief Set the slope of SigmoidFunction
+     */
+    bool setLambda( const Variant& v );
+
+    /*! \brief Return the slope of SigmoidFunction
+     */
+    Variant getLambda();
 
     /*! \brief Implement the updating method
      *
@@ -122,6 +131,7 @@ public:
     //! Construct a sigmoid updater with parameter l
     FakeSigmoidFunction( Real l = 1.0 ) {
         lambda = l;
+        addProperty( "lambda", Variant::t_real, this, &FakeSigmoidFunction::getLambda, &FakeSigmoidFunction::setLambda );
     };
 
     //! Destructor
@@ -130,6 +140,14 @@ public:
     //@}
     /*! \name Interface */
     //@{
+
+    /*! \brief Set the slope of FakeSigmoidFunction
+     */
+    bool setLambda( const Variant& v );
+
+    /*! \brief Return the slope of FakeSigmoidFunction
+     */
+    Variant getLambda();
 
     /*! \brief Implement the updating method
      *
@@ -169,6 +187,9 @@ public:
         lambda = l;
         this->min = min;
         this->max = max;
+        addProperty( "lambda", Variant::t_real, this, &ScaledSigmoidFunction::getLambda, &ScaledSigmoidFunction::setLambda );
+        addProperty( "min", Variant::t_real, this, &ScaledSigmoidFunction::getMin, &ScaledSigmoidFunction::setMin );
+        addProperty( "max", Variant::t_real, this, &ScaledSigmoidFunction::getMax, &ScaledSigmoidFunction::setMax );
     };
 
     //! Destructor
@@ -177,6 +198,30 @@ public:
     //@}
     /*! \name Interface */
     //@{
+
+    /*! \brief Set the slope of ScaledSigmoidFunction
+     */
+    bool setLambda( const Variant& v );
+
+    /*! \brief Return the slope of ScaledSigmoidFunction
+     */
+    Variant getLambda();
+
+    /*! \brief Set the minimum value of ScaledSigmoidFunction
+     */
+    bool setMin( const Variant& v );
+
+    /*! \brief Return the minimum value of ScaledSigmoidFunction
+     */
+    Variant getMin();
+
+    /*! \brief Set the maximum value of ScaledSigmoidFunction
+     */
+    bool setMax( const Variant& v );
+
+    /*! \brief Return the maximum value of ScaledSigmoidFunction
+     */
+    Variant getMax();
 
     /*! \brief Implement the updating method
      *
@@ -224,6 +269,10 @@ public:
         this->maxX = maxX;
         this->minY = minY;
         this->maxY = maxY;
+        addProperty( "minX", Variant::t_real, this, &LinearFunction::getMinX, &LinearFunction::setMinX );
+        addProperty( "maxX", Variant::t_real, this, &LinearFunction::getMaxX, &LinearFunction::setMaxX );
+        addProperty( "minY", Variant::t_real, this, &LinearFunction::getMinY, &LinearFunction::setMinY );
+        addProperty( "maxY", Variant::t_real, this, &LinearFunction::getMaxY, &LinearFunction::setMaxY );
     };
 
     //! Destructor
@@ -232,6 +281,38 @@ public:
     //@}
     /*! \name Interface */
     //@{
+
+    /*! \brief Set the minimum value of Xs LinearFunction
+     */
+    bool setMinX( const Variant& v );
+
+    /*! \brief Return the minimum value of Xs LinearFunction
+     */
+    Variant getMinX();
+
+    /*! \brief Set the maximum value of Xs LinearFunction
+     */
+    bool setMaxX( const Variant& v );
+
+    /*! \brief Return the maximum value of Xs LinearFunction
+     */
+    Variant getMaxX();
+
+    /*! \brief Set the minimum value of Ys LinearFunction
+     */
+    bool setMinY( const Variant& v );
+
+    /*! \brief Return the minimum value of Ys LinearFunction
+     */
+    Variant getMinY();
+
+    /*! \brief Set the maximum value of Ys LinearFunction
+     */
+    bool setMaxY( const Variant& v );
+
+    /*! \brief Return the maximum value of Ys LinearFunction
+     */
+    Variant getMaxY();
 
     /*! \brief Implement the updating method
      *
@@ -272,6 +353,9 @@ public:
         this->min = min;
 		this->max = max;
 		this->threshold = threshold;
+        addProperty( "min", Variant::t_real, this, &StepFunction::getMin, &StepFunction::setMin );
+        addProperty( "max", Variant::t_real, this, &StepFunction::getMax, &StepFunction::setMax );
+        addProperty( "threshold", Variant::t_real, this, &StepFunction::getThreshold, &StepFunction::setThreshold );
     };
 
     //! Destructor
@@ -280,6 +364,30 @@ public:
     //@}
     /*! \name Interface */
     //@{
+
+    /*! \brief Set the minimum value of StepFunction
+     */
+    bool setMin( const Variant& v );
+
+    /*! \brief Return the minimum value of StepFunction
+     */
+    Variant getMin();
+
+    /*! \brief Set the maximum value of StepFunction
+     */
+    bool setMax( const Variant& v );
+
+    /*! \brief Return the maximum value of StepFunction
+     */
+    Variant getMax();
+
+    /*! \brief Set the threshold of StepFunction
+     */
+    bool setThreshold( const Variant& v );
+
+    /*! \brief Return the threshold of StepFunction
+     */
+    Variant getThreshold();
 
     /*! \brief Implement the updating method
      *
@@ -334,6 +442,10 @@ public:
     //@}
     /*! \name Interface */
     //@{
+
+    /*! \brief Return the vector of OutputFunction setted
+     */
+    Variant getOuputFunctions();
 
     /*! \brief Set the i-th element of this Pool to a OutputFunction of type prototype
      */

@@ -58,6 +58,15 @@ void SigmoidFunction::apply( RealVec& inputs, RealVec& outputs ) {
     outputs.inv();
 }
 
+bool SigmoidFunction::setLambda( const Variant& v ) {
+    lambda = v.getReal();
+    return true;
+}
+
+Variant SigmoidFunction::getLambda() {
+    return Variant( lambda );
+}
+
 void SigmoidFunction::derivate( const RealVec&, const RealVec& outputs, RealVec& derivates ) const {
     // derivates <- lambda * out * (1.0-out)
     derivates.assign_aminusx( 1.0, outputs );
@@ -96,6 +105,15 @@ void FakeSigmoidFunction::apply( RealVec& inputs, RealVec& outputs ) {
     }
 }
 
+bool FakeSigmoidFunction::setLambda( const Variant& v ) {
+    lambda = v.getReal();
+    return true;
+}
+
+Variant FakeSigmoidFunction::getLambda() {
+    return Variant( lambda );
+}
+
 void FakeSigmoidFunction::derivate( const RealVec&, const RealVec& outputs, RealVec& derivates ) const {
     // derivates <- lambda * out * (1.0-out)
     derivates.assign_aminusx( 1.0, outputs );
@@ -120,6 +138,33 @@ void ScaledSigmoidFunction::apply( RealVec& inputs, RealVec& outputs ) {
     for ( u_int i = 0; i<size; i++ ) {
         outputs[i] = (max - min ) * (1.0/( 1.0 + outputs[i] )) + min;
     }
+}
+
+bool ScaledSigmoidFunction::setLambda( const Variant& v ) {
+    lambda = v.getReal();
+    return true;
+}
+
+Variant ScaledSigmoidFunction::getLambda() {
+    return Variant( lambda );
+}
+
+bool ScaledSigmoidFunction::setMin( const Variant& v ) {
+    min = v.getReal();
+    return true;
+}
+
+Variant ScaledSigmoidFunction::getMin() {
+    return Variant( min );
+}
+
+bool ScaledSigmoidFunction::setMax( const Variant& v ) {
+    max = v.getReal();
+    return true;
+}
+
+Variant ScaledSigmoidFunction::getMax() {
+    return Variant( max );
 }
 
 void ScaledSigmoidFunction::derivate( const RealVec&, const RealVec& outputs, RealVec& derivates ) const {
@@ -155,6 +200,42 @@ void LinearFunction::apply( RealVec& inputs, RealVec& outputs ) {
     }
 }
 
+bool LinearFunction::setMinX( const Variant& v ) {
+    minX = v.getReal();
+    return true;
+}
+
+Variant LinearFunction::getMinX() {
+    return Variant( minX );
+}
+
+bool LinearFunction::setMaxX( const Variant& v ) {
+    maxX = v.getReal();
+    return true;
+}
+
+Variant LinearFunction::getMaxX() {
+    return Variant( maxX );
+}
+
+bool LinearFunction::setMinY( const Variant& v ) {
+    minY = v.getReal();
+    return true;
+}
+
+Variant LinearFunction::getMinY() {
+    return Variant( minY );
+}
+
+bool LinearFunction::setMaxY( const Variant& v ) {
+    maxY = v.getReal();
+    return true;
+}
+
+Variant LinearFunction::getMaxY() {
+    return Variant( maxY );
+}
+
 void LinearFunction::derivate( const RealVec& inputs, const RealVec&, RealVec& derivates ) const {
     for( u_int i=0; i<inputs.size(); i++ ) {
         if ( inputs[i] >= minX && inputs[i] <= maxX ) {
@@ -182,6 +263,33 @@ void StepFunction::apply( RealVec& inputs, RealVec& outputs ) {
     for ( u_int i = 0; i<size; i++ ) {
         ( inputs[i] > threshold ) ? outputs[i] = max : outputs[i] = min;
     }
+}
+
+bool StepFunction::setMin( const Variant& v ) {
+    min = v.getReal();
+    return true;
+}
+
+Variant StepFunction::getMin() {
+    return Variant( min );
+}
+
+bool StepFunction::setMax( const Variant& v ) {
+    max = v.getReal();
+    return true;
+}
+
+Variant StepFunction::getMax() {
+    return Variant( max );
+}
+
+bool StepFunction::setThreshold( const Variant& v ) {
+    threshold = v.getReal();
+    return true;
+}
+
+Variant StepFunction::getThreshold() {
+    return Variant( threshold );
 }
 
 void StepFunction::derivate( const RealVec& inputs, const RealVec&, RealVec& derivates ) const {
@@ -223,6 +331,10 @@ PoolFunction::~PoolFunction() {
     for( u_int i=0; i<ups.size(); i++ ) {
         delete (ups[i]);
     }
+}
+
+Variant PoolFunction::getOuputFunctions() {
+    return Variant( &ups );
 }
 
 void PoolFunction::setOutputFunction( u_int i, const OutputFunction& prototype ) {

@@ -69,7 +69,8 @@ INSTALL( FILES ${NNFW_HDRS} DESTINATION include/nnfw )
 IF (UNIX)
     ADD_CUSTOM_TARGET( apidoc doxygen )
     ADD_CUSTOM_TARGET( apidoc_clean rm -rf ./apidoc/html )
-    ADD_CUSTOM_TARGET( distclean rm -rf CMakeFiles
+    ADD_CUSTOM_TARGET( distclean
+        COMMAND rm -rf CMakeFiles
         COMMAND rm -f CMakeCache.txt Makefile cmake_install.cmake install_manifest.txt
         COMMAND rm -f ./*~ ./src/*.cpp~ ./include/*.h~
         COMMAND rm -f lib*.a

@@ -135,6 +135,8 @@ public:
      */
     VectorData( const VectorData& src )
         : Observer(), Observable() {
+        /* --- even if the source VectorData is a view,
+           --- the copy-constructor create a new fresh copy of data
         if ( src.isView() ) {
             view = true;
             observed = src.observed;
@@ -145,13 +147,14 @@ public:
             vsize = idend - idstart;
             allocated = 0;
         } else {
+        --- */
             vsize = src.vsize;
-            allocated = src.allocated;
+            allocated = vsize;
             data = new T[allocated];
             memoryCopy( data, src.data, vsize );
             view = false;
             observed = 0;
-        }
+        /* } */
     }
 
     /*! \brief Destructor
