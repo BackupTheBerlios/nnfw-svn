@@ -246,8 +246,6 @@ void BaseNeuralNet::setOrder( Updatable* u[], u_int dim ) {
         }
     }
     dimUps = ups.size();
-    mask.resize( dimUps );
-    mask.assign( dimUps, true );
     return;
 }
 
@@ -260,41 +258,7 @@ void BaseNeuralNet::setOrder( UpdatableVec& u ) {
         }
     }
     dimUps = ups.size();
-    mask.resize( dimUps );
-    mask.assign( dimUps, true );
     return;
-}
-
-void BaseNeuralNet::disable( Updatable* up ) {
-    for( u_int i = 0; i<dimUps; i++ ) {
-        if ( ups[i] == up ) {
-            mask[i] = false;
-            return;
-        }
-    }
-    nnfwMessage( NNFW_WARNING, "an attemp to Disabling an Updatable not present in BaseNeuralNet" );
-    return;
-}
-
-void BaseNeuralNet::enable( Updatable* up ) {
-    for( u_int i = 0; i<dimUps; i++ ) {
-        if ( ups[i] == up ) {
-            mask[i] = true;
-            return;
-        }
-    }
-    nnfwMessage( NNFW_WARNING, "an attemp to Enabling an Updatable not present in BaseNeuralNet" );
-    return;
-}
-
-bool BaseNeuralNet::isEnabled( Updatable* up ) {
-    for( u_int i = 0; i<dimUps; i++ ) {
-        if ( ups[i] == up ) {
-            return mask[i];
-        }
-    }
-    nnfwMessage( NNFW_WARNING, "Updatable not present in BaseNeuralNet" );
-    return false;
 }
 
 void BaseNeuralNet::randomize( Real min, Real max ) {
@@ -317,6 +281,7 @@ Updatable* BaseNeuralNet::getByName( const char* name ) {
             return *it2;
         }
     }
+    nnfwMessage( NNFW_WARNING, "Updatable not present in BaseNeuralNet!!!" );
     return NULL;
 }
 

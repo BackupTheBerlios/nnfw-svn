@@ -153,33 +153,13 @@ public:
     //! \brief Set the order
     void setOrder( UpdatableVec& );
 
-    /*! \brief Disable the Updatable
-     *
-     * Details...
-     */
-    void disable( Updatable* );
-
-    /*! \brief Enable the Updatable
-     *
-     * Details...
-     */
-    void enable( Updatable* );
-
-    /*! \brief Return true if the Updatable object is enabled
-     *
-     * Details...
-     */
-    bool isEnabled( Updatable* );
-
     /*! \brief Step
      *
      *  Details
      */
     void step() {
         for( u_int i=0; i<dimUps; i++ ) {
-            if ( mask[i] ) {
-                ups[i]->update();
-            }
+			ups[i]->update();
         }
     };
 
@@ -235,7 +215,6 @@ protected:
 
     //! Array of Updateables ordered as specified
     UpdatableVec ups;
-    BoolVec mask;
     unsigned int dimUps;
 };
 

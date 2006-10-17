@@ -35,12 +35,58 @@ SparseMatrixLinker::SparseMatrixLinker( Cluster* from, Cluster* to, const char* 
 
 SparseMatrixLinker::SparseMatrixLinker( Real prob, Cluster* from, Cluster* to, const char* name )
     : MatrixLinker( from, to, name ), mask(nrows, ncols) {
-    // Set a Connection with probability specified
+    // --- Init data
     for( u_int i=0; i<nrows; i++ ) {
         for( u_int j=0; j<ncols; j++ ) {
             mask[i][j] = Random::boolean( prob );
         }
     }
+}
+
+SparseMatrixLinker::SparseMatrixLinker( Cluster* from, Cluster* to, Real prob, bool zeroDiagonal, bool symmetricMask, const char* name )
+    : MatrixLinker( from, to, name ), mask(nrows, ncols) {
+#ifdef NNFW_DEBUG
+        if( nrows != ncols ) {
+            nnfwMessage( NNFW_ERROR, "SparseMatrixLinker constructor which assumes square matrix used with a non square matrix!" );
+            return;
+        }
+#endif
+	if ( zeroDiagonal ) {
+		if ( symmetricMask ) {
+			for( u_int i=0; i<nrows; i++ ) {
+				for( u_int j=i+1; j<ncols; j++ ) {
+				    mask[i][j] = Random::boolean( prob );
+				    mask[j][i] = mask[i][j];
+				}
+			}
+		}
+		else {
+			for( u_int i=0; i<nrows; i++ ) {
+				for( u_int j=i+1; j<ncols; j++ ) {
+				    mask[i][j] = Random::boolean( prob );
+				    mask[j][i] = Random::boolean( prob );
+				}
+			}
+		}
+	}
+	else {
+		if ( symmetricMask ) {
+			for( u_int i=0; i<nrows; i++ ) {
+				for( u_int j=i; j<ncols; j++ ) {
+				    mask[i][j] = Random::boolean( prob );
+				    mask[j][i] = mask[i][j];
+				}
+			}
+		} 
+		else {	
+			for( u_int i=0; i<nrows; i++ ) {
+				for( u_int j=i; j<ncols; j++ ) {
+				    mask[i][j] = Random::boolean( prob );
+				    mask[j][i] = Random::boolean( prob );
+				}
+			}
+		}
+	}
 }
 
 SparseMatrixLinker::SparseMatrixLinker( PropertySettings& prop )
@@ -91,6 +137,12 @@ void SparseMatrixLinker::connect( u_int from, u_int to ) {
     mask[from][to] = true;
 }
 
+void SparseMatrixLinker::connectAll() {
+    for ( u_int r = 0; r < nrows; r++ ) 
+		for ( u_int c = 0; c < ncols; c++ )
+		    mask[r][c] = true;	
+}
+
 void SparseMatrixLinker::disconnect( u_int from, u_int to ) {
     if ( from >= nrows ) {
         // Messaggio di errore !!!
@@ -103,6 +155,14 @@ void SparseMatrixLinker::disconnect( u_int from, u_int to ) {
     mask[from][to] = false;
     w[from][to] = 0.0;
 }
+
+void SparseMatrixLinker::disconnect( Real prob ) {
+    for ( u_int r = 0; r < nrows; r++ ) 
+		for ( u_int c = 0; c < ncols; c++ )
+			if ( Random::flatReal() < prob )
+				mask[r][c] = false;
+}
+
 
 }
 
