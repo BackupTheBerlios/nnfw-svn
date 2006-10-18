@@ -32,6 +32,7 @@ BiasedCluster::BiasedCluster( u_int numNeurons, const char* name )
     biasesdata.zeroing();
     tempdata.zeroing();
     propdefs();
+    setTypename( "BiasedCluster" );
 }
 
 BiasedCluster::BiasedCluster( PropertySettings& prop )
@@ -43,6 +44,7 @@ BiasedCluster::BiasedCluster( PropertySettings& prop )
         setBiases( v );
     }
     propdefs();
+    setTypename( "BiasedCluster" );
 }
 
 BiasedCluster::~BiasedCluster() {

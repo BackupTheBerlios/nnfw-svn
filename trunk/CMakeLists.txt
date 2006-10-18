@@ -14,8 +14,12 @@ SET( NNFW_CONFIG "" CACHE STRING "NNFW Generation Configuration" )
 ### Setting Compiler g++ for linux machines
 IF (UNIX)
     MESSAGE( "-- Setting compiler for Linux" )
+    ### --- configure libxml2 flags and libs
+    EXEC_PROGRAM( "xml2-config --cflags" OUTPUT_VARIABLE LIBXML2_FLAGS )
+    EXEC_PROGRAM( "xml2-config --libs"   OUTPUT_VARIABLE LIBXML2_LIBS )
     SET( CMAKE_CXX_COMPILER "g++" )
-    SET( CMAKE_CXX_FLAGS " -pipe -fno-strict-aliasing -Wall -W " )
+    SET( CMAKE_CXX_FLAGS " -pipe -fno-strict-aliasing -Wall -W ${LIBXML2_FLAGS}" )
+    SET( CMAKE_EXE_LINKER_FLAGS "${LIBXML2_LIBS}" )
     ### --- debug check
     IF ( NNFW_CONFIG MATCHES debug )
         ## Debug version
@@ -51,7 +55,7 @@ IF (UNIX)
     STRING( REPLACE ";" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} )
 ENDIF (UNIX)
 
-SET( NNFW_SRCS ./src/propertized.cpp ./src/cluster.cpp ./src/linker.cpp ./src/simplecluster.cpp ./src/biasedcluster.cpp ./src/fakecluster.cpp ./src/ddecluster.cpp ./src/outputfunction.cpp ./src/liboutputfunctions.cpp ./src/matrixlinker.cpp ./src/sparsematrixlinker.cpp ./src/copylinker.cpp ./src/neuralnet.cpp ./src/utils.cpp ./src/nnfwfactory.cpp ./src/messages.cpp ./src/random.cpp ./src/types.cpp ./src/realvec.cpp ./src/realmat.cpp ./src/blockslearning.cpp ./src/learningnetwork.cpp ./src/ionnfw.cpp ./src/libmatrixmodifiers.cpp )
+SET( NNFW_SRCS ./src/propertized.cpp ./src/cluster.cpp ./src/linker.cpp ./src/simplecluster.cpp ./src/biasedcluster.cpp ./src/fakecluster.cpp ./src/ddecluster.cpp ./src/outputfunction.cpp ./src/liboutputfunctions.cpp ./src/matrixlinker.cpp ./src/sparsematrixlinker.cpp ./src/copylinker.cpp ./src/neuralnet.cpp ./src/utils.cpp ./src/nnfwfactory.cpp ./src/messages.cpp ./src/random.cpp ./src/types.cpp ./src/realvec.cpp ./src/realmat.cpp ./src/blockslearning.cpp ./src/learningnetwork.cpp ./src/ionnfw.cpp ./src/xmlnnfw.cpp ./src/libmatrixmodifiers.cpp )
 
 SET( NNFW_HDRS ./include/nnfw.h ./include/primtypes.h ./include/types.h ./include/memutils.h ./include/observ.h ./include/clonable.h ./include/propertized.h ./include/vectordata.h ./include/matrixdata.h ./include/realvec.h ./include/realmat.h ./include/updatable.h ./include/cluster.h ./include/simplecluster.h ./include/biasedcluster.h ./include/fakecluster.h ./include/ddecluster.h ./include/outputfunction.h ./include/derivableoutputfunction.h ./include/liboutputfunctions.h ./include/linker.h ./include/copylinker.h ./include/matrixlinker.h ./include/sparsematrixlinker.h ./include/neuralnet.h ./include/utils.h ./include/nnfwfactory.h ./include/messages.h ./include/random.h ./include/blockslearning.h ./include/learningnetwork.h ./include/ionnfw.h ./include/libmatrixmodifiers.h ./include/learningalgorithm.h ./include/modifier.h )
 
@@ -62,19 +66,3 @@ SET(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/lib)
 INSTALL( TARGETS nnfw ARCHIVE DESTINATION lib )
 INSTALL( FILES ${NNFW_HDRS} DESTINATION include/nnfw )
 
-### On Linux Machines there are also the follow make target:
-###  - make apidoc            <= generates documentation with doxygen
-###  - make apidoc_clean      <= remove documentation generated
-###  - make distclean         <= remove all file generated, also CMake generated files
-IF (UNIX)
-    ADD_CUSTOM_TARGET( apidoc doxygen )
-    ADD_CUSTOM_TARGET( apidoc_clean rm -rf ./apidoc/html )
-    ADD_CUSTOM_TARGET( distclean
-        COMMAND rm -rf CMakeFiles
-        COMMAND rm -f CMakeCache.txt Makefile cmake_install.cmake install_manifest.txt
-        COMMAND rm -f ./*~ ./src/*.cpp~ ./include/*.h~
-        COMMAND rm -f lib*.a
-        COMMAND rm -f ./lib/lib*.a
-        COMMAND rm -f doxygen.log
-        COMMAND rm -f ./apidoc/*~ )
-ENDIF (UNIX)

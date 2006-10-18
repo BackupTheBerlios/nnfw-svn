@@ -23,10 +23,216 @@
 namespace nnfw {
 
 const char* Variant::typen[t_propertized+1] = { "Null", "Real", "int", "unsigned int", "char", "unsigned char", "bool",
-    "String (const char*)", "RealVec*", "RealMat*", "OutputFunction*", "Cluster*", "Propertized*" };
+    "String (const char*)", "RealVec*", "RealMat*", "OutputFunction*", "Cluster*", "Linker*", "Propertized*" };
+
+Variant::Variant() {
+    dtype = t_null;
+}
+
+Variant::Variant( const Variant& src ) {
+    dtype = src.dtype;
+    switch( dtype ) {
+    case t_null: break;
+    case t_real: dreal = src.dreal; break;
+    case t_int: dint = src.dint; break;
+    case t_uint: duint = src.duint; break;
+    case t_char: dchar = src.dchar; break;
+    case t_uchar: duchar = src.duchar; break;
+    case t_bool: dbool = src.dbool; break;
+    case t_string: dstring = src.dstring; break;
+    case t_realvec: drealvec = src.drealvec; break;
+    case t_realmat: drealmat = src.drealmat; break;
+    case t_outfunction: doutfun = src.doutfun; break;
+    case t_cluster: dcluster = src.dcluster; break;
+    case t_linker: dlinker = src.dlinker; break;
+    case t_propertized: dprop = src.dprop; break;
+    }
+}
+
+Variant::Variant( Real d ) {
+    dtype = t_real;
+    dreal = d;
+}
+
+Variant::Variant( int d ) {
+    dtype = t_int;
+    dint = d;
+}
+
+Variant::Variant( u_int d ) {
+    dtype = t_uint;
+    duint = d;
+}
+
+Variant::Variant( char d ) {
+    dtype = t_char;
+    dchar = d;
+}
+
+Variant::Variant( unsigned char d ) {
+    dtype = t_uchar;
+    duchar = d;
+}
+
+Variant::Variant( bool d ) {
+    dtype = t_bool;
+    dbool = d;
+}
+
+Variant::Variant( const char* d ) {
+    dtype = t_string;
+    u_int size = strlen(d);
+    dstring = new char[size+1];
+    strcpy( dstring, d );
+}
+
+Variant::Variant( RealVec* d ) {
+    dtype = t_realvec;
+    drealvec = d;
+}
+
+Variant::Variant( RealMat* d ) {
+    dtype = t_realmat;
+    drealmat = d;
+}
+
+Variant::Variant( OutputFunction* d ) {
+    dtype = t_outfunction;
+    doutfun = d;
+}
+
+Variant::Variant( Cluster* d ) {
+    dtype = t_cluster;
+    dcluster = d;
+}
+
+Variant::Variant( Linker* d ) {
+    dtype = t_linker;
+    dlinker = d;
+}
+
+Variant::Variant( Propertized* d ) {
+    dtype = t_propertized;
+    dprop = d;
+}
+
+Variant& Variant::operator=( const Variant& src ) {
+    dtype = src.dtype;
+    switch( dtype ) {
+    case t_null: break;
+    case t_real: dreal = src.dreal; break;
+    case t_int: dint = src.dint; break;
+    case t_uint: duint = src.duint; break;
+    case t_char: dchar = src.dchar; break;
+    case t_uchar: duchar = src.duchar; break;
+    case t_bool: dbool = src.dbool; break;
+    case t_string: dstring = src.dstring; break;
+    case t_realvec: drealvec = src.drealvec; break;
+    case t_realmat: drealmat = src.drealmat; break;
+    case t_outfunction: doutfun = src.doutfun; break;
+    case t_cluster: dcluster = src.dcluster; break;
+    case t_linker: dlinker = src.dlinker; break;
+    case t_propertized: dprop = src.dprop; break;
+    }
+    return (*this);
+}
+
+Variant::types Variant::type() const {
+    return dtype;
+}
+
+const char* Variant::typeName() const {
+    return typen[dtype];
+}
+
+bool Variant::isNull() {
+    return ( dtype == t_null );
+}
+
+Real Variant::getReal() const {
+    checkType( t_real );
+    return dreal;
+}
+
+int Variant::getInt() const {
+    checkType( t_int );
+    return dint;
+}
+
+u_int Variant::getUInt() const {
+    checkType( t_uint );
+    return duint;
+}
+
+char Variant::getChar() const {
+    checkType( t_char );
+    return dchar;
+}
+
+unsigned char Variant::getUChar() const {
+    checkType( t_uchar );
+    return duchar;
+}
+
+bool Variant::getBool() const {
+    checkType( t_bool );
+    return dbool;
+}
+
+const char* Variant::getString() const {
+    checkType( t_string );
+    return dstring;
+}
+
+const RealVec* Variant::getRealVec() const {
+    checkType( t_realvec );
+    return drealvec;
+}
+
+const RealMat* Variant::getRealMat() const {
+    checkType( t_realmat );
+    return drealmat;
+}
+
+const OutputFunction* Variant::getOutputFunction() const {
+    checkType( t_outfunction );
+    return doutfun;
+}
+
+const Cluster* Variant::getCluster() const {
+    checkType( t_cluster );
+    return dcluster;
+}
+
+const Linker* Variant::getLinker() const {
+    checkType( t_linker );
+    return dlinker;
+}
+
+const Propertized* Variant::getPropertized() const {
+    checkType( t_propertized );
+    return dprop;
+}
+
+const char* Variant::typeName( types t ) {
+    return typen[t];
+}
+
+void Variant::checkType( types t ) const {
+    if ( t != dtype ) {
+        char msg[100];
+        sprintf( msg, "Attempt to access a %s type instead of the right type %s; unpredictable result", typen[t], typen[dtype] );
+        nnfwMessage( NNFW_ERROR, msg );
+    }
+    return;
+}
+
 
 Propertized::Propertized()
     : props() {
+    vtypename = 0;
+    setTypename( "Propertized" );
+    addProperty( "typename", Variant::t_string, this, &Propertized::getTypename );
 }
 
 Propertized::~Propertized() {
@@ -35,6 +241,7 @@ Propertized::~Propertized() {
         delete (vecProps[i]);
     }
     vecProps.clear();
+    delete []vtypename;
 }
 
 }

@@ -44,6 +44,7 @@ Cluster::Cluster( u_int numNeurons, const char* name )
 
     //! Properties definition
     propdefs();
+    // setTypename( "Cluster" ); --- it's no instianciable
 }
 
 Cluster::Cluster( PropertySettings& prop )
@@ -74,6 +75,7 @@ Cluster::Cluster( PropertySettings& prop )
     }
     //! Properties definition
     propdefs();
+    // setTypename( "Cluster" ); --- it's no instianciable
 }
 
 Cluster::~Cluster() {

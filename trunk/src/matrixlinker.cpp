@@ -32,6 +32,7 @@ namespace nnfw {
 MatrixLinker::MatrixLinker( Cluster* from, Cluster* to, const char* name )
     : Linker(from, to, name), nrows(from->size()), ncols(to->size()), w(nrows, ncols) {
     addProperty( "weights", Variant::t_realmat, this, &MatrixLinker::matrixP, &MatrixLinker::setMatrix );
+    setTypename( "MatrixLinker" );
 }
 
 MatrixLinker::MatrixLinker( PropertySettings& prop )
@@ -41,6 +42,7 @@ MatrixLinker::MatrixLinker( PropertySettings& prop )
         setMatrix( v );
     }
     addProperty( "weights", Variant::t_realmat, this, &MatrixLinker::matrixP, &MatrixLinker::setMatrix );
+    setTypename( "MatrixLinker" );
 }
 
 MatrixLinker::~MatrixLinker() {

@@ -33,11 +33,12 @@ namespace nnfw {
 
 SimpleCluster::SimpleCluster( u_int numNeurons, const char* name )
     : Cluster( numNeurons, name) {
+    setTypename( "SimpleCluster" );
 }
 
 SimpleCluster::SimpleCluster( PropertySettings& prop )
     : Cluster( prop ) {
-    /* nothing else to do */
+    setTypename( "SimpleCluster" );
 }
 
 SimpleCluster::~SimpleCluster() {

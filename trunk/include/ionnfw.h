@@ -27,6 +27,20 @@
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {
 
+/*! \name XML load/save */
+//@{
+
+class BaseNeuralNet;
+//! Load the net from an XML file, and return a BaseNeuralNet
+BaseNeuralNet* loadXML( const char* filename );
+//! Save the BaseNeuralNet passed into an XML file; return true on success
+bool saveXML( const char* filename, BaseNeuralNet* );
+
+//@}
+
+/*! \name Stream Operator */
+//@{
+
 //! Operator << with RealVec
 std::ostream& operator<<(std::ostream& stream, const RealVec& v);
 //! Operator >> with RealVec
@@ -51,6 +65,8 @@ std::istream& operator>>(std::istream& stream, Variant& var);
 std::ostream& operator<<(std::ostream& stream, const Propertized& p);
 //! Operator >> with Propertized
 std::istream& operator>>(std::istream& stream, Propertized& p);
+
+//@}
 
 }
 

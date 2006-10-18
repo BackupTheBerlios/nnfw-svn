@@ -42,135 +42,63 @@ class Variant {
 public:
     //! type of registrable data
     typedef enum { t_null=0, t_real, t_int, t_uint, t_char, t_uchar, t_bool, t_string,
-                t_realvec, t_realmat, t_outfunction, t_cluster, t_propertized } types;
+                t_realvec, t_realmat, t_outfunction, t_cluster, t_linker, t_propertized } types;
 
     /*! \name Constructors
      */
     //@{
 
     //! \brief Constructor
-    Variant() {
-        dtype = t_null;
-    };
+    Variant();
 
     //! \brief Copy-Constructor
-    Variant( const Variant& src ) {
-        dtype = src.dtype;
-        switch( dtype ) {
-        case t_null: break;
-        case t_real: dreal = src.dreal; break;
-        case t_int: dint = src.dint; break;
-        case t_uint: duint = src.duint; break;
-        case t_char: dchar = src.dchar; break;
-        case t_uchar: duchar = src.duchar; break;
-        case t_bool: dbool = src.dbool; break;
-        case t_string: dstring = src.dstring; break;
-        case t_realvec: drealvec = src.drealvec; break;
-        case t_realmat: drealmat = src.drealmat; break;
-        case t_outfunction: doutfun = src.doutfun; break;
-        case t_cluster: dcluster = src.dcluster; break;
-        case t_propertized: dprop = src.dprop; break;
-        }
-    };
+    Variant( const Variant& src );
 
     //! \brief Constructor
-    Variant( Real d ) {
-        dtype = t_real;
-        dreal = d;
-    };
+    Variant( Real d );
 
     //! \brief Constructor
-    Variant( int d ) {
-        dtype = t_int;
-        dint = d;
-    };
+    Variant( int d );
 
     //! \brief Constructor
-    Variant( u_int d ) {
-        dtype = t_uint;
-        duint = d;
-    };
+    Variant( u_int d );
 
     //! \brief Constructor
-    Variant( char d ) {
-        dtype = t_char;
-        dchar = d;
-    };
+    Variant( char d );
 
     //! \brief Constructor
-    Variant( unsigned char d ) {
-        dtype = t_uchar;
-        duchar = d;
-    };
+    Variant( unsigned char d );
 
     //! \brief Constructor
-    Variant( bool d ) {
-        dtype = t_bool;
-        dbool = d;
-    };
+    Variant( bool d );
 
     //! \brief Constructor
-    Variant( const char* d ) {
-        dtype = t_string;
-        u_int size = strlen(d);
-        dstring = new char[size+1];
-        strcpy( dstring, d );
-    };
+    Variant( const char* d );
 
     //! \brief Constructor
-    Variant( RealVec* d ) {
-        dtype = t_realvec;
-        drealvec = d;
-    };
+    Variant( RealVec* d );
 
     //! \brief Constructor
-    Variant( RealMat* d ) {
-        dtype = t_realmat;
-        drealmat = d;
-    };
+    Variant( RealMat* d );
 
     //! \brief Constructor
-    Variant( OutputFunction* d ) {
-        dtype = t_outfunction;
-        doutfun = d;
-    };
+    Variant( OutputFunction* d );
 
     //! \brief Constructor
-    Variant( Cluster* d ) {
-        dtype = t_cluster;
-        dcluster = d;
-    };
+    Variant( Cluster* d );
 
     //! \brief Constructor
-    Variant( Propertized* d ) {
-        dtype = t_propertized;
-        dprop = d;
-    };
+    Variant( Linker* d );
+
+    //! \brief Constructor
+    Variant( Propertized* d );
 
     //@}
     /*! \name Operators */
     //@{
 
     //! \brief Assign operator
-    Variant& operator=( const Variant& src ) {
-        dtype = src.dtype;
-        switch( dtype ) {
-        case t_null: break;
-        case t_real: dreal = src.dreal; break;
-        case t_int: dint = src.dint; break;
-        case t_uint: duint = src.duint; break;
-        case t_char: dchar = src.dchar; break;
-        case t_uchar: duchar = src.duchar; break;
-        case t_bool: dbool = src.dbool; break;
-        case t_string: dstring = src.dstring; break;
-        case t_realvec: drealvec = src.drealvec; break;
-        case t_realmat: drealmat = src.drealmat; break;
-        case t_outfunction: doutfun = src.doutfun; break;
-        case t_cluster: dcluster = src.dcluster; break;
-        case t_propertized: dprop = src.dprop; break;
-        }
-        return (*this);
-    };
+    Variant& operator=( const Variant& src );
 
     //@}
     /*!  \name Informations about data contained */
@@ -178,94 +106,52 @@ public:
 
     /*! \brief Type of data
      */
-    types type() const {
-        return dtype;
-    };
+    types type() const;
 
     /*! \brief Return the name of type
      */
-    const char* typeName() const {
-        return typen[dtype];
-    };
+    const char* typeName() const;
 
     /*! \brief Return true if the Variant is Null
      */
-    bool isNull() {
-        return ( dtype == t_null );
-    };
+    bool isNull();
 
     //@}
     /*! \name Retrieving data */
     //@{
 
     //! return the Real value
-    Real getReal() const {
-        checkType( t_real );
-        return dreal;
-    };
+    Real getReal() const;
     //! return the Int value
-    int getInt() const {
-        checkType( t_int );
-        return dint;
-    };
+    int getInt() const;
     //! return the UInt value
-    u_int getUInt() const {
-        checkType( t_uint );
-        return duint;
-    };
+    u_int getUInt() const;
     //! return the Char value
-    char getChar() const {
-        checkType( t_char );
-        return dchar;
-    };
+    char getChar() const;
     //! return the UChar value
-    unsigned char getUChar() const {
-        checkType( t_uchar );
-        return duchar;
-    };
+    unsigned char getUChar() const;
     //! return the Bool value
-    bool getBool() const {
-        checkType( t_bool );
-        return dbool;
-    };
+    bool getBool() const;
     //! return the const char* (constant string) value
-    const char* getString() const {
-        checkType( t_string );
-        return dstring;
-    };
+    const char* getString() const;
     //! return the RealVec value
-    const RealVec* getRealVec() const {
-        checkType( t_realvec );
-        return drealvec;
-    };
+    const RealVec* getRealVec() const;
     //! return the RealMat value
-    const RealMat* getRealMat() const {
-        checkType( t_realmat );
-        return drealmat;
-    };
+    const RealMat* getRealMat() const;
     //! return the OutputFunction value
-    const OutputFunction* getOutputFunction() const {
-        checkType( t_outfunction );
-        return doutfun;
-    };
-    //! return the OutputFunction value
-    const Cluster* getCluster() const {
-        checkType( t_cluster );
-        return dcluster;
-    };
+    const OutputFunction* getOutputFunction() const;
+    //! return the Cluster value
+    const Cluster* getCluster() const;
+    //! return the Linker value
+    const Linker* getLinker() const;
     //! return the Propertized value
-    const Propertized* getPropertized() const {
-        checkType( t_propertized );
-        return dprop;
-    };
+    const Propertized* getPropertized() const;
 
     //@}
 
     /*! \brief Return the name of type passed by argument
      */
-    static const char* typeName( types t ) {
-        return typen[t];
-    };
+    static const char* typeName( types t );
 
 private:
     //! type registered
@@ -283,17 +169,11 @@ private:
     RealMat*         drealmat;
     OutputFunction*  doutfun;
     Cluster*         dcluster;
+    Linker*          dlinker;
     Propertized*     dprop;
 
     //! Check type
-    void checkType( types t ) const {
-        if ( t != dtype ) {
-            char msg[100];
-            sprintf( msg, "Attempt to access a %s type instead of the right type %s; unpredictable result", typen[t], typen[dtype] );
-            nnfwMessage( NNFW_ERROR, msg );
-        }
-        return;
-    };
+    void checkType( types t ) const;
 };
 
 /*! \brief Encapsulates methods for accessing property data
@@ -411,6 +291,11 @@ typedef std::map< std::string, Variant > PropertySettings;
  *  by methods set/getProperty.
  *  \par Description
  *  \par Warnings
+ *  \par Properties
+ *   <table>
+ *   <tr><th>Name</th> <th>Type</th> <th>Access mode</th> <th>Description</th></tr>
+ *   <tr><td>typename</td> <td>String</td> <td>read-only</td> <td> name of the class </td> </tr>
+ *   </table>
  */
 class Propertized {
 public:
@@ -456,13 +341,51 @@ public:
     PropertyAccessVec& properties() const {
         return (PropertyAccessVec&)vecProps;
     };
+
+    /*! \brief Search for property and return it; if the property doesn't exists a NULL pointer will be returned
+     */
+    AbstractPropertyAccess* propertySearch( const char* name ) const {
+        if ( props.count( name ) > 0 ) {
+            return ((std::map< std::string, AbstractPropertyAccess* >) props)[name];
+        }
+        return 0;
+    };
+
+    /*! \brief Return the typename (i.e. the name of the Class)
+     */
+    Variant getTypename() const {
+        return Variant( vtypename );
+    };
+
+    /*! \brief Return the typename (i.e. the name of the Class)
+     */
+    Variant getTypename() {
+        return Variant( vtypename );
+    };
+
     //@}
+
+protected:
+    /*! \brief Set the typename
+     *
+     *  Use this function in all constructor of subclasses, and always set the appropriate typename
+     */
+    void setTypename( const char* type ) {
+        if (vtypename) {
+            delete []vtypename;
+        }
+        u_int size = strlen(type);
+        vtypename = new char[size+1];
+        strcpy( vtypename, type );
+    };
 
 private:
     //! mapping name -> PropertyAccess
     std::map< std::string, AbstractPropertyAccess* > props;
     //! vector of all PropertyAccess in order of registering
     PropertyAccessVec vecProps;
+    //! the name of the class
+    char* vtypename;
 };
 
 }

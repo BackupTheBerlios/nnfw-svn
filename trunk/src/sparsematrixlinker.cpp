@@ -31,6 +31,7 @@ SparseMatrixLinker::SparseMatrixLinker( Cluster* from, Cluster* to, const char* 
             mask[i][j] = true;
         }
     }
+    setTypename( "SparseMatrixLinker" );
 }
 
 SparseMatrixLinker::SparseMatrixLinker( Real prob, Cluster* from, Cluster* to, const char* name )
@@ -41,56 +42,42 @@ SparseMatrixLinker::SparseMatrixLinker( Real prob, Cluster* from, Cluster* to, c
             mask[i][j] = Random::boolean( prob );
         }
     }
+    setTypename( "SparseMatrixLinker" );
 }
 
-SparseMatrixLinker::SparseMatrixLinker( Cluster* from, Cluster* to, Real prob, bool zeroDiagonal, bool symmetricMask, const char* name )
+SparseMatrixLinker::SparseMatrixLinker( Cluster* from, Cluster* to, Real prob, bool zeroDiagonal,
+                                        bool symmetricMask, const char* name )
     : MatrixLinker( from, to, name ), mask(nrows, ncols) {
 #ifdef NNFW_DEBUG
-        if( nrows != ncols ) {
-            nnfwMessage( NNFW_ERROR, "SparseMatrixLinker constructor which assumes square matrix used with a non square matrix!" );
-            return;
-        }
+    if( nrows != ncols ) {
+        nnfwMessage( NNFW_ERROR, "SparseMatrixLinker constructor which assumes square matrix used with a non square matrix!" );
+        return;
+    }
 #endif
-	if ( zeroDiagonal ) {
-		if ( symmetricMask ) {
-			for( u_int i=0; i<nrows; i++ ) {
-				for( u_int j=i+1; j<ncols; j++ ) {
-				    mask[i][j] = Random::boolean( prob );
-				    mask[j][i] = mask[i][j];
-				}
-			}
-		}
-		else {
-			for( u_int i=0; i<nrows; i++ ) {
-				for( u_int j=i+1; j<ncols; j++ ) {
-				    mask[i][j] = Random::boolean( prob );
-				    mask[j][i] = Random::boolean( prob );
-				}
-			}
-		}
-	}
-	else {
-		if ( symmetricMask ) {
-			for( u_int i=0; i<nrows; i++ ) {
-				for( u_int j=i; j<ncols; j++ ) {
-				    mask[i][j] = Random::boolean( prob );
-				    mask[j][i] = mask[i][j];
-				}
-			}
-		} 
-		else {	
-			for( u_int i=0; i<nrows; i++ ) {
-				for( u_int j=i; j<ncols; j++ ) {
-				    mask[i][j] = Random::boolean( prob );
-				    mask[j][i] = Random::boolean( prob );
-				}
-			}
-		}
-	}
+    u_int zeroD = 0;
+    if ( zeroDiagonal ) {
+        zeroD = 1;
+    }
+    if ( symmetricMask ) {
+        for( u_int i=0; i<nrows; i++ ) {
+            for( u_int j=i+zeroD; j<ncols; j++ ) {
+                mask[i][j] = Random::boolean( prob );
+                mask[j][i] = mask[i][j];
+            }
+        }
+    } else {
+        for( u_int i=0; i<nrows; i++ ) {
+            for( u_int j=i+zeroD; j<ncols; j++ ) {
+                mask[i][j] = Random::boolean( prob );
+                mask[j][i] = Random::boolean( prob );
+            }
+        }
+    }
 }
 
 SparseMatrixLinker::SparseMatrixLinker( PropertySettings& prop )
     : MatrixLinker( prop ), mask(nrows, ncols) {
+    setTypename( "SparseMatrixLinker" );
 }
 
 

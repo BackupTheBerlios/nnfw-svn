@@ -41,6 +41,7 @@ CopyLinker::CopyLinker( Cluster* from, Cluster* to, CopyMode mode, const char* n
     setMode( mode );
 
     addProperty( "mode", Variant::t_uint, this, &CopyLinker::getModeP, &CopyLinker::setMode );
+    setTypename( "CopyLinker" );
 }
 
 CopyLinker::CopyLinker( PropertySettings& prop )
@@ -53,6 +54,7 @@ CopyLinker::CopyLinker( PropertySettings& prop )
         setMode( v );
     };
     addProperty( "mode", Variant::t_uint, this, &CopyLinker::getModeP, &CopyLinker::setMode );
+    setTypename( "CopyLinker" );
 }
 
 CopyLinker::~CopyLinker() {

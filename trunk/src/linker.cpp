@@ -29,6 +29,7 @@ Linker::Linker( Cluster* from, Cluster* to, const char* name )
     this->toc = to;
     addProperty( "from", Variant::t_cluster, this, &Linker::fromP );
     addProperty( "to", Variant::t_cluster, this, &Linker::toP );
+    // setTypename( "Linker" ); --- it's no instanciable
 }
 
 Linker::Linker( PropertySettings& prop )
@@ -47,6 +48,7 @@ Linker::Linker( PropertySettings& prop )
     }
     addProperty( "from", Variant::t_cluster, this, &Linker::fromP );
     addProperty( "to", Variant::t_cluster, this, &Linker::toP );
+    // setTypename( "Linker" ); --- it's no instanciable
 }
 
 }

@@ -15,6 +15,18 @@ S <mave> comment goes here
     'C' : means that something has been changed (e.g. implementation of a Class or a signature method)
 ==== End of Legend ====
 
+    ==> 103 - 17/10/2006 <==
+
+- <mave> Dropped make targets: distclean, apidoc, apidoc-clean (these doesn't support out-source buildings)
+- <mave> Dropped the support for QMake compilation procedure
+C <mave> Starting implementation of load/save operation from XML files;
+            used libxml2 for parsing the XML files;
+            modified CMakeList.txt to link against libxml2
+C <mave> Moved implementation of Variant from inline to normal function (propertized.cpp)
++ <mave> Variant now support Linker* type
+C <mave> Propertized has a property 'typename' for registering the name of the class;
+B <mave> fixed memory-leak in Updatable name allocation
+
     ==> 102 - 17/10/2006 <==
 
 - <marmir> Removed mask property (and the related functions) from BaseNeuralNet in neuralnet.h (you can use SetOrder, instead)

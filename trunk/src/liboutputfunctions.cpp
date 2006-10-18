@@ -316,6 +316,7 @@ PoolFunction::PoolFunction( const OutputFunction& prototype, u_int dim )
         ups.resize( 1 );
         ups[0] = new OutputFunction();
     }
+    setTypename( "PoolFunction" );
 }
 
 PoolFunction::PoolFunction( u_int dim )
@@ -325,6 +326,7 @@ PoolFunction::PoolFunction( u_int dim )
         nnfwMessage( NNFW_ERROR, "The dimension of PoolFunction must be at least one" );
         ups.resize( 1 );
     }
+    setTypename( "PoolFunction" );
 }
 
 PoolFunction::~PoolFunction() {

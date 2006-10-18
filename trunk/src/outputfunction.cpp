@@ -7,6 +7,7 @@ namespace nnfw {
 OutputFunction::OutputFunction()
     : Clonable(), Propertized(), tmp1(1), tmp2(1) {
     /* Nothing else to do */
+    setTypename( "OutputFunction" );
 }
 
 OutputFunction::~OutputFunction() {

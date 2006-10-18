@@ -26,6 +26,7 @@ DDECluster::DDECluster( const RealVec& c, u_int numNeurons, const char* name )
     : Cluster( numNeurons, name ), tmpdata(numNeurons), tmpdata2(numNeurons) {
     setCoeff( c );
     propdefs();
+    setTypename( "DDECluster" );
 }
 
 DDECluster::DDECluster( PropertySettings& prop )
@@ -37,6 +38,7 @@ DDECluster::DDECluster( PropertySettings& prop )
         setCoeff( v );
     }
     propdefs();
+    setTypename( "DDECluster" );
 }
 
 DDECluster::~DDECluster() {

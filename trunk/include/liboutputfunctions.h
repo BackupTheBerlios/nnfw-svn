@@ -48,7 +48,9 @@ public:
     //@{
 
     //! Construct
-    IdentityFunction() : DerivableOutputFunction() { /* Nothing To Do */ };
+    IdentityFunction() : DerivableOutputFunction() {
+        setTypename( "IdentityFunction" );
+    };
 
     //! Destructor
     virtual ~IdentityFunction() { /* Nothing to do */ };
@@ -83,6 +85,7 @@ public:
     SigmoidFunction( Real l = 1.0 ) {
         lambda = l;
         addProperty( "lambda", Variant::t_real, this, &SigmoidFunction::getLambda, &SigmoidFunction::setLambda );
+        setTypename( "SigmoidFunction" );
     };
 
     //! Destructor
@@ -132,6 +135,7 @@ public:
     FakeSigmoidFunction( Real l = 1.0 ) {
         lambda = l;
         addProperty( "lambda", Variant::t_real, this, &FakeSigmoidFunction::getLambda, &FakeSigmoidFunction::setLambda );
+        setTypename( "FakeSigmoidFunction" );
     };
 
     //! Destructor
@@ -190,6 +194,7 @@ public:
         addProperty( "lambda", Variant::t_real, this, &ScaledSigmoidFunction::getLambda, &ScaledSigmoidFunction::setLambda );
         addProperty( "min", Variant::t_real, this, &ScaledSigmoidFunction::getMin, &ScaledSigmoidFunction::setMin );
         addProperty( "max", Variant::t_real, this, &ScaledSigmoidFunction::getMax, &ScaledSigmoidFunction::setMax );
+        setTypename( "ScaledSigmoidFunction" );
     };
 
     //! Destructor
@@ -273,6 +278,7 @@ public:
         addProperty( "maxX", Variant::t_real, this, &LinearFunction::getMaxX, &LinearFunction::setMaxX );
         addProperty( "minY", Variant::t_real, this, &LinearFunction::getMinY, &LinearFunction::setMinY );
         addProperty( "maxY", Variant::t_real, this, &LinearFunction::getMaxY, &LinearFunction::setMaxY );
+        setTypename( "LinearFunction" );
     };
 
     //! Destructor
@@ -356,6 +362,7 @@ public:
         addProperty( "min", Variant::t_real, this, &StepFunction::getMin, &StepFunction::setMin );
         addProperty( "max", Variant::t_real, this, &StepFunction::getMax, &StepFunction::setMax );
         addProperty( "threshold", Variant::t_real, this, &StepFunction::getThreshold, &StepFunction::setThreshold );
+        setTypename( "StepFunction" );
     };
 
     //! Destructor

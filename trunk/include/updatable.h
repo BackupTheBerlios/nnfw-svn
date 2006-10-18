@@ -36,13 +36,17 @@ public:
 
     //! Constructor
     Updatable( const char* name = "unnamed" ) {
+        this->name = 0;
         setName( name );
         addProperty( "name", Variant::t_string, this, &Updatable::getNameV, &Updatable::setName );
+        // setTypename( "Updatable" ); --- it's no instanciable
     };
 
     //! Constructor with PropertySettings
     Updatable( PropertySettings& prop ) {
+        this->name = 0;
         setName( prop["name"].getString() );
+        // setTypename( "Updatable" ); --- it's no instanciable
     };
 
     //! Destructor
@@ -57,10 +61,13 @@ public:
     //! Update the object
     virtual void update() = 0;
     //! Set the name of Updatable
-    void setName( const char* name ) {
-        u_int size = strlen(name);
-        this->name = new char[size+1];
-        strcpy( this->name, name );
+    void setName( const char* newname ) {
+        if (name) {
+            delete []name;
+        }
+        u_int size = strlen(newname);
+        name = new char[size+1];
+        strcpy( name, newname );
     };
     //! Set the name of Updatable (Varian version)
     bool setName( const Variant& nv ) {
