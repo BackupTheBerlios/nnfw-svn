@@ -21,17 +21,90 @@
 </ul>
 </div>
 
+<a name="1"><h1>1 Preface </h1>
+
+<a name="2"><h1>2 Introduction </h1>
+
+<a name="2.1"><h2>2.1 Why another Neural Network library ? </h2>
+        
+<p> Agli inizi del 2005, ho cercato una libreria di reti neurali semplice da usare, flessibile ed estensibile il pi&ugrave; possible. Dopo mesi di ricerca, ho capito che non c'era una simile libreria. Nonostante il grande numero di librerie presenti sulla rete, nessuna (o almeno io non l'ho trovata) &egrave; stata sviluppata con gli obiettivi che mi sono posto io:</p>
+<ol>
+    <li> Semplicit&agrave; nella comprensione e utilizzo; </li>
+    <li> Flessibilit&agrave; in ogni aspetto della rete neurale; </li>
+    <li> Estendibile in modo semplice (fornendo anche documenti su 'come' sviluppare nuove parti); </li>
+    <li> Efficiente dal punto di vista computazionale. </li>
+</ol>
+<p> Infatti, la <em>Neural Network Framework</em> non vuole essere una libreria con tutto dentro pronta all'uso cos&igrave; come &egrave;, bens&igrave; si pone l'obiettivo di essere un <em>framework</em> per la realizzazione di proprie reti neurali in piena libert&agrave; fornendo i <em>building blocks</em> fondamentali per la costruzione di reti neurali di ogni genere.</p>
+<p> Per rendere il framework semplice, flessibile e allo stesso tempo efficiente ho scelto il C++ come linguaggio di sviluppo della libreria. Il linguaggio orientato agli oggetti mi ha permesso di strutturare il codice in modo chiaro e semplice da comprendere, e sopratutto mi ha permesso di rendere il framework facilmente estensibile e flessibile.<br>
+La possibilit&agrave; di interfacciarsi con il C, i template e particolarit&agrave; tipiche del C++ (come friend), mi hanno permesso di mantenere efficiente il codice.</p>
+
+<h2> Uno sguardo dall'alto </h2>
+
+La NNFW &egrave; composta da un insieme di classi con compiti differenti che possono essere raggrupate nel seguente modo:
+<ul>
+    <li><b>Math</b>: classi di supporto per i calcolo matematici, vettori, matrici e calcoli vettoriali e matriciali;</li>
+    <li><b>Core</b>: classi che implementano i <em>building blocks</em> fondamentali per la costruzione di reti neurali;</li>
+    <li><b>Gestione Reti Neurali</b>: classi che permettono di 'vedere' la rete neurale come un insieme, un tutto;</li>
+    <li><b>Apprendimento</b>: classi dedicate per l'implementazione di algoritmi di apprendimento.</li>
+</ul>
+
+<h3>Mathematical stuffs</h3>
+<p>Il calcolo vettoriale e matriciale &egrave; di fondamentale importanza per la realizzazione delle reti neurali. Di conseguenza &egrave; stato indispensabile implementare classi adibite a questo scopo.</p>
+<p>Due sono le classi (o meglio template) da fondamento per il calcolo algebrico: <em>VectorData</em> &amp; <em>MatrixData</em>; queste rappresentano, in modo generico, dati organizzati come vettori e matrici bi-dimensionali.</p>
+<p>Questi due template sono utilizzati dovunque nella libreria, ma sopratutto formano le classi base dalle quali derivano <em>RealVec</em> e <em>RealMat</em>.</p>
+<p><em>RealVec</em> rappresenta un vettore di numeri reali e fornisce operatori e metodi per il calcolo vettoriale quali:</p>
+<ul>
+    <li>operazioni di somma, sottrazione, divisione e moltiplicazione fra uno scalare e un vettore;</li>
+    <li>operazioni di somma, sottrazione, divisione e moltiplicazione elemento-per-elemento tra vettori;</li>
+    <li>funzioni matematiche applicate agli elementi dei vettori, quali esponenziale, dot-product, logaritmo, inversione, modulo, media, mean-square-error, etc.</li>
+</ul>
+<p><em>RealMat</em> rappresenta una matrice bi-dimensionale di numeri reali e fornisce operatori e metodi per il calcolo matriciale quali:</p>
+<ul>
+    <li>operazioni scalare-matrice: somma, sottrazione, divisione e moltiplicazione;</li>
+    <li>operazioni tra vettore e matrice;</li>
+    <li>operazioni tra matrici;</li>
+    <li>funzioni matematiche applicate agli elementi della matrice, quali esponenziale, logaritmo, inversione, etc.</li>
+    <li>funzioni matriciali, quali determinante, trasposta, etc.</li>
+</ul>
+<p>Le due classi sono strettamente legate fra loro. Infatti, l'operatore di indicizzazione, [], di RealMat restituisce un RealVec contenente la riga i-esima. Quindi, &egrave; possibile agire su una riga con i metodi messi a disposizione dalla classa RealVec:</p>
+\code
+#include "types.h"
+
+RealVec aRealVec;                           // Crea un vettore di dimensione zero
+aRealVec << 0.2 << -1.2 << 2.2 << 0.8;    // appende al vettore 4 elementi e incrementa la sua dimensione
+aRealVec.size();                            // la dimensione del vettore &egrave; ora 4
+aRealVec[2] = +3.4;                         // modifica il terzo elemento del vettore
+RealMat mat( 5, 4 );                        // crea una matrice con 5 righe e 4 colonne
+mat[3].assign( aRealVec );                  // assegna il vettore alla terza riga
+mat[3].exp();                               // applica agli elementi della terza riga l'esponenziale
+// mat[3].exp() equivale al seguente calcolo elemento-per-elemento
+for( int i=0; i '<' mat.cols(); i++ ) {
+    mat[3][i] = exp( mat[3][i] );
+}
+\endcode
+
+</div>
+
+<h3>Core: Clusters &amp; Linkers</h3>
+
+<p>Sono due le classi fondamentali per la costruzioni delle reti neurali con la NNFW: <em>Cluster</em> e <em>Linker</em>.</p>
+
+<p>Il <em>Cluster</em> &egrave; un gruppo di neuroni, un layer. Non esiste una classe <em>Neurone</em>, bens&igrave; il <em>Cluster</em> &egrave; un vettore di neuroni. Le propriet&agrave; di ogni neurone, quali input, funzione d'attivazione e altre, vengono configurate attraverso i metodi della classe <em>Cluster</em>.</p>
+\code
+#include "types.h"
+#include "simplecluster.h"
+
+SimpleCluster cluster(10, "A_Simple_Cluster"); // Crea un Cluster contenente 10 neuroni
+RealVec& ins = cluster.inputs(); // accesso agli ingressi dei neuroni
+ins[0] = +1.0;
+ins[1] = +2.7;
+ins[2] = -0.8;
+ // ... ... 
+ins[9] = +1.2;
+cluster.setFunction( SigmoidFunction( 1.0 ) ); // configura la funzione d'attivazione dei 10 neuroni
+cluster.update(); // calcola il valore degli output sulla base degli input e della funzione d'attivazione
+cout << cluster.outputs(); // stampa il valore degli output dei neuroni
+\endcode
+
 */
 
-/*! \page Gruppo1 Prova di un gruppo
-    \subpage Gruppo2
-
-qui metto la documentazione <b>capitoli</b> quello che voglio ;-)
-
-*/
-
-/*! \page Gruppo2 Prova di un gruppo
-
-SOTTO GRUPPO
-
-*/

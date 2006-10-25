@@ -1,15 +1,15 @@
 body {
     background-color: white;
     background: url(../img/sfondo2.jpg);
-    font: 10px "Helvetica", "Tahoma", "Verdana", sans-serif;
+    font: 12px "Helvetica", "Tahoma", "Verdana", sans-serif;
 }
 
 p, span, caption, td, th, ul, dl, div {
-    font: 10px "Helvetica", "Tahoma", "Verdana", sans-serif;
+    font: 12px "Helvetica", "Tahoma", "Verdana", sans-serif;
 }
 
 center {
-    font: 10px "Helvetica", "Tahoma", "Verdana", sans-serif;
+    font: 12px "Helvetica", "Tahoma", "Verdana", sans-serif;
     text-align: center;
 }
 
@@ -26,14 +26,14 @@ h1 {
 h2 {
     font: bold italic 16px "Helvetica", "Verdana", sans-serif;
     color: #005AF6;
-    padding-left: 8px;
+    padding-left: 14px;
     text-align: left;
     border-bottom: 2px solid #888;
 }
 
 h3,h4,h5,h6 {
     text-align: left;
-    font-size: 14px;
+    font-size: 12px;
     color: #005AF6;
     border-bottom: 1px solid #888;
     padding-left: 16px;
@@ -86,8 +86,6 @@ div.tabs a {
     border-bottom: 1px solid #000;
     margin-bottom: 1px;
     text-decoration: none;
-/*    padding-left: 6px;
-    padding-right: 6px;*/
 }
 
 div.tabs a:hover {
