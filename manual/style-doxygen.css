@@ -142,6 +142,40 @@ div.tabs a:hover {
     padding: 0px 0px 0px 15px;
 }
 
+#tocContent_nohead li {
+    list-style-type: none;
+}
+#tocContent_nohead {
+    font: 12px "Helvetica", "Tahoma", "Verdana", sans-serif;
+    background-color: #E4ECEC;
+    padding: 0px 10px 0px 10px;
+    border-top: 1px solid #CCC;
+    border-left: 1px solid #AAA;
+    border-right: 1px solid #666;
+    border-bottom: 1px solid #000;
+    margin-bottom: 15px;
+}
+#tocContent_nohead ul {
+    list-style-type: none;    
+}
+#tocContent_nohead a,
+#tocContent_nohead a:visited {
+    color: black;
+    text-decoration: none;
+    font-weight: normal;
+}
+#tocContent_nohead a:hover {
+    border-top: 1px solid #888;
+    border-bottom: 1px solid #888;
+    font-weight: normal;
+}
+#tocContent_nohead ul.level_one {
+    padding: 0px 0px 0px 5px;
+}
+#tocContent_nohead ul.level_two {
+    padding: 0px 0px 0px 15px;
+}
+
 /*********************************************************/
 /*************** PIE PAGINA' & COPYRIGHT *****************/
 /*********************************************************/

@@ -1,10 +1,10 @@
 [Dir src]
 Dirs=
-Files=mainpage.dox
+Files=mainpage.dox/introduction.dox/preface.dox
 
 [Project Dir]
 Dirs=src
-Files=Doxyfile/footer-doxygen.html/header-doxygen.html/style-doxygen.css
+Files=Doxyfile/footer-doxygen.html/header-doxygen.html/style-doxygen.css/nnfw_manual.tex
 
 [Project File]
 Name=NNFW-Manual
