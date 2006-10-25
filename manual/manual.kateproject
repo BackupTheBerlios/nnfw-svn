@@ -1,0 +1,11 @@
+[Dir src]
+Dirs=
+Files=mainpage.dox
+
+[Project Dir]
+Dirs=src
+Files=Doxyfile/footer-doxygen.html/header-doxygen.html/style-doxygen.css
+
+[Project File]
+Name=NNFW-Manual
+Type=Default

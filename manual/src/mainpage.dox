@@ -1,0 +1,37 @@
+/*! \mainpage NNFW Manual
+
+<div id="tocHead"> Table of Contents </div>
+<div id="tocContent">
+<ul class="level_one">
+<li><a href="#1"> 1. Preface </a></li>
+<li><a href="#2"> 2. Introduction </a></li>
+    <ul class="level_two">
+    <li><a href="#2.1"> 2.1 Why another Neural Network library ? </a></li>
+    <li><a href="#2.2"> 2.2 What is NNFW ?</a></li>
+    <li><a href="#2.3"> 2.3 What is NNFW not ?</a></li>
+    <li><a href="#2.4"> 2.4 Download &amp; Installation</a></li>
+    <li><a href="#2.5"> 2.5 Compiling and Running the tutorials</a></li>
+    <li><a href="#2.6"> 2.6 How is organized this manual </a></li>
+    <li><a href="#2.7"> 2.7 Notes about compilers and IDE</a></li>
+    </ul>
+<li><a href="#3"> 3. Overture: the first application </a></li>
+
+<li><a href="#A"> Appendix A - How to create a new Cluster </a></li>
+<li><a href="#B"> Appendix B - How to create a new Linker </a></li>
+</ul>
+</div>
+
+*/
+
+/*! \page Gruppo1 Prova di un gruppo
+    \subpage Gruppo2
+
+qui metto la documentazione <b>capitoli</b> quello che voglio ;-)
+
+*/
+
+/*! \page Gruppo2 Prova di un gruppo
+
+SOTTO GRUPPO
+
+*/
