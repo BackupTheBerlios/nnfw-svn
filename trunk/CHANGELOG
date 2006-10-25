@@ -14,6 +14,10 @@ S <mave> comment goes here
     'B' : means a BugFix
     'C' : means that something has been changed (e.g. implementation of a Class or a signature method)
 ==== End of Legend ====
+    ==> 105 - 25/10/2006 <==
+
+C <mave> improved the new style of Doxygen documentation
+
     ==> 104 - 25/10/2006 <==
 
 C <mave> updated Doxygen to version 1.5.0 and restyled
