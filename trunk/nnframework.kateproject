@@ -8,7 +8,7 @@ Files=libgsl.a/libgslcblas.a
 
 [Dir apidoc]
 Dirs=
-Files=footer-doxygen.html/header-doxygen.html/iestyle.css/style.css/style-doxygen.css
+Files=footer-doxygen.html/header-doxygen.html/style-doxygen.css
 
 [Dir docs]
 Dirs=

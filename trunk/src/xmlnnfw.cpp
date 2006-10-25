@@ -99,7 +99,7 @@ void parseProperty_10( xmlDocPtr doc, xmlNodePtr cur, const Propertized* obj ) {
         break;
     case Variant::t_outfunction:
         // --- non dovrebbe arrivare qui !! ?!?!
-        nnfwMessage( NNFW_ERROR, "Why don't use the outputfunciont tag for setting it" );
+        nnfwMessage( NNFW_ERROR, "Why don't use the outputfunction tag for setting it" );
         ok = false;
         break;
     case Variant::t_cluster:
@@ -150,10 +150,22 @@ void parseCluster_10( xmlDocPtr doc, xmlNodePtr cur, BaseNeuralNet* net ) {
     while( cur != NULL ) {
         if ( !xmlStrcmp( cur->name, (const xmlChar* ) "outputfunction" ) ) {
             // --- <outputfunction>
+            nnfwMessage( NNFW_WARNING, "parsing of <outputfunction> is not yet implemented" );
         } else if ( !xmlStrcmp( cur->name, (const xmlChar* ) "accumulate" ) ) {
             // --- <accumulate>
+            cl->accumulate( !xmlStrcmp( cur->name, (const xmlChar*) "true" ) );
         } else if ( !xmlStrcmp( cur->name, (const xmlChar* ) "randomize" ) ) {
             // --- <randomize>
+            xmlChar* min = xmlGetProp( cur, (const xmlChar*) "min" );
+            xmlChar* max = xmlGetProp( cur, (const xmlChar*) "max" );
+            if ( !min || !max ) {
+                nnfwMessage( NNFW_ERROR, "attributes min and max are mandatory in <randomize> tag" );
+            }
+            double minV = xmlXPathCastStringToNumber( min );
+            double maxV = xmlXPathCastStringToNumber( max );
+            cl->randomize( minV, maxV );
+            xmlFree(min);
+            xmlFree(max);
         } else {
             // --- nodo proprieta'
             parseProperty_10( doc, cur, cl );
@@ -166,12 +178,99 @@ void parseCluster_10( xmlDocPtr doc, xmlNodePtr cur, BaseNeuralNet* net ) {
 }
 
 void parseLinker_10( xmlDocPtr doc, xmlNodePtr cur, BaseNeuralNet* net ) {
+    char buf[100];
+    // --- parsing tag <linker>
+    xmlChar* name = xmlGetProp( cur, (const xmlChar*) "name" );
+    if ( !name ) {
+        nnfwMessage( NNFW_ERROR, "attribute name of <linker> is mandatory" );
+    }
+    xmlChar* type = xmlGetProp( cur, (const xmlChar*) "type" );
+    if ( !type ) {
+        nnfwMessage( NNFW_ERROR, "attribute type of <linker> is mandatory" );
+    }
+    xmlChar* from = xmlGetProp( cur, (const xmlChar*) "from" );
+    if ( !from ) {
+        nnfwMessage( NNFW_ERROR, "attribute from of <linker> is mandatory" );
+    }
+    xmlChar* to = xmlGetProp( cur, (const xmlChar*) "to" );
+    if ( !from ) {
+        nnfwMessage( NNFW_ERROR, "attribute to of <linker> is mandatory" );
+    }
+    PropertySettings prop;
+    prop["name"] = convString( buf, name );
+    Cluster* fromcl = (Cluster*)( net->getByName( convString( buf, from ) ) );
+    if ( !fromcl ) {
+        nnfwMessage( NNFW_ERROR, "the 'from' Cluster doesn't exist; creation of linker skipped" );
+        xmlFree( name );
+        xmlFree( type );
+        xmlFree( from );
+        xmlFree( to );
+        return;
+    }
+    Cluster* tocl = (Cluster*)( net->getByName( convString( buf, to ) ) );
+    if ( !tocl ) {
+        nnfwMessage( NNFW_ERROR, "the 'to' Cluster doesn't exist; creation of linker skipped" );
+        xmlFree( name );
+        xmlFree( type );
+        xmlFree( from );
+        xmlFree( to );
+        return;
+    }
+    prop["from"] = fromcl;
+    prop["to"] = tocl;
+    Linker* link = Factory::createLinker( convString( buf, type ), prop );
+    net->addLinker( link );
+
+    // --- parsing children nodes for settings others properties
+    cur = cur->xmlChildrenNode;
+    while( cur != NULL ) {
+        if ( !xmlStrcmp( cur->name, (const xmlChar* ) "randomize" ) ) {
+            // --- <randomize>
+            xmlChar* min = xmlGetProp( cur, (const xmlChar*) "min" );
+            xmlChar* max = xmlGetProp( cur, (const xmlChar*) "max" );
+            if ( !min || !max ) {
+                nnfwMessage( NNFW_ERROR, "attributes min and max are mandatory in <randomize> tag" );
+            }
+            double minV = xmlXPathCastStringToNumber( min );
+            double maxV = xmlXPathCastStringToNumber( max );
+            link->randomize( minV, maxV );
+            xmlFree(min);
+            xmlFree(max);
+        } else {
+            // --- nodo proprieta'
+            parseProperty_10( doc, cur, link );
+        }
+    }
+
+    xmlFree( name );
+    xmlFree( type );
+    xmlFree( from );
+    xmlFree( to );
 }
 
 void parseOrder_10( xmlDocPtr doc, xmlNodePtr cur, BaseNeuralNet* net ) {
 }
 
+void parseOutputs_10( xmlDocPtr doc, xmlNodePtr cur, BaseNeuralNet* net ) {
+}
+
+void parseInputs_10( xmlDocPtr doc, xmlNodePtr cur, BaseNeuralNet* net ) {
+}
+
 void parseConfigure_10( xmlDocPtr doc, xmlNodePtr cur, BaseNeuralNet* net ) {
+    char buf[100];
+    // --- parsing tag <linker>
+    xmlChar* name = xmlGetProp( cur, (const xmlChar*) "name" );
+    if ( !name ) {
+        nnfwMessage( NNFW_ERROR, "attribute name of <configure> is mandatory" );
+    }
+    Updatable* up = net->getByName( convString( buf, name ) );
+    // --- parsing children nodes for settings properties
+    cur = cur->xmlChildrenNode;
+    while( cur != NULL ) {
+        parseProperty_10( doc, cur, up );
+    }
+    xmlFree( name );
 }
 
 void parseNeuralnet_10( xmlDocPtr doc, xmlNodePtr cur, BaseNeuralNet* net ) {
@@ -192,6 +291,12 @@ void parseNeuralnet_10( xmlDocPtr doc, xmlNodePtr cur, BaseNeuralNet* net ) {
         } else if ( !xmlStrcmp( cur->name, (const xmlChar*) "order" ) ) {
             // --- <order>
             parseOrder_10( doc, cur, net );
+        } else if ( !xmlStrcmp( cur->name, (const xmlChar*) "outputs" ) ) {
+            // --- <outputs>
+            parseOutputs_10( doc, cur, net );
+        } else if ( !xmlStrcmp( cur->name, (const xmlChar*) "inputs" ) ) {
+            // --- <inputs>
+            parseInputs_10( doc, cur, net );
         } else if ( !xmlStrcmp( cur->name, (const xmlChar*) "configure" ) ) {
             // --- <configure>
             parseConfigure_10(doc, cur, net );
