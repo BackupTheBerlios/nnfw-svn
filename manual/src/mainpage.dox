@@ -1,31 +1,36 @@
-/*! \mainpage NNFW Manual
+/*! \page index Neural Network Manual
 
 <div id="tocHead"> Table of Contents </div>
 <div id="tocContent">
 <ul class="level_one">
-<li><a href="#1"> 1. Preface </a></li>
-<li><a href="#2"> 2. Introduction </a></li>
+<li>\ref preface </li>
+<li>\ref introduction </a></li>
     <ul class="level_two">
-    <li><a href="#2.1"> 2.1 Why another Neural Network library ? </a></li>
-    <li><a href="#2.2"> 2.2 What is NNFW ?</a></li>
-    <li><a href="#2.3"> 2.3 What is NNFW not ?</a></li>
-    <li><a href="#2.4"> 2.4 Download &amp; Installation</a></li>
-    <li><a href="#2.5"> 2.5 Compiling and Running the tutorials</a></li>
-    <li><a href="#2.6"> 2.6 How is organized this manual </a></li>
-    <li><a href="#2.7"> 2.7 Notes about compilers and IDE</a></li>
+    <li>\ref introduction_1 </li>
+    <li><a href="introduction.html#2.2"> What is NNFW ?</a></li>
+    <li><a href="introduction.html#2.3"> What is NNFW not ?</a></li>
+    <li><a href="introduction.html#2.4"> Download &amp; Installation</a></li>
+    <li><a href="introduction.html#2.5"> Compiling and Running the tutorials</a></li>
+    <li><a href="introduction.html#2.6"> How is organized this manual </a></li>
+    <li><a href="introduction.html#2.7"> Notes about compilers and IDE</a></li>
     </ul>
-<li><a href="#3"> 3. Overture: the first application </a></li>
+<li><a href="overture.html"> Overture: the first application </a></li>
 
-<li><a href="#A"> Appendix A - How to create a new Cluster </a></li>
-<li><a href="#B"> Appendix B - How to create a new Linker </a></li>
+<li><a href="appendixA.html"> Appendix A - How to create a new Cluster </a></li>
+<li><a href="appendixB.html"> Appendix B - How to create a new Linker </a></li>
 </ul>
 </div>
 
-<a name="1"><h1>1 Preface </h1>
+*/
 
-<a name="2"><h1>2 Introduction </h1>
+/*! \page preface Preface
+\addindex preface
+*/
 
-<a name="2.1"><h2>2.1 Why another Neural Network library ? </h2>
+/*! \page introduction Introduction
+\addindex introduction
+
+\section introduction_1 Why another Neural Network library ?
         
 <p> Agli inizi del 2005, ho cercato una libreria di reti neurali semplice da usare, flessibile ed estensibile il pi&ugrave; possible. Dopo mesi di ricerca, ho capito che non c'era una simile libreria. Nonostante il grande numero di librerie presenti sulla rete, nessuna (o almeno io non l'ho trovata) &egrave; stata sviluppata con gli obiettivi che mi sono posto io:</p>
 <ol>
