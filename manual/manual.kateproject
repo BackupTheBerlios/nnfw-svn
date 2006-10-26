@@ -1,6 +1,6 @@
 [Dir src]
 Dirs=
-Files=mainpage.dox/introduction.dox/preface.dox
+Files=mainpage.dox/introduction.dox/preface.dox/overture.dox
 
 [Project Dir]
 Dirs=src
