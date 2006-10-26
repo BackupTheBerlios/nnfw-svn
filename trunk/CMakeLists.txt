@@ -11,15 +11,17 @@ SET( CMAKE_COLOR_MAKEFILE ON )
 ### Default (empty) means that it will be compiled optimized without debug, GSL and MKL with single precision
 SET( NNFW_CONFIG "" CACHE STRING "NNFW Generation Configuration" )
 
+### configure CMake to link againt Qt4
+SET( QT_DONT_USE_QTGUI TRUE )
+SET( QT_USE_QTXML TRUE )
+INCLUDE( FindQt4 )
+INCLUDE( UseQt4 )
+
 ### Setting Compiler g++ for linux machines
 IF (UNIX)
     MESSAGE( "-- Setting compiler for Linux" )
-    ### --- configure libxml2 flags and libs
-    EXEC_PROGRAM( "xml2-config --cflags" OUTPUT_VARIABLE LIBXML2_FLAGS )
-    EXEC_PROGRAM( "xml2-config --libs"   OUTPUT_VARIABLE LIBXML2_LIBS )
     SET( CMAKE_CXX_COMPILER "g++" )
-    SET( CMAKE_CXX_FLAGS " -pipe -fno-strict-aliasing -Wall -W ${LIBXML2_FLAGS}" )
-    SET( CMAKE_EXE_LINKER_FLAGS "${LIBXML2_LIBS}" )
+    SET( CMAKE_CXX_FLAGS " -pipe -fno-strict-aliasing -Wall -W" )
     ### --- debug check
     IF ( NNFW_CONFIG MATCHES debug )
         ## Debug version
@@ -61,8 +63,8 @@ SET( NNFW_HDRS ./include/nnfw.h ./include/primtypes.h ./include/types.h ./includ
 
 INCLUDE_DIRECTORIES( ./include ${MKL_PATH} )
 ADD_LIBRARY( nnfw STATIC ${NNFW_SRCS} )
+TARGET_LINK_LIBRARIES( nnfw ${QT_LIBRARIES} )
 SET(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/lib)
 
 INSTALL( TARGETS nnfw ARCHIVE DESTINATION lib )
 INSTALL( FILES ${NNFW_HDRS} DESTINATION include/nnfw )
-

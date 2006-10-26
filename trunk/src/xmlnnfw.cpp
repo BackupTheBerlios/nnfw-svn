@@ -22,72 +22,57 @@
 #include "messages.h"
 #include "nnfwfactory.h"
 #include "propertized.h"
-#include <libxml/parser.h>
-#include <libxml/xmlmemory.h>
-#include <libxml/xpath.h>
+
+#include <QDomDocument>
+#include <QFile>
+#include <QString>
 
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {
 
-const char* convString( char* out, const xmlChar* in ) {
-    int lenin = xmlStrlen( in );
-    int lenout = lenin;
-    if ( UTF8Toisolat1( (unsigned char*)out, &lenout, (const unsigned char*)in, &lenin ) < 0 ) {
-        nnfwMessage( NNFW_ERROR, "Error converting string" );
-    }
-    return out;
-}
-
-void parseProperty_10( xmlDocPtr doc, xmlNodePtr cur, const Propertized* obj ) {
-    char buf[100];
-    AbstractPropertyAccess* pacc = obj->propertySearch( convString( buf, cur->name ) );
+void parseProperty_10( QDomElement cur, const Propertized* obj ) {
+    AbstractPropertyAccess* pacc = obj->propertySearch( cur.tagName().toAscii().constData() );
     if ( !pacc ) {
         char msg[100];
-        sprintf( msg, "the property %s doesn't exist in %s", cur->name, obj->getTypename().getString() );
+        sprintf( msg, "the property %s doesn't exist in %s",
+                cur.tagName().toAscii().constData(), obj->getTypename().getString() );
         nnfwMessage( NNFW_ERROR, msg );
     }
-    nnfwMessage( NNFW_WARNING, "parseProperty not yet implemented" );
     // --- property type checking
     bool ok = true;
-    xmlChar* text;
+    QString text;
     switch( pacc->type() ) {
     case Variant::t_null:
         nnfwMessage( NNFW_WARNING, "Setting a Null type Variant" );
         break;
     case Variant::t_real:
-        text = xmlNodeListGetString( doc, cur->xmlChildrenNode, 1 );
-        ok = pacc->set( Variant( (Real)( xmlXPathCastStringToNumber( text ) ) ) );
+#ifdef NNFW_DOUBLE_PRECISION
+        ok = pacc->set( Variant( cur.text().toDouble() ) );
+#else
+        ok = pacc->set( Variant( cur.text().toFloat() ) );
+#endif
         break;
     case Variant::t_int: 
-        text = xmlNodeListGetString( doc, cur->xmlChildrenNode, 1 );
-        ok = pacc->set( Variant( (int)( xmlXPathCastStringToNumber( text ) ) ) );
+        ok = pacc->set( Variant( cur.text().toInt() ) );
         break;
     case Variant::t_uint:
-        text = xmlNodeListGetString( doc, cur->xmlChildrenNode, 1 );
-        ok = pacc->set( Variant( (unsigned int)( xmlXPathCastStringToNumber( text ) ) ) );
+        ok = pacc->set( Variant( cur.text().toUInt() ) );
         break;
     case Variant::t_char:
-        text = xmlNodeListGetString( doc, cur->xmlChildrenNode, 1 );
-        // ?!?! --- ok = pacc->set( Variant( (Real)( xmlXPathCastStringToNumber( text ) ) ) );
-        ok = false;
+        ok = pacc->set( Variant( cur.text().at(0).toAscii() ) );
         break;
     case Variant::t_uchar:
-        text = xmlNodeListGetString( doc, cur->xmlChildrenNode, 1 );
-        // ?!?! --- ok = pacc->set( Variant( (Real)( xmlXPathCastStringToNumber( text ) ) ) );
-        ok = false;
+        ok = pacc->set( Variant( (unsigned char)(cur.text().at(0).toAscii()) ) );
         break;
     case Variant::t_bool:
-        text = xmlNodeListGetString( doc, cur->xmlChildrenNode, 1 );
-        // --- E' case-sensitive ?!?!
-        if ( !xmlStrcmp( cur->name, (const xmlChar* ) "true" ) ) {
+        if ( cur.text().toLower() == QString( "true" ) ) {
             ok = pacc->set( Variant( true ) );
         } else {
             ok = pacc->set( Variant( false ) );
         }
         break;
     case Variant::t_string:
-        text = xmlNodeListGetString( doc, cur->xmlChildrenNode, 1 );
-        ok = pacc->set( Variant( convString( buf, text ) ) );
+        ok = pacc->set( Variant( cur.text().toAscii().constData() ) );
         break;
     case Variant::t_realvec:
         //--- da implementare
@@ -110,231 +95,258 @@ void parseProperty_10( xmlDocPtr doc, xmlNodePtr cur, const Propertized* obj ) {
     case Variant::t_propertized:
         // --- parsing children nodes for settings others properties
         const Propertized* sub = pacc->get().getPropertized();
-        cur = cur->xmlChildrenNode;
-        while( cur != NULL ) {
-            parseProperty_10( doc, cur, sub );
+        QDomNode child = cur.firstChild();
+        while( ! child.isNull() ) {
+            QDomElement e = child.toElement();
+            if ( e.isNull() ) {
+                child = child.nextSibling();
+                continue;
+            }
+            parseProperty_10( e, sub );
+            child = child.nextSibling();
         }
         break;
     }
     if ( !ok ) {
         char msg[100];
-        sprintf( msg, "There was an error settings the property %s", cur->name );
+        sprintf( msg, "There was an error settings the property %s", cur.tagName().toAscii().constData() );
         nnfwMessage( NNFW_ERROR, msg );
     }
     return;
 }
 
-void parseCluster_10( xmlDocPtr doc, xmlNodePtr cur, BaseNeuralNet* net ) {
-    char buf[100];
+void parseCluster_10( QDomElement cur, BaseNeuralNet* net ) {
     // --- parsing tag <cluster>
-    xmlChar* name = xmlGetProp( cur, (const xmlChar*) "name" );
-    if ( !name ) {
+    QString name = cur.attribute( "name" );
+    if ( name.isNull() ) {
         nnfwMessage( NNFW_ERROR, "attribute name of <cluster> is mandatory" );
     }
-    xmlChar* type = xmlGetProp( cur, (const xmlChar*) "type" );
-    if ( !type ) {
+    QString type = cur.attribute( "type" );
+    if ( type.isNull() ) {
         nnfwMessage( NNFW_ERROR, "attribute type of <cluster> is mandatory" );
     }
-    xmlChar* size = xmlGetProp( cur, (const xmlChar*) "size" );
-    if ( !size ) {
+    QString size = cur.attribute( "size" );
+    if ( size.isNull() ) {
         nnfwMessage( NNFW_ERROR, "attribute size of <cluster> is mandatory" );
     }
     PropertySettings prop;
-    prop["name"] = convString( buf, name );
-    prop["size"] = Variant( (unsigned int)(xmlXPathCastStringToNumber( size ) ) );
-    Cluster* cl = Factory::createCluster( convString( buf, type ), prop );
+    prop["name"] = name.toAscii().constData();
+    prop["size"] = Variant( size.toUInt() );
+    Cluster* cl = Factory::createCluster( type.toAscii().constData(), prop );
     net->addCluster( cl );
 
     // --- parsing children nodes for settings others properties
-    cur = cur->xmlChildrenNode;
-    while( cur != NULL ) {
-        if ( !xmlStrcmp( cur->name, (const xmlChar* ) "outputfunction" ) ) {
+    QDomNode child = cur.firstChild();
+    while( ! child.isNull() ) {
+        QDomElement e = child.toElement();
+        if ( e.isNull() ) {
+            child = child.nextSibling();
+            continue;
+        }
+        if ( e.tagName() == QString( "outputfunction" ) ) {
             // --- <outputfunction>
             nnfwMessage( NNFW_WARNING, "parsing of <outputfunction> is not yet implemented" );
-        } else if ( !xmlStrcmp( cur->name, (const xmlChar* ) "accumulate" ) ) {
+        } else if ( e.tagName() == QString( "accumulate" ) ) {
             // --- <accumulate>
-            cl->accumulate( !xmlStrcmp( cur->name, (const xmlChar*) "true" ) );
-        } else if ( !xmlStrcmp( cur->name, (const xmlChar* ) "randomize" ) ) {
+            cl->accumulate( e.text().toLower() == QString( "true" ) );
+        } else if ( e.tagName() == QString( "randomize" ) ) {
             // --- <randomize>
-            xmlChar* min = xmlGetProp( cur, (const xmlChar*) "min" );
-            xmlChar* max = xmlGetProp( cur, (const xmlChar*) "max" );
-            if ( !min || !max ) {
+            QString min = e.attribute( "min" );
+            QString max = e.attribute( "max" );
+            if ( min.isNull() || max.isNull() ) {
                 nnfwMessage( NNFW_ERROR, "attributes min and max are mandatory in <randomize> tag" );
             }
-            double minV = xmlXPathCastStringToNumber( min );
-            double maxV = xmlXPathCastStringToNumber( max );
+#ifdef NNFW_DOUBLE_PRECISION
+            double minV = min.toDouble();
+            double maxV = max.toDouble();
+#else
+            float minV = min.toFloat();
+            float maxV = max.toFloat();
+#endif
             cl->randomize( minV, maxV );
-            xmlFree(min);
-            xmlFree(max);
         } else {
             // --- nodo proprieta'
-            parseProperty_10( doc, cur, cl );
+            parseProperty_10( e, cl );
         }
+        child = child.nextSibling();
     }
-
-    xmlFree(name);
-    xmlFree(type);
-    xmlFree(size);
 }
 
-void parseLinker_10( xmlDocPtr doc, xmlNodePtr cur, BaseNeuralNet* net ) {
-    char buf[100];
+void parseLinker_10( QDomElement cur, BaseNeuralNet* net ) {
     // --- parsing tag <linker>
-    xmlChar* name = xmlGetProp( cur, (const xmlChar*) "name" );
-    if ( !name ) {
+    QString name = cur.attribute( "name" );
+    if ( name.isNull() ) {
         nnfwMessage( NNFW_ERROR, "attribute name of <linker> is mandatory" );
     }
-    xmlChar* type = xmlGetProp( cur, (const xmlChar*) "type" );
-    if ( !type ) {
+    QString type = cur.attribute( "type" );
+    if ( type.isNull() ) {
         nnfwMessage( NNFW_ERROR, "attribute type of <linker> is mandatory" );
     }
-    xmlChar* from = xmlGetProp( cur, (const xmlChar*) "from" );
-    if ( !from ) {
+    QString from = cur.attribute( "from" );
+    if ( from.isNull() ) {
         nnfwMessage( NNFW_ERROR, "attribute from of <linker> is mandatory" );
     }
-    xmlChar* to = xmlGetProp( cur, (const xmlChar*) "to" );
-    if ( !from ) {
+    QString to = cur.attribute( "to" );
+    if ( to.isNull() ) {
         nnfwMessage( NNFW_ERROR, "attribute to of <linker> is mandatory" );
     }
     PropertySettings prop;
-    prop["name"] = convString( buf, name );
-    Cluster* fromcl = (Cluster*)( net->getByName( convString( buf, from ) ) );
+    prop["name"] = name.toAscii().constData();
+    Cluster* fromcl = (Cluster*)( net->getByName( from.toAscii().constData() ) );
     if ( !fromcl ) {
         nnfwMessage( NNFW_ERROR, "the 'from' Cluster doesn't exist; creation of linker skipped" );
-        xmlFree( name );
-        xmlFree( type );
-        xmlFree( from );
-        xmlFree( to );
         return;
     }
-    Cluster* tocl = (Cluster*)( net->getByName( convString( buf, to ) ) );
+    Cluster* tocl = (Cluster*)( net->getByName( to.toAscii().constData() ) );
     if ( !tocl ) {
         nnfwMessage( NNFW_ERROR, "the 'to' Cluster doesn't exist; creation of linker skipped" );
-        xmlFree( name );
-        xmlFree( type );
-        xmlFree( from );
-        xmlFree( to );
         return;
     }
     prop["from"] = fromcl;
     prop["to"] = tocl;
-    Linker* link = Factory::createLinker( convString( buf, type ), prop );
+    Linker* link = Factory::createLinker( type.toAscii().constData(), prop );
     net->addLinker( link );
 
     // --- parsing children nodes for settings others properties
-    cur = cur->xmlChildrenNode;
-    while( cur != NULL ) {
-        if ( !xmlStrcmp( cur->name, (const xmlChar* ) "randomize" ) ) {
+    QDomNode child = cur.firstChild();
+    while( ! child.isNull() ) {
+        QDomElement e = child.toElement();
+        if ( e.isNull() ) {
+            child = child.nextSibling();
+            continue;
+        }
+        if ( e.tagName() == QString( "randomize" ) ) {
             // --- <randomize>
-            xmlChar* min = xmlGetProp( cur, (const xmlChar*) "min" );
-            xmlChar* max = xmlGetProp( cur, (const xmlChar*) "max" );
-            if ( !min || !max ) {
+            QString min = e.attribute( "min" );
+            QString max = e.attribute( "max" );
+            if ( min.isNull() || max.isNull() ) {
                 nnfwMessage( NNFW_ERROR, "attributes min and max are mandatory in <randomize> tag" );
             }
-            double minV = xmlXPathCastStringToNumber( min );
-            double maxV = xmlXPathCastStringToNumber( max );
+#ifdef NNFW_DOUBLE_PRECISION
+            double minV = min.toDouble();
+            double maxV = max.toDouble();
+#else
+            float minV = min.toFloat();
+            float maxV = max.toFloat();
+#endif
             link->randomize( minV, maxV );
-            xmlFree(min);
-            xmlFree(max);
         } else {
             // --- nodo proprieta'
-            parseProperty_10( doc, cur, link );
+            parseProperty_10( e, link );
         }
+        child = child.nextSibling();
     }
-
-    xmlFree( name );
-    xmlFree( type );
-    xmlFree( from );
-    xmlFree( to );
 }
 
-void parseOrder_10( xmlDocPtr doc, xmlNodePtr cur, BaseNeuralNet* net ) {
+void parseOrder_10( QDomElement cur, BaseNeuralNet* net ) {
 }
 
-void parseOutputs_10( xmlDocPtr doc, xmlNodePtr cur, BaseNeuralNet* net ) {
+void parseOutputs_10( QDomElement cur, BaseNeuralNet* net ) {
 }
 
-void parseInputs_10( xmlDocPtr doc, xmlNodePtr cur, BaseNeuralNet* net ) {
+void parseInputs_10( QDomElement cur, BaseNeuralNet* net ) {
 }
 
-void parseConfigure_10( xmlDocPtr doc, xmlNodePtr cur, BaseNeuralNet* net ) {
+void parseConfigure_10( QDomElement cur, BaseNeuralNet* net ) {
     char buf[100];
     // --- parsing tag <linker>
-    xmlChar* name = xmlGetProp( cur, (const xmlChar*) "name" );
-    if ( !name ) {
+    QString name = cur.attribute( "name" );
+    if ( name.isNull() ) {
         nnfwMessage( NNFW_ERROR, "attribute name of <configure> is mandatory" );
     }
-    Updatable* up = net->getByName( convString( buf, name ) );
-    // --- parsing children nodes for settings properties
-    cur = cur->xmlChildrenNode;
-    while( cur != NULL ) {
-        parseProperty_10( doc, cur, up );
+    Updatable* up = net->getByName( name.toAscii().constData() );
+    if ( !up ) {
+        sprintf( buf, "Updatable %s doesn't exist in the neural network", name.toAscii().constData() );
+        nnfwMessage( NNFW_ERROR, buf );
     }
-    xmlFree( name );
+    // --- parsing children nodes for settings properties
+    QDomNode child = cur.firstChild();
+    while( ! child.isNull() ) {
+        QDomElement e = child.toElement();
+        if ( e.isNull() ) {
+            child = child.nextSibling();
+            continue;
+        }
+        parseProperty_10( e, up );
+        child = child.nextSibling();
+    }
 }
 
-void parseNeuralnet_10( xmlDocPtr doc, xmlNodePtr cur, BaseNeuralNet* net ) {
-    cur = cur->xmlChildrenNode;
-    if ( xmlStrcmp( cur->name, (const xmlChar*) "neuralnet" ) ) {
+void parseNeuralnet_10( QDomElement cur, BaseNeuralNet* net ) {
+    QDomNode child = cur.firstChild().toElement();
+    if ( child.toElement().isNull() ) {
         nnfwMessage( NNFW_ERROR, "Syntax error" );
         return;
     }
-    // --- parsing tag <neuralnet>
-    cur = cur->xmlChildrenNode;
-    while( cur != NULL ) {
-        if ( !xmlStrcmp( cur->name, (const xmlChar* ) "cluster" ) ) {
-            // --- <cluster>
-            parseCluster_10( doc, cur, net );
-        } else if ( !xmlStrcmp( cur->name, (const xmlChar*) "linker" ) ) {
-            // --- <linker>
-            parseLinker_10( doc, cur, net );
-        } else if ( !xmlStrcmp( cur->name, (const xmlChar*) "order" ) ) {
-            // --- <order>
-            parseOrder_10( doc, cur, net );
-        } else if ( !xmlStrcmp( cur->name, (const xmlChar*) "outputs" ) ) {
-            // --- <outputs>
-            parseOutputs_10( doc, cur, net );
-        } else if ( !xmlStrcmp( cur->name, (const xmlChar*) "inputs" ) ) {
-            // --- <inputs>
-            parseInputs_10( doc, cur, net );
-        } else if ( !xmlStrcmp( cur->name, (const xmlChar*) "configure" ) ) {
-            // --- <configure>
-            parseConfigure_10(doc, cur, net );
-        } else {
-            char msg[100];
-            sprintf( msg, "Unrecognized tag: %s", cur->name );
-            nnfwMessage( NNFW_WARNING, msg );
-        }
-        cur = cur->next;
+    if ( child.toElement().tagName() != QString( "neuralnet" ) ) {
+        nnfwMessage( NNFW_ERROR, "Syntax error" );
+        return;
     }
 
-    nnfwMessage( NNFW_WARNING, "Not yet implemented" );
+    // --- parsing tag <neuralnet>
+    child = child.firstChild();
+    while( ! child.isNull() ) {
+        QDomElement e = child.toElement();
+        if ( e.isNull() ) {
+            child = child.nextSibling();
+            continue;
+        }
+        if ( e.tagName() == QString( "cluster" ) ) {
+            // --- <cluster>
+            parseCluster_10( e, net );
+        } else if ( e.tagName() == QString( "linker" ) ) {
+            // --- <linker>
+            parseLinker_10( e, net );
+        } else if ( e.tagName() == QString( "order" ) ) {
+            // --- <order>
+            parseOrder_10( e, net );
+        } else if ( e.tagName() == QString( "outputs" ) ) {
+            // --- <outputs>
+            parseOutputs_10( e, net );
+        } else if ( e.tagName() == QString( "inputs" ) ) {
+            // --- <inputs>
+            parseInputs_10( e, net );
+        } else if ( e.tagName() == QString( "configure" ) ) {
+            // --- <configure>
+            parseConfigure_10( e, net );
+        } else {
+            char msg[100];
+            sprintf( msg, "Unrecognized tag: %s", e.tagName().toAscii().constData() );
+            nnfwMessage( NNFW_WARNING, msg );
+        }
+        child = child.nextSibling();
+    }
 }
 
 BaseNeuralNet* loadXML( const char* filename ) {
     BaseNeuralNet* net = new BaseNeuralNet();
-    xmlDocPtr doc;
-    doc = xmlParseFile( filename );
-    if ( !doc ) {
-        nnfwMessage( NNFW_ERROR, "Error reading the filename" );
+
+    QDomDocument doc( "xmldocument" );
+    QFile file( filename );
+    if ( !file.open( QIODevice::ReadOnly ) ) {
+        char msg[100];
+        sprintf( msg, "Unable to open file %s", filename );
+        nnfwMessage( NNFW_ERROR, msg );
         return net;
     }
-
-    xmlNodePtr cur = xmlDocGetRootElement( doc );
-    if (!cur) {
-        nnfwMessage( NNFW_WARNING, "Readed an empty file" );
+    if ( !doc.setContent( &file ) ) {
+        char msg[100];
+        sprintf( msg, "Error reading file %s", filename );
+        nnfwMessage( NNFW_ERROR, msg );
         return net;
     }
+    file.close();
 
-    if ( xmlStrcmp( cur->name, (const xmlChar*) "nnfw" ) ) {
+    QDomElement rootnode = doc.documentElement();
+    if ( rootnode.tagName() != QString( "nnfw" ) ) {
         nnfwMessage( NNFW_ERROR, "Wrong type of document" );
         return net;
     }
     // --- checking the version of XML file
-    xmlChar* ver = xmlGetProp( cur, (const xmlChar* ) "version" );
-    if ( !xmlStrcmp( ver, (const xmlChar* ) "1.0" ) ) {
+    QString ver = rootnode.attribute( "version" );
+    if ( ver == QString( "1.0" ) ) {
         //--- version 1.0
-        parseNeuralnet_10( doc, cur, net );
+        parseNeuralnet_10( rootnode, net );
     }
     return net;
 }

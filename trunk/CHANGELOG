@@ -14,6 +14,12 @@ S <mave> comment goes here
     'B' : means a BugFix
     'C' : means that something has been changed (e.g. implementation of a Class or a signature method)
 ==== End of Legend ====
+
+    ==> 113 - 25/10/2006 <==
+
+C <mave> due to problems to elaborate xmlChar* strings of libxml2, I used the QT library for parsing
+        xml files; Now, the NNFW depends on QT-4
+
     ==> 105 - 25/10/2006 <==
 
 C <mave> improved the new style of Doxygen documentation
