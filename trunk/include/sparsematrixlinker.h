@@ -43,13 +43,13 @@ public:
     /*! \brief Connect neurons of Clusters with a random connections with the passed probability.
 	 * Details
      */
-	SparseMatrixLinker::SparseMatrixLinker( Real prob, Cluster* from, Cluster* to, const char* name = "unnamed" );
+	SparseMatrixLinker( Real prob, Cluster* from, Cluster* to, const char* name = "unnamed" );
 
     /*! \brief Connect neurons of Clusters with a random connections with the passed probability.
 	 * With this contructor you must also specify whether the diagonal of the matrix is made of zeros and whether the matrix is symmetrical
      * ATTENTION: You can use this constructor only with square matrices, otherwise it will generate a memory error!!!
 	 */
-	SparseMatrixLinker::SparseMatrixLinker( Cluster* from, Cluster* to, Real prob, bool zeroDiagonal = false, bool symmetricMask = false, const char* name = "unnamed" );
+	SparseMatrixLinker( Cluster* from, Cluster* to, Real prob, bool zeroDiagonal = false, bool symmetricMask = false, const char* name = "unnamed" );
 
     /*! \brief Construct by PropertySettings
      */

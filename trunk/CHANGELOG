@@ -14,6 +14,10 @@ S <mave> comment goes here
     'B' : means a BugFix
     'C' : means that something has been changed (e.g. implementation of a Class or a signature method)
 ==== End of Legend ====
+    ==> 117 - 27/10/2006 <==
+
+C <mave> resolved bug in sparsematrixlinker.h
+
     ==> 116 - 27/10/2006 <==
 
 C <mave> bugfix in parsing <order> tag
