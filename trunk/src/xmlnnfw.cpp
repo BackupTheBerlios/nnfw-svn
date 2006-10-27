@@ -291,6 +291,7 @@ void parseOrder_10( QDomElement cur, BaseNeuralNet* net ) {
             nnfwMessage( NNFW_ERROR, msg );
         }
     }
+    net->setOrder( ord );
 }
 
 void parseOutputs_10( QDomElement cur, BaseNeuralNet* net ) {
