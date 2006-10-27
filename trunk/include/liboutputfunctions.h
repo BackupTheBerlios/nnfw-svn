@@ -48,9 +48,10 @@ public:
     //@{
 
     //! Construct
-    IdentityFunction() : DerivableOutputFunction() {
-        setTypename( "IdentityFunction" );
-    };
+    IdentityFunction();
+
+    //! Construct
+    IdentityFunction( PropertySettings& prop );
 
     //! Destructor
     virtual ~IdentityFunction() { /* Nothing to do */ };
@@ -82,11 +83,10 @@ public:
     //@{
 
     //! Construct a sigmoid updater with parameter l
-    SigmoidFunction( Real l = 1.0 ) {
-        lambda = l;
-        addProperty( "lambda", Variant::t_real, this, &SigmoidFunction::getLambda, &SigmoidFunction::setLambda );
-        setTypename( "SigmoidFunction" );
-    };
+    SigmoidFunction( Real l = 1.0 );
+
+    //! Construct
+    SigmoidFunction( PropertySettings& prop );
 
     //! Destructor
     virtual ~SigmoidFunction() { /* Nothing to do */ };
@@ -132,11 +132,10 @@ public:
     //@{
 
     //! Construct a sigmoid updater with parameter l
-    FakeSigmoidFunction( Real l = 1.0 ) {
-        lambda = l;
-        addProperty( "lambda", Variant::t_real, this, &FakeSigmoidFunction::getLambda, &FakeSigmoidFunction::setLambda );
-        setTypename( "FakeSigmoidFunction" );
-    };
+    FakeSigmoidFunction( Real l = 1.0 );
+
+    //! Construct
+    FakeSigmoidFunction( PropertySettings& prop );
 
     //! Destructor
     virtual ~FakeSigmoidFunction() { /* Nothing to do */ };
@@ -186,16 +185,10 @@ public:
     //@{
 
     //! Construct a scaled sigmoid updater with parameter l
-    ScaledSigmoidFunction( Real l = 1.0,
-                          Real min = -1.0, Real max = +1.0 ) {
-        lambda = l;
-        this->min = min;
-        this->max = max;
-        addProperty( "lambda", Variant::t_real, this, &ScaledSigmoidFunction::getLambda, &ScaledSigmoidFunction::setLambda );
-        addProperty( "min", Variant::t_real, this, &ScaledSigmoidFunction::getMin, &ScaledSigmoidFunction::setMin );
-        addProperty( "max", Variant::t_real, this, &ScaledSigmoidFunction::getMax, &ScaledSigmoidFunction::setMax );
-        setTypename( "ScaledSigmoidFunction" );
-    };
+    ScaledSigmoidFunction( Real l = 1.0, Real min = -1.0, Real max = +1.0 );
+
+    //! Construct
+    ScaledSigmoidFunction( PropertySettings& prop );
 
     //! Destructor
     virtual ~ScaledSigmoidFunction() { /* Nothing to do */ };
@@ -269,17 +262,10 @@ public:
     //@{
 
     //! Construct a linear updater
-    LinearFunction( Real minX, Real maxX, Real minY = -1, Real maxY = +1 ) {
-        this->minX = minX;
-        this->maxX = maxX;
-        this->minY = minY;
-        this->maxY = maxY;
-        addProperty( "minX", Variant::t_real, this, &LinearFunction::getMinX, &LinearFunction::setMinX );
-        addProperty( "maxX", Variant::t_real, this, &LinearFunction::getMaxX, &LinearFunction::setMaxX );
-        addProperty( "minY", Variant::t_real, this, &LinearFunction::getMinY, &LinearFunction::setMinY );
-        addProperty( "maxY", Variant::t_real, this, &LinearFunction::getMaxY, &LinearFunction::setMaxY );
-        setTypename( "LinearFunction" );
-    };
+    LinearFunction( Real minX, Real maxX, Real minY = -1, Real maxY = +1 );
+
+    //! Construct
+    LinearFunction( PropertySettings& prop );
 
     //! Destructor
     virtual ~LinearFunction() { /* Nothing to do */ };
@@ -355,15 +341,10 @@ public:
     //@{
 
     //! Construct a step updater
-    StepFunction( Real min = 0.0f, Real max = 1.0f, Real threshold = 0.0f ) {
-        this->min = min;
-		this->max = max;
-		this->threshold = threshold;
-        addProperty( "min", Variant::t_real, this, &StepFunction::getMin, &StepFunction::setMin );
-        addProperty( "max", Variant::t_real, this, &StepFunction::getMax, &StepFunction::setMax );
-        addProperty( "threshold", Variant::t_real, this, &StepFunction::getThreshold, &StepFunction::setThreshold );
-        setTypename( "StepFunction" );
-    };
+    StepFunction( Real min = 0.0f, Real max = 1.0f, Real threshold = 0.0f );
+
+    //! Construct
+    StepFunction( PropertySettings& prop );
 
     //! Destructor
     virtual ~StepFunction() { /* Nothing to do */ };
@@ -435,6 +416,9 @@ public:
      *  Construct a PoolFunction contains dim elements all equal to prototype passed
      */
     PoolFunction( const OutputFunction& prototype, u_int dim );
+
+    //! Construct
+    PoolFunction( PropertySettings& prop );
 
     /*! \brief Constructor
      *

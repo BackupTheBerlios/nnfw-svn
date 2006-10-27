@@ -332,9 +332,16 @@ public:
     /*! \brief set the property
      */
     bool setProperty( const char* name, const Variant& data ) {
+        if ( props.count( name ) == 0 ) return false;
         AbstractPropertyAccess& p = *(props[name]);
         return ( p.isWritable() ? p.set(data) : false );
     };
+
+    /*! \brief configure the properties by a PropertySettings
+     *
+     *  This method doesn't reports is some settings fails
+     */
+    void setProperties( PropertySettings& prop );
 
     /*! \brief Return all PropertyAccess in order of registering
      */
@@ -370,14 +377,7 @@ protected:
      *
      *  Use this function in all constructor of subclasses, and always set the appropriate typename
      */
-    void setTypename( const char* type ) {
-        if (vtypename) {
-            delete []vtypename;
-        }
-        u_int size = strlen(type);
-        vtypename = new char[size+1];
-        strcpy( vtypename, type );
-    };
+    void setTypename( const char* type );
 
 private:
     //! mapping name -> PropertyAccess

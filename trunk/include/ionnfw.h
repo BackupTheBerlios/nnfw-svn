@@ -24,6 +24,12 @@
 #include "propertized.h"
 #include <iostream>
 
+/*! \todo the follow xml code is not yet supported:
+ *      <configure type="ACluster">
+ *        <outfunction> ... </outfunction>
+ */
+
+
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {
 
@@ -38,33 +44,32 @@ bool saveXML( const char* filename, BaseNeuralNet* );
 
 //@}
 
-/*! \name Stream Operator */
+/*! \name Ouput Stream Operator */
 //@{
 
 //! Operator << with RealVec
 std::ostream& operator<<(std::ostream& stream, const RealVec& v);
-//! Operator >> with RealVec
-std::istream& operator>>(std::istream& stream, RealVec& v);
 
 //! Operator << with RealMat
 std::ostream& operator<<(std::ostream& stream, const RealMat& m);
-//! Operator >> with RealMat
-std::istream& operator>>(std::istream& stream, RealMat& m);
 
 //! Operator << with Variant::types
 std::ostream& operator<<(std::ostream& stream, const Variant::types t);
-//! Operator >> with Variant::types
-std::istream& operator>>(std::istream& stream, Variant::types& t);
 
-//! Operator << with Variant (print the value)
+//! Operator << with Variant
 std::ostream& operator<<(std::ostream& stream, const Variant var);
-//! Operator >> with Variant (read the value)
-std::istream& operator>>(std::istream& stream, Variant& var);
 
 //! Operator << with Propertized
 std::ostream& operator<<(std::ostream& stream, const Propertized& p);
-//! Operator >> with Propertized
-std::istream& operator>>(std::istream& stream, Propertized& p);
+
+//@}
+/*! \name Input Stream Operator --- these operator are all deprecated */
+//@{
+
+//! \deprecated Operator >> with RealMat
+std::istream& operator>>(std::istream& stream, RealMat& m);
+//! \deprecated Operator >> with RealVec
+std::istream& operator>>(std::istream& stream, RealVec& v);
 
 //@}
 

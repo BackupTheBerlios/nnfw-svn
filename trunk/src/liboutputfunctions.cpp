@@ -33,6 +33,17 @@
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {
 
+IdentityFunction::IdentityFunction()
+    : DerivableOutputFunction() {
+    setTypename( "IdentityFunction" );
+}
+
+IdentityFunction::IdentityFunction( PropertySettings& )
+    : DerivableOutputFunction() {
+    // --- non ha proprieta'
+    setTypename( "IdentityFunction" );
+}
+
 void IdentityFunction::apply( RealVec& inputs, RealVec& outputs ) {
     outputs.assign( inputs );
 }
@@ -43,6 +54,20 @@ void IdentityFunction::derivate( const RealVec&, const RealVec&, RealVec& deriva
 
 IdentityFunction* IdentityFunction::clone() const {
     return new IdentityFunction();
+}
+
+SigmoidFunction::SigmoidFunction( Real l ) : DerivableOutputFunction() {
+    lambda = l;
+    addProperty( "lambda", Variant::t_real, this, &SigmoidFunction::getLambda, &SigmoidFunction::setLambda );
+    setTypename( "SigmoidFunction" );
+}
+
+SigmoidFunction::SigmoidFunction( PropertySettings& prop )
+    : DerivableOutputFunction() {
+    lambda = 1.0;
+    addProperty( "lambda", Variant::t_real, this, &SigmoidFunction::getLambda, &SigmoidFunction::setLambda );
+    setProperties( prop );
+    setTypename( "SigmoidFunction" );
 }
 
 void SigmoidFunction::apply( RealVec& inputs, RealVec& outputs ) {
@@ -76,6 +101,21 @@ void SigmoidFunction::derivate( const RealVec&, const RealVec& outputs, RealVec&
 
 SigmoidFunction* SigmoidFunction::clone() const {
     return new SigmoidFunction( lambda );
+}
+
+FakeSigmoidFunction::FakeSigmoidFunction( Real l )
+    : DerivableOutputFunction() {
+    lambda = l;
+    addProperty( "lambda", Variant::t_real, this, &FakeSigmoidFunction::getLambda, &FakeSigmoidFunction::setLambda );
+    setTypename( "FakeSigmoidFunction" );
+}
+
+FakeSigmoidFunction::FakeSigmoidFunction( PropertySettings& prop )
+    : DerivableOutputFunction() {
+    lambda = 1.0;
+    addProperty( "lambda", Variant::t_real, this, &FakeSigmoidFunction::getLambda, &FakeSigmoidFunction::setLambda );
+    setProperties( prop );
+    setTypename( "FakeSigmoidFunction" );
 }
 
 void FakeSigmoidFunction::apply( RealVec& inputs, RealVec& outputs ) {
@@ -123,6 +163,29 @@ void FakeSigmoidFunction::derivate( const RealVec&, const RealVec& outputs, Real
 
 FakeSigmoidFunction* FakeSigmoidFunction::clone() const {
     return new FakeSigmoidFunction( lambda );
+}
+
+ScaledSigmoidFunction::ScaledSigmoidFunction( Real l, Real min, Real max )
+    : DerivableOutputFunction() {
+    lambda = l;
+    this->min = min;
+    this->max = max;
+    addProperty( "lambda", Variant::t_real, this, &ScaledSigmoidFunction::getLambda, &ScaledSigmoidFunction::setLambda );
+    addProperty( "min", Variant::t_real, this, &ScaledSigmoidFunction::getMin, &ScaledSigmoidFunction::setMin );
+    addProperty( "max", Variant::t_real, this, &ScaledSigmoidFunction::getMax, &ScaledSigmoidFunction::setMax );
+    setTypename( "ScaledSigmoidFunction" );
+}
+
+ScaledSigmoidFunction::ScaledSigmoidFunction( PropertySettings& prop )
+    : DerivableOutputFunction() {
+    lambda = 1.0;
+    min = -1.0;
+    max = +1.0;
+    addProperty( "lambda", Variant::t_real, this, &ScaledSigmoidFunction::getLambda, &ScaledSigmoidFunction::setLambda );
+    addProperty( "min", Variant::t_real, this, &ScaledSigmoidFunction::getMin, &ScaledSigmoidFunction::setMin );
+    addProperty( "max", Variant::t_real, this, &ScaledSigmoidFunction::getMax, &ScaledSigmoidFunction::setMax );
+    setProperties( prop );
+    setTypename( "FakeSigmoidFunction" );
 }
 
 void ScaledSigmoidFunction::apply( RealVec& inputs, RealVec& outputs ) {
@@ -176,6 +239,33 @@ void ScaledSigmoidFunction::derivate( const RealVec&, const RealVec& outputs, Re
 
 ScaledSigmoidFunction* ScaledSigmoidFunction::clone() const {
     return new ScaledSigmoidFunction( lambda, min, max );
+}
+
+LinearFunction::LinearFunction( Real minX, Real maxX, Real minY, Real maxY )
+    : DerivableOutputFunction() {
+    this->minX = minX;
+    this->maxX = maxX;
+    this->minY = minY;
+    this->maxY = maxY;
+    addProperty( "minX", Variant::t_real, this, &LinearFunction::getMinX, &LinearFunction::setMinX );
+    addProperty( "maxX", Variant::t_real, this, &LinearFunction::getMaxX, &LinearFunction::setMaxX );
+    addProperty( "minY", Variant::t_real, this, &LinearFunction::getMinY, &LinearFunction::setMinY );
+    addProperty( "maxY", Variant::t_real, this, &LinearFunction::getMaxY, &LinearFunction::setMaxY );
+    setTypename( "LinearFunction" );
+}
+
+LinearFunction::LinearFunction( PropertySettings& prop )
+    : DerivableOutputFunction() {
+    minX = -1.0;
+    maxX = +1.0;
+    minY = -1.0;
+    maxY = +1.0;
+    addProperty( "minX", Variant::t_real, this, &LinearFunction::getMinX, &LinearFunction::setMinX );
+    addProperty( "maxX", Variant::t_real, this, &LinearFunction::getMaxX, &LinearFunction::setMaxX );
+    addProperty( "minY", Variant::t_real, this, &LinearFunction::getMinY, &LinearFunction::setMinY );
+    addProperty( "maxY", Variant::t_real, this, &LinearFunction::getMaxY, &LinearFunction::setMaxY );
+    setProperties( prop );
+    setTypename( "LinearFunction" );
 }
 
 void LinearFunction::apply( RealVec& inputs, RealVec& outputs ) {
@@ -250,6 +340,29 @@ void LinearFunction::derivate( const RealVec& inputs, const RealVec&, RealVec& d
 
 LinearFunction* LinearFunction::clone() const {
     return new LinearFunction( minX, maxX, minY, maxY );
+}
+
+StepFunction::StepFunction( Real min, Real max, Real threshold )
+    : DerivableOutputFunction() {
+    this->min = min;
+    this->max = max;
+    this->threshold = threshold;
+    addProperty( "min", Variant::t_real, this, &StepFunction::getMin, &StepFunction::setMin );
+    addProperty( "max", Variant::t_real, this, &StepFunction::getMax, &StepFunction::setMax );
+    addProperty( "threshold", Variant::t_real, this, &StepFunction::getThreshold, &StepFunction::setThreshold );
+    setTypename( "StepFunction" );
+}
+
+StepFunction::StepFunction( PropertySettings& prop )
+    : DerivableOutputFunction() {
+    min = 0.0;
+    max = +1.0;
+    threshold = 0.0;
+    addProperty( "min", Variant::t_real, this, &StepFunction::getMin, &StepFunction::setMin );
+    addProperty( "max", Variant::t_real, this, &StepFunction::getMax, &StepFunction::setMax );
+    addProperty( "threshold", Variant::t_real, this, &StepFunction::getThreshold, &StepFunction::setThreshold );
+    setProperties( prop );
+    setTypename( "StepFunction" );
 }
 
 void StepFunction::apply( RealVec& inputs, RealVec& outputs ) {
@@ -327,6 +440,13 @@ PoolFunction::PoolFunction( u_int dim )
         ups.resize( 1 );
     }
     setTypename( "PoolFunction" );
+}
+
+PoolFunction::PoolFunction( PropertySettings& )
+    : OutputFunction(), ups(1) {
+    // --- non ha proprieta' ... ma dovrebbe averle !!
+    ups[0] = new OutputFunction();
+    setTypename( "StepFunction" );
 }
 
 PoolFunction::~PoolFunction() {

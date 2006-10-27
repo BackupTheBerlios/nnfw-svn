@@ -25,6 +25,8 @@
 #include "matrixlinker.h"
 #include "sparsematrixlinker.h"
 #include "copylinker.h"
+#include "outputfunction.h"
+#include "liboutputfunctions.h"
 
 namespace nnfw {
 
@@ -42,6 +44,15 @@ Linker* Factory::createLinker( const char* type, PropertySettings& p ) {
     std::string key(type);
     if( linkertypes.count( key ) ) {
         return (Linker*)( linkertypes[key]->create( p ) );
+    }
+    return 0;
+}
+
+OutputFunction* Factory::createOutputFunction( const char* type, PropertySettings& p ) {
+    if ( !isInit ) { initFactory(); };
+    std::string key(type);
+    if( outfuntypes.count( key ) ) {
+        return (OutputFunction*)( outfuntypes[key]->create( p ) );
     }
     return 0;
 }
@@ -66,20 +77,41 @@ bool Factory::registerLinker( const AbstractCreator& c, const char* type ) {
     return false;
 }
 
+bool Factory::registerOutputFunction( const AbstractCreator& c, const char* type ) {
+    if ( !isInit ) { initFactory(); };
+    std::string key(type);
+    if ( outfuntypes.count( key ) == 0 ) {
+        outfuntypes[key] = c.clone();
+        return true;
+    }
+    return false;
+}
+
 void Factory::initFactory() {
     clustertypes["SimpleCluster"] = new Creator<SimpleCluster>();
     clustertypes["BiasedCluster"] = new Creator<BiasedCluster>();
     clustertypes["DDECluster"] = new Creator<DDECluster>();
     clustertypes["FakeCluster"] = new Creator<FakeCluster>();
+
     linkertypes["MatrixLinker"] = new Creator<MatrixLinker>();
     linkertypes["SparseMatrixLinker"] = new Creator<SparseMatrixLinker>();
     linkertypes["CopyLinker"] = new Creator<CopyLinker>();
+
+    outfuntypes["FakeSigmoidFunction"] = new Creator<FakeSigmoidFunction>();
+    outfuntypes["IdentityFunction"] = new Creator<IdentityFunction>();
+    outfuntypes["LinearFunction"] = new Creator<LinearFunction>();
+    outfuntypes["ScaledSigmoidFunction"] = new Creator<ScaledSigmoidFunction>();
+    outfuntypes["SigmoidFunction"] = new Creator<SigmoidFunction>();
+    outfuntypes["StepFunction"] = new Creator<StepFunction>();
+    outfuntypes["PoolFunction"] = new Creator<PoolFunction>();
+
     isInit = true;
 }
 
 bool Factory::isInit = false;
 std::map<std::string, AbstractCreator*> Factory::clustertypes;
 std::map<std::string, AbstractCreator*> Factory::linkertypes;
+std::map<std::string, AbstractCreator*> Factory::outfuntypes;
 
 }
 

@@ -25,9 +25,6 @@
  *
  *  Details...
  *
- *  \todo SparseLinker; it connects the Cluster with sparse connections; in the constructor the user can
- *        specify a probability and the a connection from neurons will be created with probability given;
- *        or the user can insert/eliminate single connection from two neurons; and so on.
  */
 
 #include "types.h"

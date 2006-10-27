@@ -31,6 +31,8 @@
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {
 
+void parseOutputFunction_10( QDomElement cur, Cluster* cl );
+
 void parseProperty_10( QDomElement cur, const Propertized* obj ) {
     AbstractPropertyAccess* pacc = obj->propertySearch( cur.tagName().toAscii().constData() );
     if ( !pacc ) {
@@ -149,6 +151,28 @@ void parseProperty_10( QDomElement cur, const Propertized* obj ) {
     return;
 }
 
+void parseOutputFunction_10( QDomElement cur, Cluster* cl ) {
+    QString type = cur.attribute( "type" );
+    if ( type.isNull() ) {
+        nnfwMessage( NNFW_ERROR, "attribute type is mandatory in <outputfunction> tag" );
+        return;
+    }
+    PropertySettings prop;
+    OutputFunction* fun = Factory::createOutputFunction( type.toAscii().constData(), prop );
+    // --- parsing children nodes for settings properties
+    QDomNode child = cur.firstChild();
+    while( ! child.isNull() ) {
+        QDomElement e = child.toElement();
+        if ( e.isNull() ) {
+            child = child.nextSibling();
+            continue;
+        }
+        parseProperty_10( e, fun );
+        child = child.nextSibling();
+    }
+    cl->setFunction( *fun );
+}
+
 void parseCluster_10( QDomElement cur, BaseNeuralNet* net ) {
     // --- parsing tag <cluster>
     QString name = cur.attribute( "name" );
@@ -179,12 +203,7 @@ void parseCluster_10( QDomElement cur, BaseNeuralNet* net ) {
         }
         if ( e.tagName() == QString( "outputfunction" ) ) {
             // --- <outputfunction>
-            QString type = e.attribute( "type" );
-            if ( type.isNull() ) {
-                nnfwMessage( NNFW_ERROR, "attribute type is mandatory in <outputfunction> tag" );
-            } else {
-                nnfwMessage( NNFW_WARNING, "parsing of <outputfunction> is not yet implemented" );
-            }
+            parseOutputFunction_10( e, cl );
         } else if ( e.tagName() == QString( "accumulate" ) ) {
             // --- <accumulate>
             cl->accumulate( e.text().toLower() == QString( "true" ) );

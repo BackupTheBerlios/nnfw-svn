@@ -18,6 +18,9 @@
  ********************************************************************************/
 
 #include "ionnfw.h"
+#include "outputfunction.h"
+#include "cluster.h"
+#include "linker.h"
 #include "messages.h"
 
 //! Namespace that contains all classes of Neural Network Framework
@@ -30,24 +33,9 @@ std::ostream& operator<<(std::ostream& stream, const RealVec& v) {
     return stream;
 }
 
-std::istream& operator>>(std::istream& stream, RealVec& v) {
-    for ( u_int i = 0; i < v.size(); i++ ) {
-        stream >> (v[i]);
-    }
-    return stream;
-}
-
 std::ostream& operator<<(std::ostream& stream, const RealMat& m) {
     for( u_int i=0; i<m.rows(); i++ ) {
         stream << m[i] << std::endl;
-    }
-    return stream;
-}
-
-std::istream& operator>>(std::istream& stream, RealMat& m) {
-    //nnfwMessage( NNFW_ERROR, "Reading Variant not yet implemented" );
-	for( u_int i=0; i<m.rows(); i++ ) {
-        stream >> m[i];
     }
     return stream;
 }
@@ -57,13 +45,9 @@ std::ostream& operator<<(std::ostream& stream, const Variant::types t) {
     return stream;
 }
 
-std::istream& operator>>(std::istream& stream, Variant::types& t) {
-    stream >> t;
-    return stream;
-}
-
 std::ostream& operator<<(std::ostream& stream, const Variant var) {
     bool b;
+    Propertized* p;
     switch( var.type() ) {
     case Variant::t_null: stream << "Null"; break;
     case Variant::t_real: stream << var.getReal(); break;
@@ -78,15 +62,20 @@ std::ostream& operator<<(std::ostream& stream, const Variant var) {
     case Variant::t_string: stream << var.getString(); break;
     case Variant::t_realvec: stream << *(var.getRealVec()); break;
     case Variant::t_realmat: stream << *(var.getRealMat()); break;
-    case Variant::t_outfunction: stream << "print of OutputFunction not yet implemented" ; break;
-    case Variant::t_cluster: stream << "print of Cluster not yet implemented" ; break;
+    case Variant::t_outfunction:
+        p = (Propertized*)( var.getOutputFunction() );
+        stream << *p;
+        break;
+    case Variant::t_cluster:
+        p = (Propertized*)(var.getCluster());
+        stream << *p;
+        break;
+    case Variant::t_linker:
+        p = (Propertized*)(var.getLinker());
+        stream << *p;
+        break;
     case Variant::t_propertized: stream << *(var.getPropertized()); break;
     }
-    return stream;
-}
-
-std::istream& operator>>(std::istream& stream, Variant& ) {
-    nnfwMessage( NNFW_ERROR, "Reading Variant not yet implemented" );
     return stream;
 }
 
@@ -101,8 +90,21 @@ std::ostream& operator<<(std::ostream& stream, const Propertized& p) {
     return stream;    
 }
 
-std::istream& operator>>(std::istream& stream, Propertized& ) {
-    nnfwMessage( NNFW_ERROR, "Reading Variant not yet implemented" );
+// ----------------------------------------------------
+// --------------- DEPRECATED INPUT STREAM OPERATOR
+// ----------------------------------------------------
+
+std::istream& operator>>(std::istream& stream, RealVec& v) {
+    for ( u_int i = 0; i < v.size(); i++ ) {
+        stream >> (v[i]);
+    }
+    return stream;
+}
+
+std::istream& operator>>(std::istream& stream, RealMat& m) {
+    for( u_int i=0; i<m.rows(); i++ ) {
+        stream >> m[i];
+    }
     return stream;
 }
 

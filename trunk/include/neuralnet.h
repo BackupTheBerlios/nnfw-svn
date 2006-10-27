@@ -24,9 +24,6 @@
  *  \brief This file contains the declaration of Neural Network Class
  *
  *  Details ...
- *  \todo check da fare: un Cluster puo essere rimosso solo se non ha Linkers attaccati (giusto?!?!)
- *  \todo metodi da aggiungere: ricerca attraverso le strutture inLinks e outLinks
- *  \todo Optimization of disable/enable mechanism
  */
 
 #include "types.h"

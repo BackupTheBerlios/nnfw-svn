@@ -14,6 +14,17 @@ S <mave> comment goes here
     'B' : means a BugFix
     'C' : means that something has been changed (e.g. implementation of a Class or a signature method)
 ==== End of Legend ====
+    ==> 119 - 27/10/2006 <==
+
+C <mave> updated the ToDo List
+C <mave> also <outputfunction> tag is correctly parsed
++ <mave> Factory now manage (create/register) OutputFunction classes
+- <mave> deprecated all input stream operator
++ <mave> now OutputFunction, Cluster and Linker are properly managed by '<<' operators
++ <mave> added method for creating subclasses of OutputFunction from a PropertySettings map
+C <mave> moved implementation of subclasses of OutputFunction from .h to .cpp file
++ <mave> added method setProperties to Propertized class
+
     ==> 117 - 27/10/2006 <==
 
 C <mave> resolved bug in sparsematrixlinker.h

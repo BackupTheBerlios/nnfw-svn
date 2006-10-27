@@ -80,7 +80,7 @@ class Creator : public AbstractCreator {
  *  \par Warnings
  *   the methods that creates object (createCluster, createLinker, etc) doesn't check if the Creator registered
  *   returns the right type of object... so, pay attention to register the right kind of Creator,
- *   otherwise you will get an runtime object when you try to use them
+ *   otherwise you will get a runtime-error when you try to use them
  */
 class Factory {
 public:
@@ -92,6 +92,10 @@ public:
     /*! \brief Create a Linker of class type
      */
     static Linker* createLinker( const char* type, PropertySettings& param );
+
+    /*! \brief Create a OutputFunction of class type
+     */
+    static OutputFunction* createOutputFunction( const char* type, PropertySettings& param );
 
     /*! \brief Register a new Cluster type
      *
@@ -106,6 +110,13 @@ public:
      *  It use the clone() method for copying the LinkerCreator
      */
     static bool registerLinker( const AbstractCreator& c, const char* type );
+
+    /*! \brief Register a new OutputFunction type
+     *
+     *  Return true on successuful insertion<br>
+     *  It use the clone() method for copying the OutputFunctionCreator
+     */
+    static bool registerOutputFunction( const AbstractCreator& c, const char* type );
 
 private:
     /*! \brief The constructor is private, because there is no reason to instantiate this class
@@ -129,6 +140,10 @@ private:
     /*! \brief Map of registered Linker types
      */
     static std::map<std::string, AbstractCreator*> linkertypes;
+
+    /*! \brief Map of registered OutputFunction types
+     */
+    static std::map<std::string, AbstractCreator*> outfuntypes;
 };
 
 }

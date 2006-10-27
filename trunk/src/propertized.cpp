@@ -229,7 +229,7 @@ void Variant::checkType( types t ) const {
 
 
 Propertized::Propertized()
-    : props() {
+    : props(), vecProps(0) {
     vtypename = 0;
     setTypename( "Propertized" );
     addProperty( "typename", Variant::t_string, this, &Propertized::getTypename );
@@ -242,6 +242,23 @@ Propertized::~Propertized() {
     }
     vecProps.clear();
     delete []vtypename;
+}
+
+void Propertized::setProperties( PropertySettings& prop ) {
+    PropertySettings::iterator it = prop.begin();
+    while( it != prop.end() ) {
+        setProperty( (*it).first.data(), (*it).second );
+        it++;
+    }
+}
+
+void Propertized::setTypename( const char* type ) {
+    if (vtypename) {
+        delete []vtypename;
+    }
+    u_int size = strlen(type);
+    vtypename = new char[size+1];
+    strcpy( vtypename, type );
 }
 
 }
