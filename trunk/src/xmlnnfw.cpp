@@ -26,6 +26,7 @@
 #include <QDomDocument>
 #include <QFile>
 #include <QString>
+#include <QStringList>
 
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {
@@ -41,6 +42,11 @@ void parseProperty_10( QDomElement cur, const Propertized* obj ) {
     // --- property type checking
     bool ok = true;
     QString text;
+    QStringList list;
+    RealVec vec;
+    RealMat mat(0,0);
+    const RealMat* vmat;
+    int rows, cols, count;
     switch( pacc->type() ) {
     case Variant::t_null:
         nnfwMessage( NNFW_WARNING, "Setting a Null type Variant" );
@@ -75,12 +81,40 @@ void parseProperty_10( QDomElement cur, const Propertized* obj ) {
         ok = pacc->set( Variant( cur.text().toAscii().constData() ) );
         break;
     case Variant::t_realvec:
-        //--- da implementare
-        ok = false;
+        list = cur.text().simplified().split( ' ', QString::SkipEmptyParts );
+        vec.resize(0);
+        for( int i=0; i<list.size(); i++ ) {
+#ifdef NNFW_DOUBLE_PRECISION
+            vec << list[i].toDouble();
+#else
+            vec << list[i].toFloat();
+#endif
+        }
+        ok = pacc->set( Variant( &vec ) );
         break;
     case Variant::t_realmat:
-        //--- da implementare
-        ok = false;
+        list = cur.text().simplified().split( ' ', QString::SkipEmptyParts );
+        vmat = pacc->get().getRealMat();
+        rows = vmat->rows();
+        cols = vmat->cols();
+        if ( list.size() != rows*cols ) {
+            nnfwMessage( NNFW_ERROR, "Wrong RealMat dimension" );
+            ok = false;
+            break;
+        }
+        mat.resize( rows, cols );
+        count = 0;
+        for( int r=0; r<rows; r++ ) {
+            for( int c=0; c<cols; c++ ) {
+#ifdef NNFW_DOUBLE_PRECISION
+                mat[r][c] = list[count].toDouble();
+#else
+                mat[r][c] = list[count].toFloat();
+#endif
+                count++;
+            }
+        }
+        ok = pacc->set( Variant( &mat ) );
         break;
     case Variant::t_outfunction:
         // --- non dovrebbe arrivare qui !! ?!?!
@@ -145,7 +179,12 @@ void parseCluster_10( QDomElement cur, BaseNeuralNet* net ) {
         }
         if ( e.tagName() == QString( "outputfunction" ) ) {
             // --- <outputfunction>
-            nnfwMessage( NNFW_WARNING, "parsing of <outputfunction> is not yet implemented" );
+            QString type = e.attribute( "type" );
+            if ( type.isNull() ) {
+                nnfwMessage( NNFW_ERROR, "attribute type is mandatory in <outputfunction> tag" );
+            } else {
+                nnfwMessage( NNFW_WARNING, "parsing of <outputfunction> is not yet implemented" );
+            }
         } else if ( e.tagName() == QString( "accumulate" ) ) {
             // --- <accumulate>
             cl->accumulate( e.text().toLower() == QString( "true" ) );
@@ -239,16 +278,52 @@ void parseLinker_10( QDomElement cur, BaseNeuralNet* net ) {
 }
 
 void parseOrder_10( QDomElement cur, BaseNeuralNet* net ) {
+    // --- parsing tag <order>
+    QStringList list = cur.text().simplified().split( ' ', QString::SkipEmptyParts );
+    UpdatableVec ord;
+    for( int i=0; i<list.size(); i++ ) {
+        Updatable* up = net->getByName( list[i].toAscii().constData() );
+        if ( up ) {
+            ord << up;
+        } else {
+            char msg[100];
+            sprintf( msg, "The Updatable %s specified in <order> doesn't exists", list[i].toAscii().constData() );
+            nnfwMessage( NNFW_ERROR, msg );
+        }
+    }
 }
 
 void parseOutputs_10( QDomElement cur, BaseNeuralNet* net ) {
+    // --- parsing tag <outputs>
+    QStringList list = cur.text().simplified().split( ' ', QString::SkipEmptyParts );
+    for( int i=0; i<list.size(); i++ ) {
+        Cluster* up = dynamic_cast<Cluster*>( net->getByName( list[i].toAscii().constData() ) );
+        if ( up ) {
+            net->markAsOutput( up );
+        } else {
+            char msg[100];
+            sprintf( msg, "The Cluster %s specified in <outputs> doesn't exists", list[i].toAscii().constData() );
+            nnfwMessage( NNFW_ERROR, msg );
+        }
+    }
 }
 
 void parseInputs_10( QDomElement cur, BaseNeuralNet* net ) {
+    // --- parsing tag <inputs>
+    QStringList list = cur.text().simplified().split( ' ', QString::SkipEmptyParts );
+    for( int i=0; i<list.size(); i++ ) {
+        Cluster* up = dynamic_cast<Cluster*>( net->getByName( list[i].toAscii().constData() ) );
+        if ( up ) {
+            net->markAsInput( up );
+        } else {
+            char msg[100];
+            sprintf( msg, "The Cluster %s specified in <inputs> doesn't exists", list[i].toAscii().constData() );
+            nnfwMessage( NNFW_ERROR, msg );
+        }
+    }
 }
 
 void parseConfigure_10( QDomElement cur, BaseNeuralNet* net ) {
-    char buf[100];
     // --- parsing tag <linker>
     QString name = cur.attribute( "name" );
     if ( name.isNull() ) {
@@ -256,8 +331,9 @@ void parseConfigure_10( QDomElement cur, BaseNeuralNet* net ) {
     }
     Updatable* up = net->getByName( name.toAscii().constData() );
     if ( !up ) {
-        sprintf( buf, "Updatable %s doesn't exist in the neural network", name.toAscii().constData() );
-        nnfwMessage( NNFW_ERROR, buf );
+        char msg[100];
+        sprintf( msg, "Updatable %s doesn't exist in the neural network", name.toAscii().constData() );
+        nnfwMessage( NNFW_ERROR, msg );
     }
     // --- parsing children nodes for settings properties
     QDomNode child = cur.firstChild();
