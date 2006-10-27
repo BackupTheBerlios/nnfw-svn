@@ -44,9 +44,10 @@
 #include "messages.h"
 #include "cluster.h"
 #include "linker.h"
-#include "neuralnet.h"
-#include "liboutputfunctions.h"
+#include "outputfunction.h"
 #include "ionnfw.h"
+#include "random.h"
+#include "neuralnet.h"
 
 #endif
 
