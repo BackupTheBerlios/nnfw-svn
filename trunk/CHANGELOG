@@ -14,6 +14,11 @@ S <mave> comment goes here
     'B' : means a BugFix
     'C' : means that something has been changed (e.g. implementation of a Class or a signature method)
 ==== End of Legend ====
+    ==> 120 - 30/10/2006 <==
+
++ <mave> typedef checking to print out an error message when users tries to includes directly
+        primtypes.h, observ.h, vectordata.h, matrixdata.h, realvec.h and realmat.h
+
     ==> 119 - 27/10/2006 <==
 
 C <mave> updated the ToDo List

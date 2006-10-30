@@ -17,6 +17,13 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA  *
  ********************************************************************************/
 
+// --- You can't include it directly
+#ifndef TYPES_INCLUDES
+#error "You can't include realmat.h directly; Instead, You have to include types.h"
+// --- follow define avoid to get a lot of understandable error !
+#define OBSERV_H
+#endif
+
 #ifndef OBSERV_H
 #define OBSERV_H
 

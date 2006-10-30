@@ -38,6 +38,8 @@
 // --- Define NNFW_DOUBLE_PRECISION for defining Real as double
 //#define  NNFW_DOUBLE_PRECISION
 
+#define TYPES_INCLUDES
+
 #include "primtypes.h"
 #include "observ.h"
 #include "vectordata.h"
@@ -45,6 +47,8 @@
 
 #include "realvec.h"
 #include "realmat.h"
+
+#undef TYPES_INCLUDES
 
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {
