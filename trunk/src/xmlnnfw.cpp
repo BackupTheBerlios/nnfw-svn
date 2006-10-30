@@ -43,12 +43,15 @@ void parseProperty_10( QDomElement cur, const Propertized* obj ) {
     }
     // --- property type checking
     bool ok = true;
-    QString text;
-    QStringList list;
-    RealVec vec;
-    RealMat mat(0,0);
-    const RealMat* vmat;
-    int rows, cols, count;
+    QString text; // --- used by all
+    QStringList list; // --- used by realvec, realmat
+    RealVec vec; // --- used by realvec
+    RealMat mat(0,0); // --- used by realmat
+    const RealMat* vmat; // --- used by realmat
+    int rows, cols, count; // --- used by realmat
+    QString type; // --- used by outfunction
+    PropertySettings prop; // --- used by outfunction
+    QDomNode child; // --- used by outfunction
     switch( pacc->type() ) {
     case Variant::t_null:
         nnfwMessage( NNFW_WARNING, "Setting a Null type Variant" );
@@ -119,9 +122,24 @@ void parseProperty_10( QDomElement cur, const Propertized* obj ) {
         ok = pacc->set( Variant( &mat ) );
         break;
     case Variant::t_outfunction:
-        // --- non dovrebbe arrivare qui !! ?!?!
-        nnfwMessage( NNFW_ERROR, "Why don't use the outputfunction tag for setting it" );
-        ok = false;
+        type = cur.attribute( "type" );
+        if ( type.isNull() ) {
+            nnfwMessage( NNFW_ERROR, "attribute type is mandatory in <outfunction> tag" );
+            return;
+        }
+        OutputFunction* fun = Factory::createOutputFunction( type.toAscii().constData(), prop );
+        // --- parsing children nodes for settings properties
+        child = cur.firstChild();
+        while( ! child.isNull() ) {
+            QDomElement e = child.toElement();
+            if ( e.isNull() ) {
+                child = child.nextSibling();
+                continue;
+            }
+            parseProperty_10( e, fun );
+            child = child.nextSibling();
+        }
+        ok = pacc->set( Variant( fun ) );
         break;
     case Variant::t_cluster:
     case Variant::t_linker:

@@ -24,9 +24,11 @@
 #include "propertized.h"
 #include <iostream>
 
-/*! \todo the follow xml code is not yet supported:
- *      <configure type="ACluster">
- *        <outfunction> ... </outfunction>
+/*! \file
+ *  \brief Function for I/O operations
+ *
+ *  \todo XML I/O functions doesn't support name with spaces
+ *  \todo there's no support for UTF-8 coding or LOCALE string representation
  *
  */
 
