@@ -27,6 +27,7 @@
 /*! \todo the follow xml code is not yet supported:
  *      <configure type="ACluster">
  *        <outfunction> ... </outfunction>
+ *
  */
 
 

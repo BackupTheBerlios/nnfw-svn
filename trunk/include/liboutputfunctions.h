@@ -30,6 +30,7 @@
  *        first truncate the input in a range [mix,max] and the apply the Sigmoid: Sigmoid( Linear( x ) )
  *  \todo ComboLinearFunction, a subclass of OutputFunction that constructs a linear combination of OutputFunctions:
  *        example: 4*Sigmoid(x)+2*Linear(x)
+ *  \todo PoolFunction has no property because the VectorData\<OutputFunction*\> is not supported by Variant class
  */
 
 #include "outputfunction.h"

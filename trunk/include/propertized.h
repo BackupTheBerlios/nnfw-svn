@@ -25,6 +25,12 @@
 #include <map>
 #include <string>
 
+/*! \file
+ *  \brief The infrastructure for implementing properties
+ *
+ *  \todo Variant doesn't support a generic vector of data, i.e. VectorData\<Variant\> or VectorData\<Propertized*\>
+ */
+
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {
 
