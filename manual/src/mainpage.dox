@@ -1,4 +1,9 @@
 /*! \page index Neural Network Manual
+\htmlonly
+<div id="navigationBar">
+<a href="preface.html"><img src="../img/nextChapter.png"></a>
+</div>
+\endhtmlonly
 
 <div id="tocHead"> Contents </div>
 <div id="tocContent">
@@ -15,9 +20,10 @@
     <li>\ref introduction_7 </li>
     </ul>
 <li>\ref overture </li>
+<li>\ref mathstuff </li>
+<li>\ref createCluster </li>
+<li>\ref createLinker </li>
 
-<li><a href="appendixA.html"> Appendix A - How to create a new Cluster </a></li>
-<li><a href="appendixB.html"> Appendix B - How to create a new Linker </a></li>
 </ul>
 </div>
 

@@ -1,6 +1,10 @@
 /*! \page introduction Introduction
 \addindex introduction
-
+\htmlonly
+<div id="navigationBar">
+<a href="preface.html"><img src="../img/prevChapter.png"></a> <a href="index.html"><img src="../img/mainToc.png"></a> <a href="overture.html"><img src="../img/nextChapter.png"></a>
+</div>
+\endhtmlonly
 \anchor introduction_toc
 <div id="tocContent_nohead">
 <ul class="level_one">
@@ -15,12 +19,15 @@
 </div>
 
 \section introduction_1 Why another Neural Network library ?
-Agli inizi del 2005, ho cercato una libreria di reti neurali semplice da usare, flessibile ed estensibile il pi&ugrave; possible. Dopo mesi di ricerca, ho capito che non c'era una simile libreria. Nonostante il grande numero di librerie presenti sul web, nessuna (o almeno io non l'ho trovata) &egrave; stata sviluppata con gli obiettivi che mi sono posto io:
+Why not ?!?! can be a possible answer.
+
+At the beginning of 2005, I looked for a neural network library easy to use, flexible and exentsible as possible as you want.
+After some months, I understood that there isn't a such library (or at least I didn't find it). Nonetheless the great numbers of project available on internet there isn't a library developed whith follows aims in mind:
 <ol>
-    <li> Semplicit&agrave; nella comprensione e utilizzo; </li>
-    <li> Flessibilit&agrave; in ogni aspetto della rete neurale; </li>
-    <li> Estendibile in modo semplice (fornendo anche documenti su 'come' sviluppare nuove parti); </li>
-    <li> Efficiente dal punto di vista computazionale. </li>
+    <li> Easy to use and understand; </li>
+    <li> Flexibility in all aspect of neural networks; </li>
+    <li> Extensible in a straightforward way (providing, also, howtos); </li>
+    <li> Computational Efficient. </li>
 </ol>
 Infatti, la <em>Neural Network Framework</em> non vuole essere una libreria con tutto dentro pronta all'uso cos&igrave; come &egrave;, bens&igrave; si pone l'obiettivo di essere un <em>framework</em> per la realizzazione di proprie reti neurali in piena libert&agrave; fornendo i <em>building blocks</em> fondamentali per la costruzione di reti neurali di ogni genere.
 \ref introduction_toc "[Up]"
@@ -40,6 +47,33 @@ Non &egrave; stata creata a fini educativi... quindi non vi aspettate di imparar
 \ref introduction_toc "[Up]"
 
 \section introduction_4 Download & Installation
+
+\subsection introducation_41 Using NNFW on Mac OS X 10.4 Tiger in 10 steps
+
+Step 1 - From the NNFW's home page, download the package containing the source files of version 0.5.0. Unpack the archive in a directory of your choice;
+
+Step 2 - Go to: http://www.cmake.org/HTML/Index.html and download the CMake (Cross-platform Make) software. The package for Mac OS X can be found in the "Download" section (choose the "Darwin Universal - Tiger only installer" version). Once downloaded and unpacked, install the software using the installer tool included in the package;
+
+Step 3 - From the Terminal, move to the directory where NNFW has been unpacked. Here, launch the command "ccmake ." (without quotes) to start the CMake's semi-graphical interface;
+
+Step 4 - Press the "c" key on the keyboard to check the pre-compiling configuration's parameters (please consider that default parametrs should works correctly);
+
+Step 5 - Press the "g" key on the keyboard to generate the Makefile and return to the Terminal;
+
+Step 6 - Launch the command "make" to compile the library. A file named "libnnfw.a" will be created.
+
+Step 7 - Launch the command "make install" to "install" the library. The .a file will be copied to "/usr/local/lib". The various headers will be copied to "/usr/local/include/nnfw";
+
+Step 8 - The library is now installed. To use it with XCode, start creating a new XCode's project and choosing the "C++ standard tool" template. According to the Xcode's default setting, in the left section of the program's windows should be present an area called "Group & Files". Locate the "libnnfw.a" file through the Finder, select it then drag&drop it inside the "Source" subsection of "Group&Files".
+
+The screenshot published below should be helpful.
+
+\image html xcode.jpg "XCode screeshot"
+
+Step 9 - The library is now included in your project. Now, all we have to say to XCode is where he can find the NNFW's headers files. Inside the "Group & Files" area, select the project's target and right click them. From the contextual menu appeared, choose "Get Info". Then, move to the "Build" tab and fill the "User Header Search Path" field with the string "/usr/local/include/nnfw" (withouth quotes);
+
+Step 10 - Have fun!  :-)
+
 \ref introduction_toc "[Up]"
 
 \section introduction_5 Compiling and Running the tutorials

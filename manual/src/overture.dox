@@ -1,6 +1,10 @@
 /*! \page overture Overture: the first application
 \addindex introduction
-
+\htmlonly
+<div id="navigationBar">
+<a href="introduction.html"><img src="../img/prevChapter.png"></a> <a href="index.html"><img src="../img/mainToc.png"></a> <a href="mathstuff.html"><img src="../img/nextChapter.png"></a>
+</div>
+\endhtmlonly
 \anchor overture_toc
 <div id="tocContent_nohead">
 <ul class="level_one">
@@ -18,48 +22,7 @@ La NNFW &egrave; composta da un insieme di classi con compiti differenti che pos
     <li><b>Apprendimento</b>: classi dedicate per l'implementazione di algoritmi di apprendimento.</li>
 </ul>
 
-\subsection overture_11 Mathematical stuffs
-Il calcolo vettoriale e matriciale &egrave; di fondamentale importanza per la realizzazione delle reti neurali. Di conseguenza &egrave; stato indispensabile implementare classi adibite a questo scopo.
-
-Due sono le classi (o meglio template) da fondamento per il calcolo algebrico: <em>VectorData</em> &amp; <em>MatrixData</em>; queste rappresentano, in modo generico, dati organizzati come vettori e matrici bi-dimensionali.
-
-Questi due template sono utilizzati dovunque nella libreria, ma sopratutto formano le classi base dalle quali derivano <em>RealVec</em> e <em>RealMat</em>.
-
-<em>RealVec</em> rappresenta un vettore di numeri reali e fornisce operatori e metodi per il calcolo vettoriale quali:
-<ul>
-    <li>operazioni di somma, sottrazione, divisione e moltiplicazione fra uno scalare e un vettore;</li>
-    <li>operazioni di somma, sottrazione, divisione e moltiplicazione elemento-per-elemento tra vettori;</li>
-    <li>funzioni matematiche applicate agli elementi dei vettori, quali esponenziale, dot-product, logaritmo, inversione, modulo, media, mean-square-error, etc.</li>
-</ul>
-
-<em>RealMat</em> rappresenta una matrice bi-dimensionale di numeri reali e fornisce operatori e metodi per il calcolo matriciale quali:
-<ul>
-    <li>operazioni scalare-matrice: somma, sottrazione, divisione e moltiplicazione;</li>
-    <li>operazioni tra vettore e matrice;</li>
-    <li>operazioni tra matrici;</li>
-    <li>funzioni matematiche applicate agli elementi della matrice, quali esponenziale, logaritmo, inversione, etc.</li>
-    <li>funzioni matriciali, quali determinante, trasposta, etc.</li>
-</ul>
-
-Le due classi sono strettamente legate fra loro. Infatti, l'operatore di indicizzazione, [], di RealMat restituisce un RealVec contenente la riga i-esima. Quindi, &egrave; possibile agire su una riga con i metodi messi a disposizione dalla classa RealVec:
-
-\code
-#include "types.h"
-
-RealVec aRealVec;                           // Crea un vettore di dimensione zero
-aRealVec << 0.2 << -1.2 << 2.2 << 0.8;    // appende al vettore 4 elementi e incrementa la sua dimensione
-aRealVec.size();                            // la dimensione del vettore &egrave; ora 4
-aRealVec[2] = +3.4;                         // modifica il terzo elemento del vettore
-RealMat mat( 5, 4 );                        // crea una matrice con 5 righe e 4 colonne
-mat[3].assign( aRealVec );                  // assegna il vettore alla terza riga
-mat[3].exp();                               // applica agli elementi della terza riga l'esponenziale
-// mat[3].exp() equivale al seguente calcolo elemento-per-elemento
-for( int i=0; i '<' mat.cols(); i++ ) {
-    mat[3][i] = exp( mat[3][i] );
-}
-\endcode
-
-\subsection overture_12 Core: Clusters & Linkers
+\subsection overture_11 Core: Clusters & Linkers
 
 Sono due le classi fondamentali per la costruzioni delle reti neurali con la NNFW: <em>Cluster</em> e <em>Linker</em>.
 

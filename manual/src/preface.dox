@@ -1,4 +1,9 @@
 /*! \page preface Preface
 \addindex preface
+\htmlonly
+<div id="navigationBar">
+<a href="index.html"><img src="../img/mainToc.png"></a> <a href="introduction.html"><img src="../img/nextChapter.png"></a>
+</div>
+\endhtmlonly
 
 */

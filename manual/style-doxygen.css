@@ -96,6 +96,21 @@ div.tabs a:hover {
     border-right: 1px solid #AAA;
     border-bottom: 1px solid #CCC;
 }
+/*********************************************************/
+/*************** Navigation BAR      ********************/
+/*********************************************************/
+#navigationBar {
+    position: relative; top: -55px;
+    text-align: right;
+}
+#navigationBar a {
+    text-decoration: none;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+#navigationBar img {
+    border: none;
+}
 
 /*********************************************************/
 /*************** Table of Contents      *****************/
