@@ -20,7 +20,7 @@
 #ifndef NNFW_H
 #define NNFW_H
 
-/*! \mainpage Neural Network Framework (release 0.6.3)
+/*! \mainpage Neural Network Framework (release 0.6.4)
  *  <h1>Class Reference</h1>
  *
  *  This is a Neural Network Framework for creating, simulating and analyze any neural network you can image !!
@@ -41,6 +41,8 @@
  */
 
 #include "types.h"
+#include "clonable.h"
+#include "propertized.h"
 #include "messages.h"
 #include "cluster.h"
 #include "linker.h"
