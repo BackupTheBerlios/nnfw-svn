@@ -126,6 +126,7 @@ The library is now installed. If you want to use it with XCode follow that simpl
 </ol>
 
 \image html xcode.jpg "XCode screeshot"
+\image latex xcode.pdf "XCode screeshot" width=12cm
 
 \ref introduction_toc "[Up]"
 
