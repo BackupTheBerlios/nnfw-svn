@@ -48,31 +48,84 @@ Non &egrave; stata creata a fini educativi... quindi non vi aspettate di imparar
 
 \section introduction_4 Download & Installation
 
-\subsection introducation_41 Using NNFW on Mac OS X 10.4 Tiger in 10 steps
+\subsection introduction_41 Requirements
+\par CMake
+In order to compile the library, the CMake tool is required. Download and Install the latest version available from <a href="http://www.cmake.org">CMake official website</a>.<br>
+The Linux users are adviced to install the distribution specific package of CMake even if it is not up-to-date.<br>
+The Darwin Universal (Tiger only installer) is recommended for MAC OS X users.
 
-Step 1 - From the NNFW's home page, download the package containing the source files of version 0.5.0. Unpack the archive in a directory of your choice;
+\par Doxygen
+In order to generate the API documentation, the Doxygen tool is required. Download and Install the version 1.5.x from <a href="http://www.doxygen.org">Doxygen website</a>.
 
-Step 2 - Go to: http://www.cmake.org/HTML/Index.html and download the CMake (Cross-platform Make) software. The package for Mac OS X can be found in the "Download" section (choose the "Darwin Universal - Tiger only installer" version). Once downloaded and unpacked, install the software using the installer tool included in the package;
+\par QT 4.x Library
+Starting from version 0.6.x, the QT trolltech library version 4.x is required.
+You can download it from <a href="http://www.trolltech.com/products/qt/downloads">trolltech website</a>.
+The opensource edition of QT is free, select your platform, download it and follow the instruction provided by Trolltech
+to install QT library.
 
-Step 3 - From the Terminal, move to the directory where NNFW has been unpacked. Here, launch the command "ccmake ." (without quotes) to start the CMake's semi-graphical interface;
+\subsection introduction_42 Optional Libraries
+\par GSL
+For a more reliable (and truly) randomness of Random class you can download and install the GSL (GNU Scientific Library)
+version 1.6 (or above). The Linux version is available at the <a href="http://www.gnu.org/software/gsl/">official website</a>. While, the Win32 version is available at the <a href="http://gnuwin32.sourceforge.net/packages/gsl.htm">GnuWin32 project</a>.
+For MAC OS X users there are two project that provides an easy way to install opensource projects (like GSL):
+<a href="http://darwinports.opendarwin.org/">DarwinPorts</a> and <a href="http://fink.sourceforge.net/">Fink</a>.
 
-Step 4 - Press the "c" key on the keyboard to check the pre-compiling configuration's parameters (please consider that default parametrs should works correctly);
+\par Intel MKL
+Intel MKL (Matrix Kernel Library)
 
-Step 5 - Press the "g" key on the keyboard to generate the Makefile and return to the Terminal;
+\subsection introduction_43 Choose your package
+On the <a href="http://www.nnfw.org/downloads.php">NNFW website</a> there are three package available for downloads.
+Choose them that better fits with your needs:
 
-Step 6 - Launch the command "make" to compile the library. A file named "libnnfw.a" will be created.
+<ul>
+    <li> <b>Sources tarball</b>: contains all files for compiling the library and the API documentation </li>
+    <li> <b>Static libraries for linux</b>: contains only the headers and eight pre-compiled static libraries created starting from different configurations (release and debug, mkl and not mkl, single and double precision) </li>
+    <li> <b>API documentation</b>: contains the HTML version of API documentation browsable off-line </li>
+</ul>
 
-Step 7 - Launch the command "make install" to "install" the library. The .a file will be copied to "/usr/local/lib". The various headers will be copied to "/usr/local/include/nnfw";
+Only the first requires CMake and Doxygen, while the second and third ones doesn't requires them.
 
-Step 8 - The library is now installed. To use it with XCode, start creating a new XCode's project and choosing the "C++ standard tool" template. According to the Xcode's default setting, in the left section of the program's windows should be present an area called "Group & Files". Locate the "libnnfw.a" file through the Finder, select it then drag&drop it inside the "Source" subsection of "Group&Files".
+\subsection introduction_44 Configuring the NNFW
+In order to configure the different aspect of NNFW, you have to sets the NNFW_CONFIG variable from CMake configuration interface.
+The CMake configurator is different depending on the platform on wich you run it, see the platform specific instruction
+for some details about it.
+The NNFW_CONFIG variable is a string (empty is allowable) can contains the following keys separated by a space:
+<ul>
+    <li> debug : the library will be compiled with debug flags activated (default is not setted) </li>
+    <li> double : the library will be compiled using the double precision real numbers (default is single precision) </li>
+    <li> mkl : the library will use the MKL interface for speed-up math calculations (default is not) </li>
+    <li> gsl : the library will use the GSL interface (default is not) </li>
+</ul>
+For instance, if NNFW_CONFIG is setted to "mkl double" then the library will be compiled with double precision and linked against Math Kernel Library.
 
-The screenshot published below should be helpful.
+\subsection introduction_45 Compiling NNFW on Mac OS X
+<ol>
+    <li> Download the source package and unpack it where you want; </li>
+    <li> Open the Terminal and move to the directory where NNFW has been unpacked; </li>
+    <li> Launch the command "ccmake ." (without quotes) to start the CMake's configuration program; </li>
+    <li> Configure the NNFW_CONFIG variable to fits your needs; (see \ref introduction_44 ) </li>
+    <li> Press the "c" key on the keyboard to check the pre-compiling configuration's parameters (please consider that default parametrs should works correctly); </li>
+    <li> Press the "g" key on the keyboard to generate the Makefile and return to the Terminal; </li>
+    <li> Launch the command "make" to compile the library; </li>
+    <li> If all will go without error, a file named "libnnfw.a" is created in lib directory of source tree; </li>
+</ol>
+
+You can use the libnnfw.a directly from there, but if you want to install it launch the command "make install".
+It will copies the headers in PREFIX/include directory (note PREFIX is a CMake variable) and the library in PREFIX/lib.
+The library is now installed. If you want to use it with XCode follow that simple steps:
+
+<ol>
+    <li> Start creating a new XCode's project and choosing the "C++ standard tool" template; </li>
+    <li> According to the Xcode's default setting, in the left section of the program's windows should be present an area called "Group & Files"; </li>
+    <li> Locate the "libnnfw.a" file through the Finder and then, "drag&drop" it inside the "Source" subsection of "Group & Files"; (see screenshot below) </li>
+    <li> The library is now included in your project; </li>
+    <li> Now, you have to configure XCode's "User Header Search Path"; </li>
+    <li> Inside the "Group & Files" area, select the project's target and right click them; </li>
+    <li> From the contextual menu appeared, choose "Get Info" and move to the "Build" tab; </li>
+    <li> Fill the "User Header Search Path" field with the string PREFIX/include/nnfw </li>
+</ol>
 
 \image html xcode.jpg "XCode screeshot"
-
-Step 9 - The library is now included in your project. Now, all we have to say to XCode is where he can find the NNFW's headers files. Inside the "Group & Files" area, select the project's target and right click them. From the contextual menu appeared, choose "Get Info". Then, move to the "Build" tab and fill the "User Header Search Path" field with the string "/usr/local/include/nnfw" (withouth quotes);
-
-Step 10 - Have fun!  :-)
 
 \ref introduction_toc "[Up]"
 
