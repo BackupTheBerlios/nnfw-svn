@@ -17,53 +17,51 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA  *
  ********************************************************************************/
 
-#ifndef UPDATEABLE_H
-#define UPDATEABLE_H
-
-#include "propertized.h"
+#include "updatable.h"
 
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {
 
-/*! \brief Updateables objects
- *
- *  The Updatable objects has a name.
- */
-class  Updatable : public Propertized {
-public:
-    /*! \name Constructors */
-    //@{
-
-    //! Constructor
-    Updatable( const char* name = "unnamed" );
-
-    //! Constructor with PropertySettings
-    Updatable( PropertySettings& prop );
-
-    //! Destructor
-    virtual ~Updatable();
-
-    //@}
-    /*! \name Interface */
-    //@{
-
-    //! Update the object
-    virtual void update() = 0;
-    //! Set the name of Updatable
-    void setName( const char* newname );
-    //! Set the name of Updatable (Varian version)
-    bool setName( const Variant& nv );
-    //! Return the name associated
-    const char* getName();
-    //! Return the name (version that use Variant for property)
-    Variant getNameV();
-
-    //@}
-
-protected:
-    char* name;
-};
-
+Updatable::Updatable( const char* name )
+    : Propertized() {
+    this->name = 0;
+    setName( name );
+    addProperty( "name", Variant::t_string, this, &Updatable::getNameV, &Updatable::setName );
+    // setTypename( "Updatable" ); --- it's no instanciable
 }
 
-#endif
+Updatable::Updatable( PropertySettings& prop )
+    : Propertized() {
+    this->name = 0;
+    setName( prop["name"].getString() );
+    addProperty( "name", Variant::t_string, this, &Updatable::getNameV, &Updatable::setName );
+    // setTypename( "Updatable" ); --- it's no instanciable
+}
+
+Updatable::~Updatable() {
+    delete []name;
+}
+
+void Updatable::setName( const char* newname ) {
+    if (name) {
+        delete []name;
+    }
+    u_int size = strlen(newname);
+    name = new char[size+1];
+    strcpy( name, newname );
+}
+
+bool Updatable::setName( const Variant& nv ) {
+    setName( nv.getString() );
+    return true;
+}
+
+const char* Updatable::getName() {
+    return name;
+}
+
+Variant Updatable::getNameV() {
+    return Variant( name );
+}
+
+}

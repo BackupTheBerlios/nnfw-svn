@@ -14,6 +14,12 @@ S <mave> comment goes here
     'B' : means a BugFix
     'C' : means that something has been changed (e.g. implementation of a Class or a signature method)
 ==== End of Legend ====
+    ==> 124 - 1/11/2006 <==
+
+C <mave> prettified the output of output stream operators
+B <mave> resolved bug in Updatable class (moved implementation into a .cpp file)
+C <mave> updated todo list
+
     ==> 123 - 30/10/2006 <==
 
 C <mave> <outfunction> tag now is handled by xml I/O
@@ -40,11 +46,11 @@ C <mave> moved implementation of subclasses of OutputFunction from .h to .cpp fi
 
     ==> 117 - 27/10/2006 <==
 
-C <mave> resolved bug in sparsematrixlinker.h
+B <mave> resolved bug in sparsematrixlinker.h
 
     ==> 116 - 27/10/2006 <==
 
-C <mave> bugfix in parsing <order> tag
+B <mave> bugfix in parsing <order> tag
 
     ==> 115 - 27/10/2006 <==
 

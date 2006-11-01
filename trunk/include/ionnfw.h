@@ -29,6 +29,13 @@
  *
  *  \todo XML I/O functions doesn't support name with spaces
  *  \todo there's no support for UTF-8 coding or LOCALE string representation
+ *  \todo when a Cluster is configured via tag configure, then the \<outfunction\> tag always create a new
+ *    OutputFunction object from scratch ... this behaviour is not correct !! But not completly wrong.<br>
+ *    The correct behaviour is the follow:<br>
+ *    - if the \<outfunction\> tag has 'type' attribute, then a NEW freshly OutputFunction will be created and configured;<br>
+ *    - if the 'type' attribute is not present, then the current OutputFunction will be configured<br>
+ *    This allow the user to mantain previous configurations and change only those specified by sub-tags
+ *
  *
  */
 

@@ -123,11 +123,12 @@ void parseProperty_10( QDomElement cur, const Propertized* obj ) {
         break;
     case Variant::t_outfunction:
         type = cur.attribute( "type" );
+        OutputFunction* fun;
         if ( type.isNull() ) {
-            nnfwMessage( NNFW_ERROR, "attribute type is mandatory in <outfunction> tag" );
-            return;
+            //fun = pacc->get().getOutputFunction();
+        } else {
         }
-        OutputFunction* fun = Factory::createOutputFunction( type.toAscii().constData(), prop );
+            fun = Factory::createOutputFunction( type.toAscii().constData(), prop );
         // --- parsing children nodes for settings properties
         child = cur.firstChild();
         while( ! child.isNull() ) {
@@ -149,7 +150,7 @@ void parseProperty_10( QDomElement cur, const Propertized* obj ) {
     case Variant::t_propertized:
         // --- parsing children nodes for settings others properties
         const Propertized* sub = pacc->get().getPropertized();
-        QDomNode child = cur.firstChild();
+        child = cur.firstChild();
         while( ! child.isNull() ) {
             QDomElement e = child.toElement();
             if ( e.isNull() ) {

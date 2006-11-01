@@ -80,13 +80,31 @@ std::ostream& operator<<(std::ostream& stream, const Variant var) {
 }
 
 std::ostream& operator<<(std::ostream& stream, const Propertized& p) {
+    static int indent = -1;
     PropertyAccessVec& ps = p.properties();
+    indent++;
     for( u_int i=0; i<ps.size(); i++ ) {
-        stream << "Name: " << ps[i]->name();
-        stream << "\tType: " << ps[i]->type();
-        stream << "\tValue: " << ps[i]->get();
+        // --- indentation
+        for( int k=0; k<indent; k++ ) {
+            stream << "  ";
+        }
+        stream << ps[i]->name() << ": ";
+        Variant v = ps[i]->get();
+        if ( v.type() == Variant::t_propertized ||
+            v.type() == Variant::t_outfunction ||
+            v.type() == Variant::t_cluster ||
+            v.type() == Variant::t_linker ) {
+            stream << std::endl;
+        }
+        stream << ps[i]->get();
+        if ( i < (ps.size()-1) ) {
+            stream << std::endl;
+        }
+    }
+    if ( indent == 0 ) {
         stream << std::endl;
     }
+    indent--;
     return stream;    
 }
 
