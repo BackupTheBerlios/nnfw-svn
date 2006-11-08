@@ -20,6 +20,7 @@
 #ifndef DDECLUSTER_H
 #define DDECLUSTER_H
 
+#include "types.h"
 #include "cluster.h"
 #include "outputfunction.h"
 

@@ -20,6 +20,7 @@
 #ifndef SPARSEMATRIXLINKER_H
 #define SPARSEMATRIXLINKER_H
 
+#include "types.h"
 #include "linker.h"
 #include "matrixlinker.h"
 

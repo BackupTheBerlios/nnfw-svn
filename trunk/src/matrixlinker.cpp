@@ -18,7 +18,6 @@
  ********************************************************************************/
 
 #include "matrixlinker.h"
-#include "messages.h"
 #include "random.h"
 #include <cstdio>
 

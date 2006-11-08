@@ -19,7 +19,6 @@
 
 #include "ionnfw.h"
 #include "neuralnet.h"
-#include "messages.h"
 #include "nnfwfactory.h"
 #include "propertized.h"
 

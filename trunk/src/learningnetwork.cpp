@@ -20,7 +20,6 @@
 #include "learningnetwork.h"
 #include "updatable.h"
 #include "blockslearning.h"
-#include "messages.h"
 
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {

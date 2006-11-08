@@ -29,7 +29,6 @@
 #include "types.h"
 #include "cluster.h"
 #include "linker.h"
-#include "messages.h"
 #include <map>
 
 //! Namespace that contains all classes of Neural Network Framework

@@ -20,6 +20,7 @@
 #ifndef COPYLINKER_H
 #define COPYLINKER_H
 
+#include "types.h"
 #include "linker.h"
 
 //! Namespace that contains all classes of Neural Network Framework

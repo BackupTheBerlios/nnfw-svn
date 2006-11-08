@@ -43,7 +43,6 @@
 #include "types.h"
 #include "clonable.h"
 #include "propertized.h"
-#include "messages.h"
 #include "cluster.h"
 #include "linker.h"
 #include "outputfunction.h"

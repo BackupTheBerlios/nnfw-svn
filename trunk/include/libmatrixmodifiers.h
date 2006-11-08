@@ -20,6 +20,8 @@
 #ifndef LIBMATRIXMODIFIER_H
 #define LIBMATRIXMODIFIER_H
 
+#include "types.h"
+
 /*! \file
  *  \brief Library of common matrix modifiers
  *

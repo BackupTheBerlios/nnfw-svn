@@ -14,6 +14,14 @@ S <mave> comment goes here
     'B' : means a BugFix
     'C' : means that something has been changed (e.g. implementation of a Class or a signature method)
 ==== End of Legend ====
+    ==> 131 - 8/11/2006 <==
+
+C <mave> messages.h headers can only be included by types.h
+C <mave> all headers include directly "types.h" (a preparation of DLL for windows)
++ <mave> added 'shared' option to NNFW_CONFIG for building shared library
+- <mave> dropped 'debug' from NNFW_CONFIG, use CMAKE_BUILD_TYPE instead
+C <mave> Improved CMakeLists.txt
+
     ==> 124 - 1/11/2006 <==
 
 C <mave> prettified the output of output stream operators

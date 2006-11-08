@@ -20,6 +20,8 @@
 #ifndef LIBOUTPUTFUNCTIONS_H
 #define LIBOUTPUTFUNCTIONS_H
 
+#include "types.h"
+
 /*! \file
  *  \brief Library of Common OutputFunction
  *

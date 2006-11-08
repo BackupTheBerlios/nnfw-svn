@@ -34,7 +34,6 @@
 
 #include "memutils.h"
 #include "vectordata.h"
-#include "messages.h"
 
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {

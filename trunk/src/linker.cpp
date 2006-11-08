@@ -18,7 +18,6 @@
  ********************************************************************************/
 
 #include "linker.h"
-#include "messages.h"
 
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {

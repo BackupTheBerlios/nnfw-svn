@@ -20,6 +20,8 @@
 #ifndef LEARNINGALGORITHM_H
 #define LEARNINGALGORITHM_H
 
+#include "types.h"
+
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {
 

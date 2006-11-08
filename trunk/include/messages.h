@@ -17,6 +17,11 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA  *
  ********************************************************************************/
 
+// --- You can't include it directly
+#ifndef TYPES_INCLUDES
+#error "You can't include messages.h directly; Instead, You have to include types.h"
+#endif
+
 #ifndef MESSAGGES_H
 #define MESSAGGES_H
 
@@ -24,7 +29,7 @@
 namespace nnfw {
 
 /*! \file
- *  \brief This file contains the declaration of function nnfwMessage for displaying debug messages
+ *  \brief This file contains the declaration of function nnfwMessage for displaying debug messages; Don't include this file directly, instead include types.h
  *
  *  The messages are divided in four categories:
  *  <ul>

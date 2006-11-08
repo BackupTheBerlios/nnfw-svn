@@ -34,10 +34,6 @@
 
 #include "matrixdata.h"
 
-#ifdef NNFW_DEBUG
-#include "messages.h"
-#endif
-
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {
 

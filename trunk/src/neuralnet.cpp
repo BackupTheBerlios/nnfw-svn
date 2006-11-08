@@ -18,7 +18,6 @@
  ********************************************************************************/
 
 #include "neuralnet.h"
-#include "messages.h"
 #include <algorithm>
 #include <functional>
 #include <cstring>

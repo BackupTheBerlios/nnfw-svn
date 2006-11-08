@@ -20,6 +20,7 @@
 #ifndef BIASEDCLUSTER_H
 #define BIASEDCLUSTER_H
 
+#include "types.h"
 #include "cluster.h"
 #include "outputfunction.h"
 

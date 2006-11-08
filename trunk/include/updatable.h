@@ -17,15 +17,16 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA  *
  ********************************************************************************/
 
-#ifndef UPDATEABLE_H
-#define UPDATEABLE_H
+#ifndef UPDATABLE_H
+#define UPDATABLE_H
 
+#include "types.h"
 #include "propertized.h"
 
 //! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {
 
-/*! \brief Updateables objects
+/*! \brief Updatables objects
  *
  *  The Updatable objects has a name.
  */

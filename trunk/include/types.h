@@ -31,15 +31,12 @@
 #include <vector>
 #include <string>
 
-#ifdef NNFW_DEBUG
-#include "messages.h"
-#endif
-
 // --- Define NNFW_DOUBLE_PRECISION for defining Real as double
 //#define  NNFW_DOUBLE_PRECISION
 
 #define TYPES_INCLUDES
 
+#include "messages.h"
 #include "primtypes.h"
 #include "observ.h"
 #include "vectordata.h"

@@ -20,6 +20,7 @@
 #ifndef FAKECLUSTER_H
 #define FAKECLUSTER_H
 
+#include "types.h"
 #include "cluster.h"
 
 //! Namespace that contains all classes of Neural Network Framework

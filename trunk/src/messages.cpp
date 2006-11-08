@@ -17,7 +17,7 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA  *
  ********************************************************************************/
 
-#include "messages.h"
+#include "types.h"
 #include <iostream>
 
 extern void exit( int status );
