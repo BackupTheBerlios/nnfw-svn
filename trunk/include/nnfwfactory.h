@@ -62,7 +62,7 @@ class Creator : public AbstractCreator {
     /*! \name Interface */
     //@{
 
-    /*! \brief create a new Variant
+    /*! \brief create a new Propertized Object
      */
     virtual Propertized* create( PropertySettings& param ) const {
         return ( new T(param) );
@@ -100,6 +100,10 @@ public:
      */
     static OutputFunction* createOutputFunction( const char* type, PropertySettings& param );
 
+    /*! \brief Create a Propertized object different from Cluster, Linker and OutputFunction type
+     */
+    static Propertized* createPropertized( const char* type, PropertySettings& param );
+
     /*! \brief Register a new Cluster type
      *
      *  Return true on successuful insertion<br>
@@ -120,6 +124,16 @@ public:
      *  It use the clone() method for copying the OutputFunctionCreator
      */
     static bool registerOutputFunction( const AbstractCreator& c, const char* type );
+
+    /*! \brief Register a new Propertized type
+     *
+     *  Return true on successuful insertion<br>
+     *  It use the clone() method for copying the OutputFunctionCreator
+     * \par Warnings:
+     *  Never use this method for registering Cluster, Linker or OutputFunction subclasses; These hierarchy
+     *  has own special methods in factory: registerCluster, registerLinker and registerOutputFunction
+     */
+    static bool registerPropertized( const AbstractCreator& c, const char* type );
 
 private:
     /*! \brief The constructor is private, because there is no reason to instantiate this class
@@ -147,6 +161,10 @@ private:
     /*! \brief Map of registered OutputFunction types
      */
     static std::map<std::string, AbstractCreator*> outfuntypes;
+
+    /*! \brief Map of registered Propertized types
+     */
+    static std::map<std::string, AbstractCreator*> proptypes;
 };
 
 }

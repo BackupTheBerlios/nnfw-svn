@@ -14,6 +14,10 @@ S <mave> comment goes here
     'B' : means a BugFix
     'C' : means that something has been changed (e.g. implementation of a Class or a signature method)
 ==== End of Legend ====
+    ==> 132 - 10/11/2006 <==
+
++ <mave> Factory now creates also Propertized objects
+
     ==> 131 - 8/11/2006 <==
 
 C <mave> messages.h headers can only be included by types.h

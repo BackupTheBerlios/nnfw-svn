@@ -57,6 +57,15 @@ OutputFunction* Factory::createOutputFunction( const char* type, PropertySetting
     return 0;
 }
 
+Propertized* Factory::createPropertized( const char* type, PropertySettings& p ) {
+    if ( !isInit ) { initFactory(); };
+    std::string key(type);
+    if( proptypes.count( key ) ) {
+        return ( proptypes[key]->create( p ) );
+    }
+    return 0;
+}
+
 bool Factory::registerCluster( const AbstractCreator& c, const char* type ) {
     if ( !isInit ) { initFactory(); };
     std::string key(type);
@@ -87,6 +96,16 @@ bool Factory::registerOutputFunction( const AbstractCreator& c, const char* type
     return false;
 }
 
+bool Factory::registerPropertized( const AbstractCreator& c, const char* type ) {
+    if ( !isInit ) { initFactory(); };
+    std::string key(type);
+    if ( proptypes.count( key ) == 0 ) {
+        proptypes[key] = c.clone();
+        return true;
+    }
+    return false;
+}
+
 void Factory::initFactory() {
     clustertypes["SimpleCluster"] = new Creator<SimpleCluster>();
     clustertypes["BiasedCluster"] = new Creator<BiasedCluster>();
@@ -112,6 +131,7 @@ bool Factory::isInit = false;
 std::map<std::string, AbstractCreator*> Factory::clustertypes;
 std::map<std::string, AbstractCreator*> Factory::linkertypes;
 std::map<std::string, AbstractCreator*> Factory::outfuntypes;
+std::map<std::string, AbstractCreator*> Factory::proptypes;
 
 }
 
