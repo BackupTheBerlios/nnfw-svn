@@ -21,6 +21,8 @@
 #include "neuralnet.h"
 #include "nnfwfactory.h"
 #include "propertized.h"
+#include "outputfunction.h"
+#include "liboutputfunctions.h"
 
 #include <QDomDocument>
 #include <QFile>
@@ -33,6 +35,7 @@ namespace nnfw {
 void parseOutputFunction_10( QDomElement cur, Cluster* cl );
 
 void parseProperty_10( QDomElement cur, const Propertized* obj ) {
+    qDebug( obj->getTypename().getString() );
     AbstractPropertyAccess* pacc = obj->propertySearch( cur.tagName().toAscii().constData() );
     if ( !pacc ) {
         char msg[100];
@@ -40,8 +43,27 @@ void parseProperty_10( QDomElement cur, const Propertized* obj ) {
                 cur.tagName().toAscii().constData(), obj->getTypename().getString() );
         nnfwMessage( NNFW_ERROR, msg );
     }
+    // --- check if it's writable
+    if ( !pacc->isWritable() ) {
+        char msg[100];
+        sprintf( msg, "Attempt to set the read-only property %s",
+                cur.tagName().toAscii().constData() );
+        nnfwMessage( NNFW_ERROR, msg );
+    }
+    // --- check if it's a Vector Property
+    int index = -1;
+    if ( pacc->isVector() ) {
+        // at the moment, it's mandatory to speficy the index with attribute 'i'
+        QString is = cur.attribute( "i" );
+        if ( is.isNull() ) {
+            char msg[100];
+            sprintf( msg, "the property %s is a vector and you have to specify the attribute 'i'",
+                    cur.tagName().toAscii().constData() );
+            nnfwMessage( NNFW_ERROR, msg );
+        }
+        index = is.toInt();
+    }
     // --- property type checking
-    bool ok = true;
     QString text; // --- used by all
     QStringList list; // --- used by realvec, realmat
     RealVec vec; // --- used by realvec
@@ -49,40 +71,42 @@ void parseProperty_10( QDomElement cur, const Propertized* obj ) {
     const RealMat* vmat; // --- used by realmat
     int rows, cols, count; // --- used by realmat
     QString type; // --- used by outfunction
-    PropertySettings prop; // --- used by outfunction
-    QDomNode child; // --- used by outfunction
+    PropertySettings prop; // --- used by outfunction & propertized
+    QDomNode child; // --- used by outfunction & propertized
+    Variant ret; // --- Variant to set after switch
+    Propertized* sub = 0; // --- when != 0 then it'll recursively call parseProperty_10 onto sub's child nodes
     switch( pacc->type() ) {
     case Variant::t_null:
         nnfwMessage( NNFW_WARNING, "Setting a Null type Variant" );
         break;
     case Variant::t_real:
 #ifdef NNFW_DOUBLE_PRECISION
-        ok = pacc->set( Variant( cur.text().toDouble() ) );
+        ret = Variant( cur.text().toDouble();
 #else
-        ok = pacc->set( Variant( cur.text().toFloat() ) );
+        ret = Variant( cur.text().toFloat() );
 #endif
         break;
     case Variant::t_int: 
-        ok = pacc->set( Variant( cur.text().toInt() ) );
+        ret = Variant( cur.text().toInt() );
         break;
     case Variant::t_uint:
-        ok = pacc->set( Variant( cur.text().toUInt() ) );
+        ret = Variant( cur.text().toUInt() );
         break;
     case Variant::t_char:
-        ok = pacc->set( Variant( cur.text().at(0).toAscii() ) );
+        ret = Variant( cur.text().at(0).toAscii() );
         break;
     case Variant::t_uchar:
-        ok = pacc->set( Variant( (unsigned char)(cur.text().at(0).toAscii()) ) );
+        ret = Variant( (unsigned char)(cur.text().at(0).toAscii()) );
         break;
     case Variant::t_bool:
         if ( cur.text().toLower() == QString( "true" ) ) {
-            ok = pacc->set( Variant( true ) );
+            ret = Variant( true );
         } else {
-            ok = pacc->set( Variant( false ) );
+            ret = Variant( false );
         }
         break;
     case Variant::t_string:
-        ok = pacc->set( Variant( cur.text().toAscii().constData() ) );
+        ret = Variant( cur.text().toAscii().constData() );
         break;
     case Variant::t_realvec:
         list = cur.text().simplified().split( ' ', QString::SkipEmptyParts );
@@ -94,17 +118,20 @@ void parseProperty_10( QDomElement cur, const Propertized* obj ) {
             vec << list[i].toFloat();
 #endif
         }
-        ok = pacc->set( Variant( &vec ) );
+        ret = Variant( &vec );
         break;
     case Variant::t_realmat:
         list = cur.text().simplified().split( ' ', QString::SkipEmptyParts );
-        vmat = pacc->get().getRealMat();
+        if ( index != -1 ) {
+            vmat = pacc->get( index ).getRealMat();
+        } else {
+            vmat = pacc->get().getRealMat();
+        }
         rows = vmat->rows();
         cols = vmat->cols();
         if ( list.size() != rows*cols ) {
             nnfwMessage( NNFW_ERROR, "Wrong RealMat dimension" );
-            ok = false;
-            break;
+            return;
         }
         mat.resize( rows, cols );
         count = 0;
@@ -118,53 +145,79 @@ void parseProperty_10( QDomElement cur, const Propertized* obj ) {
                 count++;
             }
         }
-        ok = pacc->set( Variant( &mat ) );
+        ret = Variant( &mat );
         break;
     case Variant::t_outfunction:
         type = cur.attribute( "type" );
-        OutputFunction* fun;
         if ( type.isNull() ) {
-            //fun = pacc->get().getOutputFunction();
-        } else {
-        }
-            fun = Factory::createOutputFunction( type.toAscii().constData(), prop );
-        // --- parsing children nodes for settings properties
-        child = cur.firstChild();
-        while( ! child.isNull() ) {
-            QDomElement e = child.toElement();
-            if ( e.isNull() ) {
-                child = child.nextSibling();
-                continue;
+            if ( index != -1 ) {
+                sub = pacc->get( index ).getOutputFunction();
+            } else {
+                sub = pacc->get().getOutputFunction();
             }
-            parseProperty_10( e, fun );
-            child = child.nextSibling();
+        } else {
+            sub = Factory::createOutputFunction( type.toAscii().constData(), prop );
         }
-        ok = pacc->set( Variant( fun ) );
+        ret = Variant( (OutputFunction*)(sub) );
         break;
     case Variant::t_cluster:
     case Variant::t_linker:
         nnfwMessage( NNFW_ERROR, "Cluster and Linker are own tags" );
-        ok = false;
-        break;
+        return;
     case Variant::t_propertized:
-        // --- parsing children nodes for settings others properties
-        const Propertized* sub = pacc->get().getPropertized();
-        child = cur.firstChild();
-        while( ! child.isNull() ) {
-            QDomElement e = child.toElement();
-            if ( e.isNull() ) {
-                child = child.nextSibling();
-                continue;
+        type = cur.attribute( "type" );
+        if ( type.isNull() ) {
+            if ( index != -1 ) {
+                sub = pacc->get( index ).getPropertized();
+            } else {
+                sub = pacc->get().getPropertized();
             }
-            parseProperty_10( e, sub );
-            child = child.nextSibling();
+        } else {
+            sub = Factory::createPropertized( type.toAscii().constData(), prop );
         }
+        ret = Variant( sub );
         break;
+    }
+    bool ok = true;
+    if ( index != -1 ) {
+        ok = pacc->set( index, ret );
+    } else {
+        ok = pacc->set( ret );
     }
     if ( !ok ) {
         char msg[100];
         sprintf( msg, "There was an error settings the property %s", cur.tagName().toAscii().constData() );
         nnfwMessage( NNFW_ERROR, msg );
+    }
+    if ( sub ) {
+        // --- re-get again because the value passed by Variant is temporary
+        Variant v;
+        if ( index != -1 ) {
+            v = pacc->get( index );
+        } else {
+            v = pacc->get();
+        }
+        switch( pacc->type() ) {
+        case Variant::t_outfunction:
+            sub = v.getOutputFunction();
+            break;
+        case Variant::t_propertized:
+            sub = v.getPropertized();
+            break;
+        default: break;
+        }
+        // --- parsing children nodes for settings others properties
+        child = cur.firstChild();
+        while( ! child.isNull() ) {
+            QDomElement e = child.toElement();
+            if ( e.isNull() ) {
+                child = child.nextSibling();
+                continue;
+            }
+            qDebug( QString("parsing %1").arg(e.tagName()).toAscii().data() );
+            parseProperty_10( e, sub );
+            child = child.nextSibling();
+        }
     }
     return;
 }

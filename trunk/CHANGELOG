@@ -14,6 +14,16 @@ S <mave> comment goes here
     'B' : means a BugFix
     'C' : means that something has been changed (e.g. implementation of a Class or a signature method)
 ==== End of Legend ====
+    ==> 133 - 10/11/2006 <==
+
+B <mave> resolved bug in recursive property parsing
++ <mave> new method setCluster into OutputFunction class; this method is called when the function is inserted
+            into a Cluster by the Cluster
++ <mave> xml parser now support Vector property and check is a property is writable before parsing it
++ <mave> added a Vector property to PoolFunction, 'functions', for settings the OutputFunction
++ <mave> New kind of properties that handles a Vector of Variant instead of single Variant value;
+            new methods for creating/accessing them: addVectorProperty & set/getVectorProperty( name, index )
+
     ==> 132 - 10/11/2006 <==
 
 + <mave> Factory now creates also Propertized objects

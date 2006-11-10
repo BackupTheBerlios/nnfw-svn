@@ -84,6 +84,7 @@ Cluster::~Cluster() {
 void Cluster::setFunction( const OutputFunction& up ) {
     delete updater;
     updater = up.clone();
+    updater->setCluster( this );
 }
 
 void Cluster::setInput( u_int neuron, Real value ) {

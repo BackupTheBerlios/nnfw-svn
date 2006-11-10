@@ -427,7 +427,7 @@ public:
      *
      *  Construct a PoolFunction with dimension dim, but with <b>unintialized</b> OutputFunction
      */
-    PoolFunction( u_int dim );
+    PoolFunction( u_int dim = 1 );
 
     /*! \brief Destructor
      */
@@ -437,13 +437,29 @@ public:
     /*! \name Interface */
     //@{
 
-    /*! \brief Return the vector of OutputFunction setted
+    /*! \brief Return the i-th OutputFunction setted
      */
-    Variant getOuputFunctions();
+    OutputFunction* getOutputFunction( u_int i );
 
     /*! \brief Set the i-th element of this Pool to a OutputFunction of type prototype
      */
     void setOutputFunction( u_int i, const OutputFunction& prototype );
+
+    /*! \brief Return the i-th OutputFunction setted (Variant version)
+     */
+    Variant getOutputFunctionV( u_int i );
+
+    /*! \brief Set the i-th element (Variant version)
+     */
+    bool setOutputFunction( u_int i, const Variant& prototype );
+
+    /*! \brief Return the dimension
+     */
+    unsigned int size();
+
+    /*! \brief Return the dimension (Variant version)
+     */
+    Variant sizeV();
 
     /*! \brief Implement the updating method
      *
@@ -454,6 +470,10 @@ public:
     /*! \brief Clone this object
      */
     virtual PoolFunction* clone() const;
+
+    /*! \brief when it's inserted into a Cluster, it will be resized to fit the size of Cluster
+     */
+    virtual void setCluster( Cluster* );
 
     //@}
 

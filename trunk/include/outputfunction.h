@@ -64,6 +64,16 @@ public:
         return tmp2[0];
     };
 
+    /*! \brief Set the Cluster which it is inserted
+     *
+     *  This method it's not necessary for simple OutputFunction like SigmoidFunction, LinearFunction, etc...
+     *  but can be very helpfull for some particular and advanced function that requires to access the data
+     *  of the Cluster in which it is inserted into. (like PoolFunction)<br>
+     *  If you don't have to access to the Cluster data ignore it, but if you needs then reimplement for
+     *  know the the function is inserted into a Cluster.
+     */
+    virtual void setCluster( Cluster* ) { /* nothing to do */ };
+
     /*! \brief Clone this object
      */
     virtual OutputFunction* clone() const;

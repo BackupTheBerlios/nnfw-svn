@@ -194,22 +194,22 @@ const RealMat* Variant::getRealMat() const {
     return drealmat;
 }
 
-const OutputFunction* Variant::getOutputFunction() const {
+OutputFunction* Variant::getOutputFunction() const {
     checkType( t_outfunction );
     return doutfun;
 }
 
-const Cluster* Variant::getCluster() const {
+Cluster* Variant::getCluster() const {
     checkType( t_cluster );
     return dcluster;
 }
 
-const Linker* Variant::getLinker() const {
+Linker* Variant::getLinker() const {
     checkType( t_linker );
     return dlinker;
 }
 
-const Propertized* Variant::getPropertized() const {
+Propertized* Variant::getPropertized() const {
     checkType( t_propertized );
     return dprop;
 }

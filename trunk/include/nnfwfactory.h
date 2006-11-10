@@ -31,8 +31,6 @@
  *  This class have static method for generating Cluster, Linker and Common neural network structure<br>
  *  It's possible to add new object in the Factory using the Creator template on your class and then register it
  *
- *  \todo generic object could be supported via Propertized class; in fact, the Factory can register/create
- *     Propertized object, and users can add own strange classes only by inheritance
  */
 
 //! Namespace that contains all classes of Neural Network Framework

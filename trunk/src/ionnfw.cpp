@@ -88,14 +88,18 @@ std::ostream& operator<<(std::ostream& stream, const Propertized& p) {
             stream << "  ";
         }
         stream << ps[i]->name() << ": ";
-        Variant v = ps[i]->get();
-        if ( v.type() == Variant::t_propertized ||
-            v.type() == Variant::t_outfunction ||
-            v.type() == Variant::t_cluster ||
-            v.type() == Variant::t_linker ) {
-            stream << std::endl;
+        if ( ps[i]->isVector() ) {
+            stream << "Printing of Vector Property not yet implemented" << std::endl;
+        } else {
+            Variant v = ps[i]->get();
+            if ( v.type() == Variant::t_propertized ||
+                v.type() == Variant::t_outfunction ||
+                v.type() == Variant::t_cluster ||
+                v.type() == Variant::t_linker ) {
+                stream << std::endl;
+            }
+            stream << v;
         }
-        stream << ps[i]->get();
         if ( i < (ps.size()-1) ) {
             stream << std::endl;
         }

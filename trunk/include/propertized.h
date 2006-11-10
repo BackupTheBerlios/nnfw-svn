@@ -145,13 +145,13 @@ public:
     //! return the RealMat value
     const RealMat* getRealMat() const;
     //! return the OutputFunction value
-    const OutputFunction* getOutputFunction() const;
+    OutputFunction* getOutputFunction() const;
     //! return the Cluster value
-    const Cluster* getCluster() const;
+    Cluster* getCluster() const;
     //! return the Linker value
-    const Linker* getLinker() const;
+    Linker* getLinker() const;
     //! return the Propertized value
-    const Propertized* getPropertized() const;
+    Propertized* getPropertized() const;
 
     //@}
 
@@ -205,6 +205,12 @@ public:
     virtual bool set( const Variant& data ) = 0;
     //! Return the value of property
     virtual Variant get() const = 0;
+
+    //! Set the i-th value of Vector property
+    virtual bool set( u_int i, const Variant& data ) = 0;
+    //! Return the i-th value of Vector property
+    virtual Variant get( u_int i ) const = 0;
+
     //! Return the name of property
     const char* name() const {
         return namep;
@@ -212,6 +218,10 @@ public:
     //! Return true if the property is writable
     bool isWritable() const {
         return writable;
+    };
+    //! Return true if the property is a Vector value
+    bool isVector() const {
+        return vectorv;
     };
     //! Return the type of property
     Variant::types type() const {
@@ -229,6 +239,8 @@ protected:
     Variant::types typep;
     //! \brief True if the property is writable
     bool writable;
+    //! \brief True if the property is a Vector of values
+    bool vectorv;
 };
 
 /*! \brief Template creation of actual PropertyAccess
@@ -245,6 +257,7 @@ public:
         : AbstractPropertyAccess( name ) {
         typep = t;
         obj = o;
+        vectorv = false;
         if ( s == 0 ) {
             writable = false;
             setPtm = 0;
@@ -270,6 +283,15 @@ public:
     virtual bool set( const Variant& data ) {
         return (obj->*setPtm)( data );
     };
+    //! \brief It always return false
+    virtual bool set( u_int, const Variant& ) {
+        return false;
+    };
+    //! \brief It always return a Null Variant
+    virtual Variant get( u_int ) const {
+        return Variant();
+    };
+
     //! Return the object whom this PropertyAccess is refered to
     virtual Propertized* object() {
         return obj;
@@ -283,6 +305,69 @@ private:
     T* obj;
     bool (T::*setPtm)( const Variant& );
     Variant (T::*getPtm)();
+};
+
+/*! \brief Template creation of actual VectorPropertyAccess
+ *
+ *  you don't have to use it directly, it's automatically instanciated by Propertized's methods
+ */
+template<class T>
+class VectorPropertyAccess : public AbstractPropertyAccess {
+public:
+    /*! \name Constructors */
+    //@{
+    //! \brief Constructor
+    VectorPropertyAccess( const char* name, Variant::types t, T* o, Variant (T::*g)(u_int), bool (T::*s)(u_int, const Variant&) = 0 )
+        : AbstractPropertyAccess( name ) {
+        typep = t;
+        obj = o;
+        vectorv = true;
+        if ( s == 0 ) {
+            writable = false;
+            setPtm = 0;
+        } else {
+            writable = true;
+            setPtm = s;
+        }
+        getPtm = g;
+    };
+    //@}
+    /*! \name Interface */
+    //@{
+    //! \brief It always return false
+    virtual bool set( const Variant& ) {
+        return false;
+    };
+    //! \brief It always return a Null Variant
+    virtual Variant get() const {
+        return Variant();
+    };
+    //! \brief return the value of property
+    virtual Variant get( u_int i ) const {
+        return (obj->*getPtm)(i);
+    };
+    /*! \brief set the property
+     *
+     *  \par Warnings:
+     *  It doesn't check is the property is writable or not; before calling this method check if the property is
+     *  writable via isWritable() method
+     */
+    virtual bool set( u_int i, const Variant& data ) {
+        return (obj->*setPtm)( i, data );
+    };
+    //! Return the object whom this PropertyAccess is refered to
+    virtual Propertized* object() {
+        return obj;
+    };
+    //! \brief Clone this
+    virtual VectorPropertyAccess* clone() const {
+        return new VectorPropertyAccess( name(), type(), obj, getPtm, setPtm );
+    };
+    //@}
+private:
+    T* obj;
+    bool (T::*setPtm)( u_int i, const Variant& );
+    Variant (T::*getPtm)( u_int i );
 };
 
 /*! \brief PropertySettings
@@ -329,6 +414,19 @@ public:
         vecProps.append( access );
     };
 
+    /*! \brief add a property that holds a Vector of Variant
+     *
+     *  \par Warnings:
+     *  this method doesn't check if a property with name name already exist, so pay attention or
+     *  previous setting may be overwritten
+     */
+    template<class T>
+    void addVectorProperty( const char* name, Variant::types t, T* obj, Variant (T::*read)(u_int i), bool (T::*write)(u_int i, const Variant&) = 0 ) {
+        VectorPropertyAccess<T>* access = new VectorPropertyAccess<T>( name, t, obj, read, write );
+        props[name] = access;
+        vecProps.append( access );
+    };
+
     /*! \brief return the property setted
      */
     Variant property( const char* name ) {
@@ -341,6 +439,14 @@ public:
         if ( props.count( name ) == 0 ) return false;
         AbstractPropertyAccess& p = *(props[name]);
         return ( p.isWritable() ? p.set(data) : false );
+    };
+
+    /*! \brief set the i-th Variant of the Vector property
+     */
+    bool setVectorProperty( const char* name, u_int i, const Variant& data ) {
+        if ( props.count( name ) == 0 ) return false;
+        AbstractPropertyAccess& p = *(props[name]);
+        return ( p.isWritable() ? p.set(i, data) : false );
     };
 
     /*! \brief configure the properties by a PropertySettings

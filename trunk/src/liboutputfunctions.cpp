@@ -18,16 +18,13 @@
  ********************************************************************************/
 
 #include "liboutputfunctions.h"
+#include "cluster.h"
 
 #include <cmath>
 
 #ifdef NNFW_USE_MKL
 #include <mkl_vml.h>
 #include <mkl_cblas.h>
-#endif
-
-#ifdef NNFW_DEBUG
-#include "messages.h"
 #endif
 
 //! Namespace that contains all classes of Neural Network Framework
@@ -427,8 +424,10 @@ PoolFunction::PoolFunction( const OutputFunction& prototype, u_int dim )
     if ( dim == 0 ) {
         nnfwMessage( NNFW_ERROR, "The dimension of PoolFunction must be at least one" );
         ups.resize( 1 );
-        ups[0] = new OutputFunction();
+        ups[0] = prototype.clone();
     }
+    addProperty( "size", Variant::t_uint, this, &PoolFunction::sizeV );
+    addVectorProperty( "functions", Variant::t_outfunction, this, &PoolFunction::getOutputFunctionV, &PoolFunction::setOutputFunction );
     setTypename( "PoolFunction" );
 }
 
@@ -439,13 +438,24 @@ PoolFunction::PoolFunction( u_int dim )
         nnfwMessage( NNFW_ERROR, "The dimension of PoolFunction must be at least one" );
         ups.resize( 1 );
     }
+    addProperty( "size", Variant::t_uint, this, &PoolFunction::sizeV );
+    addVectorProperty( "functions", Variant::t_outfunction, this, &PoolFunction::getOutputFunctionV, &PoolFunction::setOutputFunction );
     setTypename( "PoolFunction" );
 }
 
-PoolFunction::PoolFunction( PropertySettings& )
-    : OutputFunction(), ups(1) {
-    // --- non ha proprieta' ... ma dovrebbe averle !!
-    ups[0] = new OutputFunction();
+PoolFunction::PoolFunction( PropertySettings& prop )
+    : OutputFunction(), ups() {
+    Variant& v = prop["size"];
+    int dim = 1;
+    if ( ! v.isNull() ) {
+        dim = v.getUInt();
+    }
+    for( int i=0; i<dim; i++ ) {
+        ups.push_back( new OutputFunction() );
+    }
+    addProperty( "size", Variant::t_uint, this, &PoolFunction::sizeV );
+    addVectorProperty( "functions", Variant::t_outfunction, this, &PoolFunction::getOutputFunctionV, &PoolFunction::setOutputFunction );
+    setProperties( prop );
     setTypename( "StepFunction" );
 }
 
@@ -455,18 +465,46 @@ PoolFunction::~PoolFunction() {
     }
 }
 
-Variant PoolFunction::getOuputFunctions() {
-    return Variant( &ups );
+OutputFunction* PoolFunction::getOutputFunction( u_int i ) {
+#ifdef NNFW_DEBUG
+    if ( i >= ups.size() ) {
+        nnfwMessage( NNFW_ERROR, "Accessing beyond boundary of this PoolFunction" );
+        return 0;
+    }
+#endif
+    return ups[i];
 }
 
 void PoolFunction::setOutputFunction( u_int i, const OutputFunction& prototype ) {
+#ifdef NNFW_DEBUG
     if ( i >= ups.size() ) {
         nnfwMessage( NNFW_ERROR, "Setting a OutputFunction beyond boundary of this PoolFunction" );
         return;
     }
+#endif
     delete (ups[i]);
     ups[i] = prototype.clone();
     return;
+}
+
+Variant PoolFunction::getOutputFunctionV( u_int i ) {
+    return Variant( ups[i] );
+}
+
+bool PoolFunction::setOutputFunction( u_int i, const Variant& v ) {
+    if ( i >= ups.size() ) {
+        return false;
+    }
+    setOutputFunction( i, *(v.getOutputFunction()) );
+    return true;
+}
+
+unsigned int PoolFunction::size() {
+    return ups.size();
+}
+
+Variant PoolFunction::sizeV() {
+    return Variant( ups.size() );
 }
 
 void PoolFunction::apply( RealVec& inputs, RealVec& outputs ) {
@@ -482,6 +520,15 @@ PoolFunction* PoolFunction::clone() const {
         pool->ups[i] = this->ups[i]->clone();
     }
     return pool;
+}
+
+void PoolFunction::setCluster( Cluster* c ) {
+    u_int oldDim = ups.size();
+    u_int newDim = c->size();
+    ups.resize( newDim );
+    for( u_int i=oldDim; i<newDim; i++ ) {
+        ups[i] = new OutputFunction();
+    }
 }
 
 }
