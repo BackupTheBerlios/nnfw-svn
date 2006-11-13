@@ -5,8 +5,129 @@
 <a href="mathstuff.html"><img src="../img/prevChapter.png"></a> <a href="index.html"><img src="../img/mainToc.png"></a> <a href="createCluster.html"><img src="../img/nextChapter.png"></a>
 </div>
 \endhtmlonly
+\anchor xmlformat_toc
+<div id="tocContent_nohead">
+<ul class="level_one">
+    <li>\ref xmlformat_1 </li>
+    <li>\ref xmlformat_2 </li>
+    <li>\ref xmlformat_3 </li>
+</ul>
+</div>
 
-\section xmlformat_1 Struttura Versione 1.0
+\section xmlformat_1 Document's Structure
+The document is composed by two kinds of tags: reserved tags and property tags. The reserved tags includes the root node &lt;nnfw&gt;, the &lt;neuralnet&gt; node and tags for creating a neural network. These tags, contained by &lt;neuralnet&gt; node, can be divided into three groups as follow:
+\par Architecture tags &lt;cluster&gt; & &lt;linker&gt;
+they declare the basic element of neuralnetwork and how they are interconnected
+\par Neural Newtork tags &lt;inputs&gt;, &lt;outputs&gt; & &lt;order&gt;
+they declare which Cluster are inputs and outputs of the neural network and how act the udpating step method
+\par Configure tag &lt;configure&gt;
+it allow to configure the object created above. The configuration can also be done directly inside the Architecture tags, but with &lt;configure&gt; you can separate the configuration from the declaration of architecture
+
+A Property tag represents an object's property, where the tag name is the property name and the tag content is the value which the object's property will be setted.
+
+A document where the property tags are not showed appear as follow:
+\code
+<nnfw version="1.0">
+  <neuralnet>
+    <cluster name="aName" type="aType" size="dim"> ... </cluster>
+    <cluster name="aName" type="aType" size="dim"> ... </cluster>
+    ...
+    <cluster name="aName" type="aType" size="dim"> ... </cluster>
+
+    <linker name="aName" type="atype" from="aClusterName" to="aClusterName"> ... </linker>
+    <linker name="aName" type="atype" from="aClusterName" to="aClusterName"> ... </linker>
+    ...
+    <linker name="aName" type="atype" from="aClusterName" to="aClusterName"> ... </linker>
+
+    <inputs> aClusterName1 aClusterName2 ... </inputs>
+    <outputs> aClusterName3 aClusterName4 ... </outputs>
+    <order> aClusterName1 aClusterName2 ... </order>
+
+    <configure name="someName"> ... </configure>
+    <configure name="someName"> ... </configure>
+    ...
+    <configure name="someName"> ... </configure>
+  </neuralnet>
+</nnfw>
+\endcode
+
+\section xmlformat_2 Setting a Property
+Inside the tags &lt;cluster&gt;, &lt;linker&gt; and &lt;configure&gt; a lot of property tags can be annidated for configuring all aspect of Clusters and Linkers.
+
+However, all the property tags appear in the same way:
+\code
+<propertyName type="aTypeName"> ... </propertyName>
+\endcode
+where propertyName is the name of object's property and the attribute type is optional but it plays an important role explained below.
+
+Property tags can exists only annidated in &lt;cluster&gt;, &lt;linker&gt; and &lt;configure&gt; tags, because they need an object to refers to. A property tag outside that tags arises an unregnozied tag error.
+
+Let's start with an example, suppose to have a cluster and we want to set the accumulate property to 'true', we will write:
+\code
+  <configure name="clusterName">
+     <accumulate> true </accumulate>
+  </configure>
+\endcode
+With the tag &lt;configure&gt; we specify which object we want to configure, and the tag &lt;accumulate&gt; tell to the xml parser to set the accumulate property of the cluster to 'true'.
+
+Now, suppose that the cluster is configured with a SigmoidFunction with lambda 1.0 as output function, and we want to change lambda to 0.5, we will write:
+\code
+  <configure name="clusterName">
+     <outfunction>
+       <lambda> 0.5 </lambda>
+     </outfunction>
+  </configure>
+\endcode
+In this situation, lambda is a property of the outfunction cluster's property, and it's possible to set it by simply annidating &lt;lambda&gt; property tag into &lt;outfunction&gt;. There's no limit to property tags annidation.
+
+But now, suppose we want to change the SigmoidFunction with a new different function (e.g. LinearFunction) and configure the new one. In this situation the attribute type is important; in fact, with this attribute you specify the new type to create and substitute to the old one. That's the code:
+\code
+  <configure name="clusterName">
+     <outfunction type="LinearFunction">
+        <minX> -20.0 </minX>
+        <maxX> +20.0 </maxX>
+        <minY> -1.0 </minY>
+        <maxY> +1.0 </maxY>
+     </outfunction>
+  </configure>
+\endcode
+In this way, the outfunction cluster's property is configured to be a LinearFunction. As soon after creation, the LinearFunction is setted accordlying to annidated property tags: minX, maxX, minY and maxY.
+
+\subsection xmlformat_21 Special Case: Vector properties
+Vector properties are handled via special attribute 'i' for configuring the value stored. At the moment there is only one class that have a Vector property: the PoolFunction. Suppose to have a Cluster with a PoolFunction and want to configure the 3rd function of a PoolFunction, that's the code:
+\code
+  <configure name="clusterName">
+     <outfunction>
+       <functions i="2">
+          <lambda> 0.5 </lambda>
+       </functions>
+     </outfunction>
+  </configure>
+\endcode
+The tag &lt;outfunction&gt; access to the PoolFunction of cluster, and the functions property is a Vector and it's possibile to change the 3rd element with the attribute i. Note, that i is egual to TWO. Because the indexing of Vector properties starts from zero (like C-array), so 0 means the first element, 1 the 2nd and 2 the 3rd.
+
+If you want to substitute the 4th function with a new one, then you need the attribute type too. That's the code:
+\code
+  <configure name="clusterName">
+     <outfunction>
+       <functions i="3" type="ScaledSigmoidFunction">
+          <lambda> 0.5 </lambda>
+          <min> -1.0 </min>
+          <max> +1.0 </max>
+       </functions>
+     </outfunction>
+  </configure>
+\endcode
+\ref xmlformat_toc "[Up]"
+
+\section xmlformat_3 Setting the Architecture
+
+\ref xmlformat_toc "[Up]"
+
+
+*/
+
+/*
 
 NOTA: gli attributi sono sempre obbligatori, se non specificati verr&agrave; restituito un messaggio di errore e il relativo tag ignorato.
 
