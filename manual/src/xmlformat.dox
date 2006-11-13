@@ -25,7 +25,7 @@ it allow to configure the object created above. The configuration can also be do
 
 A Property tag represents an object's property, where the tag name is the property name and the tag content is the value which the object's property will be setted.
 
-A document where the property tags are not showed appear as follow:
+A document where the property tags are not showed will appear as follow:
 \code
 <nnfw version="1.0">
   <neuralnet>
@@ -51,16 +51,19 @@ A document where the property tags are not showed appear as follow:
 </nnfw>
 \endcode
 
+\par Important Warning
+Spaces are not allowed in all attribute values. For instance, "a funny name" is not allowed for the attribute name. But instead, substitute white spaces with other characters, e.g. "a_funny_name" or even better use only alphanumeric chars, "aFunnyName".
+
 \section xmlformat_2 Setting a Property
 Inside the tags &lt;cluster&gt;, &lt;linker&gt; and &lt;configure&gt; a lot of property tags can be annidated for configuring all aspect of Clusters and Linkers.
 
-However, all the property tags appear in the same way:
+The common structure of all property tags is:
 \code
 <propertyName type="aTypeName"> ... </propertyName>
 \endcode
 where propertyName is the name of object's property and the attribute type is optional but it plays an important role explained below.
 
-Property tags can exists only annidated in &lt;cluster&gt;, &lt;linker&gt; and &lt;configure&gt; tags, because they need an object to refers to. A property tag outside that tags arises an unregnozied tag error.
+Property tags can exists only annidated in &lt;cluster&gt;, &lt;linker&gt; and &lt;configure&gt; tags, because they need an object which refers to. A property tag outside tags listed above arises an unrecognized tag error.
 
 Let's start with an example, suppose to have a cluster and we want to set the accumulate property to 'true', we will write:
 \code
@@ -121,6 +124,33 @@ If you want to substitute the 4th function with a new one, then you need the att
 \ref xmlformat_toc "[Up]"
 
 \section xmlformat_3 Setting the Architecture
+The topology of neural network is specified by &lt;cluster&gt; and &lt;linker&gt; tags. The latter defines how the cluster are interconnected among them and how the information is transferred through the interconnections; i.e. Linkers. The former specifies which kind of neuron's layers are present into the neural network is being constructing.
+
+\par Declaring a Cluster
+The tag &lt;cluster&gt; has three mandatory attribute:
+<ul>
+    <li><b>name</b>: the identification name of the cluster; it's used by Linker to identify cluster to interconnect</li>
+    <li><b>type</b>: is the class of cluster in construction; can be one of the type recognized by the NNFW's Factory, i.e. FakeCluster, SimpleCluster, BiasedCluster, etc.</li>
+    <li><b>size</b>: the number of neurons contained in the cluster</li>
+</ul>
+All property of the cluster's type can be setted by annidated tags. (\ref xmlformat_2 )
+
+\par Declaring a Linker
+The tag &lt;linker&gt; has four mandatory attribute:
+<ul>
+    <li><b>name</b>: the identification name of the linker; useful for settings the order and later setting by &lt;configure&gt;</li>
+    <li><b>type</b>: one of the class type recognized by NNFW's Factory, i.e. MatrixLinker, etc.</li>
+    <li><b>from</b>: the incoming Cluster to Linker; where the informations comes from. </li>
+    <li><b>to</b>: the out-going Cluster from Linker; where the informations goes to. </li>
+</ul>
+
+\section xmlformat_4 Neural Network Parameters
+Neural network parameters
+
+\section xmlformat_5 The tag <configure>
+The simplest tag. It has only one mandatory attribute, name, that indicates the identification name of the Cluster or Linker to be configurated by &lt;configure&gt; tag.
+
+Annidated in this tag, put all property tags that you need to configure the object for fitting your needs. That's all. You find examples in \ref xmlformat_2 .
 
 \ref xmlformat_toc "[Up]"
 

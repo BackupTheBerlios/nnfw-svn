@@ -19,7 +19,7 @@
 </div>
 
 \section introduction_1 Why another Neural Network library ?
-Why not ?!?! can be a possible answer.
+'Why not?' might be a possible answer.
 
 At the beginning of 2005, I looked for a neural network library easy to use, flexible and exentsible as possible as you want.
 After some months, I understood that there isn't a such library (or at least I didn't find it). Nonetheless the great numbers of project available on internet there isn't a library developed whith follows aims in mind:
@@ -43,7 +43,9 @@ Il progetto Neural Network Framework (NNFW) si pone l'obiettivo di realizzare un
 \ref introduction_toc "[Up]"
 
 \section introduction_3 What is NNFW not ?
-Non &egrave; stata creata a fini educativi... quindi non vi aspettate di imparare le reti neurali da questo tool. L'utente deve sapere cosa &egrave; una rete neurale e le differenze fra le varie tipologie.
+Non e' un applicazione gia' pronta all'uso da parte dell'utente. Bensi, richiede conoscenza del C++ e della programmazione ad oggetti per poter essere usata. Quindi, all'utente sono richieste le nozioni necessarie al fine di sviluppare un'applicazione che utilizzi le classi messe a disposizioni della libreria.
+
+Non vi aspettate di trovare un eseguibile sul quale facendo 'double-click' si avvia un programma grafico con il quale giocare a costruire reti neurali strambe... semplicemente questo applicativo non c'e', siete voi che dovrete costruirlo con i building-block messi a disposizione dalla NNFW.
 \ref introduction_toc "[Up]"
 
 \section introduction_4 Download & Installation
@@ -91,12 +93,14 @@ The CMake configurator is different depending on the platform on wich you run it
 for some details about it.
 The NNFW_CONFIG variable is a string (empty is allowable) can contains the following keys separated by a space:
 <ul>
-    <li> debug : the library will be compiled with debug flags activated (default is not setted) </li>
     <li> double : the library will be compiled using the double precision real numbers (default is single precision) </li>
     <li> mkl : the library will use the MKL interface for speed-up math calculations (default is not) </li>
     <li> gsl : the library will use the GSL interface (default is not) </li>
+    <li> shared: a dynamic library will be created instead of the static one; this feature is reported to work only on Linux machines </li>
 </ul>
 For instance, if NNFW_CONFIG is setted to "mkl double" then the library will be compiled with double precision and linked against Math Kernel Library.
+
+In addition, the standard variable CMAKE_BUILD_TYPE of CMake is also useful to sets how library will be compiled. The possibile options of CMAKE_BUILD_TYPE are Debug, Release, RelWithDebInfo and MinSizeRel. See CMake documentation.
 
 \subsection introduction_45 Compiling NNFW on Linux
 <ol>
