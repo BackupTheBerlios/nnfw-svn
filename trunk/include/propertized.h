@@ -53,82 +53,58 @@ public:
     typedef enum { t_null=0, t_real, t_int, t_uint, t_char, t_uchar, t_bool, t_string,
                 t_realvec, t_realmat, t_outfunction, t_cluster, t_linker, t_propertized } types;
 
-    /*! \name Constructors
-     */
+    /*! \name Constructors */
     //@{
-
     //! \brief Constructor
     Variant();
-
     //! \brief Copy-Constructor
     Variant( const Variant& src );
-
     //! \brief Constructor
     Variant( Real d );
-
     //! \brief Constructor
     Variant( int d );
-
     //! \brief Constructor
     Variant( u_int d );
-
     //! \brief Constructor
     Variant( char d );
-
     //! \brief Constructor
     Variant( unsigned char d );
-
     //! \brief Constructor
     Variant( bool d );
-
     //! \brief Constructor
     Variant( const char* d );
-
     //! \brief Constructor
     Variant( RealVec* d );
-
     //! \brief Constructor
     Variant( RealMat* d );
-
     //! \brief Constructor
     Variant( OutputFunction* d );
-
     //! \brief Constructor
     Variant( Cluster* d );
-
     //! \brief Constructor
     Variant( Linker* d );
-
     //! \brief Constructor
     Variant( Propertized* d );
-
     //@}
     /*! \name Operators */
     //@{
-
     //! \brief Assign operator
     Variant& operator=( const Variant& src );
-
     //@}
     /*!  \name Informations about data contained */
     //@{
-
     /*! \brief Type of data
      */
     types type() const;
-
     /*! \brief Return the name of type
      */
     const char* typeName() const;
-
     /*! \brief Return true if the Variant is Null
      */
     bool isNull();
-
     //@}
     /*! \name Retrieving data */
     //@{
-
     //! return the Real value
     Real getReal() const;
     //! return the Int value
@@ -155,7 +131,6 @@ public:
     Linker* getLinker() const;
     //! return the Propertized value
     Propertized* getPropertized() const;
-
     //@}
 
     /*! \brief Return the name of type passed by argument
@@ -186,10 +161,12 @@ private:
 };
 
 /*! \brief Encapsulates methods for accessing property data
+ *
+ *  Details here
  */
 class AbstractPropertyAccess : public Clonable {
 public:
-    /*! \name Constructors */
+    /*! \name Constructors & Destructors */
     //@{
     //! \brief Constructor
     AbstractPropertyAccess( const char* name ) {
@@ -235,6 +212,7 @@ public:
     //! Clone this
     virtual AbstractPropertyAccess* clone() const = 0;
     //@}
+
 protected:
     //! \brief Name of property
     char* namep;
