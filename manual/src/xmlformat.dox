@@ -1,0 +1,67 @@
+/*! \page xmlformat Understanding XML files format
+\addindex xmlformat
+\htmlonly
+<div id="navigationBar">
+<a href="mathstuff.html"><img src="../img/prevChapter.png"></a> <a href="index.html"><img src="../img/mainToc.png"></a> <a href="createCluster.html"><img src="../img/nextChapter.png"></a>
+</div>
+\endhtmlonly
+
+\section xmlformat_1 Struttura Versione 1.0
+
+NOTA: gli attributi sono sempre obbligatori, se non specificati verr&agrave; restituito un messaggio di errore e il relativo tag ignorato.
+
+NOTA: tutti i nomi identificativi NON DEVONO contenere spazi.
+
+root node: <nnfw> <br>
+l'unico attributo version indica la versione del file a cui fa riferimento. Per la struttura che segue l'attributo deve valere 1.0
+
+<neuralnet>: costruisce una rete neurale popolando un oggetto BaseNeuralNet come specificato dai tag figli.
+NON ha attributi.
+I tag figli possono essere pensati come divisi in un due tipologie: dichiarativi e configurativi; I primi (cluster, linker) definiscono la struttura della rete, mentre i secondi (order, configure) impostano i paramentri degli oggetti dichiarati con i precedenti tag.
+
+<cluster>: gli attributi sono
+name="string" &egrave; il nome identificativo del cluster;
+type="classname" &egrave; il nome della classe che identifica il tipo di cluster;
+size="unsigned int" &egrave; la dimensione del cluster
+
+<outputfunction>: <br>
+<b> TAG INUTILE </b>
+type="classname" &egrave; il nome della classe che identifica il tipo di outputfunction.
+I nodi figli sono le propriet&agrave; della specifica outputfunction selezionata da type. (vedere la sezione relativa ref)
+
+<accumulate>: NO attributi; il testo del tag &egrave; interpretato come booleano: true e false (non &egrave; case-sensitive)
+
+<randomize>: solo gli attributi hanno senso in questo tag, ogni testo all'interno &egrave; ignorato
+min="real" &egrave; il valore minimo;
+max="real" &egrave; il valore massimo
+
+Altri nodi figli di cluster sono determinati dalle propriet&agrave; specifiche del cluster creato (vedi sezione relativa ref)
+
+<linker>: crea un linker del tipo specificato che connette i due cluster from e to
+name="string" &egrave; il nome identificativo del cluster
+type="classname" &egrave; il nome della classe
+from="idname" &egrave; il nome id del cluster from
+to="idname" &egrave; il nome id del cluster to;
+
+I nodi figli sono le propriet&agrave; dello specifico linker creato (vedere sezione relativa ref)
+
+<randomize>: solo gli attributi hanno senso in questo tag, ogni testo all'interno &egrave; ignorato
+min="real" &egrave; il valore minimo;
+max="real" &egrave; il valore massimo
+
+<order>: un elenco di nomi identificativi di cluster e/o linker separati da spazi che dichiarano l'ordine di aggiornamento della rete neurale
+NON ha attributi
+
+<outputs>: elenco dei nomi identificativi dei cluster di output della rete neurale
+
+<inputs>: elenco dei nomi identificativi dei cluster di input della rete neurale
+
+<configure> configura un cluster o linker creato precedentemente.
+name="string" &egrave; il nome identificativo dell'oggetto che si vuole configurare
+Si possono configurare solo Cluster e Linker
+
+I tag figli sono le propriet&agrave; dell'oggetto che si vogliono configurare;
+un messaggio di errore verr&agrave; restituito se un tag figlio indica una propriet&agrave; non esistente nell'oggetto che si sta configurando
+
+
+*/
