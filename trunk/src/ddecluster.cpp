@@ -19,7 +19,7 @@
 
 #include "ddecluster.h"
 
-//! Namespace that contains all classes of Neural Network Framework
+
 namespace nnfw {
 
 DDECluster::DDECluster( const RealVec& c, u_int numNeurons, const char* name )

@@ -40,7 +40,7 @@
  */
 
 
-//! Namespace that contains all classes of Neural Network Framework
+
 namespace nnfw {
 
 /*! \name XML load/save */

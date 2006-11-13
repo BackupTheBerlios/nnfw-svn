@@ -19,7 +19,7 @@
 
 #include "linker.h"
 
-//! Namespace that contains all classes of Neural Network Framework
+
 namespace nnfw {
 
 Linker::Linker( Cluster* from, Cluster* to, const char* name )

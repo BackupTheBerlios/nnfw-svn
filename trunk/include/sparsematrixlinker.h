@@ -24,7 +24,7 @@
 #include "linker.h"
 #include "matrixlinker.h"
 
-//! Namespace that contains all classes of Neural Network Framework
+
 namespace nnfw {
 
 /*! \brief SparseMatrixLinker Class extend MatrixLinker for allow non-full connection between Clusters

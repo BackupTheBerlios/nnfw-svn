@@ -22,7 +22,7 @@
 #include <functional>
 #include <cstring>
 
-//! Namespace that contains all classes of Neural Network Framework
+
 namespace nnfw {
 
 /**********************************************

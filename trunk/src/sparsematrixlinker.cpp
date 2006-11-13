@@ -20,7 +20,7 @@
 #include "sparsematrixlinker.h"
 #include "random.h"
 
-//! Namespace that contains all classes of Neural Network Framework
+
 namespace nnfw {
 
 SparseMatrixLinker::SparseMatrixLinker( Cluster* from, Cluster* to, const char* name )

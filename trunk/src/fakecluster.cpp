@@ -23,7 +23,7 @@
 #include <cstdio>
 #include <cstring>
 
-//! Namespace that contains all classes of Neural Network Framework
+
 namespace nnfw {
 
 FakeCluster::FakeCluster( u_int size, const char* name )

@@ -29,9 +29,12 @@
  *  \brief The infrastructure for implementing properties
  *
  *  \todo Variant doesn't support a generic vector of data, i.e. VectorData\<Variant\> or VectorData\<Propertized*\>
+ *
+ *  \todo Now, it's not possibile to know the size of a Vector property from AbstractPropertyAccess;
+ *       this limits the accessibility of these kind of properties
  */
 
-//! Namespace that contains all classes of Neural Network Framework
+
 namespace nnfw {
 
 class OutputFunction;

@@ -31,7 +31,7 @@
 #include "linker.h"
 #include <map>
 
-//! Namespace that contains all classes of Neural Network Framework
+
 namespace nnfw {
 
 /*! \brief The Base Neural Network Class

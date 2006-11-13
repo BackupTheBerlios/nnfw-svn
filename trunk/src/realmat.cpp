@@ -26,7 +26,7 @@
 #include <mkl_cblas.h>
 #endif
 
-//! Namespace that contains all classes of Neural Network Framework
+
 namespace nnfw {
 
 RealMat::RealMat( u_int rows, u_int cols )

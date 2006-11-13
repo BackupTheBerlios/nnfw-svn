@@ -30,7 +30,7 @@
  *
  */
 
-//! Namespace that contains all classes of Neural Network Framework
+
 namespace nnfw {
 
 /*! \brief The Base Learning Network Class

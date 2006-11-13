@@ -20,14 +20,14 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-/*! \brief This file contains some utilities functions
+/*! \file
+ *  \brief This file contains some utilities functions
  *
  * Details...
  */
 
 #include "types.h"
 
-//! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {
 
 class BaseNeuralNet;

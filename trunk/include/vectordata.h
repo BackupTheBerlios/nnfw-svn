@@ -35,7 +35,7 @@
 #include "memutils.h"
 #include <vector>
 
-//! Namespace that contains all classes of Neural Network Framework
+
 namespace nnfw {
 
 /*! \brief VectorData Class
@@ -337,6 +337,32 @@ public:
      *  Boundary check activated only when DEBUG if defined
      */
     const T& operator[]( u_int index ) const {
+#ifdef NNFW_DEBUG
+        if( index >= vsize ) {
+            nnfwMessage( NNFW_ERROR, "Accessing elements outside boundary" );
+            return data[0];
+        }
+#endif
+        return data[index];
+    };
+
+    /*! \brief Accessing method
+     *  Boundary check activated only when DEBUG if defined
+     */
+    T& at( u_int index ) {
+#ifdef NNFW_DEBUG
+        if( index >= vsize ) {
+            nnfwMessage( NNFW_ERROR, "Accessing elements outside boundary" );
+            return data[0];
+        }
+#endif
+        return data[index];
+    };
+
+    /*! \brief Accessing method (Const Version)
+     *  Boundary check activated only when DEBUG if defined
+     */
+    const T& at( u_int index ) const {
 #ifdef NNFW_DEBUG
         if( index >= vsize ) {
             nnfwMessage( NNFW_ERROR, "Accessing elements outside boundary" );

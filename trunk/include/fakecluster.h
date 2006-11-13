@@ -23,7 +23,7 @@
 #include "types.h"
 #include "cluster.h"
 
-//! Namespace that contains all classes of Neural Network Framework
+
 namespace nnfw {
 
 /*! \brief FakeCluster Class. The FakeCluster is a Cluster without neurons, it's like an array ! :-)

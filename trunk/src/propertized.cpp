@@ -19,7 +19,7 @@
 
 #include "propertized.h"
 
-//! Namespace that contains all classes of Neural Network Framework
+
 namespace nnfw {
 
 const char* Variant::typen[t_propertized+1] = { "Null", "Real", "int", "unsigned int", "char", "unsigned char", "bool",

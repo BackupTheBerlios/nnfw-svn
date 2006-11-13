@@ -22,7 +22,7 @@
 
 extern void exit( int status );
 
-//! Namespace that contains all classes of Neural Network Framework
+
 namespace nnfw {
 
 //using namespace std;

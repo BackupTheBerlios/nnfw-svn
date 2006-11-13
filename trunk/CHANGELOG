@@ -14,6 +14,15 @@ S <mave> comment goes here
     'B' : means a BugFix
     'C' : means that something has been changed (e.g. implementation of a Class or a signature method)
 ==== End of Legend ====
+    ==> 135 - 13/11/2006 <==
+
+B <mave> bugfixs in Doxygen documentation
++ <mave> implemented saveXML (vector properties are not yet supported)
++ <mave> method RealVec::at(int) for accessing element from a pointer (an alternative to operator[])
+B <mave> bugfixs in parsing primitive types (int, u_int, char, u_char, boolean)
+C <mave> improved and optimized XML parsing implementation
+- <mave> removed special tag <outputfunction>
+
     ==> 133 - 10/11/2006 <==
 
 B <mave> resolved bug in recursive property parsing

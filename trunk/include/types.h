@@ -47,7 +47,7 @@
 
 #undef TYPES_INCLUDES
 
-//! Namespace that contains all classes of Neural Network Framework
+
 namespace nnfw {
 
 //! Array of Boolean

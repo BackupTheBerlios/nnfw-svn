@@ -28,7 +28,7 @@
 
 #include "types.h"
 
-//! Namespace that contains all classes of Neural Network Framework
+
 namespace nnfw {
 
 /*! \brief Random class define some static method for accessing the random number generator

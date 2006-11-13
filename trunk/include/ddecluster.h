@@ -24,7 +24,7 @@
 #include "cluster.h"
 #include "outputfunction.h"
 
-//! Namespace that contains all classes of Neural Network Framework
+
 namespace nnfw {
 
 /*! \brief DDECluster Class. In this cluster the input/output relation is governed by a Discrete Differential Equation

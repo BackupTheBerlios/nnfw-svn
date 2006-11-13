@@ -28,7 +28,7 @@
 #include "propertized.h"
 #include <stack>
 
-//! Namespace that contains all classes of Neural Network Framework
+
 namespace nnfw {
 
 BaseNeuralNet* feedForwardNet( U_IntVec layers, const char* clusterType, const char* linkerType ) {

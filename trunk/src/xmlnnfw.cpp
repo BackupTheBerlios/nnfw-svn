@@ -26,16 +26,15 @@
 
 #include <QDomDocument>
 #include <QFile>
+#include <QTextStream>
 #include <QString>
 #include <QStringList>
 
-//! Namespace that contains all classes of Neural Network Framework
 namespace nnfw {
 
 void parseOutputFunction_10( QDomElement cur, Cluster* cl );
 
 void parseProperty_10( QDomElement cur, const Propertized* obj ) {
-    qDebug( obj->getTypename().getString() );
     AbstractPropertyAccess* pacc = obj->propertySearch( cur.tagName().toAscii().constData() );
     if ( !pacc ) {
         char msg[100];
@@ -64,7 +63,7 @@ void parseProperty_10( QDomElement cur, const Propertized* obj ) {
         index = is.toInt();
     }
     // --- property type checking
-    QString text; // --- used by all
+    QString text = cur.text().simplified(); // --- used by all
     QStringList list; // --- used by realvec, realmat
     RealVec vec; // --- used by realvec
     RealMat mat(0,0); // --- used by realmat
@@ -81,35 +80,35 @@ void parseProperty_10( QDomElement cur, const Propertized* obj ) {
         break;
     case Variant::t_real:
 #ifdef NNFW_DOUBLE_PRECISION
-        ret = Variant( cur.text().toDouble();
+        ret = Variant( text.toDouble() );
 #else
-        ret = Variant( cur.text().toFloat() );
+        ret = Variant( text.toFloat() );
 #endif
         break;
     case Variant::t_int: 
-        ret = Variant( cur.text().toInt() );
+        ret = Variant( text.toInt() );
         break;
     case Variant::t_uint:
-        ret = Variant( cur.text().toUInt() );
+        ret = Variant( text.toUInt() );
         break;
     case Variant::t_char:
-        ret = Variant( cur.text().at(0).toAscii() );
+        ret = Variant( text.at(0).toAscii() );
         break;
     case Variant::t_uchar:
-        ret = Variant( (unsigned char)(cur.text().at(0).toAscii()) );
+        ret = Variant( (unsigned char)(text.at(0).toAscii()) );
         break;
     case Variant::t_bool:
-        if ( cur.text().toLower() == QString( "true" ) ) {
+        if ( text.toLower() == QString( "true" ) ) {
             ret = Variant( true );
         } else {
             ret = Variant( false );
         }
         break;
     case Variant::t_string:
-        ret = Variant( cur.text().toAscii().constData() );
+        ret = Variant( text.toAscii().constData() );
         break;
     case Variant::t_realvec:
-        list = cur.text().simplified().split( ' ', QString::SkipEmptyParts );
+        list = text.split( ' ', QString::SkipEmptyParts );
         vec.resize(0);
         for( int i=0; i<list.size(); i++ ) {
 #ifdef NNFW_DOUBLE_PRECISION
@@ -121,7 +120,7 @@ void parseProperty_10( QDomElement cur, const Propertized* obj ) {
         ret = Variant( &vec );
         break;
     case Variant::t_realmat:
-        list = cur.text().simplified().split( ' ', QString::SkipEmptyParts );
+        list = text.split( ' ', QString::SkipEmptyParts );
         if ( index != -1 ) {
             vmat = pacc->get( index ).getRealMat();
         } else {
@@ -214,34 +213,11 @@ void parseProperty_10( QDomElement cur, const Propertized* obj ) {
                 child = child.nextSibling();
                 continue;
             }
-            qDebug( QString("parsing %1").arg(e.tagName()).toAscii().data() );
             parseProperty_10( e, sub );
             child = child.nextSibling();
         }
     }
     return;
-}
-
-void parseOutputFunction_10( QDomElement cur, Cluster* cl ) {
-    QString type = cur.attribute( "type" );
-    if ( type.isNull() ) {
-        nnfwMessage( NNFW_ERROR, "attribute type is mandatory in <outputfunction> tag" );
-        return;
-    }
-    PropertySettings prop;
-    OutputFunction* fun = Factory::createOutputFunction( type.toAscii().constData(), prop );
-    // --- parsing children nodes for settings properties
-    QDomNode child = cur.firstChild();
-    while( ! child.isNull() ) {
-        QDomElement e = child.toElement();
-        if ( e.isNull() ) {
-            child = child.nextSibling();
-            continue;
-        }
-        parseProperty_10( e, fun );
-        child = child.nextSibling();
-    }
-    cl->setFunction( *fun );
 }
 
 void parseCluster_10( QDomElement cur, BaseNeuralNet* net ) {
@@ -272,13 +248,7 @@ void parseCluster_10( QDomElement cur, BaseNeuralNet* net ) {
             child = child.nextSibling();
             continue;
         }
-        if ( e.tagName() == QString( "outputfunction" ) ) {
-            // --- <outputfunction>
-            parseOutputFunction_10( e, cl );
-        } else if ( e.tagName() == QString( "accumulate" ) ) {
-            // --- <accumulate>
-            cl->accumulate( e.text().toLower() == QString( "true" ) );
-        } else if ( e.tagName() == QString( "randomize" ) ) {
+        if ( e.tagName() == QString( "randomize" ) ) {
             // --- <randomize>
             QString min = e.attribute( "min" );
             QString max = e.attribute( "max" );
@@ -415,7 +385,7 @@ void parseInputs_10( QDomElement cur, BaseNeuralNet* net ) {
 }
 
 void parseConfigure_10( QDomElement cur, BaseNeuralNet* net ) {
-    // --- parsing tag <linker>
+    // --- parsing tag <configure>
     QString name = cur.attribute( "name" );
     if ( name.isNull() ) {
         nnfwMessage( NNFW_ERROR, "attribute name of <configure> is mandatory" );
@@ -518,8 +488,132 @@ BaseNeuralNet* loadXML( const char* filename ) {
     return net;
 }
 
+void saveProperties( QDomDocument doc, QDomElement parent, Propertized* obj, QStringList skip = QStringList() ) {
+    PropertyAccessVec& pvec = obj->properties();
+    for( u_int i=0; i<pvec.size(); i++ ) {
+        AbstractPropertyAccess* p = pvec[i];
+        if ( skip.contains( QString( p->name() ) ) ) {
+            continue;
+        }
+        if ( p->isVector() ) {
+            char msg[100];
+            sprintf( msg, "Saving vector property is not yet supported; the property %s will not be saved", p->name() );
+            nnfwMessage( NNFW_ERROR, msg );
+            continue;
+        }
+        QDomElement elem = doc.createElement( p->name() );
+        parent.appendChild( elem );
+        QDomNode sub;
+        Variant v = p->get();
+        QString complex; // --- used for create string representation of RealVec and RealMat
+        switch( p->type() ) {
+        case Variant::t_null:
+            break;
+        case Variant::t_real:
+            sub = doc.createTextNode( QString(" %1 ").arg( v.getReal() ) );
+            break;
+        case Variant::t_int:
+            sub = doc.createTextNode( QString(" %1 ").arg( v.getInt() ) );
+            break;
+        case Variant::t_uint:
+            sub = doc.createTextNode( QString(" %1 ").arg( v.getUInt() ) );
+            break;
+        case Variant::t_char:
+            sub = doc.createTextNode( QString(" %1 ").arg( v.getChar() ) );
+            break;
+        case Variant::t_uchar:
+            sub = doc.createTextNode( QString(" %1 ").arg( v.getUChar() ) );
+            break;
+        case Variant::t_bool:
+            if ( v.getBool() ) {
+                sub = doc.createTextNode( " true " );
+            } else {
+                sub = doc.createTextNode( " false " );
+            }
+            break;
+        case Variant::t_string:
+            sub = doc.createTextNode( QString(" %1 ").arg( v.getString() ) );
+            break;
+        case Variant::t_realvec:
+            const RealVec* rv = v.getRealVec();
+            for( u_int i=0; i<rv->size(); i++ ) {
+                complex.append( QString(" %1").arg( rv->at(i) ) );
+            }
+            complex.append( " " );
+            sub = doc.createTextNode( complex );
+            break;
+        case Variant::t_realmat:
+            const RealMat* mv = v.getRealMat();
+            for( u_int r=0; r<mv->rows(); r++ ) {
+                for( u_int c=0; c<mv->cols(); c++ ) {
+                    complex.append( QString(" %1").arg( mv->at( r, c ) ) );
+                }
+                complex.append( " " );
+                //complex.append( "\n" );
+            }
+            sub = doc.createTextNode( complex );
+            break;
+        case Variant::t_outfunction:
+            elem.setAttribute( "type", v.getOutputFunction()->getTypename().getString() );
+            saveProperties( doc, elem, v.getOutputFunction(), QStringList() << "typename" );
+            break;
+        case Variant::t_cluster:
+            nnfwMessage( NNFW_ERROR, "Saving a property of type Cluster is not handled" );
+            break;
+        case Variant::t_linker:
+            nnfwMessage( NNFW_ERROR, "Saving a property of type Linker is not handled" );
+            break;
+        case Variant::t_propertized:
+            elem.setAttribute( "type", v.getPropertized()->getTypename().getString() );
+            saveProperties( doc, elem, v.getPropertized(), QStringList() << "typename" );
+            break;
+        }
+        if ( !sub.isNull() ) {
+            elem.appendChild( sub );
+        }
+    }
+}
+
 bool saveXML( const char* filename, BaseNeuralNet* net ) {
-    return false;
+    QDomDocument doc("nnfw-xml");
+    QDomElement root = doc.createElement( "nnfw" );
+    root.setAttribute( "version", "1.0" );
+    doc.appendChild( root );
+
+    QDomElement nn = doc.createElement( "neuralnet" );
+    root.appendChild( nn );
+
+    const ClusterVec& cls = net->clusters();
+    for( unsigned int i=0; i<cls.size(); i++ ) {
+        QDomElement elem = doc.createElement( "cluster" );
+        elem.setAttribute( "size", cls[i]->size() );
+        elem.setAttribute( "type", cls[i]->getTypename().getString() );
+        elem.setAttribute( "name", cls[i]->getName() );
+        nn.appendChild( elem );
+        saveProperties( doc, elem, cls[i], QStringList() << "size" << "typename" << "name" );
+    }
+
+    const LinkerVec& ls = net->linkers();
+    for( unsigned int i=0; i<ls.size(); i++ ) {
+        QDomElement elem = doc.createElement( "linker" );
+        elem.setAttribute( "to", ls[i]->to()->getName() );
+        elem.setAttribute( "from", ls[i]->from()->getName() );
+        elem.setAttribute( "type", ls[i]->getTypename().getString() );
+        elem.setAttribute( "name", ls[i]->getName() );
+        nn.appendChild( elem );
+        saveProperties( doc, elem, ls[i], QStringList() << "to" << "from" << "typename" << "name" );
+    }
+
+    QFile file( filename );
+    if ( !file.open( QIODevice::WriteOnly | QIODevice::Text ) ) {
+        char msg[100];
+        sprintf( msg, "Unable to open file %s", filename );
+        nnfwMessage( NNFW_ERROR, msg );
+        return false;
+    }
+    QTextStream out(&file);
+    out << doc.toString(2);
+    return true;
 }
 
 }

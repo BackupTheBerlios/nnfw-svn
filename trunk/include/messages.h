@@ -25,7 +25,7 @@
 #ifndef MESSAGGES_H
 #define MESSAGGES_H
 
-//! Namespace that contains all classes of Neural Network Framework
+
 namespace nnfw {
 
 /*! \file

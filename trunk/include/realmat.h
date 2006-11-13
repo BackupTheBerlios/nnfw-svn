@@ -34,7 +34,7 @@
 
 #include "matrixdata.h"
 
-//! Namespace that contains all classes of Neural Network Framework
+
 namespace nnfw {
 
 /*! \brief RealMat Class

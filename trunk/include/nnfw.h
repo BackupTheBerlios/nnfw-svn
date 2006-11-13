@@ -20,7 +20,7 @@
 #ifndef NNFW_H
 #define NNFW_H
 
-/*! \mainpage Neural Network Framework (release 0.6.4)
+/*! \mainpage Neural Network Framework (release 0.6.5)
  *  <h1>Class Reference</h1>
  *
  *  This is a Neural Network Framework for creating, simulating and analyze any neural network you can image !!
@@ -38,6 +38,10 @@
  * \todo It's really useful this include file ?!?! I think that a file including everything is not very useful
  *       rather a set of files that includes only some categories of classes: example libclusters.h may includes
  *       all subclasses of Cluster, liblinkers.h may includes all subclasses of Linker, and so on.
+ */
+
+/*! \namespace nnfw
+ *  \brief the namespace that contains all
  */
 
 #include "types.h"

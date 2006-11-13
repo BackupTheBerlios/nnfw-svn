@@ -24,7 +24,7 @@
 #include "cluster.h"
 #include "outputfunction.h"
 
-//! Namespace that contains all classes of Neural Network Framework
+
 namespace nnfw {
 
 /*! \brief BiasedCluster Class. In this cluster a neuron have an input, a output and a bias value.

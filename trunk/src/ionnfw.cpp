@@ -22,7 +22,7 @@
 #include "cluster.h"
 #include "linker.h"
 
-//! Namespace that contains all classes of Neural Network Framework
+
 namespace nnfw {
 
 std::ostream& operator<<(std::ostream& stream, const RealVec& v) {

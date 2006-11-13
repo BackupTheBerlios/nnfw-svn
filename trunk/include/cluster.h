@@ -28,7 +28,7 @@
 #include "updatable.h"
 #include "outputfunction.h"
 
-//! Namespace that contains all classes of Neural Network Framework
+
 namespace nnfw {
 
 /*! \brief Abstract Cluster Class. This define the common interface among Clusters

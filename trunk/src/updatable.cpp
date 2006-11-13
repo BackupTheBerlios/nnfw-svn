@@ -19,7 +19,7 @@
 
 #include "updatable.h"
 
-//! Namespace that contains all classes of Neural Network Framework
+
 namespace nnfw {
 
 Updatable::Updatable( const char* name )

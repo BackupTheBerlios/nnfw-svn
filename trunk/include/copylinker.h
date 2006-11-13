@@ -23,7 +23,7 @@
 #include "types.h"
 #include "linker.h"
 
-//! Namespace that contains all classes of Neural Network Framework
+
 namespace nnfw {
 
 /*! \brief CopyLinker Class. This linker copies the outputs of a cluster to inputs of another cluster

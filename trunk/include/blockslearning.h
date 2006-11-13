@@ -32,7 +32,7 @@
 #include "biasedcluster.h"
 #include "matrixlinker.h"
 
-//! Namespace that contains all classes of Neural Network Framework
+
 namespace nnfw {
 
 class Updatable;

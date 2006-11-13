@@ -19,7 +19,7 @@
 
 #include "types.h"
 
-//! Namespace that contains all classes of Neural Network Framework
+
 namespace nnfw {
 
 const LinkerVec emptyLinkerVec;
