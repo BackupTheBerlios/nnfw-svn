@@ -20,8 +20,8 @@ The document is composed by two kinds of tags: reserved tags and property tags. 
 they declare the basic element of neuralnetwork and how they are interconnected
 \par Neural Newtork tags &lt;inputs&gt;, &lt;outputs&gt; & &lt;order&gt;
 they declare which Cluster are inputs and outputs of the neural network and how act the udpating step method
-\par Configure tag &lt;configure&gt;
-it allow to configure the object created above. The configuration can also be done directly inside the Architecture tags, but with &lt;configure&gt; you can separate the configuration from the declaration of architecture
+\par Configure tags &lt;configure&gt; &lt;randomize&gt;
+The first one allows to configure the object created above. The configuration can also be done directly inside the Architecture tags, but with &lt;configure&gt; you can separate the configuration from the declaration of architecture. The second simply randomize the object's parameters.
 
 A Property tag represents an object's property, where the tag name is the property name and the tag content is the value which the object's property will be setted.
 
@@ -124,7 +124,7 @@ If you want to substitute the 4th function with a new one, then you need the att
 \ref xmlformat_toc "[Up]"
 
 \section xmlformat_3 Setting the Architecture
-The topology of neural network is specified by &lt;cluster&gt; and &lt;linker&gt; tags. The latter defines how the cluster are interconnected among them and how the information is transferred through the interconnections; i.e. Linkers. The former specifies which kind of neuron's layers are present into the neural network is being constructing.
+The topology of neural network is specified by &lt;cluster&gt; and &lt;linker&gt; tags. The latter defines how the cluster are interconnected among them and how the information is transferred through the interconnections; i.e. Linkers. The former specifies which kind of neuron's layers are present into the neural network that is being constructed.
 
 \par Declaring a Cluster
 The tag &lt;cluster&gt; has three mandatory attribute:
@@ -133,7 +133,16 @@ The tag &lt;cluster&gt; has three mandatory attribute:
     <li><b>type</b>: is the class of cluster in construction; can be one of the type recognized by the NNFW's Factory, i.e. FakeCluster, SimpleCluster, BiasedCluster, etc.</li>
     <li><b>size</b>: the number of neurons contained in the cluster</li>
 </ul>
-All property of the cluster's type can be setted by annidated tags. (\ref xmlformat_2 )
+All property of the Cluster's type can be setted by annidated tags. (\ref xmlformat_2)
+\code
+  <cluster name="hidden" type="BiasedCluster" size="6">
+    <accumulate> True </accumulate>
+    <outfunction type="ScaledSigmoidFunction">
+      <lambda> 0.5 </lambda>
+    </outfunction>
+    <biases> -1.2 2.4 0.5 -0.6 1.1 0.9 </biases>
+  </cluster>
+\endcode
 
 \par Declaring a Linker
 The tag &lt;linker&gt; has four mandatory attribute:
@@ -143,14 +152,24 @@ The tag &lt;linker&gt; has four mandatory attribute:
     <li><b>from</b>: the incoming Cluster to Linker; where the informations comes from. </li>
     <li><b>to</b>: the out-going Cluster from Linker; where the informations goes to. </li>
 </ul>
+All property of the Linker's type can be setted by annidated tags. (\ref xmlformat_2)
+\code
+  <linker name="matrix1" type="MatrixLinker" from="input" to="output">
+    <randomize min="-1.0" max="+1.0" />
+  </linker>
+\endcode
+See \ref xmlformat_5 for randomize explanation.
 
 \section xmlformat_4 Neural Network Parameters
 Neural network parameters
 
-\section xmlformat_5 The tag <configure>
-The simplest tag. It has only one mandatory attribute, name, that indicates the identification name of the Cluster or Linker to be configurated by &lt;configure&gt; tag.
+\section xmlformat_5 Configure tags
+&lt;configure&gt; has only one mandatory attribute, name, that indicates the identification name of the Cluster or Linker to be configurated by &lt;configure&gt; tag. Once opened this tag, all object's properties can be configurated putting all needed property tags inside &lt;configure&gt;. See \ref xmlformat_2 for examples.
 
-Annidated in this tag, put all property tags that you need to configure the object for fitting your needs. That's all. You find examples in \ref xmlformat_2 .
+Annidated to &lt;configure&gt;, &lt;cluster&gt; and &lt;linker&gt; tags can be placed a special reserved tag: &lt;randomize&gt;. It take two mandatory attribute 'min' and 'max' that specifies the range of random number generator. The randomize tag will sets all object's parameters that is being configurated to random values within range [min,max].
+
+\par Tip-off
+Compiling NNFW with GSL enabled allow to get more truly random number generation.
 
 \ref xmlformat_toc "[Up]"
 
