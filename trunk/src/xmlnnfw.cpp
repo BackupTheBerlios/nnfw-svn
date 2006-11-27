@@ -488,88 +488,104 @@ BaseNeuralNet* loadXML( const char* filename ) {
     return net;
 }
 
-void saveProperties( QDomDocument doc, QDomElement parent, Propertized* obj, QStringList skip = QStringList() ) {
+void saveProperties( QDomDocument doc, QDomElement parent, Propertized* obj, QStringList skip );
+
+QDomNode createPropertyFragment( Variant v, QDomDocument doc, QDomElement elem ) {
+    QDomNode sub;
+    QString complex; // --- used for create string representation of RealVec and RealMat
+    switch( v.type() ) {
+    case Variant::t_null:
+        break;
+    case Variant::t_real:
+        sub = doc.createTextNode( QString(" %1 ").arg( v.getReal() ) );
+        break;
+    case Variant::t_int:
+        sub = doc.createTextNode( QString(" %1 ").arg( v.getInt() ) );
+        break;
+    case Variant::t_uint:
+        sub = doc.createTextNode( QString(" %1 ").arg( v.getUInt() ) );
+        break;
+    case Variant::t_char:
+        sub = doc.createTextNode( QString(" %1 ").arg( v.getChar() ) );
+        break;
+    case Variant::t_uchar:
+        sub = doc.createTextNode( QString(" %1 ").arg( v.getUChar() ) );
+        break;
+    case Variant::t_bool:
+        if ( v.getBool() ) {
+            sub = doc.createTextNode( " true " );
+        } else {
+            sub = doc.createTextNode( " false " );
+        }
+        break;
+    case Variant::t_string:
+        sub = doc.createTextNode( QString(" %1 ").arg( v.getString() ) );
+        break;
+    case Variant::t_realvec:
+        const RealVec* rv = v.getRealVec();
+        for( u_int i=0; i<rv->size(); i++ ) {
+            complex.append( QString(" %1").arg( rv->at(i) ) );
+        }
+        complex.append( " " );
+        sub = doc.createTextNode( complex );
+        break;
+    case Variant::t_realmat:
+        const RealMat* mv = v.getRealMat();
+        for( u_int r=0; r<mv->rows(); r++ ) {
+            for( u_int c=0; c<mv->cols(); c++ ) {
+                complex.append( QString(" %1").arg( mv->at( r, c ) ) );
+            }
+            complex.append( " " );
+            //complex.append( "\n" );
+        }
+        sub = doc.createTextNode( complex );
+        break;
+    case Variant::t_outfunction:
+        elem.setAttribute( "type", v.getOutputFunction()->getTypename().getString() );
+        saveProperties( doc, elem, v.getOutputFunction(), QStringList() << "typename" );
+        break;
+    case Variant::t_cluster:
+        nnfwMessage( NNFW_ERROR, "Saving a property of type Cluster is not handled" );
+        break;
+    case Variant::t_linker:
+        nnfwMessage( NNFW_ERROR, "Saving a property of type Linker is not handled" );
+        break;
+    case Variant::t_propertized:
+        elem.setAttribute( "type", v.getPropertized()->getTypename().getString() );
+        saveProperties( doc, elem, v.getPropertized(), QStringList() << "typename" );
+        break;
+    }
+    return sub;
+}
+
+void saveProperties( QDomDocument doc, QDomElement parent, Propertized* obj, QStringList skip ) {
     PropertyAccessVec& pvec = obj->properties();
     for( u_int i=0; i<pvec.size(); i++ ) {
         AbstractPropertyAccess* p = pvec[i];
         if ( skip.contains( QString( p->name() ) ) ) {
             continue;
         }
-        if ( p->isVector() ) {
-            char msg[100];
-            sprintf( msg, "Saving vector property is not yet supported; the property %s will not be saved", p->name() );
-            nnfwMessage( NNFW_ERROR, msg );
+        if ( ! p->isVector() ) {
+            QDomElement elem = doc.createElement( p->name() );
+            parent.appendChild( elem );
+            QDomNode sub = createPropertyFragment( p->get(), doc, elem );
+            if ( !sub.isNull() ) {
+                elem.appendChild( sub );
+            }
             continue;
         }
-        QDomElement elem = doc.createElement( p->name() );
-        parent.appendChild( elem );
-        QDomNode sub;
-        Variant v = p->get();
-        QString complex; // --- used for create string representation of RealVec and RealMat
-        switch( p->type() ) {
-        case Variant::t_null:
-            break;
-        case Variant::t_real:
-            sub = doc.createTextNode( QString(" %1 ").arg( v.getReal() ) );
-            break;
-        case Variant::t_int:
-            sub = doc.createTextNode( QString(" %1 ").arg( v.getInt() ) );
-            break;
-        case Variant::t_uint:
-            sub = doc.createTextNode( QString(" %1 ").arg( v.getUInt() ) );
-            break;
-        case Variant::t_char:
-            sub = doc.createTextNode( QString(" %1 ").arg( v.getChar() ) );
-            break;
-        case Variant::t_uchar:
-            sub = doc.createTextNode( QString(" %1 ").arg( v.getUChar() ) );
-            break;
-        case Variant::t_bool:
-            if ( v.getBool() ) {
-                sub = doc.createTextNode( " true " );
-            } else {
-                sub = doc.createTextNode( " false " );
+        // --- Vector property
+        int id = 0;
+        Variant v;
+        while( !(v = p->get(id)).isNull() ) {
+            QDomElement elem = doc.createElement( p->name() );
+            elem.setAttribute( "i", QString("%1").arg(id) );
+            parent.appendChild( elem );
+            QDomNode sub = createPropertyFragment( v, doc, elem );
+            if ( !sub.isNull() ) {
+                elem.appendChild( sub );
             }
-            break;
-        case Variant::t_string:
-            sub = doc.createTextNode( QString(" %1 ").arg( v.getString() ) );
-            break;
-        case Variant::t_realvec:
-            const RealVec* rv = v.getRealVec();
-            for( u_int i=0; i<rv->size(); i++ ) {
-                complex.append( QString(" %1").arg( rv->at(i) ) );
-            }
-            complex.append( " " );
-            sub = doc.createTextNode( complex );
-            break;
-        case Variant::t_realmat:
-            const RealMat* mv = v.getRealMat();
-            for( u_int r=0; r<mv->rows(); r++ ) {
-                for( u_int c=0; c<mv->cols(); c++ ) {
-                    complex.append( QString(" %1").arg( mv->at( r, c ) ) );
-                }
-                complex.append( " " );
-                //complex.append( "\n" );
-            }
-            sub = doc.createTextNode( complex );
-            break;
-        case Variant::t_outfunction:
-            elem.setAttribute( "type", v.getOutputFunction()->getTypename().getString() );
-            saveProperties( doc, elem, v.getOutputFunction(), QStringList() << "typename" );
-            break;
-        case Variant::t_cluster:
-            nnfwMessage( NNFW_ERROR, "Saving a property of type Cluster is not handled" );
-            break;
-        case Variant::t_linker:
-            nnfwMessage( NNFW_ERROR, "Saving a property of type Linker is not handled" );
-            break;
-        case Variant::t_propertized:
-            elem.setAttribute( "type", v.getPropertized()->getTypename().getString() );
-            saveProperties( doc, elem, v.getPropertized(), QStringList() << "typename" );
-            break;
-        }
-        if ( !sub.isNull() ) {
-            elem.appendChild( sub );
+            id++;
         }
     }
 }

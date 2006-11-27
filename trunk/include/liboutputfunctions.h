@@ -32,7 +32,6 @@
  *        first truncate the input in a range [mix,max] and the apply the Sigmoid: Sigmoid( Linear( x ) )
  *  \todo ComboLinearFunction, a subclass of OutputFunction that constructs a linear combination of OutputFunctions:
  *        example: 4*Sigmoid(x)+2*Linear(x)
- *  \todo PoolFunction has no property because the VectorData\<OutputFunction*\> is not supported by Variant class
  */
 
 #include "outputfunction.h"
@@ -44,6 +43,12 @@ namespace nnfw {
 /*! \brief IdentityFunction
  *
  * IdentityFunction copyies the inputs to the outputs
+ *
+ *   <table class="proptable">
+ *   <tr><td class="prophead" colspan="5">Properties</td></tr>
+ *   <tr><th>Name</th> <th>Type [isVector]</th> <th>Access mode</th> <th>Description</th> <th>Class</th></tr>
+ *   <tr><td>typename</td> <td>string</td> <td>read-only</td> <td> Class's type </td> <td>Propertized</td> </tr>
+ *   </table>
  */
 class  IdentityFunction : public DerivableOutputFunction {
 public:
@@ -79,6 +84,13 @@ public:
 /*! \brief Sigmoid Function
  *
  * Details..
+ *
+ *   <table class="proptable">
+ *   <tr><td class="prophead" colspan="5">Properties</td></tr>
+ *   <tr><th>Name</th> <th>Type [isVector]</th> <th>Access mode</th> <th>Description</th> <th>Class</th></tr>
+ *   <tr><td>typename</td> <td>string</td> <td>read-only</td> <td> Class's type </td> <td>Propertized</td> </tr>
+ *   <tr><td>lambda</td> <td>Real</td> <td>read/write</td> <td> function's slope </td> <td>this</td> </tr>
+ *   </table>
  */
 class  SigmoidFunction : public DerivableOutputFunction {
 public:
@@ -128,6 +140,13 @@ public:
 /*! \brief Fake Sigmoid Function !! Is a linear approximation of sigmoid function
  *
  * Details..
+ *
+ *   <table class="proptable">
+ *   <tr><td class="prophead" colspan="5">Properties</td></tr>
+ *   <tr><th>Name</th> <th>Type [isVector]</th> <th>Access mode</th> <th>Description</th> <th>Class</th></tr>
+ *   <tr><td>typename</td> <td>string</td> <td>read-only</td> <td> Class's type </td> <td>Propertized</td> </tr>
+ *   <tr><td>lambda</td> <td>Real</td> <td>read/write</td> <td> function's slope </td> <td>this</td> </tr>
+ *   </table>
  */
 class  FakeSigmoidFunction : public DerivableOutputFunction {
 public:
@@ -181,6 +200,14 @@ public:
  * max is the y value when x -> +infinite <br>
  * (max-min) is the y value when x == 0
  *
+ *   <table class="proptable">
+ *   <tr><td class="prophead" colspan="5">Properties</td></tr>
+ *   <tr><th>Name</th> <th>Type [isVector]</th> <th>Access mode</th> <th>Description</th> <th>Class</th></tr>
+ *   <tr><td>typename</td> <td>string</td> <td>read-only</td> <td> Class's type </td> <td>Propertized</td> </tr>
+ *   <tr><td>lambda</td> <td>Real</td> <td>read/write</td> <td> function's slope </td> <td>this</td> </tr>
+ *   <tr><td>min</td> <td>Real</td> <td>read/write</td> <td> function's minimun value </td> <td>this</td> </tr>
+ *   <tr><td>max</td> <td>Real</td> <td>read/write</td> <td> function's maximun value </td> <td>this</td> </tr>
+ *   </table>
  */
 class  ScaledSigmoidFunction : public DerivableOutputFunction {
 public:
@@ -258,6 +285,16 @@ public:
  *           minX   maxX
  * </pre>
  * Further Details coming soon ;-)
+ *
+ *   <table class="proptable">
+ *   <tr><td class="prophead" colspan="5">Properties</td></tr>
+ *   <tr><th>Name</th> <th>Type [isVector]</th> <th>Access mode</th> <th>Description</th> <th>Class</th></tr>
+ *   <tr><td>typename</td> <td>string</td> <td>read-only</td> <td> Class's type </td> <td>Propertized</td> </tr>
+ *   <tr><td>minX</td> <td>Real</td> <td>read/write</td> <td> function's X minimun value </td> <td>this</td> </tr>
+ *   <tr><td>maxX</td> <td>Real</td> <td>read/write</td> <td> function's X maximun value </td> <td>this</td> </tr>
+ *   <tr><td>minY</td> <td>Real</td> <td>read/write</td> <td> function's Y minimun value </td> <td>this</td> </tr>
+ *   <tr><td>maxY</td> <td>Real</td> <td>read/write</td> <td> function's Y maximun value </td> <td>this</td> </tr>
+ *   </table>
  */
 class  LinearFunction : public DerivableOutputFunction {
 public:
@@ -337,6 +374,15 @@ public:
 /*! \brief Step Function
  *
  * Further Details coming soon ;-)
+ *
+ *   <table class="proptable">
+ *   <tr><td class="prophead" colspan="5">Properties</td></tr>
+ *   <tr><th>Name</th> <th>Type [isVector]</th> <th>Access mode</th> <th>Description</th> <th>Class</th></tr>
+ *   <tr><td>typename</td> <td>string</td> <td>read-only</td> <td> Class's type </td> <td>Propertized</td> </tr>
+ *   <tr><td>min</td> <td>Real</td> <td>read/write</td> <td> function's minimun value </td> <td>this</td> </tr>
+ *   <tr><td>max</td> <td>Real</td> <td>read/write</td> <td> function's maximun value </td> <td>this</td> </tr>
+ *   <tr><td>threshold</td> <td>Real</td> <td>read/write</td> <td> X position of step</td> <td>this</td> </tr>
+ *   </table>
  */
 class  StepFunction : public DerivableOutputFunction {
 public:
@@ -408,6 +454,14 @@ public:
  *  Further Details coming soon ;-)
  *  \par Warnings
  *  The dimension of PoolFunction must be at least one.
+ *
+ *   <table class="proptable">
+ *   <tr><td class="prophead" colspan="5">Properties</td></tr>
+ *   <tr><th>Name</th> <th>Type [isVector]</th> <th>Access mode</th> <th>Description</th> <th>Class</th></tr>
+ *   <tr><td>typename</td> <td>string</td> <td>read-only</td> <td> Class's type </td> <td>Propertized</td> </tr>
+ *   <tr><td>size</td> <td>unsigned int</td> <td>read-only</td> <td>this's dimesion </td> <td>this</td> </tr>
+ *   <tr><td>functions</td> <td>OutputFunction [V]</td> <td>read/write</td> <td>OutputFunction vector</td> <td>this</td> </tr>
+ *   </table>
  */
 class  PoolFunction : public OutputFunction {
 public:

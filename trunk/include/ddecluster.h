@@ -20,10 +20,12 @@
 #ifndef DDECLUSTER_H
 #define DDECLUSTER_H
 
+/*! \file
+ */
+
 #include "types.h"
 #include "cluster.h"
 #include "outputfunction.h"
-
 
 namespace nnfw {
 
@@ -38,48 +40,58 @@ namespace nnfw {
  *    ottenendo: <br>
  *    y(t) <- (delta)*f(x) + (1.0-delta)*y(t-1)
  *  \par Warnings
+ *
+ *   <table class="proptable">
+ *   <tr><td class="prophead" colspan="5">Properties</td></tr>
+ *   <tr><th>Name</th> <th>Type [isVector]</th> <th>Access mode</th> <th>Description</th> <th>Class</th></tr>
+ *   <tr><td>typename</td> <td>string</td> <td>read-only</td> <td> Class's type </td> <td>Propertized</td> </tr>
+ *   <tr><td>name</td> <td>string</td> <td>read/write</td> <td> name of the object </td> <td>Updatable</td> </tr>
+ *   <tr><td>accumulate</td> <td>boolean</td> <td>read/write</td> <td> if inputs are accumulated </td> <td>Cluster</td> </tr>
+ *   <tr><td>inputs</td> <td>RealVec</td> <td>read/write</td> <td> neuron's input </td> <td>Cluster</td> </tr>
+ *   <tr><td>outfunction</td> <td>OutputFunction</td> <td>read/write</td> <td> neuron's output function </td> <td>Cluster</td> </tr>
+ *   <tr><td>outputs</td> <td>RealVec</td> <td>read/write</td> <td> neuron's output </td> <td>Cluster</td> </tr>
+ *   <tr><td>size</td> <td>unsigned int</td> <td>read-only</td> <td> number of neurons </td> <td>Cluster</td> </tr>
+ *   <tr><td>coeff</td> <td>RealVec</td> <td>read/write</td> <td> equation's coefficients </td> <td>this</td> </tr>
+ *   </table>
  */
 class  DDECluster : public Cluster {
 public:
 
-    /*! \brief Construct a DDECluster setting coefficients as specified
-     *  Details...
+    /*! Construct a DDECluster setting coefficients as specified
      */
     DDECluster( const RealVec& coeff, u_int numNeurons, const char* name = "unnamed" );
 
-    /*! \brief Construct by PropertySettings
+    /*! Construct by PropertySettings
      */
     DDECluster( PropertySettings& prop );
 
-    /*! \brief Destructor
-     * Details..
+    /*! Destructor
      */
     virtual ~DDECluster();
 
-    /*! \brief Set the coeffiecients
+    /*! Set the coeffiecients
      */
     void setCoeff( const RealVec& coef );
 
-    /*! \brief Return coeffiecients
+    /*! Return coeffiecients
      */
     const RealVec& getCoeff() {
         return coeff;
     };
 
-    /*! \brief Set Coefficeients (Variant version)
+    /*! Set Coefficeients (Variant version)
      */
     bool setCoeff( const Variant& );
 
-    /*! \brief Return coeffiecients (Variant version)
+    /*! Return coeffiecients (Variant version)
      */
     Variant getCoeffP();
 
-    /*! \brief Update the outputs of neurons
-     * Details
+    /*! Update the outputs of neurons
      */
     void update();
 
-    /*! \brief Randomize Nothing ;-)
+    /*! Randomize Nothing ;-)
      */
     void randomize( Real, Real ) { /* Nothing To Do */ };
 

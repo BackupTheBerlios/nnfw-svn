@@ -24,9 +24,12 @@
 #include "fakecluster.h"
 #include "matrixlinker.h"
 #include "sparsematrixlinker.h"
+#include "dotlinker.h"
+#include "normlinker.h"
 #include "copylinker.h"
 #include "outputfunction.h"
 #include "liboutputfunctions.h"
+#include "libradialfunctions.h"
 
 namespace nnfw {
 
@@ -115,6 +118,8 @@ void Factory::initFactory() {
     linkertypes["MatrixLinker"] = new Creator<MatrixLinker>();
     linkertypes["SparseMatrixLinker"] = new Creator<SparseMatrixLinker>();
     linkertypes["CopyLinker"] = new Creator<CopyLinker>();
+    linkertypes["DotLinker"] = new Creator<DotLinker>();
+    linkertypes["NormLinker"] = new Creator<NormLinker>();
 
     outfuntypes["FakeSigmoidFunction"] = new Creator<FakeSigmoidFunction>();
     outfuntypes["IdentityFunction"] = new Creator<IdentityFunction>();
@@ -123,6 +128,7 @@ void Factory::initFactory() {
     outfuntypes["SigmoidFunction"] = new Creator<SigmoidFunction>();
     outfuntypes["StepFunction"] = new Creator<StepFunction>();
     outfuntypes["PoolFunction"] = new Creator<PoolFunction>();
+    outfuntypes["GaussFunction"] = new Creator<GaussFunction>();
 
     isInit = true;
 }

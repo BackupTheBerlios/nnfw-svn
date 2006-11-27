@@ -20,14 +20,17 @@
 #ifndef SPARSEMATRIXLINKER_H
 #define SPARSEMATRIXLINKER_H
 
+/*! \file
+ */
+
 #include "types.h"
 #include "linker.h"
 #include "matrixlinker.h"
 
-
 namespace nnfw {
 
 /*! \brief SparseMatrixLinker Class extend MatrixLinker for allow non-full connection between Clusters
+ *
  * Every connection is weighted, and the weight is memorized into a weight-matrix
  * Details ...
  */
@@ -36,28 +39,26 @@ public:
     /*! \name Constructors */
     //@{
 
-    /*! \brief Connect clusters with complete connections
-     * Details
+    /*!  Connect clusters with complete connections
      */
     SparseMatrixLinker( Cluster* from, Cluster* to, const char* name = "unnamed" );
 
-    /*! \brief Connect neurons of Clusters with a random connections with the passed probability.
-	 * Details
+    /*!  Connect neurons of Clusters with a random connections with the passed probability.
      */
 	SparseMatrixLinker( Real prob, Cluster* from, Cluster* to, const char* name = "unnamed" );
 
-    /*! \brief Connect neurons of Clusters with a random connections with the passed probability.
-	 * With this contructor you must also specify whether the diagonal of the matrix is made of zeros and whether the matrix is symmetrical
-     * ATTENTION: You can use this constructor only with square matrices, otherwise it will generate a memory error!!!
+    /*! Connect neurons of Clusters with a random connections with the passed probability.<br>
+	 * With this contructor you must also specify whether the diagonal of the matrix is made of zeros
+     * and whether the matrix is symmetrical
+     * \warning You can use this constructor only with square matrices, otherwise it will generate a memory error!!!
 	 */
 	SparseMatrixLinker( Cluster* from, Cluster* to, Real prob, bool zeroDiagonal = false, bool symmetricMask = false, const char* name = "unnamed" );
 
-    /*! \brief Construct by PropertySettings
+    /*!  Construct by PropertySettings
      */
     SparseMatrixLinker( PropertySettings& prop );
 
-    /*! \brief Destructor
-     * Details
+    /*!  Destructor
      */
     virtual ~SparseMatrixLinker();
 
@@ -65,33 +66,31 @@ public:
     /*! \name Interface */
     //@{
 
-    /*! \brief Set the weight of the connection specified
-     * Details
+    /*!  Set the weight of the connection specified
      */
     virtual void setWeight( u_int from, u_int to, Real weight );
 
-    /*! \brief Randomize the weights of the SparseMatrixLinker
-     * Details
+    /*!  Randomize the weights of the SparseMatrixLinker
      */
     virtual void randomize( Real min, Real max );
 
-    /*! \brief Connect two neurons
+    /*!  Connect two neurons
      */
     void connect( u_int from, u_int to );
 
-    /*! \brief Connect all couples of neurons
+    /*!  Connect all couples of neurons
      */
     void connectAll();
 
-    /*! \brief Disconnect the two neurons
+    /*!  Disconnect the two neurons
      */
     void disconnect( u_int from, u_int to );
 
-    /*! \brief Disconnect connections randomly according to the given probability
+    /*!  Disconnect connections randomly according to the given probability
      */
     void disconnect( Real prob );
 
-    /*! \brief Get the mask
+    /*!  Get the mask
      */
     MatrixData<bool>& getMask() {
 		return mask;

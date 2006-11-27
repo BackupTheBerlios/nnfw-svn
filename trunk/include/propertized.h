@@ -30,8 +30,6 @@
  *
  *  \todo Variant doesn't support a generic vector of data, i.e. VectorData\<Variant\> or VectorData\<Propertized*\>
  *
- *  \todo Now, it's not possibile to know the size of a Vector property from AbstractPropertyAccess;
- *       this limits the accessibility of these kind of properties
  */
 
 
@@ -363,10 +361,11 @@ typedef std::map< std::string, Variant > PropertySettings;
  *  by methods set/getProperty.
  *  \par Description
  *  \par Warnings
- *  \par Properties
- *   <table>
- *   <tr><th>Name</th> <th>Type</th> <th>Access mode</th> <th>Description</th></tr>
- *   <tr><td>typename</td> <td>String</td> <td>read-only</td> <td> name of the class </td> </tr>
+ *
+ *   <table class="proptable">
+ *   <tr><td class="prophead" colspan="5">Properties</td></tr>
+ *   <tr><th>Name</th> <th>Type [isVector]</th> <th>Access mode</th> <th>Description</th> <th>Class</th></tr>
+ *   <tr><td>typename</td> <td>string</td> <td>read-only</td> <td> Class's type </td> <td>this</td> </tr>
  *   </table>
  */
 class Propertized {

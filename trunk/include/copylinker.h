@@ -20,9 +20,11 @@
 #ifndef COPYLINKER_H
 #define COPYLINKER_H
 
+/*! \file
+ */
+
 #include "types.h"
 #include "linker.h"
-
 
 namespace nnfw {
 

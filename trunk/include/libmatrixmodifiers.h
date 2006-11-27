@@ -46,7 +46,7 @@ namespace nnfw {
  *  I called it 'basic' because it can be used also for other non-hebbian algorithms (such as the delta rule or even in back-propagation)
  *  Indeed, most of matrix modifiers will inherit from this one
  */
-	class  BasicMatrixModifier : public MatrixModifier {
+class BasicMatrixModifier : public MatrixModifier {
 public:
     //! Constructor
     BasicMatrixModifier( RealMat& matrix, RealVec& input, RealVec& output, Real lRate = 0.1 ) 

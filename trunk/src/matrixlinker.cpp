@@ -19,7 +19,6 @@
 
 #include "matrixlinker.h"
 #include "random.h"
-#include <cstdio>
 
 #ifdef NNFW_USE_MKL
 #include <mkl_cblas.h>

@@ -17,35 +17,35 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA  *
  ********************************************************************************/
 
-#ifndef CLONABLE_H
-#define CLONABLE_H
+#include "dotlinker.h"
+#include "random.h"
 
-/*! \file
- */
-
-#include "types.h"
+#ifdef NNFW_USE_MKL
+#include <mkl_cblas.h>
+#endif
 
 namespace nnfw {
 
-/*! \brief Clonable interface
- *
- *  Clonable Objects
- */
-class  Clonable {
-public:
-    /*! \name Virtual Destrucor */
-    //@{
-    //! Destructor
-    virtual ~Clonable() { /* Nothing to do */ };
-    //@}
-
-    /*! \name Interface */
-    //@{
-    //! Clone method returns a new allocated clone of this object
-    virtual Clonable* clone() const = 0;
-    //@}
-};
-
+DotLinker::DotLinker( Cluster* from, Cluster* to, const char* name )
+    : MatrixLinker(from, to, name) {
+    setTypename( "DotLinker" );
 }
 
-#endif
+DotLinker::DotLinker( PropertySettings& prop )
+    : MatrixLinker( prop ) {
+    setTypename( "DotLinker" );
+}
+
+DotLinker::~DotLinker() {
+}
+
+void DotLinker::update() {
+    // check if cluster 'To' needs a reset
+    if ( to()->needReset() ) {
+        to()->resetInputs();
+    }
+    RealMat::mul( to()->inputs(), from()->outputs(), w );
+    return;
+}
+
+}

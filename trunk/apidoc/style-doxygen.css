@@ -1,11 +1,24 @@
 body {
     background-color: white;
     background: url(../img/sfondo2.jpg);
-    font: 10px "Helvetica", "Tahoma", "Verdana", sans-serif;
+    font: 11px "Helvetica", "Tahoma", "Verdana", sans-serif;
 }
 
-p, span, caption, td, th, ul, dl, div {
-    font: 10px "Helvetica", "Tahoma", "Verdana", sans-serif;
+p, span, caption, td, th, ul, li, dl, div {
+    font: 11px "Helvetica", "Tahoma", "Verdana", sans-serif;
+}
+
+p {
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+
+li {
+    list-style-image: url(../img/bullet.gif);
+}
+
+br {
+    margin-top: -10px;
 }
 
 center {
@@ -29,6 +42,7 @@ h2 {
     padding-left: 8px;
     text-align: left;
     border-bottom: 2px solid #888;
+    margin-bottom: 0px;
 }
 
 h3,h4,h5,h6 {
@@ -42,11 +56,6 @@ h3,h4,h5,h6 {
 #head {
     background-color: white;
     margin-bottom: -6px;
-}
-
-li {
-    font-size: 12px;
-    list-style-type: square;
 }
 
 dt {
@@ -184,6 +193,36 @@ div.tabs a:hover {
 }
 /*********************************************************/
 
+/*****************************************/
+/****** Table of Properties   ***********/
+/****************************************/
+table.proptable {
+    border: none;
+    background-color: #f5f5f5;
+    border-left: 1px solid #AAA;
+    border-right: 1px solid #666;
+    border-top: 1px solid #CCC;
+    border-bottom: 1px solid #000;
+    margin-top: 5px;
+}
+table.proptable th {
+    border: none;
+    font-weight: bold;
+    text-align: center;
+    border-bottom: 2px dotted #C8CED2;
+}
+table.proptable td {
+    background-color: #f5f5f5;
+    border: none;
+    text-align: center;
+}
+table.proptable td.prophead {
+    background-color: #E8EEF2;
+    text-align: center;
+    font-size: 13px;
+    font-variant: small-caps;
+}
+
 /*********************************************************/
 /****** Modified default settings of Doxygen ***********/
 /*********************************************************/
@@ -243,7 +282,10 @@ A.qindexHL:hover {
     color: #ffffff;
 }
 A.qindexHL:visited { text-decoration: none; background-color: #6666cc; color: #ffffff }
-A.el { text-decoration: none; font-weight: bold }
+A.el {
+    text-decoration: none;
+    font-weight: bold;
+}
 A.elRef { font-weight: bold }
 A.code:link { text-decoration: none; font-weight: normal; color: #0000FF}
 A.code:visited { text-decoration: none; font-weight: normal; color: #0000FF}
@@ -253,7 +295,7 @@ A:hover { text-decoration: none; background-color: #f2f2ff }
 DL.el { margin-left: -1cm }
 .fragment {
        font-family: monospace, fixed;
-       font-size: 95%;
+       font-size: 11px;
 }
 PRE.fragment {
     border: 1px solid #CCCCCC;
@@ -472,9 +514,9 @@ a:visited {
 TH.dirtab { background: #e8eef2;
             font-weight: bold;
 }
-HR { height: 1px;
-     border: none;
-     border-top: 1px solid black;
+HR {
+    height: 0px;
+    border: none;
 }
 
 /* Style for detailed member documentation */
@@ -492,28 +534,26 @@ HR { height: 1px;
   padding: 2px;
 }
 .memitem {
-  padding: 4px;
-  background-color: #eef3f5;
-  border-width: 1px;
-  border-style: solid;
-  border-color: #dedeee;
-  -moz-border-radius: 8px 8px 8px 8px;
+    margin-top: 5px;
 }
 .memname {
   white-space: nowrap;
   font-weight: bold;
 }
 .memdoc{
-  padding-left: 10px;
+    background-color: #f5f5f5;
+    border-left: 1px solid #AAA;
+    border-right: 1px solid #666;
+    border-bottom: 1px solid #000;
+    padding-left: 7px;
+    padding-top: 2px;
+    padding-bottom: 7px;
 }
 .memproto {
-  background-color: #d5e1e8;
-  width: 100%;
-  border-width: 1px;
-  border-style: solid;
-  border-color: #84b0c7;
-  font-weight: bold;
-  -moz-border-radius: 8px 8px 8px 8px;
+    background-color: #E8EEF2;
+    border-top: 1px solid #CCC;
+    border-left: 1px solid #AAA;
+    border-right: 1px solid #666;
 }
 .paramkey {
   text-align: right;

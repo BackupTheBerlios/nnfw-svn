@@ -20,8 +20,10 @@
 #ifndef MODIFIER_H
 #define MODIFIER_H
 
-#include "types.h"
+/*! \file
+ */
 
+#include "types.h"
 
 namespace nnfw {
 

@@ -20,8 +20,10 @@
 #ifndef LEARNINGALGORITHM_H
 #define LEARNINGALGORITHM_H
 
-#include "types.h"
+/*! \file
+ */
 
+#include "types.h"
 
 namespace nnfw {
 

@@ -17,63 +17,99 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA  *
  ********************************************************************************/
 
-#ifndef UPDATABLE_H
-#define UPDATABLE_H
-
-/*! \file
- */
+#ifndef LIBRADIALFUNCTIONS_H
+#define LIBRADIALFUNCTIONS_H
 
 #include "types.h"
-#include "propertized.h"
+
+/*! \file
+ *  \brief Library of Radial OutputFunction
+ *
+ */
+
+#include "outputfunction.h"
+#include "derivableoutputfunction.h"
+
 
 namespace nnfw {
 
-/*! \brief Updatables objects
- *
- *  The Updatable objects has a name.
+/*! \brief GaussFunction
  *
  *   <table class="proptable">
  *   <tr><td class="prophead" colspan="5">Properties</td></tr>
  *   <tr><th>Name</th> <th>Type [isVector]</th> <th>Access mode</th> <th>Description</th> <th>Class</th></tr>
  *   <tr><td>typename</td> <td>string</td> <td>read-only</td> <td> Class's type </td> <td>Propertized</td> </tr>
- *   <tr><td>name</td> <td>string</td> <td>read/write</td> <td> name of the object </td> <td>this</td> </tr>
+ *   <tr><td>centre</td> <td>Real</td> <td>read/write</td> <td> Gaussian centre </td> <td>this</td> </tr>
+ *   <tr><td>variance</td> <td>Real</td> <td>read/write</td> <td> Gaussian variance (sigma) </td> <td>this</td> </tr>
+ *   <tr><td>max</td> <td>Real</td> <td>read/write</td> <td>function's maximum value</td> <td>this</td> </tr>
  *   </table>
  */
-class  Updatable : public Propertized {
+class  GaussFunction : public DerivableOutputFunction {
 public:
     /*! \name Constructors */
     //@{
 
-    //! Constructor
-    Updatable( const char* name = "unnamed" );
+    //! Construct
+    GaussFunction( Real centre = 0.0, Real variance = 1.0, Real maxvaule = 1.0 );
 
-    //! Constructor with PropertySettings
-    Updatable( PropertySettings& prop );
+    //! Construct
+    GaussFunction( PropertySettings& prop );
 
     //! Destructor
-    virtual ~Updatable();
+    virtual ~GaussFunction() { /* Nothing to do */ };
 
     //@}
     /*! \name Interface */
     //@{
 
-    //! Update the object
-    virtual void update() = 0;
-    //! Set the name of Updatable
-    void setName( const char* newname );
-    //! Set the name of Updatable (Varian version)
-    bool setName( const Variant& nv );
-    //! Return the name associated
-    const char* getName();
-    //! Return the name (version that use Variant for property)
-    Variant getNameV();
+    /*! \brief Set the centre
+     */
+    bool setCentre( const Variant& v );
+
+    /*! \brief Return the centre
+     */
+    Variant getCentre();
+
+    /*! \brief Set the Variance
+     */
+    bool setVariance( const Variant& v );
+
+    /*! \brief Return the variance
+     */
+    Variant getVariance();
+
+    /*! \brief Set the Max value
+     */
+    bool setMax( const Variant& v );
+
+    /*! \brief Return the Max
+     */
+    Variant getMax();
+
+    //! Implement the identity function
+    virtual void apply( RealVec& inputs, RealVec& outputs );
+
+    //! ???
+    virtual void derivate( const RealVec& x, const RealVec& y, RealVec& d ) const;
+
+    /*! \brief Clone this object
+     */
+    virtual GaussFunction* clone() const;
 
     //@}
+private:
 
-protected:
-    char* name;
+    // centre
+    Real centre;
+    // variance
+    Real variance;
+    // minus squared-variance
+    Real msqrvar;
+    // max value
+    Real max;
 };
 
 }
 
 #endif
+

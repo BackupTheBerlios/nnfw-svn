@@ -7,7 +7,8 @@ SET( CMAKE_COLOR_MAKEFILE ON )
 ### - double     <= use double precision for Real number
 ### - gsl        <= link against GSL library
 ### - mkl        <= link against MKL library
-### Default (empty) means that it will be compiled optimized without debug, GSL and MKL with single precision
+### - shared     <= generates a shared library
+### Default (empty) means: static, single precision, without GSL & MKL.
 SET( NNFW_CONFIG "" CACHE STRING "NNFW Configuration" )
 
 ### configure CMake to link against Qt4
@@ -17,7 +18,7 @@ INCLUDE( FindQt4 )
 INCLUDE( UseQt4 )
 
 FILE( GLOB NNFW_SRCS ./src/*.cpp )
-FILE( GLOB NNFW_HDRS ./src/*.cpp )
+FILE( GLOB NNFW_HDRS ./src/*.h )
 
 INCLUDE_DIRECTORIES( ./include )
 SET(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/lib)

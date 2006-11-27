@@ -54,7 +54,7 @@ class Updatable;
  */
 class  BaseTeachBlock {
 public:
-    /*! \brief Construct a BaseTeachBlock attached to specified BaseTeachBlocks
+    /*! Construct a BaseTeachBlock attached to specified BaseTeachBlocks
      */
     BaseTeachBlock( BaseTeachBlock* preBlock = 0, BaseTeachBlock* postBlock = 0, const char* name = "unnamed" );
     //! Destructor
@@ -104,7 +104,7 @@ protected:
  */
 class SupervisedTeachBlock : public BaseTeachBlock {
 public:
-    /*! \brief Construct a SupervisedTeachBlock attached to specified BaseTeachBlock
+    /*! Construct a SupervisedTeachBlock attached to specified BaseTeachBlock
      */
     SupervisedTeachBlock( BaseTeachBlock* preBlock = 0, BaseTeachBlock* postBlock = 0, const char* name = "unnamed" );
     //! One step of the learning method implemented by subclasses
@@ -152,7 +152,7 @@ class GradientBiasedCluster : public SupervisedTeachBlock {
 public:
     //! Construct a Gradient block attached to BiasedCluster passed
     GradientBiasedCluster( BiasedCluster* cl, BaseTeachBlock* preBlock = 0, BaseTeachBlock* postBlock = 0, const char* name = "unnamed");
-    /*! \brief Apply one step of the Gradient descent rule
+    /*! Apply one step of the Gradient descent rule<br>
      *  La regola del gradiente applicata ad un BiasedCluster consente di apprendere i valori di bias e di calcolare
      *  l'errore sull'input netto che viene passato al preBlock (se c'e' ne uno)
      */
@@ -192,7 +192,7 @@ class GradientMatrixLinker : public SupervisedTeachBlock {
 public:
     //! Construct a Gradient block attached to MatrixLinker passed
     GradientMatrixLinker( MatrixLinker* ml, BaseTeachBlock* preBlock = 0, BaseTeachBlock* postBlock = 0, const char* name = "unnamed");
-    /*! \brief Apply one step of the Gradient descent rule
+    /*! Apply one step of the Gradient descent rule<br>
      *  La regola del gradiente applicata ad un MatrixLinker consente di apprendere i valori dei pesi e di calcolare
      *  l'errore sugli output dei neuroni del Cluster in entrata; l'errore viene passato al preBlock (se c'e' ne uno)
      */

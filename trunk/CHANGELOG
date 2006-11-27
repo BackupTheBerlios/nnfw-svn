@@ -14,6 +14,17 @@ S <mave> comment goes here
     'B' : means a BugFix
     'C' : means that something has been changed (e.g. implementation of a Class or a signature method)
 ==== End of Legend ====
+
+    ==> 140 - 27/11/2006 <==
+
++ <mave> added Gaussian output function (this complete the support for RBF networks)
++ <mave> added NormLinker (perform the euclidean norm calculation)
++ <mave> added DotLinker (perform the dot-product calculation)
+B <mave> in CMakeLists.txt
++ <mave> added documentation about properties of classes
+C <mave> CSS apidoc's stylesheet changed
++ <mave> now Vector property are saved into XML files
+
     ==> 135 - 13/11/2006 <==
 
 B <mave> bugfixs in Doxygen documentation

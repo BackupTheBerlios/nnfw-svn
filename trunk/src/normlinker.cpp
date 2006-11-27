@@ -17,35 +17,43 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA  *
  ********************************************************************************/
 
-#ifndef CLONABLE_H
-#define CLONABLE_H
+#include "normlinker.h"
+#include "random.h"
+#include <cmath>
 
-/*! \file
- */
-
-#include "types.h"
+#ifdef NNFW_USE_MKL
+#include <mkl_cblas.h>
+#endif
 
 namespace nnfw {
 
-/*! \brief Clonable interface
- *
- *  Clonable Objects
- */
-class  Clonable {
-public:
-    /*! \name Virtual Destrucor */
-    //@{
-    //! Destructor
-    virtual ~Clonable() { /* Nothing to do */ };
-    //@}
-
-    /*! \name Interface */
-    //@{
-    //! Clone method returns a new allocated clone of this object
-    virtual Clonable* clone() const = 0;
-    //@}
-};
-
+NormLinker::NormLinker( Cluster* from, Cluster* to, const char* name )
+    : MatrixLinker(from, to, name), temp( to->size() ) {
+    setTypename( "NormLinker" );
 }
 
-#endif
+NormLinker::NormLinker( PropertySettings& prop )
+    : MatrixLinker( prop ), temp( to()->size() ) {
+    setTypename( "NormLinker" );
+}
+
+NormLinker::~NormLinker() {
+}
+
+void NormLinker::update() {
+    // check if cluster 'To' needs a reset
+    if ( to()->needReset() ) {
+        to()->resetInputs();
+    }
+    temp.zeroing();
+    for( u_int j=0; j<w.cols(); j++ ) {
+        for( u_int i=0; i<w.rows(); i++ ) {
+            temp[j] += (from()->outputs()[i] - w[i][j]) * (from()->outputs()[i] - w[i][j]);
+        }
+        temp[j] = std::sqrt( temp[j] );
+    }
+    to()->inputs() += temp;
+    return;
+}
+
+}

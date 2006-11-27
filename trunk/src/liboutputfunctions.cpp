@@ -488,7 +488,11 @@ void PoolFunction::setOutputFunction( u_int i, const OutputFunction& prototype )
 }
 
 Variant PoolFunction::getOutputFunctionV( u_int i ) {
-    return Variant( ups[i] );
+    if ( i < ups.size() ) {
+        return Variant( ups[i] );
+    } else {
+        return Variant();
+    }
 }
 
 bool PoolFunction::setOutputFunction( u_int i, const Variant& v ) {

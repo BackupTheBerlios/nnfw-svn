@@ -28,10 +28,9 @@
 #include "updatable.h"
 #include "outputfunction.h"
 
-
 namespace nnfw {
 
-/*! \brief Abstract Cluster Class. This define the common interface among Clusters
+/*! \brief Define the common interface among Clusters
  *
  *  \par Motivation
  *    The Cluster class define the common interface amog Cluster. The subclasses may extends this interface
@@ -68,18 +67,28 @@ namespace nnfw {
  *    on all inputs of a Cluster (as MatrixLinker do), then its more efficient that it takes the array returned
  *    by inputs (or outputs) and works over them.
  * \nosubgrouping
+ *
+ *   <table class="proptable">
+ *   <tr><td class="prophead" colspan="5">Properties</td></tr>
+ *   <tr><th>Name</th> <th>Type [isVector]</th> <th>Access mode</th> <th>Description</th> <th>Class</th></tr>
+ *   <tr><td>typename</td> <td>string</td> <td>read-only</td> <td> Class's type </td> <td>Propertized</td> </tr>
+ *   <tr><td>name</td> <td>string</td> <td>read/write</td> <td> name of the object </td> <td>Updatable</td> </tr>
+ *   <tr><td>accumulate</td> <td>boolean</td> <td>read/write</td> <td> if inputs are accumulated </td> <td>this</td> </tr>
+ *   <tr><td>inputs</td> <td>RealVec</td> <td>read/write</td> <td> neuron's input </td> <td>this</td> </tr>
+ *   <tr><td>outfunction</td> <td>OutputFunction</td> <td>read/write</td> <td> neuron's output function </td> <td>this</td> </tr>
+ *   <tr><td>outputs</td> <td>RealVec</td> <td>read/write</td> <td> neuron's output </td> <td>this</td> </tr>
+ *   <tr><td>size</td> <td>unsigned int</td> <td>read-only</td> <td> number of neurons </td> <td>this</td> </tr>
+ *   </table>
+ *
  */
 class  Cluster : public Updatable {
 public:
     /*! \name Constructors */
     //@{
-
     //! Construct a Cluster
     Cluster( u_int numNeurons, const char* name = "unnamed" );
-
     //! Construct a Cluster with PropertySettings
     Cluster( PropertySettings& prop );
-
     //! Destructor
     virtual ~Cluster();
 
@@ -87,51 +96,50 @@ public:
     /*! \name Methods affecting whole Cluster */
     //@{
 
-    /*! \brief Return the number of neurons (the length of input and output arrays)
-     * Details...
+    /*! Return the number of neurons (the length of input and output arrays)
      */
     u_int size() const {
         return numNeurons;
     };
 
-    /*! \brief Return true if inputs needs a reset
+    /*! Return true if inputs needs a reset
      */
     bool needReset() {
         return needRst;
     };
 
-    /*! \brief Enable/Disable accumulation mode
-     *  if accumulation is enabled (true) then linkers attached to this Cluster will never resetInput and accumulates data,
+    /*! Enable/Disable accumulation mode<br>
+     *  If accumulation is enabled (true) then linkers attached to this Cluster will never resetInput and accumulates data,
      *  otherwise the inputs will be resetted at each step of neural network
      */
     void accumulate( bool mode ) {
         accOff = !mode;
     };
 
-    /*! \brief return true if the Cluster will accumulates inputs
+    /*! return true if the Cluster will accumulates inputs
      */
     bool isAccumulate() {
         return !accOff;
     };
 
-    /*! \brief Randomize the parameters of the Cluster
-     * The parameters randomized by this method will be specified by sub-classes
+    /*! Randomize the parameters of the Cluster<br>
+     *  The parameters randomized by this method will be specified by sub-classes
      */
     virtual void randomize( Real min, Real max ) = 0;
 
-    /*! \brief Read Access to property 'size'
+    /*! Read Access to property 'size'
      */
     Variant sizeP() {
         return Variant( size() );
     };
 
-    /*! \brief Read Access to property 'accumulate'
+    /*! Read Access to property 'accumulate'
      */
     Variant accumP() {
         return Variant( isAccumulate() );
     };
 
-    /*! \brief Write Access to property 'accumulate'
+    /*! Write Access to property 'accumulate'
      */
     bool setAccumP( const Variant& b ) {
         accumulate( b.getBool() );
@@ -142,31 +150,30 @@ public:
     /*! \name Operations on Input's vector */
     //@{
 
-    /*! \brief Set the input of neuron
+    /*! Set the input of neuron
      * Details...
      */
     virtual void setInput( u_int neuron, Real value );
 
-    /*! \brief Set the inputs from the vector given
+    /*! Set the inputs from the vector given
      */
     virtual void setInputs( const RealVec& inputs );
 
-    /*! \brief Set all the inputs with the same value
+    /*! Set all the inputs with the same value
      * Details...
      */
     virtual void setAllInputs( Real value );
 
-    /*! \brief Reset the inputs of this cluster, typically this means that the inputs will be set to zero.
+    /*! Reset the inputs of this cluster, typically this means that the inputs will be set to zero.
      * Details...
      */
     virtual void resetInputs();
 
-    /*! \brief Get the input of neuron
-     * Details...
+    /*! Get the input of neuron
      */
     virtual Real getInput( u_int neuron ) const;
 
-    /*! \brief Get the array of inputs
+    /*! Get the array of inputs<br>
      *  Return the array of inputs, not a copy of inputs; Then you can change inputs by the pointer returned !!!
      */
     RealVec& inputs() {
@@ -188,22 +195,19 @@ public:
     /*! \name Operations on Output's vector */
     //@{
 
-    /*! \brief Force the output of the neuron at value specified
-     * Details...
+    /*! Force the output of the neuron at value specified
      */
     virtual void setOutput( u_int neuron, Real value );
 
-    /*! \brief Set the outputs from the vector given
+    /*! Set the outputs from the vector given
      */
     virtual void setOutputs( const RealVec& outputs );
 
-    /*! \brief Get the output of neuron
-     * Details...
+    /*! Get the output of neuron
      */
     virtual Real getOutput( u_int neuron ) const;
 
-    /*! \brief Get the array of outputs
-     *
+    /*! Get the array of outputs<br>
      *  Return the array of outputs, not a copy of outputs; Then you can change outputs by the pointer returned !!!
      */
     RealVec& outputs() {
@@ -225,14 +229,13 @@ public:
     /*! \name Operations on OutputFunction */
     //@{
 
-    /*! \brief Set the output function for all neurons contained
-     *
+    /*! Set the output function for all neurons contained<br>
      *  This method create an internal copy of the OutputFunction passed <br>
-     *  ATTENTION: This function delete the previous updater class registered !!! <br>
+     *  \warning This function delete the previous updater class registered !!! <br>
      */
     void setFunction( const OutputFunction& up );
 
-    /*! \brief Get the Output function
+    /*! Get the Output function
      */
     OutputFunction* const getFunction() {
         return updater;
@@ -252,7 +255,7 @@ public:
     //@}
 
 protected:
-    /*! \brief Set the state of 'needReset'
+    /*! Set the state of 'needReset'<br>
      *  Used by subclassed into update implementation
      */
     void setNeedReset( bool b ) {

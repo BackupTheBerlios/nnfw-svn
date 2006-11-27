@@ -20,35 +20,53 @@
 #ifndef MATRIXLINKER_H
 #define MATRIXLINKER_H
 
+/*! \file
+ */
+
 #include "types.h"
 #include "linker.h"
 
-
 namespace nnfw {
 
-/*! \brief MatrixLinker Class define a full connection from a group of clusters to one cluster.
+/*! \brief MatrixLinker Class define a full connection between two cluster.
  *
- * Every connection is weighted, and the weight is memorized into a weight-matrix
- * Details ...
+ * \par Motivation
+ * This class rapresent a full-connection between neuron's 'from' Cluster and neuron's 'to' Cluster.
+ * The connections has a weight and are stored in a matrix which the rows are the neuron's 'from' and
+ * the columns the neuron's 'to'. <br>
+ *
+ * \par Description
+ * Every connection is weighted, and the weight is memorized into a weight-matrix. <br>
+ * The effective computation of inputs' 'to' is done in the subclasses (DotLinker, NormLinker, etc).
+ *
+ * \par Warning
+ * From 0.7.0 release the update method will become pure-virtual.
+ *
+ *   <table class="proptable">
+ *   <tr><td class="prophead" colspan="5">Properties</td></tr>
+ *   <tr><th>Name</th> <th>Type [isVector]</th> <th>Access mode</th> <th>Description</th> <th>Class</th></tr>
+ *   <tr><td>typename</td> <td>string</td> <td>read-only</td> <td> Class's type </td> <td>Propertized</td> </tr>
+ *   <tr><td>name</td> <td>string</td> <td>read/write</td> <td> name of the object </td> <td>Updatable</td> </tr>
+ *   <tr><td>from</td> <td>Cluster</td> <td>read-only</td> <td> incoming Cluster </td> <td>Linker</td> </tr>
+ *   <tr><td>to</td> <td>Cluster</td> <td>read-only</td> <td> outgoing Cluster </td> <td>Linker</td> </tr>
+ *   <tr><td>weights</td> <td>RealMat</td> <td>read/write</td> <td> connections' weights </td> <td>this</td> </tr>
+ *   </table>
+ *
  */
 class  MatrixLinker : public Linker {
 public:
     /*! \name Constructors */
     //@{
 
-    /*! \brief Connect clusters with a complete connections
-     *
-     * Details
+    /*!  Connect clusters with a complete connections
      */
     MatrixLinker( Cluster* from, Cluster* to, const char* name = "unnamed" );
 
-    /*! \brief Construct by PropertySettings
+    /*!  Construct by PropertySettings
      */
     MatrixLinker( PropertySettings& prop );
 
-    /*! \brief Destructor
-     *
-     * Details
+    /*!  Destructor
      */
     virtual ~MatrixLinker();
 
@@ -56,63 +74,53 @@ public:
     /*! \name Interface */
     //@{
 
-    /*! \brief Get the number of rows
-     *
-     * Details...
+    /*!  Get the number of rows
      */
     u_int getRows();
 
-    /*! \brief Get the number of cols
-     *
-     * Details...
+    /*!  Get the number of cols
      */
     u_int getCols();
 
-    /*! \brief Returns the total number of the links: rows*cols
-     *
-     * Details...
+    /*!  Returns the total number of the links: rows*cols
      */
     u_int size();
 
-    /*! \brief Randomize the weights of the MatrixLinker
-     * Details
+    /*!  Randomize the weights of the MatrixLinker
      */
     virtual void randomize( Real min, Real max );
 
-    /*! \brief Set the weight of the connection specified
-     * Details
+    /*!  Set the weight of the connection specified
      */
     virtual void setWeight( u_int from, u_int to, Real weight );
 
-    /*! \brief Get the weight of the connection specified
-     * Details
+    /*!  Get the weight of the connection specified
      */
     virtual Real getWeight( u_int from, u_int to );
 
-    /*! \brief Return the weight matrix
-     *
-     * Details
+    /*!  Return the weight matrix
      */
 	RealMat& matrix() {
 		return w;
 	}
 
-    /*! \brief Return the weight matrix (Variant ver)
+    /*!  Return the weight matrix (Variant ver)
      */
     Variant matrixP() {
         return Variant( &w );
     };
 
-    /*! \brief Set the whole weight matrix
+    /*!  Set the whole weight matrix
      */
     void setMatrix( const RealMat& mat );
 
-    /*! \brief Set the whole weight matrix (Variant ver)
+    /*!  Set the whole weight matrix (Variant ver)
      */
     bool setMatrix( const Variant& v );
 
-    /*! \brief Update the Linker
-     * Details...
+    /*!  Update the Linker
+     *
+     *   \deprecated this method will become pure-virtual by 0.7.x releases
      */
     void update();
 

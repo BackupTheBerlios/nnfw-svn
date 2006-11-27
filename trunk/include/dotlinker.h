@@ -17,32 +17,54 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA  *
  ********************************************************************************/
 
-#ifndef CLONABLE_H
-#define CLONABLE_H
+#ifndef DOTLINKER_H
+#define DOTLINKER_H
 
 /*! \file
  */
 
 #include "types.h"
+#include "matrixlinker.h"
 
 namespace nnfw {
 
-/*! \brief Clonable interface
+/*! \brief DotLinker Class
  *
- *  Clonable Objects
+ *   <table class="proptable">
+ *   <tr><td class="prophead" colspan="5">Properties</td></tr>
+ *   <tr><th>Name</th> <th>Type [isVector]</th> <th>Access mode</th> <th>Description</th> <th>Class</th></tr>
+ *   <tr><td>typename</td> <td>string</td> <td>read-only</td> <td> Class's type </td> <td>Propertized</td> </tr>
+ *   <tr><td>name</td> <td>string</td> <td>read/write</td> <td> name of the object </td> <td>Updatable</td> </tr>
+ *   <tr><td>from</td> <td>Cluster</td> <td>read-only</td> <td> incoming Cluster </td> <td>Linker</td> </tr>
+ *   <tr><td>to</td> <td>Cluster</td> <td>read-only</td> <td> outgoing Cluster </td> <td>Linker</td> </tr>
+ *   <tr><td>weights</td> <td>RealMat</td> <td>read/write</td> <td> connections' weights </td> <td>MatrixLinker</td> </tr>
+ *   </table>
  */
-class  Clonable {
+class  DotLinker : public MatrixLinker {
 public:
-    /*! \name Virtual Destrucor */
+    /*! \name Constructors */
     //@{
-    //! Destructor
-    virtual ~Clonable() { /* Nothing to do */ };
-    //@}
 
+    /*!  Connect clusters with a complete connections
+     */
+    DotLinker( Cluster* from, Cluster* to, const char* name = "unnamed" );
+
+    /*!  Construct by PropertySettings
+     */
+    DotLinker( PropertySettings& prop );
+
+    /*!  Destructor
+     */
+    virtual ~DotLinker();
+
+    //@}
     /*! \name Interface */
     //@{
-    //! Clone method returns a new allocated clone of this object
-    virtual Clonable* clone() const = 0;
+
+    /*! Performs the dot-product calculation
+     */
+    void update();
+
     //@}
 };
 

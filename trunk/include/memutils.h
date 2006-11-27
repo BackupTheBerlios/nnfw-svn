@@ -20,12 +20,14 @@
 #ifndef MEMUTILS_H
 #define MEMUTILS_H
 
-#include "types.h"
+/*! \file
+ */
 
+#include "types.h"
 
 namespace nnfw {
 
-/*! \brief template for memory copy of data
+/*!  template for memory copy of data
  */
 template<class T>
 inline void memoryCopy( T* dest, const T* src, unsigned int size ) {
@@ -34,7 +36,7 @@ inline void memoryCopy( T* dest, const T* src, unsigned int size ) {
     };
 };
 
-/*! \brief template for memory zeroing of data
+/*!  template for memory zeroing of data
  */
 template<class T>
 inline void memoryZeroing( T* data, unsigned int size ) {
@@ -43,25 +45,25 @@ inline void memoryZeroing( T* data, unsigned int size ) {
     };
 };
 
-/*! \brief specialization of memoryCopy for float data
+/*!  specialization of memoryCopy for float data
  */
 inline void memoryCopy( float* dest, const float* src, unsigned int size ) {
     memcpy( dest, src, sizeof(float)*size );
 };
 
-/*! \brief specialization of memoryZeroing for float data
+/*!  specialization of memoryZeroing for float data
  */
 inline void memoryZeroing( float* data, unsigned int size ) {
     memset( data, 0, sizeof(float)*size );
 };
 
-/*! \brief specialization of memoryCopy for double data
+/*!  specialization of memoryCopy for double data
  */
 inline void memoryCopy( double* dest, const double* src, unsigned int size ) {
     memcpy( dest, src, sizeof(double)*size );
 };
 
-/*! \brief specialization of memoryZeroing for double data
+/*!  specialization of memoryZeroing for double data
  */
 inline void memoryZeroing( double* data, unsigned int size ) {
     memset( data, 0, sizeof(double)*size );
