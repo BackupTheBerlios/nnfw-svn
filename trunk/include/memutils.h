@@ -69,6 +69,18 @@ inline void memoryZeroing( double* data, unsigned int size ) {
     memset( data, 0, sizeof(double)*size );
 };
 
+/*!  specialization of memoryCopy for bool data
+ */
+inline void memoryCopy( bool* dest, const bool* src, unsigned int size ) {
+    memcpy( dest, src, sizeof(bool)*size );
+};
+
+/*!  specialization of memoryZeroing for bool data
+ */
+inline void memoryZeroing( bool* data, unsigned int size ) {
+    memset( data, 0, sizeof(bool)*size );
+};
+
 }
 
 #endif

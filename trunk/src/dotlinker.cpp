@@ -44,7 +44,7 @@ void DotLinker::update() {
     if ( to()->needReset() ) {
         to()->resetInputs();
     }
-    RealMat::mul( to()->inputs(), from()->outputs(), w );
+    RealMat::mul( to()->inputs(), from()->outputs(), matrix() );
     return;
 }
 

@@ -78,6 +78,10 @@ public:
      */
     void connect( u_int from, u_int to );
 
+    /*!  Connects randomly according to the given probability
+     */
+    void connectRandom( Real prob );
+
     /*!  Connect all couples of neurons
      */
     void connectAll();
@@ -86,9 +90,20 @@ public:
      */
     void disconnect( u_int from, u_int to );
 
-    /*!  Disconnect connections randomly according to the given probability
+    /*!  Disconnects randomly according to the given probability
      */
-    void disconnect( Real prob );
+    void disconnectRandom( Real prob );
+
+    /*!  Disonnect all couples of neurons
+     */
+    void disconnectAll();
+
+    /*!  Disconnect connections randomly according to the given probability
+     *   \deprecated use disconnectRandom
+     */
+    void disconnect( Real prob ) {
+        disconnectRandom( prob );
+    };
 
     /*!  Get the mask
      */

@@ -75,12 +75,26 @@ public:
     //@{
 
     /*!  Get the number of rows
+     *  \deprecated
      */
     u_int getRows();
 
     /*!  Get the number of cols
+     *  \deprecated
      */
     u_int getCols();
+
+    /*!  Get the number of rows
+     */
+    u_int rows() {
+        return nrows;
+    };
+
+    /*!  Get the number of cols
+     */
+    u_int cols() {
+        return ncols;
+    };
 
     /*!  Returns the total number of the links: rows*cols
      */
@@ -102,7 +116,7 @@ public:
      */
 	RealMat& matrix() {
 		return w;
-	}
+	};
 
     /*!  Return the weight matrix (Variant ver)
      */
@@ -126,7 +140,7 @@ public:
 
     //@}
 
-protected:
+private:
     //! Registers the dimensions of the matrix
     u_int nrows, ncols;
     //! Weight Matrix

@@ -14,6 +14,12 @@ S <mave> comment goes here
     'B' : means a BugFix
     'C' : means that something has been changed (e.g. implementation of a Class or a signature method)
 ==== End of Legend ====
+    ==> 141 - 29/11/2006 <==
+
++ <mave> memoryCopy & memoryZeroing specialization for bool type
++ <mave> SparseMatrixLinker, added methods: disconnectRandom(Real), connectRandom(Real) and disconnectAll()
+C <mave> disconnect(Real) changed name in disconnectRandom(Real), SparseMatrixLinker
+C <mave> all attributes of MatrixLinker are privates now
 
     ==> 140 - 27/11/2006 <==
 
