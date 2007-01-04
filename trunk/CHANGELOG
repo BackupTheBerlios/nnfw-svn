@@ -14,6 +14,11 @@ S <mave> comment goes here
     'B' : means a BugFix
     'C' : means that something has been changed (e.g. implementation of a Class or a signature method)
 ==== End of Legend ====
+    ==> 142 - 4/01/2007 <==
+
+C <mave> implemented Random::gauss with GSL library
+B <mave> correct wrong initialization in switch
+
     ==> 141 - 29/11/2006 <==
 
 + <mave> memoryCopy & memoryZeroing specialization for bool type

@@ -82,6 +82,9 @@ u_int Random::flatInt( u_int x ) {
 }
 
 Real Random::gauss( Real mean, Real stdev ) {
+#ifdef NNFW_USE_GSL
+    return mean + gsl_ran_gaussian( rnd, (double)stdev );
+#else
     Real x1, x2, w;
     do {
         x1 = 2. * flatReal() - 1.;
@@ -90,6 +93,7 @@ Real Random::gauss( Real mean, Real stdev ) {
     } while ( w >= 1. );
     w = sqrt( (-2. * log( w ) ) / w );
     return (x1 * w) * sqrt(stdev) + mean;
+#endif
 }
 
 };

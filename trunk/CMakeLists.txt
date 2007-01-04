@@ -30,8 +30,13 @@ ELSE ( NNFW_CONFIG MATCHES shared )
     INSTALL( TARGETS nnfw ARCHIVE DESTINATION lib )
 ENDIF ( NNFW_CONFIG MATCHES shared )
 
-#TARGET_LINK_LIBRARIES( nnfw ${QT_LIBRARIES} )
 INSTALL( FILES ${NNFW_HDRS} DESTINATION include/nnfw )
+
+### create the nnfw-config script
+IF (UNIX)
+### mettere un comando post-build che configura lo script nnfw-config nel modo appropriato
+
+ENDIF (UNIX)
 
 ### Setting Compiler g++ for linux machines
 IF (UNIX)
@@ -51,7 +56,6 @@ IF (UNIX)
     IF ( NNFW_CONFIG MATCHES gsl )
         EXEC_PROGRAM( gsl-config ARGS --libs OUTPUT_VARIABLE GSL_LIB )
         EXEC_PROGRAM( gsl-config ARGS --cflags OUTPUT_VARIABLE GSL_FLAGS )
-#        TARGET_LINK_LIBRARIES( nnfw ${GSL_LIB} )
         GET_TARGET_PROPERTY( TMP nnfw COMPILE_FLAGS )
         SET_TARGET_PROPERTIES( nnfw PROPERTIES COMPILE_FLAGS "${TMP} ${GSL_FLAGS} -DNNFW_USE_GSL" )
     ENDIF ( NNFW_CONFIG MATCHES gsl )

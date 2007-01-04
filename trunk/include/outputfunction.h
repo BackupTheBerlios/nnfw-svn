@@ -25,6 +25,8 @@
  *
  *  Details...
  *
+ *  \todo Remember to implement clone method when extend
+ *
  */
 
 #include "types.h"

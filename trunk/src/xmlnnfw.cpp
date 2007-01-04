@@ -493,6 +493,8 @@ void saveProperties( QDomDocument doc, QDomElement parent, Propertized* obj, QSt
 QDomNode createPropertyFragment( Variant v, QDomDocument doc, QDomElement elem ) {
     QDomNode sub;
     QString complex; // --- used for create string representation of RealVec and RealMat
+    const RealVec* rv;
+    const RealMat* mv;
     switch( v.type() ) {
     case Variant::t_null:
         break;
@@ -522,7 +524,7 @@ QDomNode createPropertyFragment( Variant v, QDomDocument doc, QDomElement elem )
         sub = doc.createTextNode( QString(" %1 ").arg( v.getString() ) );
         break;
     case Variant::t_realvec:
-        const RealVec* rv = v.getRealVec();
+        rv = v.getRealVec();
         for( u_int i=0; i<rv->size(); i++ ) {
             complex.append( QString(" %1").arg( rv->at(i) ) );
         }
@@ -530,7 +532,7 @@ QDomNode createPropertyFragment( Variant v, QDomDocument doc, QDomElement elem )
         sub = doc.createTextNode( complex );
         break;
     case Variant::t_realmat:
-        const RealMat* mv = v.getRealMat();
+        mv = v.getRealMat();
         for( u_int r=0; r<mv->rows(); r++ ) {
             for( u_int c=0; c<mv->cols(); c++ ) {
                 complex.append( QString(" %1").arg( mv->at( r, c ) ) );
