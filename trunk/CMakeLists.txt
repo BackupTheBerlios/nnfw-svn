@@ -18,7 +18,7 @@ INCLUDE( FindQt4 )
 INCLUDE( UseQt4 )
 
 FILE( GLOB NNFW_SRCS ./src/*.cpp )
-FILE( GLOB NNFW_HDRS ./src/*.h )
+FILE( GLOB NNFW_HDRS ./include/*.h )
 
 INCLUDE_DIRECTORIES( ./include )
 SET(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/lib)
@@ -31,12 +31,7 @@ ELSE ( NNFW_CONFIG MATCHES shared )
 ENDIF ( NNFW_CONFIG MATCHES shared )
 
 INSTALL( FILES ${NNFW_HDRS} DESTINATION include/nnfw )
-
-### create the nnfw-config script
-IF (UNIX)
-### mettere un comando post-build che configura lo script nnfw-config nel modo appropriato
-
-ENDIF (UNIX)
+INSTALL( PROGRAMS ${NNFW_BINARY_DIR}/nnfw-config DESTINATION bin )
 
 ### Setting Compiler g++ for linux machines
 IF (UNIX)
@@ -71,3 +66,24 @@ IF (UNIX)
         SET_TARGET_PROPERTIES( nnfw PROPERTIES COMPILE_FLAGS "${TMP} -I${MKL_PATH} -DNNFW_USE_MKL" )
     ENDIF ( NNFW_CONFIG MATCHES mkl )
 ENDIF (UNIX)
+
+### create the nnfw-config script
+IF (UNIX)
+    ## prefix
+    STRING( REPLACE "/" "\\/" PREF "${CMAKE_INSTALL_PREFIX}" )
+    ## CFLAGS
+    IF ( NNFW_CONFIG MATCHES double )
+        SET( CFL " -DNNFW_DOUBLE_PRECISION " )
+    ENDIF ( NNFW_CONFIG MATCHES double )
+    ## Library
+    IF ( NNFW_CONFIG MATCHES mkl )
+        SET( LFLA "-L${MKL_PATH}/../lib/32 -lmkl_ia32 -lmkl -lvml" )
+    ENDIF ( NNFW_CONFIG MATCHES mkl )
+    SET( LFLA "${LFLA} ${GSL_LIB} ${QT_QTCORE_LIBRARY} ${QT_QTXML_LIBRARY}" )
+    STRING( REPLACE "/" "\\/" LFL "${LFLA}" )
+
+    ADD_CUSTOM_COMMAND( TARGET nnfw POST_BUILD
+        COMMAND sed 's/version=".*"/version="0.6.8"/' ${NNFW_SOURCE_DIR}/bin/nnfw-config_template | sed 's/prefix=".*"/prefix="${PREF}"/' | sed 's/^cflags=".*"/cflags="${CFL}"/' | sed 's/LIBS=".*"/LIBS="${LFL}"/' > nnfw-config 
+    )
+ENDIF (UNIX)
+

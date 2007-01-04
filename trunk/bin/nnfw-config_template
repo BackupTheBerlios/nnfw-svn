@@ -1,0 +1,100 @@
+#!/bin/sh
+
+#
+# This script is part of NNFW, <URL:http://www.nnfw.org/>
+#
+
+scriptname="nnfw-config"
+version="0.6.7"
+prefix="/usr"
+LIBS=" "
+includedir="${prefix}/include"
+libdir="${prefix}/lib"
+bindir="${prefix}/bin"
+cflags=" "
+
+usage () {
+    echo "Usage: "  1>&2
+    echo "$scriptname --version         - show installed script and NNFW version"  1>&2
+    echo "$scriptname --ldflags         - linker flags required to link with NNFW"  1>&2
+    echo "$scriptname --libs            - libraries required to link with NNFW"  1>&2
+    echo "$scriptname --cflags          - compiler flags required to find NNFW headers"  1>&2
+    echo "$scriptname --help            - show usage info (this message)          "  1>&2
+    echo "$scriptname --help SUBCOMMAND - show help for SUBCOMMAND                "  1>&2
+    echo "$scriptname --prefix          - prefix used during NNFW compile"  1>&2
+}
+
+if test $# -eq 0; then
+    usage
+    exit 1
+fi
+
+if test $# -gt 0; then
+    case $1 in
+    --version)
+        echo $version
+    ;;
+    --help)
+        if test $# -eq 1; then
+            usage
+        elif test $# -eq 2; then
+            case $2 in 
+            --version)
+                echo "Usage: $0 --version"
+                echo "  Print the NNFW version installed"
+            ;;
+            --cflags)
+                echo "Usage: $0 --cflags"
+                echo "  Print C compiler flags for compiling code that uses NNFW."
+                echo "  This includes any \`-I' flags needed to find Sane's header files."
+            ;;
+            --ldflags)
+                echo "Usage: $0 --ldflags"
+                echo "  Print linker flags for building the executable."
+                echo "  Print the linker command-line flags necessary to link against"
+                echo "  the NNFW library.  The libraries are listed with --libs."
+            ;;
+            --libs)
+                echo "Usage: $0 --libs"
+                echo "  Print linker flags for building the executable."
+                echo "  Print the linker command-line flags necessary to link against"
+                echo "  the NNFW library, and any other libraries it requires."
+            ;;
+            --prefix)
+                echo "Usage: $0 --version"
+                echo "  Print the prefix used during NNFW compile"
+            ;;
+            esac
+        else
+            usage
+        fi
+        exit 1
+    ;;
+    --ldflags)
+        echo "-L${libdir} "
+    ;;
+    --libs)
+      echo "-lnnfw ${LIBS}"
+    ;;
+    --cflags)
+        unique_cflags=
+        if test "${includedir}" != "/usr/include"; then
+            unique_cflags="${unique_cflags} -I${includedir}"
+        fi
+        for i in $cflags; do
+            if test "${i}" != "-I${includedir}"; then
+                unique_cflags="${unique_cflags} $i"
+            fi
+        done
+        echo ${unique_cflags}
+    ;;
+    --prefix)
+        echo ${prefix}
+    ;;
+    *)
+        usage
+        exit 1
+    ;;
+  esac
+fi
+
