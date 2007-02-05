@@ -77,9 +77,9 @@ IF (UNIX)
     ENDIF ( NNFW_CONFIG MATCHES double )
     ## Library
     IF ( NNFW_CONFIG MATCHES mkl )
-        SET( LFLA "-L${MKL_PATH}/../lib/32 -lmkl_ia32 -lmkl -lvml" )
+        SET( LFLA "-Wl,-rpath,${MKL_PATH}/../lib/32 -L${MKL_PATH}/../lib/32 -lmkl_ia32 -lmkl -lvml -lguide" )
     ENDIF ( NNFW_CONFIG MATCHES mkl )
-    SET( LFLA "${LFLA} ${GSL_LIB} ${QT_QTCORE_LIBRARY} ${QT_QTXML_LIBRARY}" )
+    SET( LFLA "-Wl,-rpath,${CMAKE_INSTALL_PREFIX}/lib ${LFLA} ${GSL_LIB} ${QT_QTCORE_LIBRARY} ${QT_QTXML_LIBRARY}" )
     STRING( REPLACE "/" "\\/" LFL "${LFLA}" )
 
     ADD_CUSTOM_COMMAND( TARGET nnfw POST_BUILD

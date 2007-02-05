@@ -14,6 +14,9 @@ S <mave> comment goes here
     'B' : means a BugFix
     'C' : means that something has been changed (e.g. implementation of a Class or a signature method)
 ==== End of Legend ====
+
++ <mave> added another Random::flatInt method
+
     ==> 143/144 - 4/01/2007 <==
 
 B <mave> bugfix in nnfw-config script generation

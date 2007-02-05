@@ -73,6 +73,12 @@ public:
      */
     static u_int flatInt( u_int x );
 
+    /*! \brief Return a random integer value in between x and y-1
+     *
+     * Details..
+     */
+    static int flatInt( int x, int y );
+
     /*! \brief Return a random real value with a gaussian distribution
      *
      * Details..

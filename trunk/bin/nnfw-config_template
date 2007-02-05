@@ -16,7 +16,6 @@ cflags=" "
 usage () {
     echo "Usage: "  1>&2
     echo "$scriptname --version         - show installed script and NNFW version"  1>&2
-    echo "$scriptname --ldflags         - linker flags required to link with NNFW"  1>&2
     echo "$scriptname --libs            - libraries required to link with NNFW"  1>&2
     echo "$scriptname --cflags          - compiler flags required to find NNFW headers"  1>&2
     echo "$scriptname --help            - show usage info (this message)          "  1>&2
@@ -48,12 +47,6 @@ if test $# -gt 0; then
                 echo "  Print C compiler flags for compiling code that uses NNFW."
                 echo "  This includes any \`-I' flags needed to find Sane's header files."
             ;;
-            --ldflags)
-                echo "Usage: $0 --ldflags"
-                echo "  Print linker flags for building the executable."
-                echo "  Print the linker command-line flags necessary to link against"
-                echo "  the NNFW library.  The libraries are listed with --libs."
-            ;;
             --libs)
                 echo "Usage: $0 --libs"
                 echo "  Print linker flags for building the executable."
@@ -70,11 +63,8 @@ if test $# -gt 0; then
         fi
         exit 1
     ;;
-    --ldflags)
-        echo "-L${libdir} "
-    ;;
     --libs)
-      echo "-lnnfw ${LIBS}"
+      echo "-L${libdir} -lnnfw ${LIBS}"
     ;;
     --cflags)
         unique_cflags=

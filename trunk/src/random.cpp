@@ -77,7 +77,15 @@ u_int Random::flatInt( u_int x ) {
 #ifdef NNFW_USE_GSL
     return (u_int)( gsl_rng_uniform_int( rnd, x ) );
 #else
-	return (int) ( (Real) (rand()-1) / RAND_MAX * x);
+	return (int)(rand() % x);
+#endif
+}
+
+int Random::flatInt( int min, int max ) {
+#ifdef NNFW_USE_GSL
+    return ( gsl_rng_get(rnd) % (max-min) ) + min;
+#else
+    return (int)(rand() % (max-min) + min-1);
 #endif
 }
 
