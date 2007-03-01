@@ -386,6 +386,8 @@ public:
     //@}
 
 protected:
+    friend class RealVec;
+
     /*! \brief Return the VectorData of the data
      */
     Vec& rawdata() const {

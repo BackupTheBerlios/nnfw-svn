@@ -2,13 +2,17 @@ Copyright 2005-2006 Gianluca Massera <gmassera@istc.cnr.it>
 
 Current Maintainers:
     * Gianluca Massera <mave@mail.berlios.de>
-    * Marco Mirolli
 
 Thanks: ( randomly ordered ;-) )
-    * Federico Cecconi:  for consulting about project design
-    * Marco Mirolli: project design, in particular redesigning of learning part, developing library, debugging
-    * Francesco Mannella: implementation of RealVec::norm()
-    * Eduardo Coutinho: feedback about real usage of NNFW in research
+    * Federico Cecconi
+        for consulting about project design
+    * Marco Mirolli
+        project design, in particular redesigning of learning part, developing library, debugging
+    * Francesco Mannella
+        implementation of RealVec::norm() and
+        outer-product RealVec::mul()
+    * Eduardo Coutinho
+        feedback about real usage of NNFW in research
 
 Thanks to all people involved in follow projects:
     * CMake: very useful tool for cross-platform compiling

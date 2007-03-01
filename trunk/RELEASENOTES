@@ -1,0 +1,13 @@
+
+======= 0.7.0 Release =======
+ * Summary of important changes
+    - added Outer-product, thanks to Francesco
+    - added another Random::flatInt method
+    - added nnfw-config script
+    - implemented Random::gauss with GSL library
+    - memoryCopy & memoryZeroing specialization for bool type
+    - added methods: disconnectRandom(Real), connectRandom(Real) and disconnectAll()
+    - changed name of disconnect(Real) to disconnectRandom(Real)
+    - all attributes of MatrixLinker are privates now
+
+======= Releases before 0.7.0 see SVN log =======

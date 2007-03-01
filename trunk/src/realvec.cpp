@@ -104,6 +104,28 @@ Real RealVec::norm() {
 #endif
 }
 
+RealMat& RealVec::mul( RealMat& m, const RealVec& x, const RealVec& y ) {
+#ifdef NNFW_USE_MKL
+    Real* mRaw = m.rawdata().rawdata();
+    Real* xRaw = x.rawdata();
+    Real* yRaw = y.rawdata();
+#ifndef NNFW_DOUBLE_PRECISION
+    cblas_sgemm( CblasRowMajor, CblasTrans, CblasNoTrans,
+                m.rows(), m.cols(), 1, 1.0f, xRaw, m.rows(), yRaw, m.cols(), 1.0f, mRaw, m.cols() );
+#else
+    cblas_dgemm( CblasRowMajor, CblasTrans, CblasNoTrans,
+                m.rows(), m.cols(), 1, 1.0f, xRaw, m.rows(), yRaw, m.cols(), 1.0f, mRaw, m.cols() );
+#endif
+#else
+    for( u_int j = 0; j<y.size(); j++ ) {
+        for( u_int i = 0; i<x.size(); i++ ) {
+            m[j][i] +=  x[i] * y[j];
+        }
+    }
+#endif
+    return m;
+}
+
 void RealVec::createAllBinaries( RealVec* v, unsigned long int pats, u_int dims ) {
 //#ifdef NNFW_DEBUG
 	unsigned long int totPat = 1;

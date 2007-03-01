@@ -290,6 +290,18 @@ public:
 	}
 
     //@}
+    /*! \name Vector-Vector Operators */
+    //@{
+
+    /*! \brief Outer Product: m += x'*y
+     *  \param m the matrix result of multiplication
+     *  \param x the first vector
+     *  \param y the second vector
+     *  \return the matrix m
+     */ 
+    static RealMat& mul( RealMat& m, const RealVec& x, const RealVec& y );
+
+    //@}
 	
     /*! \brief Create all the binary vectors of a given dimension
      */

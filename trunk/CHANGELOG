@@ -15,6 +15,12 @@ S <mave> comment goes here
     'C' : means that something has been changed (e.g. implementation of a Class or a signature method)
 ==== End of Legend ====
 
+    ==> 146 - 5/02/2007 - 0.7.0 release <==
+
++ <mave> added Outer-product, thanks to Francesco
+
+    ==> 145 - 5/02/2007 <==
+
 + <mave> added another Random::flatInt method
 
     ==> 143/144 - 4/01/2007 <==

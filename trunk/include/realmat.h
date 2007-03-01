@@ -32,9 +32,6 @@
  *  Details...
  */
 
-#include "matrixdata.h"
-
-
 namespace nnfw {
 
 /*! \brief RealMat Class

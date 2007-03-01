@@ -42,6 +42,9 @@
 #include "vectordata.h"
 #include "matrixdata.h"
 
+namespace nnfw {
+    class RealMat;
+}
 #include "realvec.h"
 #include "realmat.h"
 
