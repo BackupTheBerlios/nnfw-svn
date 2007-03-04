@@ -88,6 +88,8 @@ IF (UNIX)
         SET( LFLA "-Wl,-rpath,${MKL_PATH}/../lib/32 -L${MKL_PATH}/../lib/32 -lmkl_ia32 -lmkl -lvml -lguide" )
     ENDIF ( NNFW_CONFIG MATCHES mkl )
     SET( LFLA "-Wl,-rpath,${CMAKE_INSTALL_PREFIX}/${LIB_DIR} ${LFLA} ${GSL_LIB} ${QT_QTCORE_LIBRARY} ${QT_QTXML_LIBRARY}" )
+	STRING( REPLACE "optimized" "" LFLA "${LFLA}" )
+	STRING( REPLACE "debug" "" LFLA "${LFLA}" )
     STRING( REPLACE "/" "\\/" LFL "${LFLA}" )
 
     ADD_CUSTOM_COMMAND( TARGET nnfw POST_BUILD
