@@ -93,7 +93,7 @@ IF (UNIX)
     STRING( REPLACE "/" "\\/" LFL "${LFLA}" )
 
     ADD_CUSTOM_COMMAND( TARGET nnfw POST_BUILD
-        COMMAND sed 's/version=".*"/version="0.7.0"/' ${NNFW_SOURCE_DIR}/bin/nnfw-config_template | sed 's/prefix=".*"/prefix="${PREF}"/' | sed 's/^cflags=".*"/cflags="${CFL}"/' | sed 's/LIBS=".*"/LIBS="${LFL}"/' | sed 's/libdir=".*"/libdir="\$\{prefix\}\/${LIB_DIR}"/' > nnfw-config 
+        COMMAND sed 's/version=".*"/version="0.7.0"/' ${NNFW_SOURCE_DIR}/bin/nnfw-config_template | sed 's/prefix=".*"/prefix="${PREF}"/' | sed 's/^cflags=".*"/cflags="${CFL}"/' | sed 's/LIBS=".*"/LIBS="${LFL}"/' | sed 's/libdir=".*"/libdir="${PREF}\/${LIB_DIR}"/' > nnfw-config 
     )
 ENDIF (UNIX)
 
