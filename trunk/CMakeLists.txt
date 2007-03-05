@@ -21,14 +21,15 @@ FILE( GLOB NNFW_SRCS ./src/*.cpp )
 FILE( GLOB NNFW_HDRS ./include/*.h )
 
 INCLUDE_DIRECTORIES( ./include )
-### check the type of machine
-EXEC_PROGRAM( uname ARGS -m OUTPUT_VARIABLE ARCHTYPE )
-IF ( ARCHTYPE MATCHES "i686" )
-	SET( LIB_DIR "lib" )
-ENDIF ( ARCHTYPE MATCHES "i686" )
-IF ( ARCHTYPE MATCHES "x86_64" )
-	SET( LIB_DIR "lib64" )
-ENDIF ( ARCHTYPE MATCHES "x86_64" )
+### Directory where Library will be installed
+SET( LIB_DIR "lib" )
+IF (UNIX)
+	### check the type of machine
+	EXEC_PROGRAM( uname ARGS -m OUTPUT_VARIABLE ARCHTYPE )
+	IF ( ARCHTYPE MATCHES "x86_64" )
+		SET( LIB_DIR "lib64" )
+	ENDIF ( ARCHTYPE MATCHES "x86_64" )
+ENDIF (UNIX)
 
 IF ( NNFW_CONFIG MATCHES shared )
     ADD_LIBRARY( nnfw SHARED ${NNFW_SRCS} )
