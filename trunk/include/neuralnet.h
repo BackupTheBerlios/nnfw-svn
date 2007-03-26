@@ -149,6 +149,11 @@ public:
     //! \brief Set the order
     void setOrder( UpdatableVec& );
 
+    //! \brief Return the order
+    const UpdatableVec& order() const {
+		return ups;
+	};
+
     /*! \brief Step
      *
      *  Details
@@ -174,6 +179,18 @@ public:
      *   there no way to retrieve all of them with this methods... call them with unique name ;-)
      */
     Updatable* getByName( const char* );
+
+    /*! \brief Return the Updatable with the name specified, and cast it automatically to type required
+     *
+     *  Returns NULL-pointer if there's no updatable object whit the name specified or 
+	 *  the cast required it's not possible
+     *  \warning return the first that finds. If you have named different Updatables with same name
+     *   there no way to retrieve all of them with this methods... call them with unique name ;-)
+     */
+	template<class T>
+    T* byName( const char* name ) {
+		return dynamic_cast<T*>(getByName(name));
+	};
 
     /*! \brief Return true if the Cluster is in this net
      *

@@ -622,6 +622,33 @@ bool saveXML( const char* filename, BaseNeuralNet* net ) {
         saveProperties( doc, elem, ls[i], QStringList() << "to" << "from" << "typename" << "name" );
     }
 
+	QDomElement elem = doc.createElement( "inputs" );
+	QString str;
+	const ClusterVec& cl1 = net->inputClusters();
+	for( unsigned int i=0; i<cl1.size(); i++ ) {
+		str += QString("%1 ").arg(cl1[i]->getName());
+	}
+	nn.appendChild( elem );
+	elem.appendChild( doc.createTextNode( str ) );
+
+	elem = doc.createElement( "outputs" );
+	str = "";
+	const ClusterVec& cl2 = net->outputClusters();
+	for( unsigned int i=0; i<cl2.size(); i++ ) {
+		str += QString("%1 ").arg(cl2[i]->getName());
+	}
+	nn.appendChild( elem );
+	elem.appendChild( doc.createTextNode( str ) );
+
+	elem = doc.createElement( "order" );
+	str = "";
+	const UpdatableVec& uls = net->order();
+	for( unsigned int i=0; i<uls.size(); i++ ) {
+		str += QString("%1 ").arg(uls[i]->getName());
+	}
+	nn.appendChild( elem );
+	elem.appendChild( doc.createTextNode( str ) );
+
     QFile file( filename );
     if ( !file.open( QIODevice::WriteOnly | QIODevice::Text ) ) {
         char msg[100];
