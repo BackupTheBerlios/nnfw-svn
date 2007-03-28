@@ -14,6 +14,9 @@ S <mave> comment goes here
     'B' : means a BugFix
     'C' : means that something has been changed (e.g. implementation of a Class or a signature method)
 ==== End of Legend ====
+    ==> 156 - 28/03/2007 - 0.7.1 release <==
+
++ <mave> various bugfixes; Important bugfix in XML save/load
 
     ==> 146 - 5/02/2007 - 0.7.0 release <==
 
