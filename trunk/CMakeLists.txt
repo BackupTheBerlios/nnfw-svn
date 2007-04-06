@@ -12,10 +12,15 @@ SET( CMAKE_COLOR_MAKEFILE ON )
 SET( NNFW_CONFIG "" CACHE STRING "NNFW Configuration" )
 
 ### configure CMake to link against Qt4
-SET( QT_DONT_USE_QTGUI TRUE )
+FIND_PACKAGE( Qt4 REQUIRED )
+#SET( QT_DONTUSE_QTGUI TRUE )
 SET( QT_USE_QTXML TRUE )
-INCLUDE( FindQt4 )
-INCLUDE( UseQt4 )
+INCLUDE(${QT_USE_FILE})
+
+#SET( QT_DONT_USE_QTGUI TRUE )
+#SET( QT_USE_QTXML TRUE )
+#INCLUDE( FindQt4 )
+#INCLUDE( UseQt4 )
 
 FILE( GLOB NNFW_SRCS ./src/*.cpp )
 FILE( GLOB NNFW_HDRS ./include/*.h )
@@ -98,3 +103,17 @@ IF (UNIX)
     )
 ENDIF (UNIX)
 
+
+### Setting Compiler minGW for Windows machines
+IF (MINGW)
+    SET_TARGET_PROPERTIES( nnfw PROPERTIES LINK_FLAGS "-LC:\\Qt\\4.2.3\\lib -Wl,--output-def,nnfwdll.def" )
+    
+	TARGET_LINK_LIBRARIES( nnfw "QtXml4" )
+	TARGET_LINK_LIBRARIES( nnfw "QtCore4" )
+
+	## Create VisualStudio library
+    ADD_CUSTOM_COMMAND( TARGET nnfw POST_BUILD
+        COMMAND lib /machine:i386 /def:nnfwdll.def
+    )
+
+ENDIF (MINGW)
