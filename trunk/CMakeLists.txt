@@ -137,7 +137,7 @@ ENDIF (UNIX)
 
 ### Setting Compiler minGW for Windows machines
 IF (MINGW)
-    SET_TARGET_PROPERTIES( nnfw PROPERTIES LINK_FLAGS "-LC:\\Qt\\4.2.3\\lib -Wl,--output-def,nnfwdll.def" )
+    SET_TARGET_PROPERTIES( nnfw PROPERTIES LINK_FLAGS "-LC:\\Qt\\4.2.3\\lib -Wl,--output-def,nnfwdll.def " )
     
 	TARGET_LINK_LIBRARIES( nnfw "QtXml4" )
 	TARGET_LINK_LIBRARIES( nnfw "QtCore4" )
