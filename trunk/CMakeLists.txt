@@ -33,6 +33,12 @@ ENDIF (UNIX)
 IF ( NNFW_CONFIG MATCHES shared )
     ADD_LIBRARY( nnfw SHARED ${NNFW_SRCS} )
     INSTALL( TARGETS nnfw LIBRARY DESTINATION ${LIB_DIR} )
+IF(MINGW)
+	INSTALL( FILES ${NNFW_BINARY_DIR}/libnnfw.dll DESTINATION lib )
+	INSTALL( FILES ${NNFW_BINARY_DIR}/nnfwdll.lib DESTINATION lib )
+	INSTALL( FILES ${NNFW_BINARY_DIR}/nnfwdll.exp DESTINATION lib )
+	INSTALL( FILES ${NNFW_BINARY_DIR}/nnfwdll.def DESTINATION lib )
+ENDIF(MINGW)	
 ELSE ( NNFW_CONFIG MATCHES shared )
     ADD_LIBRARY( nnfw STATIC ${NNFW_SRCS} )
     INSTALL( TARGETS nnfw ARCHIVE DESTINATION ${LIB_DIR} )
@@ -56,7 +62,18 @@ SET(CPACK_RESOURCE_FILE_LICENSE "${NNFW_SOURCE_DIR}/GPL.txt")
 #SET(CPACK_RESOURCE_FILE_WELCOME "")
 #   CPACK_INSTALL_COMMANDS              - Extra commands to install components
 
-#SET(CPACK_GENERATOR "STGZ")
+IF(WIN32 AND NOT UNIX)
+  # There is a bug in NSI that does not handle full unix paths properly. Make
+  # sure there is at least one set of four (4) backlasshes.
+  #SET(CPACK_PACKAGE_ICON "${CMake_SOURCE_DIR}/Utilities/Release\\\\InstallIcon.bmp")
+  #SET(CPACK_NSIS_INSTALLED_ICON_NAME "bin\\\\MyExecutable.exe")
+  SET(CPACK_NSIS_DISPLAY_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY} Neural Network Framework")
+  SET(CPACK_NSIS_HELP_LINK "http:\\\\\\\\www.nnfw.org")
+  SET(CPACK_NSIS_URL_INFO_ABOUT "http:\\\\\\\\www.nnfw.org")
+  SET(CPACK_NSIS_CONTACT "mave@berlios.de")
+ENDIF(WIN32 AND NOT UNIX)
+
+SET(CPACK_GENERATOR "NSIS")
 INCLUDE(CPack)
 
 
