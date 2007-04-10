@@ -137,14 +137,15 @@ ENDIF (UNIX)
 
 ### Setting Compiler minGW for Windows machines
 IF (MINGW)
-    SET_TARGET_PROPERTIES( nnfw PROPERTIES LINK_FLAGS "-LC:\\Qt\\4.2.3\\lib -Wl,--output-def,nnfwdll.def " )
+	ADD_DEFINITIONS( -DNNFW_BUILDING_DLL )
+    SET_TARGET_PROPERTIES( nnfw PROPERTIES LINK_FLAGS "-LC:\\Qt\\4.2.3\\lib -Wl,--output-def,nnfwdll.def -Wl,--export-all-symbols -Wl,--add-stdcall-alias" )
     
 	TARGET_LINK_LIBRARIES( nnfw "QtXml4" )
 	TARGET_LINK_LIBRARIES( nnfw "QtCore4" )
 
 	## Create VisualStudio library
-    ADD_CUSTOM_COMMAND( TARGET nnfw POST_BUILD
-        COMMAND lib /machine:i386 /def:nnfwdll.def
-    )
+#    ADD_CUSTOM_COMMAND( TARGET nnfw POST_BUILD
+#        COMMAND lib /machine:X86 /def:nnfwdll.def
+#    )
 
 ENDIF (MINGW)
