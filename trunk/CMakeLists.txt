@@ -1,4 +1,3 @@
-
 PROJECT( NNFW )
 SET( CMAKE_COLOR_MAKEFILE ON )
 
@@ -47,13 +46,33 @@ ENDIF ( NNFW_CONFIG MATCHES shared )
 INSTALL( FILES ${NNFW_HDRS} DESTINATION include/nnfw )
 INSTALL( PROGRAMS ${NNFW_BINARY_DIR}/nnfw-config DESTINATION bin )
 
+# ---------------------------------------- #
+# ############## PACKAGE ################# #
+# ---------------------------------------- #
+SET(CPACK_PACKAGE_FILE_NAME "nnfw-0.7.1")
+SET(CPACK_PACKAGE_VERSION_MAJOR "0")
+SET(CPACK_PACKAGE_VERSION_MINOR "7")
+SET(CPACK_PACKAGE_VERSION_PATCH "1")
+SET(CPACK_PACKAGE_VENDOR "Gianluca Massera")
+
+SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Neural Network Framework, NNFW Project")
+#SET(CPACK_PACKAGE_DESCRIPTION_FILE "")
+SET(CPACK_RESOURCE_FILE_LICENSE "GPL.txt")
+#SET(CPACK_RESOURCE_FILE_README "")
+#SET(CPACK_RESOURCE_FILE_WELCOME "")
+#   CPACK_INSTALL_COMMANDS              - Extra commands to install components
+
+#SET(CPACK_GENERATOR "STGZ")
+INCLUDE(CPack)
+
+
 ### Setting Compiler g++ for linux machines
 IF (UNIX)
     MESSAGE( "-- Setting compiler for Linux" )
     SET( CMAKE_CXX_COMPILER "g++" )
-    SET( CMAKE_CXX_FLAGS "-pipe -fno-strict-aliasing -Wall -W " )
+    SET( CMAKE_CXX_FLAGS "-pipe -fPIC -Wall -W " )
     SET( CMAKE_CXX_FLAGS_DEBUG "-g -O0 -DNNFW_DEBUG" )
-    SET( CMAKE_CXX_FLAGS_RELEASE "-O3 -funroll-loops" )
+    SET( CMAKE_CXX_FLAGS_RELEASE "-O3 " )
     SET( CMAKE_CXX_FLAGS_RELWITHDEBINFO "-g -O2" )
     SET( CMAKE_CXX_FLAGS_MINSIZEREL "-O2 -Os" )
     SET_TARGET_PROPERTIES( nnfw PROPERTIES COMPILE_FLAGS "" )
@@ -99,7 +118,7 @@ IF (UNIX)
     STRING( REPLACE "/" "\\/" LFL "${LFLA}" )
 
     ADD_CUSTOM_COMMAND( TARGET nnfw POST_BUILD
-        COMMAND sed 's/version=".*"/version="0.7.0"/' ${NNFW_SOURCE_DIR}/bin/nnfw-config_template | sed 's/prefix=".*"/prefix="${PREF}"/' | sed 's/^cflags=".*"/cflags="${CFL}"/' | sed 's/LIBS=".*"/LIBS="${LFL}"/' | sed 's/libdir=".*"/libdir="${PREF}\\/${LIB_DIR}"/' > nnfw-config 
+        COMMAND sed 's/version=".*"/version="0.7.1"/' ${NNFW_SOURCE_DIR}/bin/nnfw-config_template | sed 's/prefix=".*"/prefix="${PREF}"/' | sed 's/^cflags=".*"/cflags="${CFL}"/' | sed 's/LIBS=".*"/LIBS="${LFL}"/' | sed 's/libdir=".*"/libdir="${PREF}\\/${LIB_DIR}"/' > nnfw-config 
     )
 ENDIF (UNIX)
 
