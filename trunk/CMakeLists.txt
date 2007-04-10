@@ -49,10 +49,10 @@ INSTALL( FILES ${NNFW_HDRS} DESTINATION include/nnfw )
 # ---------------------------------------- #
 # ############## PACKAGE ################# #
 # ---------------------------------------- #
-SET(CPACK_PACKAGE_FILE_NAME "nnfw-0.7.1")
+SET(CPACK_PACKAGE_FILE_NAME "nnfw-0.7.2")
 SET(CPACK_PACKAGE_VERSION_MAJOR "0")
 SET(CPACK_PACKAGE_VERSION_MINOR "7")
-SET(CPACK_PACKAGE_VERSION_PATCH "1")
+SET(CPACK_PACKAGE_VERSION_PATCH "2")
 SET(CPACK_PACKAGE_VENDOR "Gianluca Massera")
 
 SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Neural Network Framework, NNFW Project")
@@ -130,7 +130,7 @@ IF (UNIX)
     STRING( REPLACE "/" "\\/" LFL "${LFLA}" )
 
     ADD_CUSTOM_COMMAND( TARGET nnfw POST_BUILD
-        COMMAND sed 's/version=".*"/version="0.7.1"/' ${NNFW_SOURCE_DIR}/bin/nnfw-config_template | sed 's/prefix=".*"/prefix="${PREF}"/' | sed 's/^cflags=".*"/cflags="${CFL}"/' | sed 's/LIBS=".*"/LIBS="${LFL}"/' | sed 's/libdir=".*"/libdir="${PREF}\\/${LIB_DIR}"/' > nnfw-config 
+        COMMAND sed 's/version=".*"/version="0.7.2"/' ${NNFW_SOURCE_DIR}/bin/nnfw-config_template | sed 's/prefix=".*"/prefix="${PREF}"/' | sed 's/^cflags=".*"/cflags="${CFL}"/' | sed 's/LIBS=".*"/LIBS="${LFL}"/' | sed 's/libdir=".*"/libdir="${PREF}\\/${LIB_DIR}"/' > nnfw-config 
     )
 ENDIF (UNIX)
 

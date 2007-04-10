@@ -30,8 +30,12 @@
 
 #ifdef WIN32
 	#define _CRT_SECURE_NO_DEPRECATE
+	#ifdef NNFW_BUILDING_DLL
+		#define NNFW_API __declspec(dllexport)
+	#else
+		#define NNFW_API __declspec(dllimport)
+	#endif
 #endif
-
 
 #include <vector>
 #include <string>

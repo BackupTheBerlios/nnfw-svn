@@ -48,7 +48,7 @@ namespace nnfw {
  *   </table>
  *
  */
-class  BiasedCluster : public Cluster {
+class NNFW_API BiasedCluster : public Cluster {
 public:
     /*! \name Constructors */
     //@{
