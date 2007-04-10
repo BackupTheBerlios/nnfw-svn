@@ -39,7 +39,6 @@ ELSE ( NNFW_CONFIG MATCHES shared )
 ENDIF ( NNFW_CONFIG MATCHES shared )
 
 INSTALL( FILES ${NNFW_HDRS} DESTINATION include/nnfw )
-INSTALL( PROGRAMS ${NNFW_BINARY_DIR}/nnfw-config DESTINATION bin )
 
 # ---------------------------------------- #
 # ############## PACKAGE ################# #
@@ -97,6 +96,7 @@ ENDIF (UNIX)
 
 ### create the nnfw-config script
 IF (UNIX)
+	INSTALL( PROGRAMS ${NNFW_BINARY_DIR}/nnfw-config DESTINATION bin )
     ## prefix
     STRING( REPLACE "/" "\\/" PREF "${CMAKE_INSTALL_PREFIX}" )
     ## CFLAGS
