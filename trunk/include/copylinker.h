@@ -51,7 +51,7 @@ namespace nnfw {
  *     Viceversa, se le dimensioni di 'from' e 'to' sono 5 e 8, rispettivamente, allora i 5 inputs del Cluster 'from'
  *     (tutti i dati della sorgente) vengono copiati nei primi 5 inputs del Cluster 'to'.
  */
-class  CopyLinker : public Linker {
+class NNFW_API CopyLinker : public Linker {
 public:
     //! Modality of Data Copying
     typedef enum { In2In = 0, In2Out = 1, Out2In = 2, Out2Out = 3 } CopyMode;

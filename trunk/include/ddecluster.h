@@ -54,7 +54,7 @@ namespace nnfw {
  *   <tr><td>coeff</td> <td>RealVec</td> <td>read/write</td> <td> equation's coefficients </td> <td>this</td> </tr>
  *   </table>
  */
-class  DDECluster : public Cluster {
+class NNFW_API DDECluster : public Cluster {
 public:
 
     /*! Construct a DDECluster setting coefficients as specified

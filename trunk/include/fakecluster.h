@@ -57,7 +57,7 @@ namespace nnfw {
  *   </table>
  *
  */
-class  FakeCluster : public Cluster {
+class NNFW_API FakeCluster : public Cluster {
 public:
     /*! \name Constructors */
     //@{

@@ -31,7 +31,7 @@ namespace nnfw {
  *
  *  Clonable Objects
  */
-class  Clonable {
+class NNFW_API Clonable {
 public:
     /*! \name Virtual Destrucor */
     //@{

@@ -81,7 +81,7 @@ namespace nnfw {
  *   </table>
  *
  */
-class  Cluster : public Updatable {
+class NNFW_API Cluster : public Updatable {
 public:
     /*! \name Constructors */
     //@{

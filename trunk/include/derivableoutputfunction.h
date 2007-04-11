@@ -37,7 +37,7 @@ namespace nnfw {
  *
  *  Details...
  */
-class  DerivableOutputFunction : public OutputFunction {
+class NNFW_API DerivableOutputFunction : public OutputFunction {
 public:
     /*! \name Constructors */
     //@{
