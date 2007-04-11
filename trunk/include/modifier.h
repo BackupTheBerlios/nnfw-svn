@@ -31,7 +31,7 @@ namespace nnfw {
  *
  *  The modifier object is a the basic building blok for any kind of learning algorithm
  */
-class  Modifier {
+class NNFW_API Modifier {
 public:
     //! Constructor
     Modifier() { /* Nothing to do */ };
@@ -45,7 +45,7 @@ public:
  *
  *  Abstract modifier class which links to a Realmat object (the matrix of network's parameters to be modified)
  */
-class  MatrixModifier : public Modifier {
+class NNFW_API MatrixModifier : public Modifier {
 public:
     //! Constructor
 	MatrixModifier( RealMat& matrix ) : m( matrix ) { /* Nothing to do */ };
@@ -75,7 +75,7 @@ protected:
  *
  *  Abstract modifier class which links to a Realvec object (the vector of network's parameters to be modified)
  */
-class  VectorModifier : public Modifier {
+class NNFW_API VectorModifier : public Modifier {
 public:
     //! Constructor
 	VectorModifier( RealVec& vector ) : v( vector ) { /* Nothing to do */ };

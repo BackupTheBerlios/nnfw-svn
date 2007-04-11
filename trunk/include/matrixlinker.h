@@ -53,7 +53,7 @@ namespace nnfw {
  *   </table>
  *
  */
-class  MatrixLinker : public Linker {
+class NNFW_API MatrixLinker : public Linker {
 public:
     /*! \name Constructors */
     //@{

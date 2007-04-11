@@ -39,7 +39,7 @@ namespace nnfw {
  *   <tr><td>name</td> <td>string</td> <td>read/write</td> <td> name of the object </td> <td>this</td> </tr>
  *   </table>
  */
-class  Updatable : public Propertized {
+class NNFW_API Updatable : public Propertized {
 public:
     /*! \name Constructors */
     //@{

@@ -34,7 +34,7 @@ namespace nnfw {
  * Every connection is weighted, and the weight is memorized into a weight-matrix
  * Details ...
  */
-class  SparseMatrixLinker : public MatrixLinker {
+class NNFW_API SparseMatrixLinker : public MatrixLinker {
 public:
     /*! \name Constructors */
     //@{

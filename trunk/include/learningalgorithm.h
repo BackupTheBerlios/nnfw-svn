@@ -31,7 +31,7 @@ namespace nnfw {
  *
  *  The LearningAlgorithm object is a the abstract class from which to implement learning algorithms
  */
-class  LearningAlgorithm {
+class NNFW_API LearningAlgorithm {
 public:
     //! Constructor
     LearningAlgorithm() { /* Nothing to do */ };

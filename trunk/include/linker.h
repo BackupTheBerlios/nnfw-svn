@@ -46,7 +46,7 @@ namespace nnfw {
  *   </table>
  *
  */
-class  Linker : public Updatable {
+class NNFW_API Linker : public Updatable {
 public:
     /*! \name Constructors */
     //@{

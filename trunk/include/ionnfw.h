@@ -41,9 +41,9 @@ namespace nnfw {
 
 class BaseNeuralNet;
 //! Load the net from an XML file, and return a BaseNeuralNet
-BaseNeuralNet* loadXML( const char* filename );
+NNFW_API BaseNeuralNet* loadXML( const char* filename );
 //! Save the BaseNeuralNet passed into an XML file; return true on success
-bool saveXML( const char* filename, BaseNeuralNet* );
+NNFW_API bool saveXML( const char* filename, BaseNeuralNet* );
 
 //@}
 
@@ -51,28 +51,28 @@ bool saveXML( const char* filename, BaseNeuralNet* );
 //@{
 
 //! Operator << with RealVec
-std::ostream& operator<<(std::ostream& stream, const RealVec& v);
+NNFW_API std::ostream& operator<<(std::ostream& stream, const RealVec& v);
 
 //! Operator << with RealMat
-std::ostream& operator<<(std::ostream& stream, const RealMat& m);
+NNFW_API std::ostream& operator<<(std::ostream& stream, const RealMat& m);
 
 //! Operator << with Variant::types
-std::ostream& operator<<(std::ostream& stream, const Variant::types t);
+NNFW_API std::ostream& operator<<(std::ostream& stream, const Variant::types t);
 
 //! Operator << with Variant
-std::ostream& operator<<(std::ostream& stream, const Variant var);
+NNFW_API std::ostream& operator<<(std::ostream& stream, const Variant var);
 
 //! Operator << with Propertized
-std::ostream& operator<<(std::ostream& stream, const Propertized& p);
+NNFW_API std::ostream& operator<<(std::ostream& stream, const Propertized& p);
 
 //@}
 /*! \name Input Stream Operator --- these operator are all deprecated */
 //@{
 
 //! \deprecated Operator >> with RealMat
-std::istream& operator>>(std::istream& stream, RealMat& m);
+NNFW_API std::istream& operator>>(std::istream& stream, RealMat& m);
 //! \deprecated Operator >> with RealVec
-std::istream& operator>>(std::istream& stream, RealVec& v);
+NNFW_API std::istream& operator>>(std::istream& stream, RealVec& v);
 
 //@}
 

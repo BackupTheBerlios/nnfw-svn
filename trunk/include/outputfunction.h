@@ -40,7 +40,7 @@ namespace nnfw {
  *
  *  Details...
  */
-class OutputFunction : public Clonable, public Propertized {
+class NNFW_API OutputFunction : public Clonable, public Propertized {
 public:
     /*! \name Constructors */
     //@{

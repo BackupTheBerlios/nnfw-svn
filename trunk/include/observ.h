@@ -44,7 +44,7 @@ namespace nnfw {
  *  \par Description
  *  \par Warnings
  */
-class NotifyEvent {
+class NNFW_API NotifyEvent {
 public:
     //! Constructor
     NotifyEvent( int type = 0 ) : etype(type) { /* Nothing to do */ };
@@ -62,7 +62,7 @@ protected:
  *  \par Description
  *  \par Warnings
  */
-class Observer {
+class NNFW_API Observer {
 public:
     /*! \name Constructors */
 
@@ -83,7 +83,7 @@ public:
  *  \par Description
  *  \par Warnings
  */
-class Observable {
+class NNFW_API Observable {
 public:
     /*! \name Constructors */
 

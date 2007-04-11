@@ -44,7 +44,7 @@ namespace nnfw {
  *   </table>
  *
  */
-class  SimpleCluster : public Cluster {
+class NNFW_API SimpleCluster : public Cluster {
 public:
     /*! \name Constructors */
     //@{

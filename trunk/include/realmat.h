@@ -39,7 +39,7 @@ namespace nnfw {
  *  \par Description
  *  \par Warnings
  */
-class RealMat : public MatrixData<Real, RealVec> {
+class NNFW_API RealMat : public MatrixData<Real, RealVec> {
 public:
     /*! \name Constructors */
     //@{

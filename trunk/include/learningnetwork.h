@@ -37,7 +37,7 @@ namespace nnfw {
  *
  * Details
  */
-class  LearningNetwork {
+class NNFW_API LearningNetwork {
 public:
     /*! \brief Construct an empty LearningNetwork
      *  Details

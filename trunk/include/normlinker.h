@@ -40,7 +40,7 @@ namespace nnfw {
  *   <tr><td>weights</td> <td>RealMat</td> <td>read/write</td> <td> connections' weights </td> <td>MatrixLinker</td> </tr>
  *   </table>
  */
-class  NormLinker : public MatrixLinker {
+class NNFW_API NormLinker : public MatrixLinker {
 public:
     /*! \name Constructors */
     //@{

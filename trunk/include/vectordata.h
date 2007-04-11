@@ -45,7 +45,7 @@ namespace nnfw {
  *  \par Warnings
  */
 template<class T>
-class VectorData : private Observer, public Observable {
+class NNFW_API VectorData : private Observer, public Observable {
 public:
     //! Type of Notification
     typedef enum { datachanged = 1, datadestroying = 2 } t_notify;

@@ -45,7 +45,7 @@ typedef VectorData<AbstractPropertyAccess*> PropertyAccessVec;
 /*! \brief Incapsulate values of different types/classes in a unified way (like union)
  *  \nosubgrouping
  */
-class Variant {
+class NNFW_API Variant {
 public:
     //! type of registrable data
     typedef enum { t_null=0, t_real, t_int, t_uint, t_char, t_uchar, t_bool, t_string,
@@ -162,7 +162,7 @@ private:
  *
  *  Details here
  */
-class AbstractPropertyAccess : public Clonable {
+class NNFW_API AbstractPropertyAccess : public Clonable {
 public:
     /*! \name Constructors & Destructors */
     //@{
@@ -227,7 +227,7 @@ protected:
  *  you don't have to use it directly, it's automatically instanciated by Propertized's methods
  */
 template<class T>
-class PropertyAccess : public AbstractPropertyAccess {
+class NNFW_API PropertyAccess : public AbstractPropertyAccess {
 public:
     /*! \name Constructors */
     //@{
@@ -291,7 +291,7 @@ private:
  *  you don't have to use it directly, it's automatically instanciated by Propertized's methods
  */
 template<class T>
-class VectorPropertyAccess : public AbstractPropertyAccess {
+class NNFW_API VectorPropertyAccess : public AbstractPropertyAccess {
 public:
     /*! \name Constructors */
     //@{
@@ -368,7 +368,7 @@ typedef std::map< std::string, Variant > PropertySettings;
  *   <tr><td>typename</td> <td>string</td> <td>read-only</td> <td> Class's type </td> <td>this</td> </tr>
  *   </table>
  */
-class Propertized {
+class NNFW_API Propertized {
 public:
     /*! \name Constructors */
     //@{

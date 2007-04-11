@@ -55,7 +55,7 @@ enum {
 /*! \brief Print out a message
  *
  */
-void nnfwMessage( unsigned int category, const char* msg );
+NNFW_API void nnfwMessage( unsigned int category, const char* msg );
 
 }
 

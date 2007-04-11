@@ -44,7 +44,7 @@ namespace nnfw {
  *   <tr><td>max</td> <td>Real</td> <td>read/write</td> <td>function's maximum value</td> <td>this</td> </tr>
  *   </table>
  */
-class  GaussFunction : public DerivableOutputFunction {
+class NNFW_API GaussFunction : public DerivableOutputFunction {
 public:
     /*! \name Constructors */
     //@{

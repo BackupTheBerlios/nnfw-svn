@@ -38,7 +38,7 @@ namespace nnfw {
 
 /*! \brief Abstract Creator of Propertized objects
  */
-class AbstractCreator : public Clonable {
+class NNFW_API AbstractCreator : public Clonable {
 public:
     /*! \name Interface */
     //@{
@@ -83,7 +83,7 @@ class Creator : public AbstractCreator {
  *   returns the right type of object... so, pay attention to register the right kind of Creator,
  *   otherwise you will get a runtime-error when you try to use them
  */
-class Factory {
+class NNFW_API Factory {
 public:
 
     /*! \brief Create a Cluster of class type

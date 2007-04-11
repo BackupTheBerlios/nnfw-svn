@@ -41,7 +41,7 @@ namespace nnfw {
  *  \par Description
  *  \par Warnings
  */
-class RealVec : public VectorData<Real> {
+class NNFW_API RealVec : public VectorData<Real> {
 public:
     /*! \name Constructors */
     //@{

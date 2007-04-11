@@ -50,7 +50,7 @@ namespace nnfw {
  *   <tr><td>typename</td> <td>string</td> <td>read-only</td> <td> Class's type </td> <td>Propertized</td> </tr>
  *   </table>
  */
-class  IdentityFunction : public DerivableOutputFunction {
+class NNFW_API IdentityFunction : public DerivableOutputFunction {
 public:
     /*! \name Constructors */
     //@{
@@ -92,7 +92,7 @@ public:
  *   <tr><td>lambda</td> <td>Real</td> <td>read/write</td> <td> function's slope </td> <td>this</td> </tr>
  *   </table>
  */
-class  SigmoidFunction : public DerivableOutputFunction {
+class NNFW_API SigmoidFunction : public DerivableOutputFunction {
 public:
     /*! \name Constructors */
     //@{
@@ -148,7 +148,7 @@ public:
  *   <tr><td>lambda</td> <td>Real</td> <td>read/write</td> <td> function's slope </td> <td>this</td> </tr>
  *   </table>
  */
-class  FakeSigmoidFunction : public DerivableOutputFunction {
+class NNFW_API FakeSigmoidFunction : public DerivableOutputFunction {
 public:
     /*! \name Constructors */
     //@{
@@ -209,7 +209,7 @@ public:
  *   <tr><td>max</td> <td>Real</td> <td>read/write</td> <td> function's maximun value </td> <td>this</td> </tr>
  *   </table>
  */
-class  ScaledSigmoidFunction : public DerivableOutputFunction {
+class NNFW_API ScaledSigmoidFunction : public DerivableOutputFunction {
 public:
     /*! \name Constructors */
     //@{
@@ -296,7 +296,7 @@ public:
  *   <tr><td>maxY</td> <td>Real</td> <td>read/write</td> <td> function's Y maximun value </td> <td>this</td> </tr>
  *   </table>
  */
-class  LinearFunction : public DerivableOutputFunction {
+class NNFW_API LinearFunction : public DerivableOutputFunction {
 public:
     /*! \name Constructors */
     //@{
@@ -384,7 +384,7 @@ public:
  *   <tr><td>threshold</td> <td>Real</td> <td>read/write</td> <td> X position of step</td> <td>this</td> </tr>
  *   </table>
  */
-class  StepFunction : public DerivableOutputFunction {
+class NNFW_API StepFunction : public DerivableOutputFunction {
 public:
     /*! \name Constructors */
     //@{
@@ -463,7 +463,7 @@ public:
  *   <tr><td>functions</td> <td>OutputFunction [V]</td> <td>read/write</td> <td>OutputFunction vector</td> <td>this</td> </tr>
  *   </table>
  */
-class  PoolFunction : public OutputFunction {
+class NNFW_API PoolFunction : public OutputFunction {
 public:
     /*! \name Constructors */
     //@{

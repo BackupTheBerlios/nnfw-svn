@@ -46,7 +46,7 @@ namespace nnfw {
  *  I called it 'basic' because it can be used also for other non-hebbian algorithms (such as the delta rule or even in back-propagation)
  *  Indeed, most of matrix modifiers will inherit from this one
  */
-class BasicMatrixModifier : public MatrixModifier {
+class NNFW_API BasicMatrixModifier : public MatrixModifier {
 public:
     //! Constructor
     BasicMatrixModifier( RealMat& matrix, RealVec& input, RealVec& output, Real lRate = 0.1 ) 
@@ -134,7 +134,7 @@ private:
  *  deltaW = lr * input * output
  *  It requires the matrix to be modified, a vector of inputs, a vector of outputs, and the mask of modifiable elements (existing links)
  */
-	class  SparseCovarianceMatrixModifier : public BasicMatrixModifier {
+class NNFW_API SparseCovarianceMatrixModifier : public BasicMatrixModifier {
 public:
     //! Constructor
     SparseCovarianceMatrixModifier( RealMat& matrix, RealVec& input, RealVec& output, MatrixData<bool>& otherMask, RealVec& meanInp, RealVec &meanOut, Real lRate = 0.1 ) 
