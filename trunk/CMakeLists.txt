@@ -134,10 +134,13 @@ IF (UNIX)
     )
 ENDIF (UNIX)
 
+### Setting For Win32 machines
+IF( WIN32 AND NOT UNIX )
+	ADD_DEFINITIONS( -DNNFW_BUILDING_DLL )
+ENDIF( WIN32 AND NOT UNIX )
 
 ### Setting Compiler minGW for Windows machines
 IF (MINGW)
-	ADD_DEFINITIONS( -DNNFW_BUILDING_DLL )
     SET_TARGET_PROPERTIES( nnfw PROPERTIES LINK_FLAGS "-LC:\\Qt\\4.2.3\\lib -Wl,--output-def,nnfwdll.def -Wl,--export-all-symbols -Wl,--add-stdcall-alias" )
     
 	TARGET_LINK_LIBRARIES( nnfw "QtXml4" )
