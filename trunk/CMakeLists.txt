@@ -33,12 +33,13 @@ ENDIF (UNIX)
 IF ( NNFW_CONFIG MATCHES shared )
     ADD_LIBRARY( nnfw SHARED ${NNFW_SRCS} )
     INSTALL( TARGETS nnfw LIBRARY DESTINATION ${LIB_DIR} )
-IF(MINGW)
-	INSTALL( FILES ${NNFW_BINARY_DIR}/libnnfw.dll DESTINATION lib )
-	INSTALL( FILES ${NNFW_BINARY_DIR}/nnfwdll.lib DESTINATION lib )
-	INSTALL( FILES ${NNFW_BINARY_DIR}/nnfwdll.exp DESTINATION lib )
-	INSTALL( FILES ${NNFW_BINARY_DIR}/nnfwdll.def DESTINATION lib )
-ENDIF(MINGW)	
+IF(WIN32)
+	INSTALL( FILES ${NNFW_BINARY_DIR}/release/nnfw.dll DESTINATION bin )
+	INSTALL( FILES ${NNFW_BINARY_DIR}/release/nnfw.lib DESTINATION bin )
+	INSTALL( FILES ${NNFW_BINARY_DIR}/release/nnfw.exp DESTINATION bin )
+	INSTALL( FILES C:/Qt/4.2.3-vs/bin/QtXml4.dll DESTINATION bin )
+	INSTALL( FILES C:/Qt/4.2.3-vs/bin/QtCore4.dll DESTINATION bin )
+ENDIF(WIN32)	
 ELSE ( NNFW_CONFIG MATCHES shared )
     ADD_LIBRARY( nnfw STATIC ${NNFW_SRCS} )
     INSTALL( TARGETS nnfw ARCHIVE DESTINATION ${LIB_DIR} )
@@ -137,15 +138,14 @@ ENDIF (UNIX)
 ### Setting For Win32 machines
 IF( WIN32 AND NOT UNIX )
 	ADD_DEFINITIONS( -DNNFW_BUILDING_DLL )
+	TARGET_LINK_LIBRARIES( nnfw "QtXml4" )
+	TARGET_LINK_LIBRARIES( nnfw "QtCore4" )
 ENDIF( WIN32 AND NOT UNIX )
 
 ### Setting Compiler minGW for Windows machines
 IF (MINGW)
     SET_TARGET_PROPERTIES( nnfw PROPERTIES LINK_FLAGS "-LC:\\Qt\\4.2.3\\lib -Wl,--output-def,nnfwdll.def -Wl,--export-all-symbols -Wl,--add-stdcall-alias" )
     
-	TARGET_LINK_LIBRARIES( nnfw "QtXml4" )
-	TARGET_LINK_LIBRARIES( nnfw "QtCore4" )
-
 	## Create VisualStudio library
 #    ADD_CUSTOM_COMMAND( TARGET nnfw POST_BUILD
 #        COMMAND lib /machine:X86 /def:nnfwdll.def
