@@ -35,6 +35,8 @@
 	#else
 		#define NNFW_API __declspec(dllimport)
 	#endif
+#else
+	#define NNFW_API
 #endif
 
 #include <vector>
