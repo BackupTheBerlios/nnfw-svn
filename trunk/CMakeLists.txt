@@ -39,7 +39,7 @@ IF(WIN32)
 	INSTALL( FILES ${NNFW_BINARY_DIR}/release/nnfw.exp DESTINATION bin )
 	INSTALL( FILES C:/Qt/4.2.3-vs/bin/QtXml4.dll DESTINATION bin )
 	INSTALL( FILES C:/Qt/4.2.3-vs/bin/QtCore4.dll DESTINATION bin )
-ENDIF(WIN32)	
+ENDIF(WIN32)
 ELSE ( NNFW_CONFIG MATCHES shared )
     ADD_LIBRARY( nnfw STATIC ${NNFW_SRCS} )
     INSTALL( TARGETS nnfw ARCHIVE DESTINATION ${LIB_DIR} )
@@ -64,17 +64,20 @@ SET(CPACK_RESOURCE_FILE_LICENSE "${NNFW_SOURCE_DIR}/GPL.txt")
 #   CPACK_INSTALL_COMMANDS              - Extra commands to install components
 
 IF(WIN32 AND NOT UNIX)
-  # There is a bug in NSI that does not handle full unix paths properly. Make
-  # sure there is at least one set of four (4) backlasshes.
-  #SET(CPACK_PACKAGE_ICON "${CMake_SOURCE_DIR}/Utilities/Release\\\\InstallIcon.bmp")
-  #SET(CPACK_NSIS_INSTALLED_ICON_NAME "bin\\\\MyExecutable.exe")
-  SET(CPACK_NSIS_DISPLAY_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY} Neural Network Framework")
-  SET(CPACK_NSIS_HELP_LINK "http:\\\\\\\\www.nnfw.org")
-  SET(CPACK_NSIS_URL_INFO_ABOUT "http:\\\\\\\\www.nnfw.org")
-  SET(CPACK_NSIS_CONTACT "mave@berlios.de")
+	# There is a bug in NSI that does not handle full unix paths properly. Make
+	# sure there is at least one set of four (4) backlasshes.
+	#SET(CPACK_PACKAGE_ICON "${CMake_SOURCE_DIR}/Utilities/Release\\\\InstallIcon.bmp")
+	#SET(CPACK_NSIS_INSTALLED_ICON_NAME "bin\\\\MyExecutable.exe")
+	SET(CPACK_NSIS_DISPLAY_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY} Neural Network Framework")
+	SET(CPACK_NSIS_HELP_LINK "http:\\\\\\\\www.nnfw.org")
+	SET(CPACK_NSIS_URL_INFO_ABOUT "http:\\\\\\\\www.nnfw.org")
+	SET(CPACK_NSIS_CONTACT "mave@berlios.de")
+	SET(CPACK_GENERATOR "NSIS")
 ENDIF(WIN32 AND NOT UNIX)
+IF (UNIX)
+	SET(CPACK_GENERATOR "STGZ")
+ENDIF (UNIX)
 
-SET(CPACK_GENERATOR "NSIS")
 INCLUDE(CPack)
 
 
