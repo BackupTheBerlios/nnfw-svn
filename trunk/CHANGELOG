@@ -14,6 +14,9 @@ S <mave> comment goes here
     'B' : means a BugFix
     'C' : means that something has been changed (e.g. implementation of a Class or a signature method)
 ==== End of Legend ====
+
++ <mave> added LeakyIntegratorFunction
+
     ==> 169 - 12/04/2007 - 0.7.2 release <==
 
 + <mave> added support for Windows; created Installer

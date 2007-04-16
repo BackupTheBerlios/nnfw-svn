@@ -127,7 +127,9 @@ void Factory::initFactory() {
     outfuntypes["ScaledSigmoidFunction"] = new Creator<ScaledSigmoidFunction>();
     outfuntypes["SigmoidFunction"] = new Creator<SigmoidFunction>();
     outfuntypes["StepFunction"] = new Creator<StepFunction>();
+	outfuntypes["LeakyIntegratorFunction"] = new Creator<LeakyIntegratorFunction>();
     outfuntypes["PoolFunction"] = new Creator<PoolFunction>();
+	outfuntypes["CompositeFunction"] = new Creator<CompositeFunction>();
     outfuntypes["GaussFunction"] = new Creator<GaussFunction>();
 
     isInit = true;

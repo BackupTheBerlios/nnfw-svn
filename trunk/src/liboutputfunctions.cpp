@@ -415,6 +415,57 @@ StepFunction* StepFunction::clone() const {
 }
 
 
+
+LeakyIntegratorFunction::LeakyIntegratorFunction( Real d )
+    : OutputFunction(), outprev() {
+    delta = d;
+    addProperty( "delta", Variant::t_real, this, &LeakyIntegratorFunction::getDelta, &LeakyIntegratorFunction::setDelta );
+    setTypename( "LeakyIntegratorFunction" );
+}
+
+LeakyIntegratorFunction::LeakyIntegratorFunction( PropertySettings& prop )
+    : OutputFunction(), outprev() {
+    delta = 0.5;
+    addProperty( "delta", Variant::t_real, this, &LeakyIntegratorFunction::getDelta, &LeakyIntegratorFunction::setDelta );
+    setProperties( prop );
+    setTypename( "LeakyIntegratorFunction" );
+}
+
+void LeakyIntegratorFunction::apply( RealVec& inputs, RealVec& outputs ) {
+#ifdef NNFW_DEBUG
+    if ( inputs.size() != outputs.size() ) {
+        nnfwMessage( NNFW_ERROR, "The output dimension doesn't match the input dimension" );
+        return;
+    }
+#endif
+	//--- y <- delta*y(t-1) + (1.0-delta)*inputs
+	//---  its equivalent to
+	//--- y <- delta*( y(t-1) - inputs ) + inputs
+	outputs.assign_xminusy( outprev, inputs );
+	outputs.scale( delta );
+	outputs += inputs;
+	outprev.assign( outputs );
+}
+
+bool LeakyIntegratorFunction::setDelta( const Variant& v ) {
+    delta = v.getReal();
+    return true;
+}
+
+Variant LeakyIntegratorFunction::getDelta() {
+    return Variant( delta );
+}
+
+LeakyIntegratorFunction* LeakyIntegratorFunction::clone() const {
+	LeakyIntegratorFunction* cl = new LeakyIntegratorFunction( delta );
+	cl->outprev = outprev;
+    return cl;
+}
+
+void LeakyIntegratorFunction::setCluster( Cluster* c ) {
+	outprev.resize( c->size() );
+}
+
 PoolFunction::PoolFunction( const OutputFunction& prototype, u_int dim )
     : OutputFunction(), ups(dim) {
     for( u_int i=0; i<dim; i++ ) {
@@ -533,6 +584,70 @@ void PoolFunction::setCluster( Cluster* c ) {
     for( u_int i=oldDim; i<newDim; i++ ) {
         ups[i] = new OutputFunction();
     }
+}
+
+CompositeFunction::CompositeFunction( const OutputFunction& f, const OutputFunction& g )
+    : OutputFunction(), mid() {
+	first = f.clone();
+	second = g.clone();
+
+    addProperty( "first", Variant::t_outfunction, this, &CompositeFunction::getFirstFunction, &CompositeFunction::setFirstFunction );
+    addProperty( "second", Variant::t_outfunction, this, &CompositeFunction::getSecondFunction, &CompositeFunction::setSecondFunction );
+    setTypename( "CompositeFunction" );
+}
+
+CompositeFunction::CompositeFunction( PropertySettings& prop )
+    : OutputFunction(), mid() {
+	first = new IdentityFunction();
+	second = new IdentityFunction();
+    addProperty( "first", Variant::t_outfunction, this, &CompositeFunction::getFirstFunction, &CompositeFunction::setFirstFunction );
+    addProperty( "second", Variant::t_outfunction, this, &CompositeFunction::getSecondFunction, &CompositeFunction::setSecondFunction );
+    setProperties( prop );
+    setTypename( "CompositeFunction" );
+}
+//----------------------------
+void CompositeFunction::apply( RealVec& inputs, RealVec& outputs ) {
+#ifdef NNFW_DEBUG
+    if ( inputs.size() != outputs.size() ) {
+        nnfwMessage( NNFW_ERROR, "The output dimension doesn't match the input dimension" );
+        return;
+    }
+#endif
+	first->apply( inputs, mid );
+	second->apply( mid, outputs );
+}
+
+bool CompositeFunction::setFirstFunction( const Variant& v ) {
+	delete first;
+    first = v.getOutputFunction()->clone();
+	first->setCluster( cl );
+    return true;
+}
+
+Variant CompositeFunction::getFirstFunction() {
+    return Variant( first );
+}
+
+bool CompositeFunction::setSecondFunction( const Variant& v ) {
+	delete second;
+    second = v.getOutputFunction()->clone();
+	second->setCluster( cl );
+    return true;
+}
+
+Variant CompositeFunction::getSecondFunction() {
+    return Variant( second );
+}
+
+CompositeFunction* CompositeFunction::clone() const {
+	return new CompositeFunction( *first, *second );
+}
+
+void CompositeFunction::setCluster( Cluster* c ) {
+	this->cl = c;
+	mid.resize( c->size() );
+	first->setCluster( c );
+	second->setCluster( c );
 }
 
 }

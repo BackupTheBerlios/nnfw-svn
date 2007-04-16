@@ -43,7 +43,7 @@ public:
     /*! \name Interface */
     //@{
 
-    /*! \brief create a new Variant
+    /*! \brief create an instance of Propertized from PropertySettings specified
      */
     virtual Propertized* create( PropertySettings& param ) const = 0;
 

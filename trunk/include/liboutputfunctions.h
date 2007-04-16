@@ -449,6 +449,65 @@ public:
     Real threshold;
 };
 
+/*! \brief LeakyIntegrator Function !! 
+ *
+ * Details..
+ *
+ *   <table class="proptable">
+ *   <tr><td class="prophead" colspan="5">Properties</td></tr>
+ *   <tr><th>Name</th> <th>Type [isVector]</th> <th>Access mode</th> <th>Description</th> <th>Class</th></tr>
+ *   <tr><td>typename</td> <td>string</td> <td>read-only</td> <td> Class's type </td> <td>Propertized</td> </tr>
+ *   <tr><td>delta</td> <td>Real</td> <td>read/write</td> <td> leak rate </td> <td>this</td> </tr>
+ *   </table>
+ */
+class NNFW_API LeakyIntegratorFunction : public OutputFunction {
+public:
+    /*! \name Constructors */
+    //@{
+
+    //! Construct a LeakyIntegrator with delta 0.5 by default
+    LeakyIntegratorFunction( Real d = 0.5 );
+
+    //! Construct from PropertySettings
+    LeakyIntegratorFunction( PropertySettings& prop );
+
+    //! Destructor
+    virtual ~LeakyIntegratorFunction() { /* Nothing to do */ };
+
+    //@}
+    /*! \name Interface */
+    //@{
+
+    /*! \brief Set the leak rate of LeakyIntegratorFunction
+     */
+    bool setDelta( const Variant& v );
+
+    /*! \brief Return the leak rate of LeakyIntegratorFunction
+     */
+    Variant getDelta();
+
+    /*! \brief Implement the updating method
+     *
+     * it computes: y(t) <- delta * y(t-1) + (1.0-delta) * inputs
+     */
+    virtual void apply( RealVec& inputs, RealVec& outputs );
+
+    /*! \brief Clone this object
+     */
+    virtual LeakyIntegratorFunction* clone() const;
+
+    /*! \brief resize itself to fit the size of Cluster
+     */
+    virtual void setCluster( Cluster* );
+
+    //@}
+
+    //! delta is the leak rate of the function
+    Real delta;
+	//! previous outputs
+	RealVec outprev;
+};
+
 /*! \brief Pool of Functions
  *
  *  Further Details coming soon ;-)
@@ -535,6 +594,80 @@ private:
     //! Vector of OutputFunction
     VectorData<OutputFunction*> ups;
 };
+
+
+
+/*! \brief Composite Function !! 
+ *
+ * Details..
+ *
+ *   <table class="proptable">
+ *   <tr><td class="prophead" colspan="5">Properties</td></tr>
+ *   <tr><th>Name</th> <th>Type [isVector]</th> <th>Access mode</th> <th>Description</th> <th>Class</th></tr>
+ *   <tr><td>typename</td> <td>string</td> <td>read-only</td> <td> Class's type </td> <td>Propertized</td> </tr>
+ *   <tr><td>first</td> <td>OutputFunction</td> <td>read/write</td> <td> first function </td> <td>this</td> </tr>
+ *   <tr><td>second</td> <td>OutputFunction</td> <td>read/write</td> <td> second function </td> <td>this</td> </tr>
+ *   </table>
+ */
+class NNFW_API CompositeFunction : public OutputFunction {
+public:
+    /*! \name Constructors */
+    //@{
+
+    //! Construct a Composite
+    CompositeFunction( const OutputFunction& f, const OutputFunction& g );
+
+    //! Construct from PropertySettings
+    CompositeFunction( PropertySettings& prop );
+
+    //! Destructor
+    virtual ~CompositeFunction() { /* Nothing to do */ };
+
+    //@}
+    /*! \name Interface */
+    //@{
+
+    /*! \brief Set the first function of CompositeFunction
+     */
+    bool setFirstFunction( const Variant& v );
+
+    /*! \brief Return the first function of CompositeFunction
+     */
+    Variant getFirstFunction();
+
+    /*! \brief Set the second function of CompositeFunction
+     */
+    bool setSecondFunction( const Variant& v );
+
+    /*! \brief Return the second function of CompositeFunction
+     */
+    Variant getSecondFunction();
+
+    /*! \brief Implement the updating method
+     *
+     * it computes: y(t) <- second( first( input, outputs ) )
+     */
+    virtual void apply( RealVec& inputs, RealVec& outputs );
+
+    /*! \brief Clone this object
+     */
+    virtual CompositeFunction* clone() const;
+
+    /*! \brief recursive call setCluster on first and second function setted
+     */
+    virtual void setCluster( Cluster* );
+
+    //@}
+
+	//--- functions
+	OutputFunction* first;
+	OutputFunction* second;
+	//--- intermediate result
+	RealVec mid;
+	//--- Cluster
+	Cluster* cl;
+};
+
 
 }
 
