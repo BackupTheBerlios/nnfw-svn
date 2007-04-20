@@ -14,7 +14,7 @@ S <mave> comment goes here
     'B' : means a BugFix
     'C' : means that something has been changed (e.g. implementation of a Class or a signature method)
 ==== End of Legend ====
-    ==> 170 - 20/04/2007 <==
+    ==> 176 - 20/04/2007 <==
 
 B <mave> bugfix in assignment operator of RealVec and VectorData
 + <mave> added LeakyIntegratorFunction
