@@ -29,14 +29,14 @@ namespace nnfw {
 FakeCluster::FakeCluster( u_int size, const char* name )
     : Cluster( size, name) {
     // Set the outputs as a View of inputs
-    outputs().convertToView( inputs(), 0, size );
+    outputs().convertToView( inputs(), 0, numNeurons() );
     setTypename( "FakeCluster" );
 }
 
 FakeCluster::FakeCluster( PropertySettings& prop )
     : Cluster( prop ) {
     // Set the outputs as a View of inputs
-    outputs().convertToView( inputs(), 0, size() );
+    outputs().convertToView( inputs(), 0, numNeurons() );
     setTypename( "FakeCluster" );
 }
     

@@ -35,7 +35,7 @@ BiasedCluster::BiasedCluster( u_int numNeurons, const char* name )
 }
 
 BiasedCluster::BiasedCluster( PropertySettings& prop )
-    : Cluster( prop ), biasesdata( size() ), tempdata( size() ) {
+    : Cluster( prop ), biasesdata( numNeurons() ), tempdata( numNeurons() ) {
     Variant& v = prop["biases"];
     if ( v.isNull() ) {
         biasesdata.zeroing();
@@ -56,7 +56,7 @@ void BiasedCluster::update() {
 }
 
 void BiasedCluster::setBias( u_int neuron, Real bias ) {
-    if ( neuron >= size() ) {
+    if ( neuron >= numNeurons() ) {
         char msg[100];
         sprintf( msg, "The neuron %u doesn't exists! The operation setBias will be ignored", neuron );
         nnfwMessage( NNFW_ERROR, msg );
@@ -66,7 +66,7 @@ void BiasedCluster::setBias( u_int neuron, Real bias ) {
 }
 
 void BiasedCluster::setAllBiases( Real bias ) {
-    biases().assign( size(), bias );
+    biases().assign( numNeurons(), bias );
 }
 
 void BiasedCluster::setBiases( const RealVec& bias ) {
@@ -74,7 +74,7 @@ void BiasedCluster::setBiases( const RealVec& bias ) {
 }
 
 Real BiasedCluster::getBias( u_int neuron ) {
-    if ( neuron >= size() ) {
+    if ( neuron >= numNeurons() ) {
         char msg[100];
         sprintf( msg, "The neuron %u doesn't exists! The operation getBias will return 0.0", neuron );
         nnfwMessage( NNFW_ERROR, msg );
@@ -84,7 +84,7 @@ Real BiasedCluster::getBias( u_int neuron ) {
 }
 
 void BiasedCluster::randomize( Real min, Real max ) {
-    for ( u_int i = 0; i < size(); i++ ) {
+    for ( u_int i = 0; i < numNeurons(); i++ ) {
         biasesdata[i] = Random::flatReal( min, max );
     }
 }

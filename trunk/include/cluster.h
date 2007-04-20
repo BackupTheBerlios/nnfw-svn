@@ -77,7 +77,7 @@ namespace nnfw {
  *   <tr><td>inputs</td> <td>RealVec</td> <td>read/write</td> <td> neuron's input </td> <td>this</td> </tr>
  *   <tr><td>outfunction</td> <td>OutputFunction</td> <td>read/write</td> <td> neuron's output function </td> <td>this</td> </tr>
  *   <tr><td>outputs</td> <td>RealVec</td> <td>read/write</td> <td> neuron's output </td> <td>this</td> </tr>
- *   <tr><td>size</td> <td>unsigned int</td> <td>read-only</td> <td> number of neurons </td> <td>this</td> </tr>
+ *   <tr><td>numNeurons</td> <td>unsigned int</td> <td>read-only</td> <td> number of neurons </td> <td>this</td> </tr>
  *   </table>
  *
  */
@@ -97,9 +97,16 @@ public:
     //@{
 
     /*! Return the number of neurons (the length of input and output arrays)
+	 *  \deprecated use numNeurons instead
      */
     u_int size() const {
-        return numNeurons;
+        return numNeurons();
+    };
+
+    /*! Return the number of neurons (the length of input and output arrays)
+     */
+    u_int numNeurons() const {
+        return numneurons;
     };
 
     /*! Return true if inputs needs a reset
@@ -129,8 +136,8 @@ public:
 
     /*! Read Access to property 'size'
      */
-    Variant sizeP() {
-        return Variant( size() );
+    Variant numNeuronsP() {
+        return Variant( numNeurons() );
     };
 
     /*! Read Access to property 'accumulate'
@@ -264,7 +271,7 @@ protected:
 
 private:
     //! Number of neurons
-    u_int numNeurons;
+    u_int numneurons;
     //! Input of neurons
     RealVec inputdata;
     //! Output of neurons

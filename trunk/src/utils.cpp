@@ -43,7 +43,7 @@ BaseNeuralNet* feedForwardNet( U_IntVec layers, const char* clusterType, const c
     for( u_int i=0; i<layers.size(); i++ ) {
         sprintf( buf, "%s%d", clusterType, clCount );
         PropertySettings prop;
-        prop["size"] = layers[i];
+        prop["numNeurons"] = layers[i];
         prop["name"] = buf;
         curr = Factory::createCluster( clusterType, prop );
         if ( i == 0 ) {

@@ -30,10 +30,10 @@ namespace nnfw {
 
 CopyLinker::CopyLinker( Cluster* from, Cluster* to, CopyMode mode, const char* name )
     : Linker(from, to, name), dataFrom(), dataTo() {
-    if ( from->size() < to->size() ) {
-        dimData = from->size();
+    if ( from->numNeurons() < to->numNeurons() ) {
+        dimData = from->numNeurons();
     } else {
-        dimData = to->size(); 
+        dimData = to->numNeurons();
     }
     // Follow initialization force setMode method to setting datas, otherwise strange automatic compile-time
     // initialization may results in unpredictable behaviour
@@ -109,7 +109,7 @@ void CopyLinker::update() {
     return;
 }
 
-u_int CopyLinker::size() {
+u_int CopyLinker::size() const {
     return dimData;
 }
 

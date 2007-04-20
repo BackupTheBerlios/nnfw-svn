@@ -98,7 +98,7 @@ public:
 
     /*!  Returns the total number of the links: rows*cols
      */
-    u_int size();
+    u_int size() const;
 
     /*!  Randomize the weights of the MatrixLinker
      */

@@ -31,7 +31,7 @@ namespace nnfw {
 
 Cluster::Cluster( u_int numNeurons, const char* name )
     : Updatable(name), inputdata(numNeurons), outputdata(numNeurons) {
-    this->numNeurons = numNeurons;
+    this->numneurons = numNeurons;
     outputdata.zeroing();
     inputdata.zeroing();
     accOff = true;
@@ -53,9 +53,9 @@ Cluster::Cluster( PropertySettings& prop )
         setName( prop["name"].getString() );
     }
     // --- Configuring Dimension
-    this->numNeurons = prop["size"].getUInt();
-    inputdata.resize( numNeurons );
-    outputdata.resize( numNeurons );
+    this->numneurons = prop["numNeurons"].getUInt();
+    inputdata.resize( numneurons );
+    outputdata.resize( numneurons );
     // --- Configuring Accumulate modality
     v = prop["accumulate"];
     if ( v.isNull() ) {
@@ -87,7 +87,7 @@ void Cluster::setFunction( const OutputFunction& up ) {
 }
 
 void Cluster::setInput( u_int neuron, Real value ) {
-    if ( neuron >= numNeurons ) {
+    if ( neuron >= numneurons ) {
         char msg[100];
         sprintf( msg, "The neuron %u doesn't exists! The operation setInput will be ignored", neuron );
         nnfwMessage( NNFW_ERROR, msg );
@@ -101,7 +101,7 @@ void Cluster::setInputs( const RealVec& inputs ) {
 }
 
 void Cluster::setAllInputs( Real value ) {
-    inputdata.assign( numNeurons, value );
+    inputdata.assign( numneurons, value );
     setNeedReset( false );
 }
 
@@ -111,7 +111,7 @@ void Cluster::resetInputs() {
 }
 
 Real Cluster::getInput( u_int neuron ) const {
-    if ( neuron >= numNeurons ) {
+    if ( neuron >= numneurons ) {
         char msg[100];
         sprintf( msg, "The neuron %u doesn't exists! The operation getInput will return 0.0", neuron );
         nnfwMessage( NNFW_ERROR, msg );
@@ -121,7 +121,7 @@ Real Cluster::getInput( u_int neuron ) const {
 }
 
 void Cluster::setOutput( u_int neuron, Real value ) {
-    if ( neuron >= numNeurons ) {
+    if ( neuron >= numneurons ) {
         char msg[100];
         sprintf( msg, "The neuron %u doesn't exists! The operation setOutput will be ignored", neuron );
         nnfwMessage( NNFW_ERROR, msg );
@@ -135,7 +135,7 @@ void Cluster::setOutputs( const RealVec& outputs ) {
 }
 
 Real Cluster::getOutput( u_int neuron ) const {
-    if ( neuron >= numNeurons ) {
+    if ( neuron >= numneurons ) {
         char msg[100];
         sprintf( msg, "The neuron %u doesn't exists! The operation getOutput will return 0.0", neuron );
         nnfwMessage( NNFW_ERROR, msg );
@@ -145,7 +145,7 @@ Real Cluster::getOutput( u_int neuron ) const {
 }
 
 void Cluster::propdefs() {
-    addProperty( "size", Variant::t_uint, this, &Cluster::sizeP );
+    addProperty( "numNeurons", Variant::t_uint, this, &Cluster::numNeuronsP );
     addProperty( "accumulate", Variant::t_bool, this, &Cluster::accumP, &Cluster::setAccumP );
     addProperty( "inputs", Variant::t_realvec, this, &Cluster::inputsP, &Cluster::setInputsP );
     addProperty( "outputs", Variant::t_realvec, this, &Cluster::outputsP, &Cluster::setOutputsP );

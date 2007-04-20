@@ -234,7 +234,7 @@ void parseCluster_10( QDomElement cur, BaseNeuralNet* net ) {
     }
     PropertySettings prop;
     prop["name"] = name.toAscii().constData();
-    prop["size"] = Variant( size.toUInt() );
+    prop["numNeurons"] = Variant( size.toUInt() );
     Cluster* cl = Factory::createCluster( type.toAscii().constData(), prop );
     net->addCluster( cl );
 
@@ -602,11 +602,11 @@ bool saveXML( const char* filename, BaseNeuralNet* net ) {
     const ClusterVec& cls = net->clusters();
     for( unsigned int i=0; i<cls.size(); i++ ) {
         QDomElement elem = doc.createElement( "cluster" );
-        elem.setAttribute( "size", cls[i]->size() );
+        elem.setAttribute( "size", cls[i]->numNeurons() );
         elem.setAttribute( "type", cls[i]->getTypename().getString() );
         elem.setAttribute( "name", cls[i]->getName() );
         nn.appendChild( elem );
-        saveProperties( doc, elem, cls[i], QStringList() << "size" << "typename" << "name" );
+        saveProperties( doc, elem, cls[i], QStringList() << "numNeurons" << "typename" << "name" );
     }
 
     const LinkerVec& ls = net->linkers();

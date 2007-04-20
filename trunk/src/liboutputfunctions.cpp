@@ -469,9 +469,9 @@ LeakyIntegratorFunction* LeakyIntegratorFunction::clone() const {
 }
 
 void LeakyIntegratorFunction::setCluster( Cluster* c ) {
-	if ( c->size() != delta.size() ) {
-		delta.resize( c->size() );
-		outprev.resize( c->size() );
+	if ( c->numNeurons() != delta.size() ) {
+		delta.resize( c->numNeurons() );
+		outprev.resize( c->numNeurons() );
 	}
 }
 
@@ -588,7 +588,7 @@ PoolFunction* PoolFunction::clone() const {
 
 void PoolFunction::setCluster( Cluster* c ) {
     u_int oldDim = ups.size();
-    u_int newDim = c->size();
+    u_int newDim = c->numNeurons();
     ups.resize( newDim );
     for( u_int i=oldDim; i<newDim; i++ ) {
         ups[i] = new OutputFunction();
@@ -659,7 +659,7 @@ CompositeFunction* CompositeFunction::clone() const {
 
 void CompositeFunction::setCluster( Cluster* c ) {
 	this->cl = c;
-	mid.resize( c->size() );
+	mid.resize( c->numNeurons() );
 	first->setCluster( c );
 	second->setCluster( c );
 }

@@ -110,7 +110,7 @@ public:
      *
      * The actual means of 'size' will be specified by sub-classes that implementes concrete linkers
      */
-    virtual u_int size() = 0;
+    virtual u_int size() const = 0;
 
     /*! \brief Randomize the parameters of the Linker
      *

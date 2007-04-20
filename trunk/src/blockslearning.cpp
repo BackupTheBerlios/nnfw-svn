@@ -73,9 +73,9 @@ RealVec& SupervisedTeachBlock::getError() {
 GradientBiasedCluster::GradientBiasedCluster( BiasedCluster* cl, BaseTeachBlock* pre, BaseTeachBlock* post, const char* name)
     : SupervisedTeachBlock( pre, post, name ) {
     this->cl = cl;
-    target.resize( cl->size() );
-    error.resize( cl->size() );
-    oldDelta.resize( cl->size() );
+    target.resize( cl->numNeurons() );
+    error.resize( cl->numNeurons() );
+    oldDelta.resize( cl->numNeurons() );
     oldDelta.assign( oldDelta.size(), 0.0f );
     rate = 0.2f;
     momento = 0.0f;

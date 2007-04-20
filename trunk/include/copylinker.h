@@ -94,7 +94,7 @@ public:
      *
      * Details
      */
-    u_int size();
+    u_int size() const;
 
     /*! \brief Randomize nothing !!
      *

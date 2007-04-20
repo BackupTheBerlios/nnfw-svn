@@ -30,7 +30,7 @@ DDECluster::DDECluster( const RealVec& c, u_int numNeurons, const char* name )
 }
 
 DDECluster::DDECluster( PropertySettings& prop )
-    : Cluster( prop ), tmpdata( size() ), tmpdata2( size() ) {
+    : Cluster( prop ), tmpdata( numNeurons() ), tmpdata2( numNeurons() ) {
     Variant& v = prop["coeff"];
     if ( v.isNull() ) {
         setCoeff( RealVec() );
@@ -54,7 +54,7 @@ void DDECluster::setCoeff( const RealVec& c ) {
     coeff.assign( c );
     ds.resize( (c.size()>3) ? c.size()-3 : 0 );
     for( u_int i=0; i<ds.size(); i++ ) {
-        ds[i].resize( size() );
+        ds[i].resize( numNeurons() );
         ds[i].zeroing();
     }
 }
