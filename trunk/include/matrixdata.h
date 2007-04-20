@@ -445,6 +445,11 @@ private:
         //notifyAll( matdatachanged );
     };
 
+	//! The Copy-Construction and Assignement is to allowed
+    MatrixData( const MatrixData& src )
+        : Observer(), Observable(), data(0), rowView(0) {
+	};
+
 };
 
 }

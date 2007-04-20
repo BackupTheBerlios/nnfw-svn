@@ -414,19 +414,21 @@ StepFunction* StepFunction::clone() const {
     return new StepFunction( min, max, threshold );
 }
 
-
-
-LeakyIntegratorFunction::LeakyIntegratorFunction( Real d )
-    : OutputFunction(), outprev() {
-    delta = d;
-    addProperty( "delta", Variant::t_real, this, &LeakyIntegratorFunction::getDelta, &LeakyIntegratorFunction::setDelta );
+LeakyIntegratorFunction::LeakyIntegratorFunction( const RealVec& d )
+    : OutputFunction(), delta(), outprev() {
+    delta.resize( d.size() );
+	delta.assign( d );
+	outprev.resize( delta.size() );
+	outprev.zeroing();
+    addProperty( "delta", Variant::t_realvec, this, &LeakyIntegratorFunction::getDeltaV, &LeakyIntegratorFunction::setDeltaV );
     setTypename( "LeakyIntegratorFunction" );
 }
 
 LeakyIntegratorFunction::LeakyIntegratorFunction( PropertySettings& prop )
-    : OutputFunction(), outprev() {
-    delta = 0.5;
-    addProperty( "delta", Variant::t_real, this, &LeakyIntegratorFunction::getDelta, &LeakyIntegratorFunction::setDelta );
+    : OutputFunction(), delta(1), outprev(1) {
+	delta[0] = 0.5;
+	outprev[0] = 0.0f;
+    addProperty( "delta", Variant::t_realvec, this, &LeakyIntegratorFunction::getDeltaV, &LeakyIntegratorFunction::setDeltaV );
     setProperties( prop );
     setTypename( "LeakyIntegratorFunction" );
 }
@@ -442,28 +444,35 @@ void LeakyIntegratorFunction::apply( RealVec& inputs, RealVec& outputs ) {
 	//---  its equivalent to
 	//--- y <- delta*( y(t-1) - inputs ) + inputs
 	outputs.assign_xminusy( outprev, inputs );
-	outputs.scale( delta );
+	outputs *= delta;
 	outputs += inputs;
 	outprev.assign( outputs );
 }
 
-bool LeakyIntegratorFunction::setDelta( const Variant& v ) {
-    delta = v.getReal();
-    return true;
+Variant LeakyIntegratorFunction::getDeltaV() {
+	return Variant( &delta );
 }
 
-Variant LeakyIntegratorFunction::getDelta() {
-    return Variant( delta );
+bool LeakyIntegratorFunction::setDeltaV( const Variant& v ) {
+	setDelta( *(v.getRealVec()) );
+	return true;
+}
+
+void LeakyIntegratorFunction::zeroingStatus() {
+	outprev.zeroing();
 }
 
 LeakyIntegratorFunction* LeakyIntegratorFunction::clone() const {
 	LeakyIntegratorFunction* cl = new LeakyIntegratorFunction( delta );
-	cl->outprev = outprev;
+	cl->outprev.assign( outprev );
     return cl;
 }
 
 void LeakyIntegratorFunction::setCluster( Cluster* c ) {
-	outprev.resize( c->size() );
+	if ( c->size() != delta.size() ) {
+		delta.resize( c->size() );
+		outprev.resize( c->size() );
+	}
 }
 
 PoolFunction::PoolFunction( const OutputFunction& prototype, u_int dim )
@@ -605,7 +614,12 @@ CompositeFunction::CompositeFunction( PropertySettings& prop )
     setProperties( prop );
     setTypename( "CompositeFunction" );
 }
-//----------------------------
+
+CompositeFunction::~CompositeFunction() {
+	delete first;
+	delete second;
+}
+
 void CompositeFunction::apply( RealVec& inputs, RealVec& outputs ) {
 #ifdef NNFW_DEBUG
     if ( inputs.size() != outputs.size() ) {

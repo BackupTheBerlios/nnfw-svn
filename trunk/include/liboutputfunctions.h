@@ -457,7 +457,7 @@ public:
  *   <tr><td class="prophead" colspan="5">Properties</td></tr>
  *   <tr><th>Name</th> <th>Type [isVector]</th> <th>Access mode</th> <th>Description</th> <th>Class</th></tr>
  *   <tr><td>typename</td> <td>string</td> <td>read-only</td> <td> Class's type </td> <td>Propertized</td> </tr>
- *   <tr><td>delta</td> <td>Real</td> <td>read/write</td> <td> leak rate </td> <td>this</td> </tr>
+ *   <tr><td>delta</td> <td>RealVec</td> <td>read/write</td> <td> leak rates </td> <td>this</td> </tr>
  *   </table>
  */
 class NNFW_API LeakyIntegratorFunction : public OutputFunction {
@@ -465,8 +465,8 @@ public:
     /*! \name Constructors */
     //@{
 
-    //! Construct a LeakyIntegrator with delta 0.5 by default
-    LeakyIntegratorFunction( Real d = 0.5 );
+    //! Construct a LeakyIntegrator with deltas specified
+    LeakyIntegratorFunction( const RealVec& d );
 
     //! Construct from PropertySettings
     LeakyIntegratorFunction( PropertySettings& prop );
@@ -478,13 +478,29 @@ public:
     /*! \name Interface */
     //@{
 
-    /*! \brief Set the leak rate of LeakyIntegratorFunction
+    /*! \brief Return the i-th Delta setted
      */
-    bool setDelta( const Variant& v );
+    RealVec& getDelta() {
+		return delta;
+	};
 
-    /*! \brief Return the leak rate of LeakyIntegratorFunction
+    /*! \brief Set the i-th Delta
      */
-    Variant getDelta();
+    void setDelta( const RealVec& v ) {
+		delta.assign( v );
+	};
+
+    /*! \brief Return the i-th Delta setted (Variant version)
+     */
+    Variant getDeltaV();
+
+    /*! \brief Set the i-th element (Variant version)
+     */
+    bool setDeltaV( const Variant& v );
+
+    /*! \brief Zeroing the status
+     */
+	void zeroingStatus();
 
     /*! \brief Implement the updating method
      *
@@ -503,7 +519,7 @@ public:
     //@}
 
     //! delta is the leak rate of the function
-    Real delta;
+    RealVec delta;
 	//! previous outputs
 	RealVec outprev;
 };
@@ -621,7 +637,7 @@ public:
     CompositeFunction( PropertySettings& prop );
 
     //! Destructor
-    virtual ~CompositeFunction() { /* Nothing to do */ };
+    virtual ~CompositeFunction();
 
     //@}
     /*! \name Interface */

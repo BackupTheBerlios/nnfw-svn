@@ -70,6 +70,15 @@ public:
      */
     RealVec( const RealVec& orig );
 
+    /*! \brief Assignement-operator
+     */
+    RealVec& operator=( const RealVec& src ) {
+		RealVec& self = *this;
+		self.resize( src.size() );
+		self.assign( src );
+		return self;
+	};
+
     //@}
     /*! \name Operations on RealVec */
     //@{

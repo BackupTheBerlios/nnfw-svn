@@ -32,8 +32,6 @@
 
 namespace nnfw {
 
-void parseOutputFunction_10( QDomElement cur, Cluster* cl );
-
 void parseProperty_10( QDomElement cur, const Propertized* obj ) {
     AbstractPropertyAccess* pacc = obj->propertySearch( cur.tagName().toAscii().constData() );
     if ( !pacc ) {

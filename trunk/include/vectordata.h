@@ -161,7 +161,16 @@ public:
             view = false;
             observed = 0;
         /* } */
-    }
+    };
+
+    /*! \brief Assignement-operator
+     */
+    VectorData& operator=( const VectorData& src ) {
+		VectorData& self = *this;
+		self.resize( src.size() );
+		self.assign( src );
+		return self;
+	};
 
     /*! \brief Destructor
      */
@@ -172,7 +181,7 @@ public:
         } else {
             delete []data;
         }
-    }
+    };
     //@}
     /*! \name Informations about VectorData */
     //@{
