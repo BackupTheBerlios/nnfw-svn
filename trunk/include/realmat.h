@@ -44,7 +44,7 @@ public:
     /*! \name Constructors */
     //@{
 
-    /*! \brief Construct an empty matrix of dimension size
+    /*! \brief Construct matrix of dimension size initialized to zero
      */
     RealMat( u_int rows, u_int cols );
 
