@@ -5,7 +5,6 @@
 #include <QMap>
 
 #include "nnfw/nnfw.h"
-using namespace nnfw;
 
 class ClusterRenderer;
 class LinkerRenderer;
@@ -16,14 +15,16 @@ public:
 	NNRenderer( QWidget* parent = 0 );
 
 	//! set the neuralnet to display
-	void setNeuralNet( BaseNeuralNet* nn );
+	void setNeuralNet( nnfw::BaseNeuralNet* nn );
 	//! return the neuralnet displayed
-	BaseNeuralNet* getNeuralNet() {
+	nnfw::BaseNeuralNet* getNeuralNet() {
 		return nn;
 	};
 public slots:
 	//! calculate the position of Clusters in order to see inputs to the bottom and output in top
 	void defaultPositioning();
+	//! recalculate the bounding rect of scene
+	void fitSceneRect();
 
 protected:
 	void keyPressEvent(QKeyEvent *event);
@@ -35,10 +36,10 @@ protected:
 private:
 	//! when there is no neuralnet to display the zoom-in/out is disabled
 	bool scaleDisabled;
-	BaseNeuralNet* nn;
+	nnfw::BaseNeuralNet* nn;
 	//--- mappings
-	QMap<Cluster*, ClusterRenderer*> clmap;
-	QMap<Linker*, LinkerRenderer*> lkmap;
+	QMap<nnfw::Cluster*, ClusterRenderer*> clmap;
+	QMap<nnfw::Linker*, LinkerRenderer*> lkmap;
 };
 
 #endif
