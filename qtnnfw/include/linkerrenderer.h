@@ -18,9 +18,12 @@ protected:
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
 
 private:
+	void adjustArrow( QLineF );
+
     ClusterRenderer *source, *dest;
 
 	QPainterPath path;
+	QPainterPath arrowPath;
 	qreal arrowSize; 
 };
 

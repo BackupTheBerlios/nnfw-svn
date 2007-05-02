@@ -23,8 +23,6 @@ public:
 public slots:
 	//! calculate the position of Clusters in order to see inputs to the bottom and output in top
 	void defaultPositioning();
-	//! recalculate the bounding rect of scene
-	void fitSceneRect();
 
 protected:
 	void keyPressEvent(QKeyEvent *event);

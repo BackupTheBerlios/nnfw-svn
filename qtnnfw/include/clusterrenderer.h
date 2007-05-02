@@ -7,20 +7,16 @@
 #include <QGraphicsItem>
 
 class LinkerRenderer;
+class NNRenderer;
 
 class ClusterRenderer : public QObject, public QGraphicsItem {
-	Q_OBJECT
 public:
-	ClusterRenderer( nnfw::Cluster* cl );
+	ClusterRenderer( NNRenderer* nnrenderer, nnfw::Cluster* cl );
 	
 	QRectF boundingRect() const;
 	QPainterPath shape() const;
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 	void addLinker( LinkerRenderer* lr );
-
-signals:
-	//! emitted when is moving
-	void moved();
 
 protected:
 	void mousePressEvent(QGraphicsSceneMouseEvent *event);
@@ -35,6 +31,7 @@ private:
 	int rectlx;
 	int rectly;
 	QVector<LinkerRenderer*> lks;
+	NNRenderer* nnr;
 };
 
 #endif

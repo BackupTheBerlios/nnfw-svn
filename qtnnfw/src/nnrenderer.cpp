@@ -18,7 +18,6 @@ using namespace nnfw;
 NNRenderer::NNRenderer( QWidget* parent ): QGraphicsView(parent), clmap(), lkmap() {
 	QGraphicsScene* scene = new QGraphicsScene(this);
 	scene->setItemIndexMethod(QGraphicsScene::NoIndex);
-	//scene->setSceneRect(-200, -200, 400, 400);
 	setScene(scene);
  	setCacheMode(CacheBackground);
  	setRenderHint(QPainter::Antialiasing);
@@ -39,6 +38,7 @@ void NNRenderer::setNeuralNet( BaseNeuralNet* net ) {
 			delete *it;
 		}
 	}
+	scene()->setSceneRect( QRectF() );
 	this->nn = net;
 	if ( net == 0 ) {
 		setMatrix( QMatrix() );
@@ -49,7 +49,7 @@ void NNRenderer::setNeuralNet( BaseNeuralNet* net ) {
 	const ClusterVec& cls = nn->clusters();
 	int xpos = -170; int ypos = -170;
 	for( unsigned int i=0; i<cls.size(); i++ ) {
-		ClusterRenderer* cs = new ClusterRenderer( cls[i] );
+		ClusterRenderer* cs = new ClusterRenderer( this, cls[i] );
 		scene()->addItem( cs );
 		cs->setPos( xpos, ypos );
 		xpos += 30;
@@ -65,6 +65,7 @@ void NNRenderer::setNeuralNet( BaseNeuralNet* net ) {
 		scene()->addItem( lr );
 		lkmap[ lks[i] ] = lr;
 	}
+	setMatrix( QMatrix() );
 	scaleDisabled = false;
 	defaultPositioning();
 	update();
@@ -112,17 +113,8 @@ void NNRenderer::defaultPositioning() {
 	for( int i=0; i<lsr.size(); i++ ) {
 		lsr[i]->adjust();
 	};
+	scene()->setSceneRect( scene()->itemsBoundingRect() );
 }
-
-void NNRenderer::fitSceneRect() {
-	QRectF all;
-	foreach( QGraphicsItem* item, items() ) {
-		all = all.united( item->boundingRect() );
-	}
-	all.adjust( 5, 5, 5, 5 );
-	scene()->setSceneRect( all );
-}
-
 
 void NNRenderer::keyPressEvent(QKeyEvent *event) {
 	switch (event->key()) {
@@ -147,9 +139,11 @@ void NNRenderer::drawBackground(QPainter *painter, const QRectF &rect) {
 	painter->setBrush(Qt::black);
 	painter->drawLine( -30, 0, +30, 0 );
 	painter->drawLine( 0, -30, 0, +30 );
-	painter->setBrush(Qt::transparent);
+
+	// draw SceneRect
+/*	painter->setBrush(Qt::transparent);
 	QRectF sceneRect = this->sceneRect();
-	painter->drawRect( sceneRect );
+	painter->drawRect( sceneRect );*/
 	
 /*	// Shadow
 	QRectF sceneRect = this->sceneRect();

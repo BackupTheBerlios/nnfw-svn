@@ -1,6 +1,7 @@
 
 #include "clusterrenderer.h"
 #include "linkerrenderer.h"
+#include "nnrenderer.h"
 
 #include <QDebug>
 #include <QGraphicsScene>
@@ -14,8 +15,9 @@
 
 using namespace nnfw;
 
-ClusterRenderer::ClusterRenderer( Cluster* cl ) {
+ClusterRenderer::ClusterRenderer( NNRenderer* nnrenderer, Cluster* cl ) {
 	this->cl = cl;
+	this->nnr = nnrenderer;
 	dim = (int)cl->size();
 	//--- calculate the rectangle
 	recw = dim*14;
@@ -27,7 +29,7 @@ ClusterRenderer::ClusterRenderer( Cluster* cl ) {
 }
 	
 QRectF ClusterRenderer::boundingRect() const {
-	return QRectF( rectlx, rectly, recw, rech );
+	return QRectF( rectlx, rectly, recw, rech ).adjusted( -3, -3, 3, 3 );
 }
 
 QPainterPath ClusterRenderer::shape() const {
@@ -80,6 +82,9 @@ void ClusterRenderer::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 void ClusterRenderer::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
 	update();
 	QGraphicsItem::mouseReleaseEvent(event);
+	if ( scene() ) {
+		scene()->setSceneRect( scene()->itemsBoundingRect() );
+	}
 }
 
 QVariant ClusterRenderer::itemChange(GraphicsItemChange change, const QVariant &value) {
@@ -88,7 +93,6 @@ QVariant ClusterRenderer::itemChange(GraphicsItemChange change, const QVariant &
 		foreach( LinkerRenderer *lr, lks ) {
 			lr->adjust();
 		}
-		emit moved();
 		break;
 	default:
 		break;
