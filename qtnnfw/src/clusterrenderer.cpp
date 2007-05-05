@@ -25,7 +25,10 @@ ClusterRenderer::ClusterRenderer( NNRenderer* nnrenderer, Cluster* cl ) {
 	rectlx = -recw/2;
 	rectly = -rech/2;
 	setFlag(ItemIsMovable);
+	setFlag(ItemIsSelectable);
 	setZValue(1);
+	setToolTip( cl->getName() );
+	grabbed = false;
 }
 	
 QRectF ClusterRenderer::boundingRect() const {
@@ -44,19 +47,16 @@ void ClusterRenderer::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
 /*	painter->setPen(Qt::NoPen);
 	painter->setBrush(Qt::darkGray);
 	painter->drawRect(-7, -7, 20, 20);*/
-	if (option->state & QStyle::State_Sunken) {
+	if ( (option->state & QStyle::State_Sunken) || isSelected() ) {
 		painter->setBrush( Qt::gray );
 	} else {
 		painter->setBrush( Qt::white );
 	}
 	painter->setPen(QPen(Qt::black, 1));
-	painter->drawRect(rectlx, rectly, recw, rech);
+	painter->drawRect( QRectF(rectlx, rectly, recw, rech).adjusted(-2,-2,2,2) );
 	if ( option->levelOfDetail > 2 ) {
-		//--- draw the name
-		painter->setPen(QPen(Qt::red, 1));
-		painter->drawText( QRect(rectlx, rectly, recw, rech), Qt::AlignHCenter, QString(cl->getName()) );
 		//--- draw neurons
-		painter->setPen(QPen( Qt::black, 1));
+		painter->setPen(QPen( Qt::black, 0.6));
 		painter->setBrush( Qt::transparent );
 		for( int i=0; i<dim; i++ ) {
 			painter->drawEllipse( rectlx+( i*14 )+2, rectly+2, 10, 10 );
@@ -75,25 +75,53 @@ void ClusterRenderer::addLinker( LinkerRenderer* lr ) {
 }
 
 void ClusterRenderer::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+	grabbed = true;
 	update();
 	QGraphicsItem::mousePressEvent(event);
 }
 
+void ClusterRenderer::mouseMoveEvent(QGraphicsSceneMouseEvent* event) {
+	if ( !grabbed ) return;
+	QGraphicsItem::mouseMoveEvent(event);
+	if ( scene() ) {
+		QRectF sr = scene()->sceneRect();
+		QRectF ir = boundingRect();
+		qreal dw = 0.0f;
+		qreal dh = 0.0f;
+		if ( sr.top() > ir.top() ) {
+			dh = qAbs( sr.top() - ir.top() );
+		} else if ( sr.bottom() < ir.bottom() ) {
+			dh = qAbs( sr.bottom() - ir.bottom() );
+		}
+		if ( sr.left() > ir.left() ) {
+			dw = qAbs( sr.left() - ir.left() );
+		} else if ( sr.right() < ir.right() ) {
+			dw = qAbs( sr.right() - ir.right() );
+		}
+		sr.adjust( -dw, -dh, dw, dh );
+		scene()->setSceneRect( sr );
+	}
+	update();
+}
+
 void ClusterRenderer::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
+	grabbed = false;
 	update();
 	QGraphicsItem::mouseReleaseEvent(event);
 	if ( scene() ) {
+		//--- fit prefectly after movements
 		scene()->setSceneRect( scene()->itemsBoundingRect() );
 	}
 }
 
 QVariant ClusterRenderer::itemChange(GraphicsItemChange change, const QVariant &value) {
 	switch (change) {
-	case ItemPositionChange:
+	case ItemPositionChange: {
 		foreach( LinkerRenderer *lr, lks ) {
 			lr->adjust();
 		}
 		break;
+	}
 	default:
 		break;
 	};

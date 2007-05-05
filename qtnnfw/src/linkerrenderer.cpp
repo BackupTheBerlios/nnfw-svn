@@ -10,6 +10,7 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QPainter>
 #include <QStyleOption>
+#include <QPainterPathStroker>
 #include <cmath>
 
 static const double Pi = 3.14159265358979323846264338327950288419717;
@@ -17,7 +18,7 @@ static double TwoPi = 2.0 * Pi;
 
 LinkerRenderer::LinkerRenderer(ClusterRenderer *sourceNode, ClusterRenderer *destNode )
 	: path(), arrowSize(10) {
-	setAcceptedMouseButtons(0);
+	setFlag(ItemIsSelectable);
 	source = sourceNode;
 	dest = destNode;
 	source->addLinker( this );
@@ -52,66 +53,67 @@ void LinkerRenderer::adjust() {
 		return;
 	}
 	//--- normal condition		
-	qreal mstep = 0.01f;
 	QLineF line(mapFromItem(source, 0, 0), mapFromItem(dest, 0, 0));
-	qreal ts = 0.0f;
-	QRectF r = mapFromItem( source, source->boundingRect() ).boundingRect();
-	while( r.contains( line.pointAt( ts ) ) ) {
-		ts += mstep;
-		if ( ts > 1.0f ) {
-			ts = 0.0f;
-			break;
-		}
+	//--- find the SourcePoint of path
+	QRectF srcRect2 = srcRect.adjusted( -0.6, -0.6, 0.6, 0.6 );
+	QPointF sourcePoint;
+	if ( line.intersect( QLineF(srcRect2.topLeft(), srcRect2.topRight()), &sourcePoint ) ==
+		 QLineF::BoundedIntersection ) {
+	} else if ( line.intersect( QLineF(srcRect2.topRight(), srcRect2.bottomRight()), &sourcePoint ) ==
+		 QLineF::BoundedIntersection ) {
+	} else if ( line.intersect( QLineF(srcRect2.bottomLeft(), srcRect2.bottomRight()), &sourcePoint ) ==
+		 QLineF::BoundedIntersection ) {
+	} else {
+		line.intersect( QLineF(srcRect2.bottomLeft(), srcRect2.topLeft()), &sourcePoint );
 	}
-	qreal te = 1.0f;
-	r = mapFromItem( dest, dest->boundingRect() ).boundingRect();
-	while( r.contains( line.pointAt( te ) ) ) {
-		te -= mstep;
-		if ( te < 0.0f ) {
-			te = 1.0f;
-			break;
-		}
+	//--- find the DestPoint of path
+	QRectF dstRect2 = dstRect.adjusted( -0.6, -0.6, 0.6, 0.6 );
+	QPointF destPoint;
+	if ( line.intersect( QLineF(dstRect2.topLeft(), dstRect2.topRight()), &destPoint ) ==
+		 QLineF::BoundedIntersection ) {
+	} else if ( line.intersect( QLineF(dstRect2.topRight(), dstRect2.bottomRight()), &destPoint ) ==
+		 QLineF::BoundedIntersection ) {
+	} else if ( line.intersect( QLineF(dstRect2.bottomLeft(), dstRect2.bottomRight()), &destPoint ) ==
+		 QLineF::BoundedIntersection ) {
+	} else {
+		line.intersect( QLineF(dstRect2.bottomLeft(), dstRect2.topLeft()), &destPoint );
 	}
 	removeFromIndex();
-	QPointF sourcePoint = line.pointAt(ts);
-	QPointF destPoint = line.pointAt(te);
 	//--- creating the cubic curve from sourcePoint to destPoint
 	line = QLineF( sourcePoint, destPoint );
 	//--- calculating c1 control-point
-	r = mapFromItem( source, source->boundingRect() ).boundingRect();
 	QPointF c1;
 	//qreal minctrl = 1.0f;
 	qreal coeffctrl = 2.0f;
-	if ( sourcePoint.y() < r.top() ) {
+	if ( sourcePoint.y() <= srcRect.top() ) {
 		//--- is up
 		c1 = QPointF( sourcePoint.x(), sourcePoint.y()+line.dy()/coeffctrl );
-	} else if ( sourcePoint.y() > r.bottom() ) {
+	} else if ( sourcePoint.y() >= srcRect.bottom() ) {
 		//--- is bottom
 		c1 = QPointF( sourcePoint.x(), sourcePoint.y()+line.dy()/coeffctrl );
-	} else if ( sourcePoint.x() < r.left() ) {
+	} else if ( sourcePoint.x() <= srcRect.left() ) {
 		//--- is left
 		c1 = QPointF( sourcePoint.x()+line.dx()/coeffctrl, sourcePoint.y() );
-	} else if ( sourcePoint.x() > r.right() ) {
+	} else if ( sourcePoint.x() >= srcRect.right() ) {
 		//--- is right
 		c1 = QPointF( sourcePoint.x()+line.dx()/coeffctrl, sourcePoint.y() );
 	}
 	//--- calculating c2 control-point
-	r = mapFromItem( dest, dest->boundingRect() ).boundingRect();
 	QPointF c2;
 	QPointF offset;
-	if ( destPoint.y() < r.top() ) {
+	if ( destPoint.y() < dstRect.top() ) {
 		//--- is up
 		c2 = QPointF( destPoint.x(), destPoint.y()-line.dy()/coeffctrl );
 		offset = QPointF( 0, -arrowSize );
-	} else if ( destPoint.y() > r.bottom() ) {
+	} else if ( destPoint.y() > dstRect.bottom() ) {
 		//--- is bottom
 		c2 = QPointF( destPoint.x(), destPoint.y()-line.dy()/coeffctrl );
 		offset = QPointF( 0, +arrowSize );
-	} else if ( destPoint.x() < r.left() ) {
+	} else if ( destPoint.x() < dstRect.left() ) {
 		//--- is left
 		c2 = QPointF( destPoint.x()-line.dx()/coeffctrl, destPoint.y() );
 		offset = QPointF( -arrowSize, 0 );
-	} else if ( destPoint.x() > r.right() ) {
+	} else if ( destPoint.x() > dstRect.right() ) {
 		//--- is right
 		c2 = QPointF( destPoint.x()-line.dx()/coeffctrl, destPoint.y() );
 		offset = QPointF( +arrowSize, 0 );
@@ -147,8 +149,21 @@ QRectF LinkerRenderer::boundingRect() const {
 	return path.boundingRect().united( arrowPath.boundingRect() ).adjusted(-extra, -extra, extra, extra);
 }
 
-void LinkerRenderer::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *) {
-	painter->setPen(QPen(Qt::black, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+QPainterPath LinkerRenderer::shape() const {
+	QPainterPath rp;
+	rp.addPath( path );
+	rp.addPath( arrowPath );
+	QPainterPathStroker stroke;
+	stroke.setWidth( 10 );
+	return stroke.createStroke( rp );
+}
+
+void LinkerRenderer::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *) {
+	if ( (option->state & QStyle::State_Sunken) || isSelected() ) {
+		painter->setPen(QPen(Qt::gray, 3, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+	} else {
+		painter->setPen(QPen(Qt::black, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+	}
 	painter->drawPath( path );
 
 	painter->setBrush(QColor(122, 163, 39));

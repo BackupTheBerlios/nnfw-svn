@@ -12,9 +12,10 @@ class LinkerRenderer : public QGraphicsItem {
 public:
 	LinkerRenderer(ClusterRenderer *sourceNode, ClusterRenderer *destNode);
 	void adjust();
+	QRectF boundingRect() const;
+	QPainterPath shape() const;
 
 protected:
-	QRectF boundingRect() const;
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
 
 private:

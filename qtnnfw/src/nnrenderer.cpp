@@ -20,9 +20,10 @@ NNRenderer::NNRenderer( QWidget* parent ): QGraphicsView(parent), clmap(), lkmap
 	scene->setItemIndexMethod(QGraphicsScene::NoIndex);
 	setScene(scene);
  	setCacheMode(CacheBackground);
+	setDragMode(RubberBandDrag);
  	setRenderHint(QPainter::Antialiasing);
- 	setTransformationAnchor(AnchorUnderMouse);
- 	setResizeAnchor(AnchorViewCenter);
+ 	setTransformationAnchor(NoAnchor);
+ 	setResizeAnchor(NoAnchor);
 	setBackgroundBrush( QColor( 250, 240, 230 ) );
 
 	scaleDisabled = true;

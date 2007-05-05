@@ -5,6 +5,7 @@
 #include "nnfw/cluster.h"
 #include <QObject>
 #include <QGraphicsItem>
+#include <QPainterPath>
 
 class LinkerRenderer;
 class NNRenderer;
@@ -19,8 +20,9 @@ public:
 	void addLinker( LinkerRenderer* lr );
 
 protected:
-	void mousePressEvent(QGraphicsSceneMouseEvent *event);
-	void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+	void mousePressEvent( QGraphicsSceneMouseEvent *event );
+	void mouseReleaseEvent( QGraphicsSceneMouseEvent *event );
+	void mouseMoveEvent( QGraphicsSceneMouseEvent* event );
 	QVariant itemChange(GraphicsItemChange change, const QVariant &value);
 
 private:
@@ -32,6 +34,7 @@ private:
 	int rectly;
 	QVector<LinkerRenderer*> lks;
 	NNRenderer* nnr;
+	bool grabbed;
 };
 
 #endif
