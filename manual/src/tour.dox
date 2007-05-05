@@ -1,0 +1,63 @@
+/*! \page tour Illustrated Tour
+\addindex tour
+\htmlonly
+<div id="navigationBar">
+<a href="introduction.html"><img src="../img/prevChapter.png"></a> <a href="index.html"><img src="../img/mainToc.png"></a> <a href="overture.html"><img src="../img/nextChapter.png"></a>
+</div>
+\endhtmlonly
+\anchor tour_toc
+<div id="tocContent_nohead">
+<ul class="level_one">
+    <li>\ref tour_1 </li>
+    <li>\ref tour_2 </li>
+    <li>\ref tour_3 </li>
+    <li>\ref tour_4 </li>
+</ul>
+</div>
+
+\section tour_1 A Look from the Sky
+\image html diagramma1.png "an example of neural network looked from the 'sky'"
+\image latex diagramma1.pdf "an example of neural network looked from the 'sky'" width=12cm
+
+The image above reports all the fondamental class of the library in order to create neural network. It also illustrate how they are related among each others:
+<ol>
+	<li> <b>BaseNeuralNet</b> is like a Container where you put all the items of your neural network.</li>
+	<li> <b>Cluster</b> is a group of neurons.</li>
+	<li> <b>Linker</b> is a connection between two cluster that transfer/compute information arriving from a Cluster to another Cluster</li>
+</ol>
+
+The key-point of this library is that neural networks are not seen as composed by single-alone neurons connected among each others. In fact, there isn't a class that represent a single neurons, but only a class (Cluster) that represent a group of neurons. (of course, you can create a group composed only by one neuron)
+Hence, a neural network is group-of-neurons (Clusters) connected in same way (Linkers).
+
+\ref introduction_toc "[Up]"
+
+\section tour_2 BaseNeuralNet is a little more than a Container
+Once Clusters and Linkers are created the neural network is already full-functional. So, the BaseNeuralNet is a container-class created for comodity and to improve the usability of big and complex neural networks. In addition of container-features, it has:
+<ol>
+	<li> the possibility to mark a Cluster as 'input' or/and 'output' of a neural network. This is just for user-end facility, there is no changes in functionality when you mark a Cluster as 'input' or 'output' or both 'input'-'output', but you can access them very fast with methods created on purpose,</li>
+	<li> the <b>order</b> of <em>update</em> calling. This is probabily the most important feature of BaseNeuralNet. In fact, in order to spread the inputs arriving to the neural network through connections, you should call in the appropriate sequence the method <em>update</em> on each Cluster and Linker. For facilitate this, you have just to tell to BaseNeuralNet the sequence and call the method <em>step</em>.</li>
+</ol>
+\ref introduction_toc "[Up]"
+
+\section tour_3 Inside a Cluster
+Cluster is composed by three basic properties:
+<ol>
+ 	<li><b>inputs</b>: is a RealVec (vector of real) containing the inputs of Cluster's neurons. The inputs can be setted by hand (i.e. in the case of 'input' Cluster where you put external-values), or they are calculated by Linkers computations that incoming to the Cluster.</li>
+	<li> <b>outputs</b>: is a RealVec containing the outputs of Cluster's neurons, or the final-activation of neurons. This values are taken from outgoing Linkers as input for their calculations.</li>
+	<li> <b>OutputFunction</b>: this is the function that govern the information tranfer from inputs to outputs. (i.e. Linear transformation, Logist, Radial-basis functions and so on). This is the 'core' of neurons, the 'rule' on which they behave.</li>
+</ol>
+
+\ref introduction_toc "[Up]"
+
+\section tour_4 Inside a Linker
+Linker is more abstract than Cluster. It only specify a 'from' and 'to' Clusters. The 'from' Cluster is where the Linker takes its input for calculation, and the 'to' Cluster is where it put the result of calculation.
+
+The Linker represent the 'rule' on which the <b>outputs</b> of 'from' Cluster is transformed/calculated/mapped to <b>inputs</b> of 'to' Cluster. They represents the 'axons' of neurons.
+For instance, in feed-forward network, Linkers are just RealMat (matrix of real) and they calculate the weighted-sum of <em>from</em>'s <b>outputs</b> putting the results into <em>to</em>'s <b>inputs</b>.
+
+\ref introduction_toc "[Up]"
+
+
+*/
+
+

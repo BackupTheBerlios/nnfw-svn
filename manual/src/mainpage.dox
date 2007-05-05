@@ -19,6 +19,13 @@
     <li>\ref introduction_6 </li>
     <li>\ref introduction_7 </li>
     </ul>
+<li>\ref tour </li>
+    <ul class="level_two">
+    <li>\ref tour_1 </li>
+    <li>\ref tour_2 </li>
+    <li>\ref tour_3 </li>
+    <li>\ref tour_4 </li>
+	</ul>
 <li>\ref overture </li>
 <li>\ref mathstuff </li>
 <li>\ref xmlformat </li>

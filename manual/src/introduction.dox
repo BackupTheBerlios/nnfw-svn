@@ -2,7 +2,7 @@
 \addindex introduction
 \htmlonly
 <div id="navigationBar">
-<a href="preface.html"><img src="../img/prevChapter.png"></a> <a href="index.html"><img src="../img/mainToc.png"></a> <a href="overture.html"><img src="../img/nextChapter.png"></a>
+<a href="preface.html"><img src="../img/prevChapter.png"></a> <a href="index.html"><img src="../img/mainToc.png"></a> <a href="tour.html"><img src="../img/nextChapter.png"></a>
 </div>
 \endhtmlonly
 \anchor introduction_toc
