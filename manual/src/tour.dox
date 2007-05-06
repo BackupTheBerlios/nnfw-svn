@@ -26,6 +26,9 @@ The image above reports all the fondamental class of the library in order to cre
 	<li> <b>Linker</b> is a connection between two cluster that transfer/compute information arriving from a Cluster to another Cluster</li>
 </ol>
 
+\image html diagramma2.png "Clusters marked as Input or Output of a BaseNeuralNet"
+\image latex diagramma2.pdf "Clusters marked as Input or Output of a BaseNeuralNet" width=12cm
+
 The key-point of this library is that neural networks are not seen as composed by single-alone neurons connected among each others. In fact, there isn't a class that represent a single neurons, but only a class (Cluster) that represent a group of neurons. (of course, you can create a group composed only by one neuron)
 Hence, a neural network is group-of-neurons (Clusters) connected in same way (Linkers).
 
@@ -37,6 +40,8 @@ Once Clusters and Linkers are created the neural network is already full-functio
 	<li> the possibility to mark a Cluster as 'input' or/and 'output' of a neural network. This is just for user-end facility, there is no changes in functionality when you mark a Cluster as 'input' or 'output' or both 'input'-'output', but you can access them very fast with methods created on purpose,</li>
 	<li> the <b>order</b> of <em>update</em> calling. This is probabily the most important feature of BaseNeuralNet. In fact, in order to spread the inputs arriving to the neural network through connections, you should call in the appropriate sequence the method <em>update</em> on each Cluster and Linker. For facilitate this, you have just to tell to BaseNeuralNet the sequence and call the method <em>step</em>.</li>
 </ol>
+
+
 \ref introduction_toc "[Up]"
 
 \section tour_3 Inside a Cluster
