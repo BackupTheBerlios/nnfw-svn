@@ -1,0 +1,129 @@
+<!DOCTYPE nnfw-xml>
+<nnfw version="1.0" >
+  <neuralnet>
+    <cluster size="3" type="SimpleCluster" name="InputCluster" >
+      <accumulate> false </accumulate>
+      <outfunction type="LinearFunction" >
+        <minX> -10 </minX>
+        <maxX> 10 </maxX>
+        <minY> -1 </minY>
+        <maxY> 1 </maxY>
+      </outfunction>
+    </cluster>
+    <cluster size="7" type="SimpleCluster" name="ProprioCluster" >
+      <accumulate> false </accumulate>
+      <outfunction type="PoolFunction" >
+        <functions i="0" type="LinearFunction" >
+          <minX> -2.44339 </minX>
+          <maxX> 1.04717 </maxX>
+          <minY> -1 </minY>
+          <maxY> 1 </maxY>
+        </functions>
+        <functions i="1" type="LinearFunction" >
+          <minX> -1.57075 </minX>
+          <maxX> 1.57075 </maxX>
+          <minY> -1 </minY>
+          <maxY> 1 </maxY>
+        </functions>
+        <functions i="2" type="LinearFunction" >
+          <minX> -1.04717 </minX>
+          <maxX> 1.57075 </maxX>
+          <minY> -1 </minY>
+          <maxY> 1 </maxY>
+        </functions>
+        <functions i="3" type="LinearFunction" >
+          <minX> -2.96697 </minX>
+          <maxX> 0 </maxX>
+          <minY> -1 </minY>
+          <maxY> 1 </maxY>
+        </functions>
+        <functions i="4" type="LinearFunction" >
+          <minX> -0.523583 </minX>
+          <maxX> 1.57075 </maxX>
+          <minY> -1 </minY>
+          <maxY> 1 </maxY>
+        </functions>
+        <functions i="5" type="LinearFunction" >
+          <minX> -0.523583 </minX>
+          <maxX> 0.523583 </maxX>
+          <minY> -1 </minY>
+          <maxY> 1 </maxY>
+        </functions>
+        <functions i="6" type="LinearFunction" >
+          <minX> -1.57075 </minX>
+          <maxX> 1.57075 </maxX>
+          <minY> -1 </minY>
+          <maxY> 1 </maxY>
+        </functions>
+      </outfunction>
+    </cluster>
+    <cluster size="6" type="FakeCluster" name="TattileCluster" >
+      <accumulate> false </accumulate>
+      <outfunction type="SigmoidFunction" >
+        <lambda> 1 </lambda>
+      </outfunction>
+    </cluster>
+    <cluster size="14" type="SimpleCluster" name="OutputBraccioCluster" >
+      <accumulate> false </accumulate>
+      <outfunction type="SigmoidFunction" >
+        <lambda> 1 </lambda>
+      </outfunction>
+    </cluster>
+    <cluster size="2" type="BiasedCluster" name="OutputManoCluster" >
+      <accumulate> false </accumulate>
+	  <outfunction type="CompositeFunction">
+        <first type="SigmoidFunction" >
+          <lambda> 1 </lambda>
+	    </first>
+		<second type="LeakyIntegratorFunction" />
+      </outfunction>
+    </cluster>
+	
+	<cluster size="2" type="BiasedCluster" name="InnerManoCluster" >
+		<accumulate> false </accumulate>
+		<outfunction type="CompositeFunction">
+			<first type="ScaledSigmoidFunction" >
+				<lambda> 1 </lambda>
+				<min> -1.0 </min>
+				<max> +1.0 </max>
+			</first>
+			<second type="LeakyIntegratorFunction" />
+		</outfunction>
+	</cluster>
+	<cluster size="2" type="BiasedCluster" name="InnerBraccioCluster" >
+		<accumulate> false </accumulate>
+		<outfunction type="CompositeFunction">
+			<first type="ScaledSigmoidFunction" >
+				<lambda> 1 </lambda>
+				<min> -1.0 </min>
+				<max> +1.0 </max>
+			</first>
+			<second type="LeakyIntegratorFunction" />
+		</outfunction>
+	</cluster>
+	
+	
+    <linker from="InputCluster" type="MatrixLinker" to="OutputBraccioCluster" name="MatrixLinker1" />
+	<linker from="ProprioCluster" type="MatrixLinker" to="OutputBraccioCluster" name="MatrixLinker3" />
+	<linker from="InnerBraccioCluster" type="MatrixLinker" to="OutputBraccioCluster" name="MatrixLinker5" />
+    
+    <linker from="TattileCluster" type="MatrixLinker" to="OutputManoCluster" name="MatrixLinker4" />
+	<linker from="InnerManoCluster" type="MatrixLinker" to="OutputManoCluster" name="MatrixLinker6" />
+
+	<linker from="InputCluster" type="MatrixLinker" to="InnerManoCluster" name="MatrixLinker100" />
+	<linker from="ProprioCluster" type="MatrixLinker" to="InnerManoCluster" name="MatrixLinker101" />
+	<linker from="InnerBraccioCluster" type="MatrixLinker" to="InnerManoCluster" name="MatrixLinker102" />
+	<linker from="InnerManoCluster" type="MatrixLinker" to="InnerManoCluster" name="MatrixLinker103" />
+	
+	<linker from="TattileCluster" type="MatrixLinker" to="InnerBraccioCluster" name="MatrixLinker200" />
+	<linker from="InnerBraccioCluster" type="MatrixLinker" to="InnerBraccioCluster" name="MatrixLinker201" />
+	<linker from="InnerManoCluster" type="MatrixLinker" to="InnerBraccioCluster" name="MatrixLinker202" />
+	
+
+	<inputs> InputCluster ProprioCluster TattileCluster </inputs>
+	<outputs> OutputBraccioCluster OutputManoCluster </outputs>
+	
+	<order> InputCluster ProprioCluster TattileCluster MatrixLinker100 MatrixLinker101 MatrixLinker102 MatrixLinker103 MatrixLinker200 MatrixLinker201 MatrixLinker202 InnerBraccioCluster InnerManoCluster MatrixLinker1 MatrixLinker3 MatrixLinker5 MatrixLinker4 MatrixLinker6 OutputBraccioCluster OutputManoCluster </order>
+	
+  </neuralnet>
+</nnfw>
