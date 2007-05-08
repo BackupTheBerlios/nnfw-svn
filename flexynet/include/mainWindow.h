@@ -34,6 +34,7 @@ class QSlider;
 class QCheckBox;
 class QActionGroup;
 class NNRenderer;
+class FBrowser;
 
 #include "nnfw/nnfw.h"
 using namespace nnfw;
@@ -55,6 +56,7 @@ public slots:
 
 private:
 	bool askSaveFilename();
+	void createBrowser();
 
 	QAction* fileNewA;
 	QAction* fileLoadA;
@@ -69,6 +71,9 @@ private:
 
 	//--- central Widget
 	NNRenderer* centre;
+
+	//--- DockWidgets
+	FBrowser* browse;
 	
 	//--- current NeuralNet opened
 	BaseNeuralNet* nn;

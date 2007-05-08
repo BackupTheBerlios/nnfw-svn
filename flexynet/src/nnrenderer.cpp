@@ -58,6 +58,8 @@ void NNRenderer::setNeuralNet( BaseNeuralNet* net ) {
 		}
 	}
 	scene()->setSceneRect( QRectF() );
+	clmap.clear();
+	lkmap.clear();
 	this->nn = net;
 	if ( net == 0 ) {
 		setMatrix( QMatrix() );

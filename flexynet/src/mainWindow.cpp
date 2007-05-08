@@ -40,6 +40,7 @@
 
 #include "mainWindow.h"
 #include "nnrenderer.h"
+#include "fbrowser.h"
 
 MainWindow::MainWindow( QWidget* parent )
     : QMainWindow( parent ), hasChanges(false), filename(), infoFile() {
@@ -114,6 +115,8 @@ MainWindow::MainWindow( QWidget* parent )
 	centre->setNeuralNet( 0 );
 	setCentralWidget( centre );
 
+	createBrowser();
+
 	// --- add view/hide checkboxes in the view menu for Toolbars/DockWidgets
 	QMenu* tmp = createPopupMenu();
 	QList<QAction*> acts = tmp->actions();
@@ -145,6 +148,7 @@ void MainWindow::fileNew() {
 	nn = new BaseNeuralNet();
 	// --- display it
 	centre->setNeuralNet( nn );
+	browse->setNeuralNet( nn );
     fileSaveA->setEnabled( true );
     fileSaveasA->setEnabled( true );
     fileCloseA->setEnabled( true );
@@ -176,6 +180,7 @@ void MainWindow::fileLoad() {
 	nn = loadXML( filename.toAscii().data() );
 	// --- display it
 	centre->setNeuralNet( nn );
+	browse->setNeuralNet( nn );
     fileSaveA->setEnabled( true );
     fileSaveasA->setEnabled( true );
     fileCloseA->setEnabled( true );
@@ -197,6 +202,7 @@ void MainWindow::fileClose() {
     }
 	// --- empty the display
 	centre->setNeuralNet( 0 );
+	browse->setNeuralNet( 0 );
     fileSaveA->setEnabled( false );
     fileSaveasA->setEnabled( false );
     fileCloseA->setEnabled( false );
@@ -254,5 +260,14 @@ bool MainWindow::askSaveFilename() {
     filename = newf;
     infoFile = QFileInfo( filename );
     return true;
+}
+
+void MainWindow::createBrowser() {
+	QDockWidget* fb = new QDockWidget( tr("Browser"), this );
+	fb->setAllowedAreas( Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea );
+	addDockWidget( Qt::RightDockWidgetArea, fb );
+	// --- create the content
+	browse = new FBrowser( fb );
+	fb->layout()->addWidget( browse );
 }
 

@@ -25,7 +25,6 @@
  *
  *  Details...
  *
- *  \todo Remember to implement clone method when extend
  *
  */
 

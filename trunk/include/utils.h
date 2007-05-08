@@ -35,25 +35,23 @@ class LearningNetwork;
 
 /*! \brief Function to quickly construct a FeedForward Neural Network
  *  Return a BaseNeuralNetwork that represent a feedforwar neural net.<br>
- *  La rete neurale risultante conterra' SimpleCluster connessi tramite MatrixLinker.<br>
- *  Il numero di neuroni all'interno dei SimpleCluster sono presi dal vettore layers passato.<br>
- *  Il SimpleCluster di dimensione layers[0] sara' l'input della rete neurale e quello corrispondente
- *  all'ultimo valore di layers sara' l'output. Gli altri, in ordine, saranno i SimpleCluster nascosti.
- *  \param layers il vettore che specifica le dimensioni dei SimpleCluster
+ *  The neural network returned is composed by Cluster of clusterType speficied.
+ *  The number of neurons of each Cluster is taken from layers vector.
+ *  Also, the first Cluster is setted as input of BaseNeuralNet and the last one as output.<br>
+ *  The Linker created will link each Cluster to its successive.
+ *  \param layers an integer vector contains the number of neurons of each Cluster
+ *  \param clusterType the Typename of Cluster to create (it must be a Typename registered to Factory)
+ *  \param linkerType the Typename of Linker to create (it must be a Typename registered to Factory)
  */
 NNFW_API BaseNeuralNet* feedForwardNet( U_IntVec layers, const char* clusterType = "BiasedCluster", const char* linkerType = "MatrixLinker" );
 
 /*! \brief Function to quickly construct a Backpropagation Learning Network
- *  It only use GradientBiasedCluster and GradientMatrixLinker
- *  WARNINGS: Questa funzione non controlla la struttura della rete neurale, quindi e' cura di chi la usa
- *   assicurarsi che la rete neurale soddisfi i seguenti requisiti:<br>
- *   a) Deve essere una struttura FeedForward senza MatrixLinker a formare ricorrenze<br>
- *   b) Devono esistere Cluster di inputs e di outputs<br>
- *   c) La struttura principale della rete deve essere composta da BiasedCluster e MatrixLinker
+ *  \deprecated don't use; a new learning framework will coming soon
  */
 NNFW_API LearningNetwork* backpropagationFor( BaseNeuralNet* net );
 
 /*! \brief A quick way to sets all the parameters of Gradient types blocks in LearningNetwork passed
+ * \deprecated because it's based on the old learning design
  * \param learnNet the LearningNewtork contains the Gradient blocks to configure
  * \param rate the learning rate
  * \param momento the momentum parameter (default is zero)

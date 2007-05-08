@@ -317,16 +317,6 @@ public:
 		return result;
     };
 
-	/*! \brief Sum up the values of the vector.
-     */
-    int sum() {
-		int s = 0;
-        for( u_int i=0; i<size(); i++ ) {
-			s += (*this)[i];
-		}
-		return s;
-    };
-	
     //@}
 
 	/*! \brief Indexing operator

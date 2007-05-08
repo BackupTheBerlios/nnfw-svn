@@ -27,9 +27,6 @@
  *
  *  Details...
  *
- *  \todo CompositeFunction, a subclass of OutputFunction that allow to combine two or more OutputFunctions;
- *        example: combining a SigmoidFunction with LinearFunction it's possibile realize an OutputFunction that
- *        first truncate the input in a range [mix,max] and the apply the Sigmoid: Sigmoid( Linear( x ) )
  *  \todo ComboLinearFunction, a subclass of OutputFunction that constructs a linear combination of OutputFunctions:
  *        example: 4*Sigmoid(x)+2*Linear(x)
  */

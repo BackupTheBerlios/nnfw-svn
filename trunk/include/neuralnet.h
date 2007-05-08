@@ -61,6 +61,22 @@ public:
      */
     void addCluster( Cluster* c, bool isInput = false, bool isOutput = false );
 
+	/*! \brief Add a Cluster and mark it as Input
+	 *
+	 *  Behave exactly the same of addCluster( c, true, false )
+	 */
+	void addInputCluster( Cluster* c ) {
+		addCluster( c, true, false );
+	};
+
+	/*! \brief Add a Cluster and mark it as Output
+	 *
+	 *  Behave exactly the same of addCluster( c, false, true )
+	 */
+	void addOutputCluster( Cluster* c ) {
+		addCluster( c, false, true );
+	};
+
     /*! \brief Remove a Cluster from the network
      *
      * Details...
@@ -146,10 +162,16 @@ public:
      */
     void setOrder( Updatable* updatables[], u_int dim );
 
-    //! \brief Set the order
+    /*! \brief Set the order
+	 *
+	 * Details
+	 */
     void setOrder( UpdatableVec& );
 
-    //! \brief Return the order
+    /*! \brief Return the order
+	 *
+	 * Details
+	 */
     const UpdatableVec& order() const {
 		return ups;
 	};
@@ -179,18 +201,6 @@ public:
      *   there no way to retrieve all of them with this methods... call them with unique name ;-)
      */
     Updatable* getByName( const char* );
-
-    /*! \brief Return the Updatable with the name specified, and cast it automatically to type required
-     *
-     *  Returns NULL-pointer if there's no updatable object whit the name specified or 
-	 *  the cast required it's not possible
-     *  \warning return the first that finds. If you have named different Updatables with same name
-     *   there no way to retrieve all of them with this methods... call them with unique name ;-)
-     */
-	template<class T>
-    T* byName( const char* name ) {
-		return dynamic_cast<T*>(getByName(name));
-	};
 
     /*! \brief Return true if the Cluster is in this net
      *
