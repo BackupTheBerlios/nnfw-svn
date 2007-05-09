@@ -162,20 +162,18 @@ ENDIF (UNIX)
 ### Setting For Win32 machines
 IF( WIN32 AND NOT UNIX )
 	ADD_DEFINITIONS( -DNNFW_BUILDING_DLL )
-IF( CMAKE_BUILD_TYPE MATCHES Debug OR CMAKE_BUILD_TYPE MATCHES RelWithDebInfo )
-	ADD_DEFINITIONS( -DNNFW_DEBUG )
-ENDIF( CMAKE_BUILD_TYPE MATCHES Debug OR CMAKE_BUILD_TYPE MATCHES RelWithDebInfo )
+	IF( CMAKE_BUILD_TYPE MATCHES Debug OR CMAKE_BUILD_TYPE MATCHES RelWithDebInfo )
+		ADD_DEFINITIONS( -DNNFW_DEBUG )
+	ENDIF( CMAKE_BUILD_TYPE MATCHES Debug OR CMAKE_BUILD_TYPE MATCHES RelWithDebInfo )
+    ### --- double check
+    IF ( NNFW_CONFIG MATCHES double )
+        ADD_DEFINITIONS( "-DNNFW_DOUBLE_PRECISION" )
+    ENDIF ( NNFW_CONFIG MATCHES double )
 	TARGET_LINK_LIBRARIES( nnfw "QtXml4" )
 	TARGET_LINK_LIBRARIES( nnfw "QtCore4" )
 ENDIF( WIN32 AND NOT UNIX )
 
 ### Setting Compiler minGW for Windows machines
 IF (MINGW)
-    SET_TARGET_PROPERTIES( nnfw PROPERTIES LINK_FLAGS "-LC:\\Qt\\4.2.3\\lib -Wl,--output-def,nnfwdll.def -Wl,--export-all-symbols -Wl,--add-stdcall-alias" )
-    
-	## Create VisualStudio library
-#    ADD_CUSTOM_COMMAND( TARGET nnfw POST_BUILD
-#        COMMAND lib /machine:X86 /def:nnfwdll.def
-#    )
-
+    SET_TARGET_PROPERTIES( nnfw PROPERTIES LINK_FLAGS "-LC:\\Qt\\4.2.3\\lib -Wl,--export-all-symbols -Wl,--add-stdcall-alias" )
 ENDIF (MINGW)
