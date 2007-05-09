@@ -58,7 +58,7 @@ void BaseNeuralNet::addCluster( Cluster* c, bool isInput, bool isOutput ) {
 
 bool BaseNeuralNet::removeCluster( Cluster* c ) {
     if ( !c ) {
-        nnfwMessage( NNFW_ERROR, "Null Pointer passed to addCluster! This operation will return false" );
+        nnfwMessage( NNFW_ERROR, "Null Pointer passed to removeCluster! This operation will return false" );
         return false;
     }
     unmark( c );

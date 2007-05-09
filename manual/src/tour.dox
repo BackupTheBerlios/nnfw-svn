@@ -46,6 +46,9 @@ Once Clusters and Linkers are created the neural network is already full-functio
 \ref introduction_toc "[Up]"
 
 \section tour_3 Inside a Cluster
+\image html diagramma3.png "Cluster's Structure"
+\image latex diagramma3.pdf "Cluster's Structure" width=12cm
+
 Cluster is composed by three basic properties:
 <ol>
  	<li><b>inputs</b>: is a RealVec (vector of real) containing the inputs of Cluster's neurons. The inputs can be setted by hand (i.e. in the case of 'input' Cluster where you put external-values), or they are calculated by Linkers computations that incoming to the Cluster.</li>
@@ -56,6 +59,10 @@ Cluster is composed by three basic properties:
 \ref introduction_toc "[Up]"
 
 \section tour_4 Inside a Linker
+
+\image html diagramma4.png "Linker behaviour when updated; on right the 'from' Cluster; on left the 'to' Cluster"
+\image latex diagramma4.pdf "Linker behaviour when updated; on right the 'from' Cluster; on left the 'to' Cluster" width=12cm
+
 Linker is more abstract than Cluster. It only specify a 'from' and 'to' Clusters. The 'from' Cluster is where the Linker takes its input for calculation, and the 'to' Cluster is where it put the result of calculation.
 
 The Linker represent the 'rule' on which the <b>outputs</b> of 'from' Cluster is transformed/calculated/mapped to <b>inputs</b> of 'to' Cluster. They represents the 'axons' of neurons.

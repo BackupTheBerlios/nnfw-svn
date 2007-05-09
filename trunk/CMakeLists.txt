@@ -33,17 +33,6 @@ ENDIF (UNIX)
 IF ( NNFW_CONFIG MATCHES shared )
     ADD_LIBRARY( nnfw SHARED ${NNFW_SRCS} )
     INSTALL( TARGETS nnfw LIBRARY DESTINATION ${LIB_DIR} )
-IF(WIN32)
-	INSTALL( FILES ${NNFW_BINARY_DIR}/release/nnfw.dll DESTINATION bin )
-	INSTALL( FILES ${NNFW_BINARY_DIR}/release/nnfw.lib DESTINATION bin )
-	INSTALL( FILES ${NNFW_BINARY_DIR}/release/nnfw.exp DESTINATION bin )
-	INSTALL( FILES C:/Qt/4.2.3-vs/bin/QtXml4.dll DESTINATION bin )
-	INSTALL( FILES C:/Qt/4.2.3-vs/bin/QtCore4.dll DESTINATION bin )
-	## --- Debug versions
-	INSTALL( FILES ${NNFW_BINARY_DIR}/debug/nnfw.dll DESTINATION bin RENAME nnfwd.dll )
-	INSTALL( FILES ${NNFW_BINARY_DIR}/debug/nnfw.lib DESTINATION bin RENAME nnfwd.lib )
-	INSTALL( FILES ${NNFW_BINARY_DIR}/debug/nnfw.exp DESTINATION bin RENAME nnfwd.exp )
-ENDIF(WIN32)
 ELSE ( NNFW_CONFIG MATCHES shared )
     ADD_LIBRARY( nnfw STATIC ${NNFW_SRCS} )
     INSTALL( TARGETS nnfw ARCHIVE DESTINATION ${LIB_DIR} )
@@ -67,40 +56,6 @@ ELSE (WIN32)
 	INSTALL( FILES "${NNFW_SOURCE_DIR}/RELEASENOTES" DESTINATION share/nnfw )
 ENDIF (WIN32)
 INSTALL( FILES ${NNFW_HDRS} DESTINATION include/nnfw )
-
-# ---------------------------------------- #
-# ############## PACKAGE ################# #
-# ---------------------------------------- #
-SET(CPACK_PACKAGE_FILE_NAME "nnfw-0.7.2")
-SET(CPACK_PACKAGE_VERSION_MAJOR "0")
-SET(CPACK_PACKAGE_VERSION_MINOR "7")
-SET(CPACK_PACKAGE_VERSION_PATCH "2")
-SET(CPACK_PACKAGE_VENDOR "Gianluca Massera")
-
-SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Neural Network Framework, NNFW Project")
-#SET(CPACK_PACKAGE_DESCRIPTION_FILE "")
-SET(CPACK_RESOURCE_FILE_LICENSE "${NNFW_SOURCE_DIR}/GPL.txt")
-#SET(CPACK_RESOURCE_FILE_README "")
-#SET(CPACK_RESOURCE_FILE_WELCOME "")
-#   CPACK_INSTALL_COMMANDS              - Extra commands to install components
-
-IF(WIN32 AND NOT UNIX)
-	# There is a bug in NSI that does not handle full unix paths properly. Make
-	# sure there is at least one set of four (4) backlasshes.
-	#SET(CPACK_PACKAGE_ICON "${CMake_SOURCE_DIR}/Utilities/Release\\\\InstallIcon.bmp")
-	#SET(CPACK_NSIS_INSTALLED_ICON_NAME "bin\\\\MyExecutable.exe")
-	SET(CPACK_NSIS_DISPLAY_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY} Neural Network Framework")
-	SET(CPACK_NSIS_HELP_LINK "http:\\\\\\\\www.nnfw.org")
-	SET(CPACK_NSIS_URL_INFO_ABOUT "http:\\\\\\\\www.nnfw.org")
-	SET(CPACK_NSIS_CONTACT "mave@berlios.de")
-	SET(CPACK_GENERATOR "NSIS")
-ENDIF(WIN32 AND NOT UNIX)
-IF (UNIX)
-	SET(CPACK_GENERATOR "STGZ")
-ENDIF (UNIX)
-
-INCLUDE(CPack)
-
 
 ### Setting Compiler g++ for linux machines
 IF (UNIX)

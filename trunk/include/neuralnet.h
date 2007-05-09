@@ -24,6 +24,10 @@
  *  \brief This file contains the declaration of Neural Network Class
  *
  *  Details ...
+ *
+ *  \todo The removeCluster/removeLinker are very slow because Clusters and Linkers are memorized via std::vector;
+ *  for a better performances std::vector should changed to std::map
+ *
  */
 
 #include "types.h"
