@@ -44,9 +44,9 @@ The NNFW project is a set of C++ classes for creating an huge variety of neural 
 \ref introduction_toc "[Up]"
 
 \section introduction_3 What is NNFW not ?
-Non e' un applicazione gia' pronta all'uso da parte dell'utente. Bensi, richiede conoscenza del C++ e della programmazione ad oggetti per poter essere usata. Quindi, all'utente sono richieste le nozioni necessarie al fine di sviluppare un'applicazione che utilizzi le classi messe a disposizioni della libreria.
+It's not an application for education purpose. The utilization of this library requires a basic knowledge about neural network and its dynamics. For accessing to all functionalities of NNFW, is required a basic knowledge of C++ and Object-Oriented programming.
 
-Non vi aspettate di trovare un eseguibile sul quale facendo 'double-click' si avvia un programma grafico con il quale giocare a costruire reti neurali strambe... semplicemente questo applicativo non c'e', siete voi che dovrete costruirlo con i building-block messi a disposizione dalla NNFW.
+Its developed by researched for research-purpose.
 \ref introduction_toc "[Up]"
 
 \section introduction_4 Download & Installation
@@ -192,12 +192,5 @@ The library is now installed. If you want to use it with XCode follow that simpl
 \ref introduction_toc "[Up]"
 
 
-*/
-
-
-
-/*
-Per rendere il framework semplice, flessibile e allo stesso tempo efficiente ho scelto il C++ come linguaggio di sviluppo della libreria. Il linguaggio orientato agli oggetti mi ha permesso di strutturare il codice in modo chiaro e semplice da comprendere, e sopratutto mi ha permesso di rendere il framework facilmente estensibile e flessibile.<br>
-La possibilit&agrave; di interfacciarsi con il C, i template e particolarit&agrave; tipiche del C++ (come friend), mi hanno permesso di mantenere efficiente il codice.
 */
 
