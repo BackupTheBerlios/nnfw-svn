@@ -29,16 +29,17 @@ After some months, I understood that there isn't a such library (or at least I d
     <li> Extensible in a straightforward way (providing, also, howtos); </li>
     <li> Computational Efficient. </li>
 </ol>
-Infatti, la <em>Neural Network Framework</em> non vuole essere una libreria con tutto dentro pronta all'uso cos&igrave; come &egrave;, bens&igrave; si pone l'obiettivo di essere un <em>framework</em> per la realizzazione di proprie reti neurali in piena libert&agrave; fornendo i <em>building blocks</em> fondamentali per la costruzione di reti neurali di ogni genere.
+Neural Network Framework was created with these aims in mind.
+
 \ref introduction_toc "[Up]"
 
 \section introduction_2 What is NNFW ?
-Il progetto Neural Network Framework (NNFW) si pone l'obiettivo di realizzare un insieme di classi C++ che consentono la creazione e l'utilizzo di un'enorme variet&agrave; di reti neurali. Il framework consente di potere usare la capacit&agrave; espressiva dell'infrastruttura a diversi livelli per consentire un uso agevole ed efficacie da parte di ogni utente, dal novizio all'esperto:
+The NNFW project is a set of C++ classes for creating an huge variety of neural networks. The framework is structured in different levels in order to provides various interfaces for quick-easy utilization and deeply-expert utilization, from newbie to masters:
 <ol>
-    <li> a basso livello &egrave; possibile agire in completa libert&agrave; per la costruzione di complesse architetture altrimenti non realizzabili; &egrave; a questo livello che si puo contribuire aggiungendo nuove funzionalit&agrave; alla libreria;</li>
-    <li> ad un livello intermedio sono presenti classi per la realizzazione di architetture largamente usate quali multilayer feedforward, Elmann networks, SOM e altre ancora;</li>
-    <li> la possibilit&agrave; di descrivere la rete con file XML aggiunge un altro livello di accessibilit&agrave; alle varie funzionalit&agrave; del framework;</li>
-    <li> un interfaccia grafica permette a chiunque con poche nozioni sulla libreria di creare e giocare con reti neurali anche complesse</li>
+    <li> at low-level it's possibile to act completly free for building complex architecture; from this level expert-users can contribute to NNFW adding new functionalities;</li>
+    <li> at mid-level there are classes for quick-creation of common neural networks as multilayer feedforward, Elmann networks, Radial-basis network and so on;</li>
+    <li> the possibility to represent a neural network with XML files allow an abstract and general way for accessing to all functionality of NNFW, also to the contribution of expert users;</li>
+    <li> a graphical interface it's the high-level way to use the framework; the most user-friendly and for newbie users, or just for playing with complex neural networks;</li>
 </ol>
 \ref introduction_toc "[Up]"
 
