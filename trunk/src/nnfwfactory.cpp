@@ -119,6 +119,8 @@ void Factory::initFactory() {
     linkertypes["CopyLinker"] = new Creator<CopyLinker>();
     linkertypes["DotLinker"] = new Creator<DotLinker>();
     linkertypes["NormLinker"] = new Creator<NormLinker>();
+	//--- for backward compatibility
+    linkertypes["MatrixLinker"] = new Creator<DotLinker>();
 
     outfuntypes["FakeSigmoidFunction"] = new Creator<FakeSigmoidFunction>();
     outfuntypes["IdentityFunction"] = new Creator<IdentityFunction>();

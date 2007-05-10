@@ -15,6 +15,10 @@ S <mave> comment goes here
     'C' : means that something has been changed (e.g. implementation of a Class or a signature method)
 ==== End of Legend ====
 
+    ==> 201 - 10/05/2007 <==
+
+C <mave> Factory map "MatrixLinker" to "DotLinker" for backward compatibility
+
     ==> 200 - 10/05/2007 <==
 
 C <mave> Cluster::accumulate() renamed to setAccumulate()
