@@ -56,53 +56,56 @@ public:
     //! Modality of Data Copying
     typedef enum { In2In = 0, In2Out = 1, Out2In = 2, Out2Out = 3 } CopyMode;
 
-    /*! \brief Constructor
+	/*! \name Constructors */
+	//@{
+
+    /*! Constructor
      */
     CopyLinker( Cluster* from, Cluster* to, CopyMode mode, const char* name = "unnamed" );
 
-    /*! \brief Construct by PropertySettings
+    /*! Construct by PropertySettings
      */
     CopyLinker( PropertySettings& prop );
 
-    /*! \brief Destructor
+    /*! Destructor
      */
     virtual ~CopyLinker();
 
-    /*! \brief Change the Modality of Data Copying
+	//@}
+	/*! \name Interface */
+	//@{
+
+    /*! Change the Modality of Data Copying
      */
     void setMode( CopyMode );
 
-    /*! \brief Return the Modality of Data Copying
+    /*! Return the Modality of Data Copying
      */
     CopyMode getMode();
 
-    /*! \brief Change the Modality of Data Copying (Variant version)
+    /*! Change the Modality of Data Copying (Variant version)
      */
     bool setMode( const Variant& v );
     
-    /*! \brief Return the Modality of Data Copying (Variant version)
+    /*! Return the Modality of Data Copying (Variant version)
      */
     Variant getModeP();
 
-    /*! \brief Update the linker
-     *
-     * Details...
+    /*! Update the linker
      */
     void update();
 
-    /*! \brief Returns the number of neurons connected
-     *
-     * Details
+    /*! Returns the number of neurons connected
      */
     u_int size() const;
 
-    /*! \brief Randomize nothing !!
-     *
-     * Details
+    /*! Randomize (i.e. do nothing !!)
      */
     void randomize( Real , Real ) {
         // --- Do Nothing
     };
+
+	//@}
 
 private:
     //! View of source RealVec of copying

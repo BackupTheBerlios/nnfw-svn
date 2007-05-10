@@ -33,7 +33,7 @@ namespace nnfw {
 class BaseNeuralNet;
 class LearningNetwork;
 
-/*! \brief Function to quickly construct a FeedForward Neural Network
+/*! Function to quickly construct a FeedForward Neural Network<br>
  *  Return a BaseNeuralNetwork that represent a feedforwar neural net.<br>
  *  The neural network returned is composed by Cluster of clusterType speficied.
  *  The number of neurons of each Cluster is taken from layers vector.
@@ -45,16 +45,16 @@ class LearningNetwork;
  */
 NNFW_API BaseNeuralNet* feedForwardNet( U_IntVec layers, const char* clusterType = "BiasedCluster", const char* linkerType = "MatrixLinker" );
 
-/*! \brief Function to quickly construct a Backpropagation Learning Network
+/*! Function to quickly construct a Backpropagation Learning Network
  *  \deprecated don't use; a new learning framework will coming soon
  */
 NNFW_API LearningNetwork* backpropagationFor( BaseNeuralNet* net );
 
-/*! \brief A quick way to sets all the parameters of Gradient types blocks in LearningNetwork passed
- * \deprecated because it's based on the old learning design
+/*! A quick way to sets all the parameters of Gradient types blocks in LearningNetwork passed
  * \param learnNet the LearningNewtork contains the Gradient blocks to configure
  * \param rate the learning rate
  * \param momento the momentum parameter (default is zero)
+ * \deprecated because it's based on the old learning design
  */
 NNFW_API void setParamsOfGradientBlocks( LearningNetwork* learnNet, Real rate, Real momento = 0.0 );
 

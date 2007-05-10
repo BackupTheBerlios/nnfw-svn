@@ -115,7 +115,6 @@ void Factory::initFactory() {
     clustertypes["DDECluster"] = new Creator<DDECluster>();
     clustertypes["FakeCluster"] = new Creator<FakeCluster>();
 
-    linkertypes["MatrixLinker"] = new Creator<MatrixLinker>();
     linkertypes["SparseMatrixLinker"] = new Creator<SparseMatrixLinker>();
     linkertypes["CopyLinker"] = new Creator<CopyLinker>();
     linkertypes["DotLinker"] = new Creator<DotLinker>();

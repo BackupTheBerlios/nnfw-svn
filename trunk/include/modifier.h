@@ -33,12 +33,22 @@ namespace nnfw {
  */
 class NNFW_API Modifier {
 public:
+	/*! \name Constructors */
+	//@{
+	
     //! Constructor
     Modifier() { /* Nothing to do */ };
     //! Destructor
     virtual ~Modifier() { /* Nothing to do */ };
+
+	//@}
+	/*! \name Interface */
+	//@{
+
     //! Modify the object
     virtual void modify() = 0;
+
+	//@}
 };
 
 /*! \brief MatrixModifier object
@@ -47,11 +57,18 @@ public:
  */
 class NNFW_API MatrixModifier : public Modifier {
 public:
+	/*! \name Constructors */
+	//@{
+
     //! Constructor
 	MatrixModifier( RealMat& matrix ) : m( matrix ) { /* Nothing to do */ };
 
     //! Destructor
     virtual ~MatrixModifier() { /* Nothing to do */ };
+
+	//@}
+	/*! \name Interface */
+	//@{
 
     //! Modify the object
     virtual void modify() = 0;
@@ -65,6 +82,8 @@ public:
 	void setMatrix( RealMat& matrix ) {
 		m = matrix;	
 	};
+
+	//@}
 	
 protected:
     //! The matrix to be modified
@@ -77,12 +96,19 @@ protected:
  */
 class NNFW_API VectorModifier : public Modifier {
 public:
+	/*! \name Constructors */
+	//@{
+
     //! Constructor
 	VectorModifier( RealVec& vector ) : v( vector ) { /* Nothing to do */ };
     
 	//! Destructor
     virtual ~VectorModifier() { /* Nothing to do */ };
     
+	//@}
+	/*! \name Interface */
+	//@{
+
 	//! Modify the object
     virtual void modify() = 0;
     
@@ -95,6 +121,8 @@ public:
 	void setVector( RealVec& vector ) {
 		v = vector;	
 	};
+
+	//@}
 	
 protected:
     //! The vector to be modified

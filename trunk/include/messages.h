@@ -31,6 +31,17 @@ namespace nnfw {
 /*! \file
  *  \brief This file contains the declaration of function nnfwMessage for displaying debug messages; Don't include this file directly, instead include types.h
  *
+ */
+
+//! Categories of messages
+enum {
+    NNFW_INFORMATION = 0,
+    NNFW_WARNING = 1,
+    NNFW_ERROR = 2,
+    NNFW_CRITICAL = 3
+};
+
+/*! Print out a message<br>
  *  The messages are divided in four categories:
  *  <ul>
  *     <li><b>NNFW_INFORMATION</b>: it's only an informational message, this is not an error </li>
@@ -42,17 +53,6 @@ namespace nnfw {
  *     <li><b>NNFW_CRITICAL</b>: it's a critical error. It's not possibile go on !!! The program will be
  *         terminated. The user of library must avoid that this messages arises </li>
  *  </ul>
- */
-
-//! Categories of messages
-enum {
-    NNFW_INFORMATION = 0,
-    NNFW_WARNING = 1,
-    NNFW_ERROR = 2,
-    NNFW_CRITICAL = 3
-};
-
-/*! \brief Print out a message
  *
  */
 NNFW_API void nnfwMessage( unsigned int category, const char* msg );

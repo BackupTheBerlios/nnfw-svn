@@ -23,9 +23,6 @@
 /*! \file
  *  \brief This file contains the declaration of the abstract OutputFunction Class
  *
- *  Details...
- *
- *
  */
 
 #include "types.h"
@@ -53,11 +50,11 @@ public:
     /*! \name Interface */
     //@{
 
-    /*! \brief Calculate the outputs of neurons by the net inputs given
+    /*! Calculate the outputs of neurons by the net inputs given
      */
     virtual void apply( RealVec& inputs, RealVec& outputs );
 
-    /*! \brief Calculate the outputs of a single neuron
+    /*! Calculate the outputs of a single neuron
      */
     Real apply( Real input ) {
         tmp1[0] = input;
@@ -65,8 +62,7 @@ public:
         return tmp2[0];
     };
 
-    /*! \brief Set the Cluster which it is inserted
-     *
+    /*! Set the Cluster which it is inserted<br>
      *  This method it's not necessary for simple OutputFunction like SigmoidFunction, LinearFunction, etc...
      *  but can be very helpfull for some particular and advanced function that requires to access the data
      *  of the Cluster in which it is inserted into. (like PoolFunction)<br>
@@ -75,7 +71,7 @@ public:
      */
     virtual void setCluster( Cluster* ) { /* nothing to do */ };
 
-    /*! \brief Clone this object
+    /*! Clone this object
      */
     virtual OutputFunction* clone() const;
 

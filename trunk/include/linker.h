@@ -23,8 +23,6 @@
 /*! \file
  *  \brief This file contains the declaration of the linkers implemented
  *
- *  Details...
- *
  */
 
 #include "types.h"
@@ -54,7 +52,7 @@ public:
     //! Construct
     Linker( Cluster* from, Cluster* to, const char* name = "unnamed" );
 
-    /*! \brief Construct by PropertySettings
+    /*! Construct by PropertySettings
      */
     Linker( PropertySettings& );
 
@@ -62,17 +60,13 @@ public:
     /*! \name Deprecated Methods */
     //@{
 
-    /*! \brief Return the Cluster From -- Deprecated ( use from() )
-     *
-     * Details
+    /*! Return the Cluster From -- Deprecated ( use from() )
      */
     Cluster* getFrom() const {
         return fromc;
     };
 
-    /*! \brief Return the Cluster to -- Deprecated ( use to() )
-     *
-     * Details
+    /*! Return the Cluster to -- Deprecated ( use to() )
      */
     Cluster* getTo() const {
         return toc;
@@ -82,38 +76,36 @@ public:
     /*! \name Interface */
     //@{
 
-    /*! \brief Return the Cluster From
+    /*! Return the Cluster From
      */
     Cluster* from() const {
         return fromc;
     };
 
-    /*! \brief Return the Cluster to
+    /*! Return the Cluster to
      */
     Cluster* to() const {
         return toc;
     };
 
-    /*! \brief Return Cluster from (Variant version)
+    /*! Return Cluster from (Variant version)
      */
     Variant fromP() {
         return Variant( fromc );
     };
 
-    /*! \brief Return Cluster to (Variant version)
+    /*! Return Cluster to (Variant version)
      */
     Variant toP() {
         return Variant( toc );
     };
 
-    /*! \brief Returns the 'size' of the linker
-     *
+    /*! Returns the 'size' of the linker<br>
      * The actual means of 'size' will be specified by sub-classes that implementes concrete linkers
      */
     virtual u_int size() const = 0;
 
-    /*! \brief Randomize the parameters of the Linker
-     *
+    /*! Randomize the parameters of the Linker<br>
      * The parameters randomized by this method will be specified by sub-classes
      */
     virtual void randomize( Real min, Real max ) = 0;

@@ -112,6 +112,15 @@ void SparseMatrixLinker::randomize( Real min, Real max ) {
     }
 }
 
+void SparseMatrixLinker::update() {
+    // check if cluster 'To' needs a reset
+    if ( to()->needReset() ) {
+        to()->resetInputs();
+    }
+    RealMat::mul( to()->inputs(), from()->outputs(), matrix() );
+    return;
+}
+
 void SparseMatrixLinker::connect( u_int from, u_int to ) {
     if ( from >= rows() ) {
         // Messaggio di errore !!!

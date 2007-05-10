@@ -75,16 +75,6 @@ public:
     //@{
 
     /*!  Get the number of rows
-     *  \deprecated
-     */
-    u_int getRows();
-
-    /*!  Get the number of cols
-     *  \deprecated
-     */
-    u_int getCols();
-
-    /*!  Get the number of rows
      */
     u_int rows() {
         return nrows;
@@ -131,12 +121,6 @@ public:
     /*!  Set the whole weight matrix (Variant ver)
      */
     bool setMatrix( const Variant& v );
-
-    /*!  Update the Linker
-     *
-     *   \deprecated this method will become pure-virtual by 0.7.x releases
-     */
-    void update();
 
     //@}
 

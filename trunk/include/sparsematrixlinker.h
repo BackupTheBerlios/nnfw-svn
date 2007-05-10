@@ -39,11 +39,11 @@ public:
     /*! \name Constructors */
     //@{
 
-    /*!  Connect clusters with complete connections
+    /*! Connect clusters with complete connections
      */
     SparseMatrixLinker( Cluster* from, Cluster* to, const char* name = "unnamed" );
 
-    /*!  Connect neurons of Clusters with a random connections with the passed probability.
+    /*! Connect neurons of Clusters with a random connections with the passed probability.
      */
 	SparseMatrixLinker( Real prob, Cluster* from, Cluster* to, const char* name = "unnamed" );
 
@@ -54,11 +54,11 @@ public:
 	 */
 	SparseMatrixLinker( Cluster* from, Cluster* to, Real prob, bool zeroDiagonal = false, bool symmetricMask = false, const char* name = "unnamed" );
 
-    /*!  Construct by PropertySettings
+    /*! Construct by PropertySettings
      */
     SparseMatrixLinker( PropertySettings& prop );
 
-    /*!  Destructor
+    /*! Destructor
      */
     virtual ~SparseMatrixLinker();
 
@@ -66,46 +66,43 @@ public:
     /*! \name Interface */
     //@{
 
-    /*!  Set the weight of the connection specified
+    /*! Set the weight of the connection specified
      */
     virtual void setWeight( u_int from, u_int to, Real weight );
 
-    /*!  Randomize the weights of the SparseMatrixLinker
+    /*! Randomize the weights of the SparseMatrixLinker
      */
     virtual void randomize( Real min, Real max );
 
-    /*!  Connect two neurons
+    /*! Performs the dot-product calculation where the non-connection are considered as zero
+     */
+    void update();
+
+    /*! Connect two neurons
      */
     void connect( u_int from, u_int to );
 
-    /*!  Connects randomly according to the given probability
+    /*! Connects randomly according to the given probability
      */
     void connectRandom( Real prob );
 
-    /*!  Connect all couples of neurons
+    /*! Connect all couples of neurons
      */
     void connectAll();
 
-    /*!  Disconnect the two neurons
+    /*! Disconnect the two neurons
      */
     void disconnect( u_int from, u_int to );
 
-    /*!  Disconnects randomly according to the given probability
+    /*! Disconnects randomly according to the given probability
      */
     void disconnectRandom( Real prob );
 
-    /*!  Disonnect all couples of neurons
+    /*! Disonnect all couples of neurons
      */
     void disconnectAll();
 
-    /*!  Disconnect connections randomly according to the given probability
-     *   \deprecated use disconnectRandom
-     */
-    void disconnect( Real prob ) {
-        disconnectRandom( prob );
-    };
-
-    /*!  Get the mask
+    /*! Get the mask
      */
     MatrixData<bool>& getMask() {
 		return mask;

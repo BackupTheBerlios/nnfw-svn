@@ -145,12 +145,12 @@ void GradientBiasedCluster::resetOldDeltas() {
 }
 
 GradientMatrixLinker::GradientMatrixLinker( MatrixLinker* ml, BaseTeachBlock* pre, BaseTeachBlock* post, const char* name )
-: SupervisedTeachBlock( pre, post, name ), oldDelta(ml->getRows(), ml->getCols()) {
+: SupervisedTeachBlock( pre, post, name ), oldDelta(ml->rows(), ml->cols()) {
     this->ml = ml;
     rate = 0.3f;
     momento = 0.0f;
-    target.resize( ml->getCols() );
-    error.resize( ml->getCols() );
+    target.resize( ml->cols() );
+    error.resize( ml->cols() );
     oldDelta.zeroing();
 }
 
@@ -165,8 +165,8 @@ void GradientMatrixLinker::learn() {
     
     // --- 1. Propaga l'errore ai preBlocks
     // (devo propagare solo l'errore moltiplicato per il peso relativo)
-    u_int outS = ml->getCols();
-    u_int inpS = ml->getRows();
+    u_int outS = ml->cols();
+    u_int inpS = ml->rows();
     RealVec errIn( inpS, 0.0 );
     for( u_int r=0; r<inpS; r++ ) {
         for( u_int c=0; c<outS; c++ ) {

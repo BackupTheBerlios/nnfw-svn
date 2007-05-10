@@ -45,15 +45,15 @@ public:
     /*! \name Constructors */
     //@{
 
-    /*!  Connect clusters with a complete connections
+    /*! Connect clusters with a complete connections
      */
     NormLinker( Cluster* from, Cluster* to, const char* name = "unnamed" );
 
-    /*!  Construct by PropertySettings
+    /*! Construct by PropertySettings
      */
     NormLinker( PropertySettings& prop );
 
-    /*!  Destructor
+    /*! Destructor
      */
     virtual ~NormLinker();
 

@@ -29,7 +29,6 @@
 
 /*! \file
  *  \brief This file contains the RealVec Class; Don't include this file directly, instead include types.h
- *  Details...
  */
 
 
@@ -46,31 +45,31 @@ public:
     /*! \name Constructors */
     //@{
 
-    /*! \brief Construct an empty vector of dimension size
+    /*! Construct an empty vector of dimension size
      */
     RealVec( u_int size );
     
-    /*! \brief Construct a vector of dimension size with all values set to value
+    /*! Construct a vector of dimension size with all values set to value
      */
     RealVec( u_int size, Real value );
 
-    /*! \brief Construct an empty vector with dimesion zero
+    /*! Construct an empty vector with dimesion zero
      */
     RealVec();
 
-    /*! \brief Construct a RealVec view
+    /*! Construct a RealVec view
      */
     RealVec( RealVec& src, u_int idStart, u_int idEnd );
 
-    /*! \brief Construct by copying data from const Real* vector
+    /*! Construct by copying data from const Real* vector
      */
     RealVec( const Real* r, u_int dim );
 
-    /*! \brief Copy-Constructor
+    /*! Copy-Constructor
      */
     RealVec( const RealVec& orig );
 
-    /*! \brief Assignement-operator
+    /*! Assignement-operator
      */
     RealVec& operator=( const RealVec& src ) {
 		RealVec& self = *this;
@@ -83,7 +82,7 @@ public:
     /*! \name Operations on RealVec */
     //@{
 
-    /*! \brief Append Operator
+    /*! Append Operator
      */
     RealVec& operator<<( const Real& value ) {
         append( value );
@@ -206,11 +205,11 @@ public:
     /*! \name Math Functions */
     //@{
 
-    /*! \brief Exponential
+    /*! Exponential
      */
     RealVec& exp();
 
-    /*! \brief Scaling (scalar-vector multiply)
+    /*! Scaling (scalar-vector multiply)
      */
     void scale( const Real v ) {
         for( u_int i=0; i<vsize; i++ ) {
@@ -218,55 +217,15 @@ public:
         }
     };
 
-    /*! \brief Element Inversion
+    /*! Element Inversion
      */
     RealVec& inv();
 
-    /*! \brief vector norm: ||x||
+    /*! vector norm: ||x||
      */
     Real norm();
 
-    /*! \brief Equation: x-y
-     */
-    void assign_xminusy( const RealVec& x, const RealVec& y ) {
-        for( u_int i=0; i<vsize; i++ ) {
-            data[i] = x[i]-y[i];
-        }
-    };
-
-    /*! \brief Equation: -x
-     */
-    void assign_minusx( const RealVec& x ) {
-        for( u_int i=0; i<vsize; i++ ) {
-            data[i] = -x[i];
-        }
-    };
-
-    /*! \brief Equation: a-x
-     */
-    void assign_aminusx( Real a, const RealVec& x ) {
-        for( u_int i=0; i<vsize; i++ ) {
-            data[i] = a-x[i];
-        }
-    };
-
-    /*! \brief Equation: a*x
-     */
-    void assign_amulx( const Real a, const RealVec& x ) {
-        for( u_int i=0; i<vsize; i++ ) {
-            data[i] = a*x[i];
-        }
-    };
-
-    /*! \brief Equation: a/x
-     */
-    void assign_adivx( const Real a, const RealVec& x ) {
-        for( u_int i=0; i<vsize; i++ ) {
-            data[i] = a/x[i];
-        }
-    };
-	
-    /*! \brief Calculate the square of each element
+    /*! Calculate the square of each element
      */
 	void square() {
         for( u_int i=0; i<vsize; i++ ) {
@@ -274,7 +233,7 @@ public:
         }
     };
 	
-    /*! \brief Return the sum of the vector's elements
+    /*! Return the sum of the vector's elements
      */
 	Real sum() {
 		Real s = 0.0;
@@ -283,14 +242,63 @@ public:
         }
 		return s;
     };
-	
-    /*! \brief Return the mean value of the vector's elements
+
+	/*! Not operation<br>
+	 *  It apply the operator '!' to all elements of RealVec
+     */
+    void neg() {
+        for( u_int i=0; i<vsize; i++ ) {
+			data[i] = !data[i];
+        }
+    };
+
+    /*! Equation: x-y
+     */
+    void assign_xminusy( const RealVec& x, const RealVec& y ) {
+        for( u_int i=0; i<vsize; i++ ) {
+            data[i] = x[i]-y[i];
+        }
+    };
+
+    /*! Equation: -x
+     */
+    void assign_minusx( const RealVec& x ) {
+        for( u_int i=0; i<vsize; i++ ) {
+            data[i] = -x[i];
+        }
+    };
+
+    /*! Equation: a-x
+     */
+    void assign_aminusx( Real a, const RealVec& x ) {
+        for( u_int i=0; i<vsize; i++ ) {
+            data[i] = a-x[i];
+        }
+    };
+
+    /*! Equation: a*x
+     */
+    void assign_amulx( const Real a, const RealVec& x ) {
+        for( u_int i=0; i<vsize; i++ ) {
+            data[i] = a*x[i];
+        }
+    };
+
+    /*! Equation: a/x
+     */
+    void assign_adivx( const Real a, const RealVec& x ) {
+        for( u_int i=0; i<vsize; i++ ) {
+            data[i] = a/x[i];
+        }
+    };
+		
+    /*! Return the mean value of the vector's elements
      */
 	Real mean() {
 		return this->sum() / vsize;
     };
 
-	/*! \brief For each element i, data[i] = 0 if data[i] <= threshold; data[i] = 1 otherwise
+	/*! For each element i, data[i] = 0 if data[i] <= threshold; data[i] = 1 otherwise
 	 */
 	void step( Real threshold ) {
 		for ( u_int i = 0; i<vsize; i++ ) {
@@ -302,7 +310,7 @@ public:
     /*! \name Vector-Vector Operators */
     //@{
 
-    /*! \brief Outer Product: m += x'*y
+    /*! Outer Product: m += x'*y
      *  \param m the matrix result of multiplication
      *  \param x the first vector
      *  \param y the second vector
@@ -312,11 +320,11 @@ public:
 
     //@}
 	
-    /*! \brief Create all the binary vectors of a given dimension
+    /*! Create all the binary vectors of a given dimension
      */
 	static void createAllBinaries( RealVec* vector, unsigned long int pats, u_int dims );
 
-    /*! \brief Return the mean square error of the vector's elements
+    /*! Return the mean square error of the vector's elements
      */
 	static Real mse( const RealVec& target, const RealVec& actual );
 
@@ -325,7 +333,7 @@ protected:
 
     friend class RealMat;
 
-    /*! \brief return the rawdata
+    /*! return the rawdata
      */
     Real* rawdata() const {
         return VectorData<Real>::rawdata();

@@ -38,11 +38,10 @@ class OutputFunction;
 class Propertized;
 class AbstractPropertyAccess;
 
-//! \brief Vector of PropertyAccess
+//! Vector of PropertyAccess
 typedef VectorData<AbstractPropertyAccess*> PropertyAccessVec;
 
 /*! \brief Incapsulate values of different types/classes in a unified way (like union)
- *  \nosubgrouping
  */
 class NNFW_API Variant {
 public:
@@ -52,51 +51,51 @@ public:
 
     /*! \name Constructors */
     //@{
-    //! \brief Constructor
+    //! Constructor
     Variant();
-    //! \brief Copy-Constructor
+    //! Copy-Constructor
     Variant( const Variant& src );
-    //! \brief Constructor
+    //! Constructor
     Variant( Real d );
-    //! \brief Constructor
+    //! Constructor
     Variant( int d );
-    //! \brief Constructor
+    //! Constructor
     Variant( u_int d );
-    //! \brief Constructor
+    //! Constructor
     Variant( char d );
-    //! \brief Constructor
+    //! Constructor
     Variant( unsigned char d );
-    //! \brief Constructor
+    //! Constructor
     Variant( bool d );
-    //! \brief Constructor
+    //! Constructor
     Variant( const char* d );
-    //! \brief Constructor
+    //! Constructor
     Variant( RealVec* d );
-    //! \brief Constructor
+    //! Constructor
     Variant( RealMat* d );
-    //! \brief Constructor
+    //! Constructor
     Variant( OutputFunction* d );
-    //! \brief Constructor
+    //! Constructor
     Variant( Cluster* d );
-    //! \brief Constructor
+    //! Constructor
     Variant( Linker* d );
-    //! \brief Constructor
+    //! Constructor
     Variant( Propertized* d );
     //@}
     /*! \name Operators */
     //@{
-    //! \brief Assign operator
+    //! Assign operator
     Variant& operator=( const Variant& src );
     //@}
-    /*!  \name Informations about data contained */
+    /*! \name Informations about data contained */
     //@{
-    /*! \brief Type of data
+    /*! Type of data
      */
     types type() const;
-    /*! \brief Return the name of type
+    /*! Return the name of type
      */
     const char* typeName() const;
-    /*! \brief Return true if the Variant is Null
+    /*! Return true if the Variant is Null
      */
     bool isNull();
     //@}
@@ -130,7 +129,7 @@ public:
     Propertized* getPropertized() const;
     //@}
 
-    /*! \brief Return the name of type passed by argument
+    /*! Return the name of type passed by argument
      */
     static const char* typeName( types t );
 
@@ -165,13 +164,13 @@ class NNFW_API AbstractPropertyAccess : public Clonable {
 public:
     /*! \name Constructors & Destructors */
     //@{
-    //! \brief Constructor
+    //! Constructor
     AbstractPropertyAccess( const char* name ) {
         u_int size = strlen(name);
         this->namep = new char[size+1];
         strcpy( this->namep, name );
     };
-    //! \brief Destructor
+    //! Destructor
     virtual ~AbstractPropertyAccess() {
         delete []namep;
     };
@@ -211,13 +210,13 @@ public:
     //@}
 
 protected:
-    //! \brief Name of property
+    //! Name of property
     char* namep;
-    //! \brief Type of property
+    //! Type of property
     Variant::types typep;
-    //! \brief True if the property is writable
+    //! True if the property is writable
     bool writable;
-    //! \brief True if the property is a Vector of values
+    //! True if the property is a Vector of values
     bool vectorv;
 };
 
@@ -230,7 +229,7 @@ class NNFW_API PropertyAccess : public AbstractPropertyAccess {
 public:
     /*! \name Constructors */
     //@{
-    //! \brief Constructor
+    //! Constructor
     PropertyAccess( const char* name, Variant::types t, T* o, Variant (T::*g)(), bool (T::*s)( const Variant& ) = 0 )
         : AbstractPropertyAccess( name ) {
         typep = t;
@@ -248,24 +247,22 @@ public:
     //@}
     /*! \name Interface */
     //@{
-    //! \brief return the value of property
+    //! return the value of property
     virtual Variant get() const {
         return (obj->*getPtm)();
     };
-    /*! \brief set the property
-     *
-     *  \par Warnings:
-     *  It doesn't check is the property is writable or not; before calling this method check if the property is
-     *  writable via isWritable() method
+    /*! set the property
+     *  \warning It doesn't check is the property is writable or not; before calling this 
+	 *  method check if the property is writable via isWritable() method
      */
     virtual bool set( const Variant& data ) {
         return (obj->*setPtm)( data );
     };
-    //! \brief It always return false
+    //! It always return false
     virtual bool set( u_int, const Variant& ) {
         return false;
     };
-    //! \brief It always return a Null Variant
+    //! It always return a Null Variant
     virtual Variant get( u_int ) const {
         return Variant();
     };
@@ -274,7 +271,7 @@ public:
     virtual Propertized* object() {
         return obj;
     };
-    //! \brief Clone this
+    //! Clone this
     virtual PropertyAccess* clone() const {
         return new PropertyAccess( name(), type(), obj, getPtm, setPtm );
     };
@@ -294,7 +291,7 @@ class NNFW_API VectorPropertyAccess : public AbstractPropertyAccess {
 public:
     /*! \name Constructors */
     //@{
-    //! \brief Constructor
+    //! Constructor
     VectorPropertyAccess( const char* name, Variant::types t, T* o, Variant (T::*g)(u_int), bool (T::*s)(u_int, const Variant&) = 0 )
         : AbstractPropertyAccess( name ) {
         typep = t;
@@ -312,23 +309,21 @@ public:
     //@}
     /*! \name Interface */
     //@{
-    //! \brief It always return false
+    //! It always return false
     virtual bool set( const Variant& ) {
         return false;
     };
-    //! \brief It always return a Null Variant
+    //! It always return a Null Variant
     virtual Variant get() const {
         return Variant();
     };
-    //! \brief return the value of property
+    //! return the value of property
     virtual Variant get( u_int i ) const {
         return (obj->*getPtm)(i);
     };
-    /*! \brief set the property
-     *
-     *  \par Warnings:
-     *  It doesn't check is the property is writable or not; before calling this method check if the property is
-     *  writable via isWritable() method
+    /*! set the property
+     *  \warning It doesn't check is the property is writable or not; before calling this
+	 *  method check if the property is writable via isWritable() method
      */
     virtual bool set( u_int i, const Variant& data ) {
         return (obj->*setPtm)( i, data );
@@ -337,7 +332,7 @@ public:
     virtual Propertized* object() {
         return obj;
     };
-    //! \brief Clone this
+    //! Clone this
     virtual VectorPropertyAccess* clone() const {
         return new VectorPropertyAccess( name(), type(), obj, getPtm, setPtm );
     };
@@ -371,19 +366,17 @@ class NNFW_API Propertized {
 public:
     /*! \name Constructors */
     //@{
-    //! \brief Constructor
+    //! Constructor
     Propertized();
-    //! \brief Destructor
+    //! Destructor
     ~Propertized();
 
     //@}
     /*! \name Interface */
     //@{
 
-    /*! \brief add a property
-     *
-     *  \par Warnings:
-     *  this method doesn't check if a property with name name already exist, so pay attention or
+    /*! add a property
+     *  \warning this method doesn't check if a property with name name already exist, so pay attention or
      *  previous setting may be overwritten
      */
     template<class T>
@@ -393,10 +386,8 @@ public:
         vecProps.append( access );
     };
 
-    /*! \brief add a property that holds a Vector of Variant
-     *
-     *  \par Warnings:
-     *  this method doesn't check if a property with name name already exist, so pay attention or
+    /*! add a property that holds a Vector of Variant
+     *  \warning this method doesn't check if a property with name name already exist, so pay attention or
      *  previous setting may be overwritten
      */
     template<class T>
@@ -406,13 +397,13 @@ public:
         vecProps.append( access );
     };
 
-    /*! \brief return the property setted
+    /*! return the property setted
      */
     Variant property( const char* name ) {
         return props[name]->get();
     };
 
-    /*! \brief set the property
+    /*! set the property
      */
     bool setProperty( const char* name, const Variant& data ) {
         if ( props.count( name ) == 0 ) return false;
@@ -420,7 +411,7 @@ public:
         return ( p.isWritable() ? p.set(data) : false );
     };
 
-    /*! \brief set the i-th Variant of the Vector property
+    /*! set the i-th Variant of the Vector property
      */
     bool setVectorProperty( const char* name, u_int i, const Variant& data ) {
         if ( props.count( name ) == 0 ) return false;
@@ -428,19 +419,18 @@ public:
         return ( p.isWritable() ? p.set(i, data) : false );
     };
 
-    /*! \brief configure the properties by a PropertySettings
-     *
-     *  This method doesn't reports is some settings fails
+    /*! configure the properties by a PropertySettings
+     *  \warning This method doesn't reports is some settings fails
      */
     void setProperties( PropertySettings& prop );
 
-    /*! \brief Return all PropertyAccess in order of registering
+    /*! Return all PropertyAccess in order of registering
      */
     PropertyAccessVec& properties() const {
         return (PropertyAccessVec&)vecProps;
     };
 
-    /*! \brief Search for property and return it; if the property doesn't exists a NULL pointer will be returned
+    /*! Search for property and return it; if the property doesn't exists a NULL pointer will be returned
      */
     AbstractPropertyAccess* propertySearch( const char* name ) const {
         if ( props.count( name ) > 0 ) {
@@ -449,13 +439,13 @@ public:
         return 0;
     };
 
-    /*! \brief Return the typename (i.e. the name of the Class)
+    /*! Return the typename (i.e. the name of the Class)
      */
     Variant getTypename() const {
         return Variant( vtypename );
     };
 
-    /*! \brief Return the typename (i.e. the name of the Class)
+    /*! Return the typename (i.e. the name of the Class)
      */
     Variant getTypename() {
         return Variant( vtypename );
@@ -464,8 +454,7 @@ public:
     //@}
 
 protected:
-    /*! \brief Set the typename
-     *
+    /*! Set the typename<br>
      *  Use this function in all constructor of subclasses, and always set the appropriate typename
      */
     void setTypename( const char* type );

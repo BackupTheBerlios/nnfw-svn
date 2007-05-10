@@ -29,7 +29,6 @@
 
 /*! \file
  *  \brief This file contains definition of primitive types ; Don't include this file directly, instead include types.h
- *  Details...
  */
 
 

@@ -23,8 +23,6 @@
 /*! \file
  *  \brief This file contains the declaration of Neural Network Class
  *
- *  Details ...
- *
  *  \todo The removeCluster/removeLinker are very slow because Clusters and Linkers are memorized via std::vector;
  *  for a better performances std::vector should changed to std::map
  *
@@ -46,143 +44,109 @@ namespace nnfw {
  */
 class NNFW_API BaseNeuralNet {
 public:
-    /*! \brief Construct an empty neural network
-     *
-     * Details...
+	/*! \name Constructors */
+	//@{
+
+    /*! Construct an empty neural network
      */
     BaseNeuralNet();
 
-    /*! \brief Destructor
-     *
-     * Details
+    /*! Destructor
      */
     ~BaseNeuralNet();
 
-    /*! \brief Add a Cluster into the neural network
-     *
-     * If isInput is true then the Cluster will be considered as an Input Cluster of this network
+	//@}
+	/*! \name Interface */
+	//@{
+
+    /*! Add a Cluster into the neural network<br>
+     * If isInput is true then the Cluster will be considered as an Input Cluster of this network<br>
      * If isOutput is true then the Cluster will be considered as an Output Cluster of this network
      */
     void addCluster( Cluster* c, bool isInput = false, bool isOutput = false );
 
-	/*! \brief Add a Cluster and mark it as Input
-	 *
+	/*! Add a Cluster and mark it as Input<br>
 	 *  Behave exactly the same of addCluster( c, true, false )
 	 */
 	void addInputCluster( Cluster* c ) {
 		addCluster( c, true, false );
 	};
 
-	/*! \brief Add a Cluster and mark it as Output
-	 *
+	/*! Add a Cluster and mark it as Output<br>
 	 *  Behave exactly the same of addCluster( c, false, true )
 	 */
 	void addOutputCluster( Cluster* c ) {
 		addCluster( c, false, true );
 	};
 
-    /*! \brief Remove a Cluster from the network
-     *
-     * Details...
+    /*! Remove a Cluster from the network
      */
     bool removeCluster( Cluster* c );
 
-    /*! \brief Mark a Cluster as an Input Cluster of this network
-     *
-     * Details
+    /*! Mark a Cluster as an Input Cluster of this network
      */
     void markAsInput( Cluster* c );
 
-    /*! \brief Mark a Cluster as an Output Cluster of this network
-     *
-     * Details
+    /*! Mark a Cluster as an Output Cluster of this network
      */
     void markAsOutput( Cluster* c );
 
-    /*! \brief Eliminate the marks from Cluster passed
-     *
-     *  Warning: if a Cluster have two marker (Input and Output marks) then both marker are removed
+    /*! Eliminate the marks from Cluster passed
+     *  \warning if a Cluster have two marker (Input and Output marks) then both marker are removed
      */
     void unmark( Cluster* c );
 
-    /*! \brief Eliminate the marks from all Cluster present in this networks
-     *
-     * Details
+    /*! Eliminate the marks from all Cluster present in this networks
      */
     void unmarkAll();
 
-    /*! \brief Return true if there isn't Linkers connected with Cluster c 
-     *
-     * Details..
+    /*! Return true if there isn't Linkers connected with Cluster c 
      */
     bool isIsolated( Cluster* c ) const;
 
-    /*! \brief Returns the vector of Clusters contained
-     *
-     * Details...
+    /*! Returns the vector of Clusters contained
      */
     const ClusterVec& clusters() const;
 
-    /*! \brief Returns the vector of Input Clusters contained
-     *
-     *  Gli Input Cluster sono restituiti nell'ordine con il quale sono stati marcati (?!?!?)
-     *  
+    /*! Returns the vector of Input Clusters contained
      */
     const ClusterVec& inputClusters() const;
 
-    /*! \brief Returns the vector of Output Clusters contained
-     *
-     * Details...
+    /*! Returns the vector of Output Clusters contained
      */
     const ClusterVec& outputClusters() const;
 
-    /*! \brief Add Linker
-     *
-     * Details...
+    /*! Add Linker
      */
     void addLinker( Linker* l );
 
-    /*! \brief Remove Linker
-     *
-     * Details..
+    /*! Remove Linker
      */
     bool removeLinker( Linker* );
 
-    /*! \brief Returns the array of Linkers contained
-     *
-     * Details...
+    /*! Returns the array of Linkers contained
      */
     const LinkerVec& linkers() const;
 
-    /*! \brief If out is true, return the Linkers outgoing from Cluster c, otherwise return incoming Linkers
-     *
-     * Details ...
+    /*! If out is true, return the Linkers outgoing from Cluster c, otherwise return incoming Linkers
      */
     const LinkerVec& linkers( Cluster* c, bool out = false ) const;
 
-    /*! \brief Set the order 
-     *
-     * Details..
+    /*! Set the order 
      */
     void setOrder( Updatable* updatables[], u_int dim );
 
-    /*! \brief Set the order
-	 *
-	 * Details
+    /*! Set the order
 	 */
     void setOrder( UpdatableVec& );
 
-    /*! \brief Return the order
-	 *
-	 * Details
+    /*! Return the order
 	 */
     const UpdatableVec& order() const {
 		return ups;
 	};
 
-    /*! \brief Step
-     *
-     *  Details
+    /*! Step
      */
     void step() {
         for( u_int i=0; i<dimUps; i++ ) {
@@ -190,39 +154,33 @@ public:
         }
     };
 
-    /*! \brief This randomize the free parameters of the all elements of the neural net
-     *
+    /*! This randomize the free parameters of the all elements of the neural net<br>
      *  This method call randomize method of every Cluster and Linker inserted
      *  \param min is the lower-bound of random number generator desired
      *  \param max is the upper-bound of random number generator desired
      */
     void randomize( Real min, Real max );
 
-    /*! \brief Return the Updatable with the name specified
-     *
+    /*! Return the Updatable with the name specified<br>
      *  Returns NULL-pointer if there's no updatable object whit the name specified<br>
-     *  WARNING: return the first that finds. If you have named different Updatables with same name
+     *  \warning return the first that finds. If you have named different Updatables with same name
      *   there no way to retrieve all of them with this methods... call them with unique name ;-)
      */
     Updatable* getByName( const char* );
 
-    /*! \brief Return true if the Cluster is in this net
-     *
-     * Details
+    /*! Return true if the Cluster is in this net
      */
     bool find( const Cluster* ) const;
 
-    /*! \brief Return true if the Linker is in this net
-     *
-     * Details
+    /*! Return true if the Linker is in this net
      */
     bool find( const Linker* ) const;
 
-    /*! \brief Return true if the Updatable object is in this net
-     *
-     * Details
+    /*! Return true if the Updatable object is in this net
      */
     bool find( const Updatable* ) const;
+
+	//@}
 
 protected:
     //! Clusters

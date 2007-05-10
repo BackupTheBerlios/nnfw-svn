@@ -25,8 +25,6 @@
 /*! \file
  *  \brief Library of common matrix modifiers
  *
- *  Details...
- *
  *  \todo See whether most of MatrixModifiers subclasses can just extend HebbMatrixModifier
  *	      This is the reason why I left its modify() method virtual!
  *		  In which case: should we change this class name?
@@ -48,6 +46,9 @@ namespace nnfw {
  */
 class NNFW_API BasicMatrixModifier : public MatrixModifier {
 public:
+	/*! \name Constructors */
+	//@{
+
     //! Constructor
     BasicMatrixModifier( RealMat& matrix, RealVec& input, RealVec& output, Real lRate = 0.1 ) 
 		: MatrixModifier( matrix ), inp( input ), out( output ), lr( lRate ) { 
@@ -56,6 +57,10 @@ public:
 
     //! Destructor
     ~BasicMatrixModifier() { /* Nothing to do */ };
+
+	//@}
+	/*! \name Interface */
+	//@{
 
     //! Modify the object according to the simple Hebb rule
     virtual void modify();
@@ -91,6 +96,8 @@ public:
 	void setLearningRate( Real lRate ) {
 		lr = lRate;	
 	};
+
+	//@}
 	
 protected:
     //! The vector of input

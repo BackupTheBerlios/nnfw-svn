@@ -33,8 +33,6 @@
 /*! \file
  *  \brief This is the main header files!! Include this file in your project... and play :-)
  *
- *  Details...
- *
  * \todo It's really useful this include file ?!?! I think that a file including everything is not very useful
  *       rather a set of files that includes only some categories of classes: example libclusters.h may includes
  *       all subclasses of Cluster, liblinkers.h may includes all subclasses of Linker, and so on.

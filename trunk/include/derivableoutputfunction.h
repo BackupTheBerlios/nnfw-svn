@@ -51,8 +51,7 @@ public:
     /*! \name Interface */
     //@{
 
-    /*! \brief Compute the derivate of the function represent
-     *
+    /*! Compute the derivate of the function represent<br>
      *  Given the input of neurons and the corresponding output of neurons, it calculate
      *  the derivate
      */

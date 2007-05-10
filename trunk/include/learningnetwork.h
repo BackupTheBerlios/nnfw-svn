@@ -26,8 +26,6 @@
 /*! \file
  *  \brief This file contains the declaration learning networks
  *
- *  Details...
- *
  */
 
 
@@ -39,54 +37,53 @@ namespace nnfw {
  */
 class NNFW_API LearningNetwork {
 public:
-    /*! \brief Construct an empty LearningNetwork
-     *  Details
+	//@}
+	/*! \name Constructors */
+	//@{
+
+    /*! Construct an empty LearningNetwork
      */
     LearningNetwork();
 
-    /*! \brief Destructor
-     *
-     * Details
+    /*! Destructor
      */
     ~LearningNetwork();
 
-    /*! \brief Add a BaseTeachBlock
-     *  Details
+	//@}
+	/*! \name Interface */
+	//@{
+
+    /*! Add a BaseTeachBlock
      */
     void addTeachBlock( BaseTeachBlock* b );
 
-    /*! \brief Returns the vector of BaseTeachBlocks contained
-     * Details...
+    /*! Returns the vector of BaseTeachBlocks contained
      */
     const TeachBlockVec& teachBlocks() const;
 
-    /*! \brief Set the order in which learn() methods will be called
-     * Details..
+    /*! Set the order in which learn() methods will be called
      */
     void setOrder( BaseTeachBlock* blocks[], u_int dim );
-    //! \brief Set the order
+
+    //! Set the order
     void setOrder( TeachBlockVec& );
 
     //! Return the BaseTeachBlock with name specified
     BaseTeachBlock* getByName( const char* name );
 
-    /*! \brief Disable the calling of learn() method of BaseTeachBlock passed
-     * Details...
+    /*! Disable the calling of learn() method of BaseTeachBlock passed
      */
     void disable( BaseTeachBlock* );
 
-    /*! \brief Enable the BaseTeachBlock
-     * Details...
+    /*! Enable the BaseTeachBlock
      */
     void enable( BaseTeachBlock* );
 
-    /*! \brief Return true if the BaseTeachBlock object is enabled
-     * Details...
+    /*! Return true if the BaseTeachBlock object is enabled
      */
     bool isEnabled( BaseTeachBlock* );
 
-    /*! \brief Learn
-     *  Details
+    /*! Learn
      */
     void learn() {
         for( u_int i=0; i<dimBls; i++ ) {
@@ -96,10 +93,11 @@ public:
         }
     };
 
-    /*! \brief Return true if the BaseTeachBlock is in this net
-     * Details
+    /*! Return true if the BaseTeachBlock is in this net
      */
     bool find( const BaseTeachBlock* ) const;
+
+	//@}
 
 protected:
     //! TeachBlocks

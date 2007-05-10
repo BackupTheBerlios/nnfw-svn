@@ -62,19 +62,15 @@ public:
     /*! \name Constructors */
     //@{
 
-    /*! \brief Construct a FakeCluster
-     *
-     *  Details...
+    /*! Construct a FakeCluster
      */
     FakeCluster( u_int size, const char* name = "unnamed" );
 
-    /*! \brief Construct by PropertySettings
+    /*! Construct by PropertySettings
      */
     FakeCluster( PropertySettings& );
 
-    /*! \brief Destructor
-     *
-     * Details...
+    /*! Destructor
      */
     virtual ~FakeCluster();
 
@@ -82,11 +78,11 @@ public:
     /*! \name Interface */
     //@{
 
-    /*! \brief Update ;-) It's do nothing !!
+    /*! Update ;-) It's do nothing !!
      */
     void update();
 
-    /*! \brief Randomize ?!?! What means 'randomize a FakeCluster' ???
+    /*! Randomize ?!?! it do nothings
      */
     void randomize( Real min, Real max );
 

@@ -29,7 +29,6 @@
 
 /*! \file
  *  \brief This file contains the RealMat Class; Don't include this file directly, instead include types.h
- *  Details...
  */
 
 namespace nnfw {
@@ -44,17 +43,17 @@ public:
     /*! \name Constructors */
     //@{
 
-    /*! \brief Construct matrix of dimension size initialized to zero
+    /*! Construct matrix of dimension size initialized to zero
      */
     RealMat( u_int rows, u_int cols );
 
-    /*! \brief Construct a Matrix view from VectorData passed
+    /*! Construct a Matrix view from VectorData passed
      *  \param src is the RealVec from which this method constructs a RealMat view.
      *  <b>See Documentation about MatrixData view constructor</b>
      */
     RealMat( RealVec& src, u_int rstart, u_int rend, u_int rows, u_int cols );
 
-    /*! \brief Destructor
+    /*! Destructor
      */
     ~RealMat();
 
@@ -68,7 +67,7 @@ public:
         return (*this);
     };
 
-    //! \brief Transpose this RealMat
+    //! Transpose this RealMat
     RealMat& transpose() {
         Real tmp;
         RealMat& self = *this;
@@ -164,7 +163,7 @@ public:
 	/*! \name Vector-Matrix Operators */
     //@{
 
-    /*! \brief Right Multiplication: y += x*m
+    /*! Right Multiplication: y += x*m
      *  \param y the result of multiplication
      *  \param x the vector
      *  \param m the matrix
@@ -172,7 +171,7 @@ public:
      */
     static RealVec& mul( RealVec& y, const RealVec& x, const RealMat& m );
 
-    /*! \brief Left Multiplication: y += m*x
+    /*! Left Multiplication: y += m*x
      *  \param y the result of multiplication
      *  \param m the matrix
      *  \param x the vector
@@ -189,11 +188,11 @@ public:
     /*! \name Math Functions */
     //@{
 
-    /*! \brief Exponential
+    /*! Exponential
      */
     RealMat& exp();
 
-    /*! \brief Scaling (scalar-vector multiply)
+    /*! Scaling (scalar-vector multiply)
      */
     RealMat& scale( const Real v ) {
         for( u_int i=0; i<size(); i++ ) {
@@ -202,7 +201,7 @@ public:
         return (*this);
     };
 
-    /*! \brief Element Inversion
+    /*! Element Inversion
      */
     RealMat& inv();
 

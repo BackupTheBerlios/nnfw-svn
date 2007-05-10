@@ -37,51 +37,38 @@ namespace nnfw {
  */
 class NNFW_API Random {
 public:
-    /*! \brief Set the seed of the random number generator
-     *
-     * Details..
+	/*! \name Static Interface */
+	//@{
+
+    /*! Set the seed of the random number generator
      */
     static void setSeed( long int seed );
 
-	/*! \brief Return a real number in [0;1)
-     *
-     * Details..
+	/*! Return a real number in [0;1)
      */
     static Real flatReal( );
 
-    /*! \brief Return a real number in range [min,max)
-     *
-     * Details..
+    /*! Return a real number in range [min,max)
      */
     static Real flatReal( Real min, Real max );
 
-    /*! \brief Return a random boolean value; True value appear with probability specified as paramater
-     *
-     * Details..
+    /*! Return a random boolean value; True value appear with probability specified as paramater
      */
     static bool boolean( Real trueProb );
 
-    /*! \brief Return a random boolean value; True and False values are the same probability
-     *
-     * Details..
+    /*! Return a random boolean value; True and False values are the same probability
      */
     static bool boolean( );
 
-    /*! \brief Return a random integer value in between 0 and x-1
-     *
-     * Details..
+    /*! Return a random integer value in between 0 and x-1
      */
     static u_int flatInt( u_int x );
 
-    /*! \brief Return a random integer value in between x and y-1
-     *
-     * Details..
+    /*! Return a random integer value in between x and y-1
      */
     static int flatInt( int x, int y );
 
-    /*! \brief Return a random real value with a gaussian distribution
-     *
-     * Details..
+    /*! Return a random real value with a gaussian distribution
      */
 	static Real gauss( Real mean, Real stdev );
 };

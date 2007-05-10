@@ -36,7 +36,7 @@ inline void memoryCopy( T* dest, const T* src, unsigned int size ) {
     };
 };
 
-/*!  template for memory zeroing of data
+/*! template for memory zeroing of data
  */
 template<class T>
 inline void memoryZeroing( T* data, unsigned int size ) {
@@ -45,37 +45,37 @@ inline void memoryZeroing( T* data, unsigned int size ) {
     };
 };
 
-/*!  specialization of memoryCopy for float data
+/*! specialization of memoryCopy for float data
  */
 inline void memoryCopy( float* dest, const float* src, unsigned int size ) {
     memcpy( dest, src, sizeof(float)*size );
 };
 
-/*!  specialization of memoryZeroing for float data
+/*! specialization of memoryZeroing for float data
  */
 inline void memoryZeroing( float* data, unsigned int size ) {
     memset( data, 0, sizeof(float)*size );
 };
 
-/*!  specialization of memoryCopy for double data
+/*! specialization of memoryCopy for double data
  */
 inline void memoryCopy( double* dest, const double* src, unsigned int size ) {
     memcpy( dest, src, sizeof(double)*size );
 };
 
-/*!  specialization of memoryZeroing for double data
+/*! specialization of memoryZeroing for double data
  */
 inline void memoryZeroing( double* data, unsigned int size ) {
     memset( data, 0, sizeof(double)*size );
 };
 
-/*!  specialization of memoryCopy for bool data
+/*! specialization of memoryCopy for bool data
  */
 inline void memoryCopy( bool* dest, const bool* src, unsigned int size ) {
     memcpy( dest, src, sizeof(bool)*size );
 };
 
-/*!  specialization of memoryZeroing for bool data
+/*! specialization of memoryZeroing for bool data
  */
 inline void memoryZeroing( bool* data, unsigned int size ) {
     memset( data, 0, sizeof(bool)*size );

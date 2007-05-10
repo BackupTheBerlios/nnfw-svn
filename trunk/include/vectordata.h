@@ -29,7 +29,9 @@
 
 /*! \file
  *  \brief This file contains the template VectorData ; Don't include this file directly, instead include types.h
- *  Details...
+ *
+ *  \todo creation of MathVector template, a subclass of VectorData for types that supports 
+ *  math operation (+,-,*,/, etc), so it's faster and easier create vectors of int, boolean, and so on.
  */
 
 #include "memutils.h"
@@ -53,7 +55,7 @@ public:
     /*! \name Constructors */
     //@{
 
-    /*! \brief Default Constructor
+    /*! Default Constructor
      */
     VectorData()
         : Observer(), Observable() {
@@ -66,7 +68,7 @@ public:
         idend = 0;
     };
 
-    /*! \brief Construct a vector of dimension size setting all values to defaul constructor of T
+    /*! Construct a vector of dimension size setting all values to defaul constructor of T
      */
     VectorData( u_int size ) 
         : Observer(), Observable() {
@@ -85,7 +87,7 @@ public:
         idend = 0;
     };
 
-    /*! \brief Construct a vector of dimension size setting all the values as specified
+    /*! Construct a vector of dimension size setting all the values as specified
      */
     VectorData( u_int size, T& value )
         : Observer(), Observable() {
@@ -102,7 +104,7 @@ public:
         idend = 0;
     };
     
-    /*! \brief Construct a VectorData view
+    /*! Construct a VectorData view
      */
     VectorData( VectorData<T>& src, u_int idStart, u_int idEnd )
         : Observer(), Observable() {
@@ -122,7 +124,7 @@ public:
         observed = &src;
     };
 
-    /*! \brief Construct by copying data from const T* vector
+    /*! Construct by copying data from const T* vector
      */
     VectorData( const T* r, u_int dim )
         : Observer(), Observable() {
@@ -137,33 +139,28 @@ public:
         idend = 0;
     };
 
-    /*! \brief Copy-Constructor
+    /*! The Copy-Constructor always allocate new memory and copies the data, 
+	 *  even if the source VectorData is a view.
+	 *  Hence, a copy of a VectorData view is not a view but a new copy of data viewed by source.
+	 *  \param src the VectorData to be copied
      */
     VectorData( const VectorData& src )
         : Observer(), Observable() {
         /* --- even if the source VectorData is a view,
-           --- the copy-constructor create a new fresh copy of data
-        if ( src.isView() ) {
-            view = true;
-            observed = src.observed;
-            observed->addObserver( this );
-            idstart = src.idstart;
-            idend = src.idend;
-            data = (observed->data) + idstart;
-            vsize = idend - idstart;
-            allocated = 0;
-        } else {
-        --- */
-            vsize = src.vsize;
-            allocated = vsize;
-            data = new T[allocated];
-            memoryCopy( data, src.data, vsize );
-            view = false;
-            observed = 0;
-        /* } */
+           --- the copy-constructor create a new fresh copy of data */
+		vsize = src.vsize;
+		allocated = vsize;
+		data = new T[allocated];
+		memoryCopy( data, src.data, vsize );
+		view = false;
+		observed = 0;
     };
 
-    /*! \brief Assignement-operator
+    /*! The assignment operator, check the size of itself and resize itself if necessary, and copy the data
+	 *  using the assing method.<br>
+	 *  This not change the nature of this VectorData, if it's a view the source data are assigned to the
+	 *  data viewed and this remains a VectorData view of the same VectorData.
+	 *  \param src the VectorData to be copied
      */
     VectorData& operator=( const VectorData& src ) {
 		VectorData& self = *this;
@@ -172,7 +169,7 @@ public:
 		return self;
 	};
 
-    /*! \brief Destructor
+    /*! Destructor
      */
     ~VectorData() {
         notifyAll( NotifyEvent( datadestroying ) );
@@ -186,19 +183,19 @@ public:
     /*! \name Informations about VectorData */
     //@{
 
-    /*! \brief Return the size of VectorData
+    /*! Return the size of VectorData
      */
     u_int size() const {
         return vsize;
     };
 
-    /*! \brief Return True if it is a VectorData view
+    /*! Return True if it is a VectorData view
      */
     bool isView() const {
         return view;
     };
 
-    /*! \brief Equal Operator
+    /*! Equal Operator
      */
     bool operator==( const VectorData<T>& b ) {
         if ( this->size() != b.size() ) return false;
@@ -211,7 +208,7 @@ public:
         return true;
     };
 
-    /*! \brief Not-Equal Operator
+    /*! Not-Equal Operator
      */
     bool operator!=( const VectorData<T>& b ) {
         return !( *this == b );
@@ -221,13 +218,13 @@ public:
     /*! \name Operations on VectorData */
     //@{
 
-    /*! \brief Set all values to default value of T, in other words to T()
+    /*! Set all values to default value of T, in other words to T()
      */
     void zeroing() {
         memoryZeroing( data, vsize );
     };
 
-    /*! \brief Set all values to value
+    /*! Set all values to value
      */
     void setAll( const T& value ) {
         for( u_int i=0; i<vsize; i++ ) {
@@ -235,7 +232,7 @@ public:
         }
     };
 
-    /*! \brief Assign to first num element the value passed
+    /*! Assign to first num element the value passed
      */
     VectorData<T>& assign( u_int num, const T& value ) {
 #ifdef NNFW_DEBUG
@@ -250,7 +247,7 @@ public:
         return (*this);
     };
 
-    /*! \brief Assignment method. The sizes of VectorData must be the same.
+    /*! Assignment method. The sizes of VectorData must be the same.
      */
     VectorData<T>& assign( const VectorData<T>& src ) {
 #ifdef NNFW_DEBUG
@@ -263,9 +260,8 @@ public:
         return (*this);
     };
 
-    /*! \brief Assignment method. The size of data to be assigned is specified by size parameter.
-     *
-     *  This method allow to copy data from a VectorData to another VectorData with different size.
+    /*! Assignment method allow to copy data from a VectorData to another VectorData with different size.
+	 *  \param sizec the size of data to be assigned 
      */
     VectorData<T>& assign( const VectorData<T>& src, u_int sizec ) {
 #ifdef NNFW_DEBUG
@@ -278,14 +274,13 @@ public:
         return (*this);
     };
 
-	/*! \name Functions that assume that T has define standard operations (+, !, ==...) */
-    //@{
-
-	/*! \brief Compare two vectors. The sizes of VectorData must be the same.
-	 *
-	 *  Element-by-element comparison between the two arrays. 
+	/*! Element-by-element comparison between the two VectorData. 
 	 *  It returns a boolean array of the same size, with elements set to true (1) where the values are the same,
 	 *  and elements set to false (0) where they are not.
+	 *  \param b the 'right' VectorData to compare with itself
+	 *  \param comparison the VectorData where to register the results (this is returned by method)
+	 *
+	 *  \warning This method require that the template class T has the operator== defined
      */
     VectorData<int>& compare( const VectorData<T>& b, VectorData<int>& comparison ) {
 #ifdef NNFW_DEBUG
@@ -307,20 +302,8 @@ public:
 		return comparison;
     };
 
-	/*! \brief Not operation.
-     */
-    VectorData<int>& neg( VectorData<int>& result ) {
-		result.resize(size());
-        for( u_int i=0; i<size(); i++ ) {
-			result[i] = ! (*this)[i] ;
-        }
-		return result;
-    };
-
-    //@}
-
-	/*! \brief Indexing operator
-     *  Boundary check activated only when DEBUG if defined
+	/*! Indexing operator
+     *  \warning Boundary check activated only when DEBUG if defined
      */
     T& operator[]( u_int index ) {
 #ifdef NNFW_DEBUG
@@ -332,8 +315,8 @@ public:
         return data[index];
     };
 
-    /*! \brief Indexing operator (Const Version)
-     *  Boundary check activated only when DEBUG if defined
+    /*! Indexing operator (Const Version)
+     *  \warning Boundary check activated only when DEBUG if defined
      */
     const T& operator[]( u_int index ) const {
 #ifdef NNFW_DEBUG
@@ -345,8 +328,8 @@ public:
         return data[index];
     };
 
-    /*! \brief Accessing method
-     *  Boundary check activated only when DEBUG if defined
+    /*! Accessing method
+     *  \warning Boundary check activated only when DEBUG if defined
      */
     T& at( u_int index ) {
 #ifdef NNFW_DEBUG
@@ -358,8 +341,8 @@ public:
         return data[index];
     };
 
-    /*! \brief Accessing method (Const Version)
-     *  Boundary check activated only when DEBUG if defined
+    /*! Accessing method (Const Version)
+     *  \warning Boundary check activated only when DEBUG if defined
      */
     const T& at( u_int index ) const {
 #ifdef NNFW_DEBUG
@@ -371,7 +354,7 @@ public:
         return data[index];
     };
 
-    /*! \brief Resize the VectorData
+    /*! Resize the VectorData
      */
     void resize( u_int newsize ) {
         if ( view ) {
@@ -398,14 +381,14 @@ public:
         notifyAll( NotifyEvent( datachanged ) );
     };
 
-    /*! \brief Append an element; the dimesion increase by one
+    /*! Append an element; the dimesion increase by one
      */
     void append( const T& value ) {
         resize( vsize+1 );
         data[vsize-1] = value;
     };
 
-    /*! \brief Append Operator
+    /*! Append Operator; the dimesion increase by one
      */
     VectorData<T>& operator<<( const T& value ) {
         append( value );
@@ -415,7 +398,7 @@ public:
     /*! \name Operations on VectorData views */
     //@{
 
-    /*! \brief Configure the indexes of starting and ending of this VectorData view
+    /*! Configure the indexes of starting and ending of this VectorData view. <br>
      *  If VectorData is not a view, then it will shows an error message
      */
     void setView( u_int idStart, u_int idEnd ) {
@@ -436,7 +419,7 @@ public:
         notifyAll( NotifyEvent( datachanged ) );
     };
 
-    /*! \brief Convert this VectorData to a view of VectorData src passed
+    /*! Convert this VectorData to a view of VectorData src passed
      */
     void convertToView( VectorData<T>& src, u_int idStart, u_int idEnd ) {
         if ( observed == (&src) ) {
@@ -490,48 +473,48 @@ public:
     //! Difference pointer type
     typedef ptrdiff_t difference_type;
 
-    /*! \brief Max size allowed
+    /*! Max size allowed
      */
     size_type max_size() {
         return 300000; // <- FIXME it must return the maximum space of memory allocable
     };
 
-    /*! \brief Is Empty
+    /*! Is Empty
      */
     bool empty() {
         return (vsize==0);
     };
 
-    /*! \brief Append an element
+    /*! Append an element
      */
     void push_back( const T& value ) {
         resize( vsize+1 );
         data[vsize-1] = value;
     };
 
-    /*! \brief Iterator at initial position
+    /*! Iterator at initial position
      */
     iterator begin() {
         return vectordataIterator( *this );
     };
-    /*! \brief Iterator at initial position
+    /*! Iterator at initial position
      */
     const_iterator begin() const {
         return vectordataIterator( ((VectorData&)*this) );
     };
 
-    /*! \brief Iterator at past-end position
+    /*! Iterator at past-end position
      */
     iterator end() {
         return vectordataIterator( *this, vsize );
     };
-    /*! \brief Iterator at past-end position
+    /*! Iterator at past-end position
      */
     const_iterator end() const {
         return vectordataIterator( ((VectorData&)*this), vsize );
     };
 
-    /*! \brief Erase method
+    /*! Erase method
      */
     iterator erase( iterator pos ) {
         if ( view ) {
@@ -547,7 +530,7 @@ public:
         return (pos);
     };
 
-    /*! \brief Erase All elements
+    /*! Erase All elements
      */
     void clear() {
         if ( view ) {
@@ -558,7 +541,7 @@ public:
         }
     };
 
-    /*! \brief Inner-class implements iterator over VectorData
+    /*! Inner-class implements iterator over VectorData
      */
     class vectordataIterator : public std::iterator<std::bidirectional_iterator_tag,T,ptrdiff_t> {
     public:
@@ -622,7 +605,7 @@ public:
 
 protected:
 
-    /*! \brief Raw Data
+    /*! Raw Data
      */
     T* rawdata() const {
         return data;

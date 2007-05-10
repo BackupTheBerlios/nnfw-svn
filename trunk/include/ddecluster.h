@@ -56,6 +56,8 @@ namespace nnfw {
  */
 class NNFW_API DDECluster : public Cluster {
 public:
+	/*! \name Constructors */
+	//@{
 
     /*! Construct a DDECluster setting coefficients as specified
      */
@@ -68,6 +70,10 @@ public:
     /*! Destructor
      */
     virtual ~DDECluster();
+
+	//@}
+	/*! \name Interface */
+	//@{
 
     /*! Set the coeffiecients
      */
@@ -94,6 +100,8 @@ public:
     /*! Randomize Nothing ;-)
      */
     void randomize( Real, Real ) { /* Nothing To Do */ };
+
+	//@}
 
 private:
     //! Coefficient of equation

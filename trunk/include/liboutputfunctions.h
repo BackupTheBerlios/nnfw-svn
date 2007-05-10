@@ -25,8 +25,6 @@
 /*! \file
  *  \brief Library of Common OutputFunction
  *
- *  Details...
- *
  *  \todo ComboLinearFunction, a subclass of OutputFunction that constructs a linear combination of OutputFunctions:
  *        example: 4*Sigmoid(x)+2*Linear(x)
  */
@@ -71,7 +69,7 @@ public:
     //! return always 1 (an explain of why will be coming soon)
     virtual void derivate( const RealVec& x, const RealVec& y, RealVec& d ) const;
 
-    /*! \brief Clone this object
+    /*! Clone this object
      */
     virtual IdentityFunction* clone() const;
 
@@ -107,24 +105,22 @@ public:
     /*! \name Interface */
     //@{
 
-    /*! \brief Set the slope of SigmoidFunction
+    /*! Set the slope of SigmoidFunction
      */
     bool setLambda( const Variant& v );
 
-    /*! \brief Return the slope of SigmoidFunction
+    /*! Return the slope of SigmoidFunction
      */
     Variant getLambda();
 
-    /*! \brief Implement the updating method
-     *
-     * Details...
+    /*! Implement the updating method
      */
     virtual void apply( RealVec& inputs, RealVec& outputs );
 
     //! return the approximation commonly used in backpropagation learning: x(1-x)
     virtual void derivate( const RealVec& x, const RealVec& y, RealVec& d ) const;
 
-    /*! \brief Clone this object
+    /*! Clone this object
      */
     virtual SigmoidFunction* clone() const;
 
@@ -163,24 +159,22 @@ public:
     /*! \name Interface */
     //@{
 
-    /*! \brief Set the slope of FakeSigmoidFunction
+    /*! Set the slope of FakeSigmoidFunction
      */
     bool setLambda( const Variant& v );
 
-    /*! \brief Return the slope of FakeSigmoidFunction
+    /*! Return the slope of FakeSigmoidFunction
      */
     Variant getLambda();
 
-    /*! \brief Implement the updating method
-     *
-     * Details...
+    /*! Implement the updating method
      */
     virtual void apply( RealVec& inputs, RealVec& outputs );
 
     //! return the approximation commonly used in backpropagation learning: x(1-x)
     virtual void derivate( const RealVec& x, const RealVec& y, RealVec& d ) const;
 
-    /*! \brief Clone this object
+    /*! Clone this object
      */
     virtual FakeSigmoidFunction* clone() const;
 
@@ -224,40 +218,38 @@ public:
     /*! \name Interface */
     //@{
 
-    /*! \brief Set the slope of ScaledSigmoidFunction
+    /*! Set the slope of ScaledSigmoidFunction
      */
     bool setLambda( const Variant& v );
 
-    /*! \brief Return the slope of ScaledSigmoidFunction
+    /*! Return the slope of ScaledSigmoidFunction
      */
     Variant getLambda();
 
-    /*! \brief Set the minimum value of ScaledSigmoidFunction
+    /*! Set the minimum value of ScaledSigmoidFunction
      */
     bool setMin( const Variant& v );
 
-    /*! \brief Return the minimum value of ScaledSigmoidFunction
+    /*! Return the minimum value of ScaledSigmoidFunction
      */
     Variant getMin();
 
-    /*! \brief Set the maximum value of ScaledSigmoidFunction
+    /*! Set the maximum value of ScaledSigmoidFunction
      */
     bool setMax( const Variant& v );
 
-    /*! \brief Return the maximum value of ScaledSigmoidFunction
+    /*! Return the maximum value of ScaledSigmoidFunction
      */
     Variant getMax();
 
-    /*! \brief Implement the updating method
-     *
-     * Details...
+    /*! Implement the updating method
      */
     virtual void apply( RealVec& inputs, RealVec& outputs );
 
     //! return the approximation commonly used in backpropagation learning: x(1-x)
     virtual void derivate( const RealVec& x, const RealVec& y, RealVec& d ) const;
 
-    /*! \brief Clone this object
+    /*! Clone this object
      */
     virtual ScaledSigmoidFunction* clone() const;
 
@@ -311,48 +303,46 @@ public:
     /*! \name Interface */
     //@{
 
-    /*! \brief Set the minimum value of Xs LinearFunction
+    /*! Set the minimum value of Xs LinearFunction
      */
     bool setMinX( const Variant& v );
 
-    /*! \brief Return the minimum value of Xs LinearFunction
+    /*! Return the minimum value of Xs LinearFunction
      */
     Variant getMinX();
 
-    /*! \brief Set the maximum value of Xs LinearFunction
+    /*! Set the maximum value of Xs LinearFunction
      */
     bool setMaxX( const Variant& v );
 
-    /*! \brief Return the maximum value of Xs LinearFunction
+    /*! Return the maximum value of Xs LinearFunction
      */
     Variant getMaxX();
 
-    /*! \brief Set the minimum value of Ys LinearFunction
+    /*! Set the minimum value of Ys LinearFunction
      */
     bool setMinY( const Variant& v );
 
-    /*! \brief Return the minimum value of Ys LinearFunction
+    /*! Return the minimum value of Ys LinearFunction
      */
     Variant getMinY();
 
-    /*! \brief Set the maximum value of Ys LinearFunction
+    /*! Set the maximum value of Ys LinearFunction
      */
     bool setMaxY( const Variant& v );
 
-    /*! \brief Return the maximum value of Ys LinearFunction
+    /*! Return the maximum value of Ys LinearFunction
      */
     Variant getMaxY();
 
-    /*! \brief Implement the updating method
-     *
-     * Details...
+    /*! Implement the updating method
      */
     virtual void apply( RealVec& inputs, RealVec& outputs );
 
     //! return the m coefficient if x is in [minX, maxX] and x(1-x) otherwise
     virtual void derivate( const RealVec& x, const RealVec& y, RealVec& d ) const;
 
-    /*! \brief Clone this object
+    /*! Clone this object
      */
     virtual LinearFunction* clone() const;
 
@@ -399,40 +389,38 @@ public:
     /*! \name Interface */
     //@{
 
-    /*! \brief Set the minimum value of StepFunction
+    /*! Set the minimum value of StepFunction
      */
     bool setMin( const Variant& v );
 
-    /*! \brief Return the minimum value of StepFunction
+    /*! Return the minimum value of StepFunction
      */
     Variant getMin();
 
-    /*! \brief Set the maximum value of StepFunction
+    /*! Set the maximum value of StepFunction
      */
     bool setMax( const Variant& v );
 
-    /*! \brief Return the maximum value of StepFunction
+    /*! Return the maximum value of StepFunction
      */
     Variant getMax();
 
-    /*! \brief Set the threshold of StepFunction
+    /*! Set the threshold of StepFunction
      */
     bool setThreshold( const Variant& v );
 
-    /*! \brief Return the threshold of StepFunction
+    /*! Return the threshold of StepFunction
      */
     Variant getThreshold();
 
-    /*! \brief Implement the updating method
-     *
-     * Details...
+    /*! Implement the updating method
      */
     virtual void apply( RealVec& inputs, RealVec& outputs );
 
     //! Using the derivate of the sigmoid function!!! 
     virtual void derivate( const RealVec& x, const RealVec& y, RealVec& d ) const;
 
-    /*! \brief Clone this object
+    /*! Clone this object
      */
     virtual StepFunction* clone() const;
 
@@ -475,41 +463,40 @@ public:
     /*! \name Interface */
     //@{
 
-    /*! \brief Return the i-th Delta setted
+    /*! Return the i-th Delta setted
      */
     RealVec& getDelta() {
 		return delta;
 	};
 
-    /*! \brief Set the i-th Delta
+    /*! Set the i-th Delta
      */
     void setDelta( const RealVec& v ) {
 		delta.assign( v );
 	};
 
-    /*! \brief Return the i-th Delta setted (Variant version)
+    /*! Return the i-th Delta setted (Variant version)
      */
     Variant getDeltaV();
 
-    /*! \brief Set the i-th element (Variant version)
+    /*! Set the i-th element (Variant version)
      */
     bool setDeltaV( const Variant& v );
 
-    /*! \brief Zeroing the status
+    /*! Zeroing the status
      */
 	void zeroingStatus();
 
-    /*! \brief Implement the updating method
-     *
+    /*! Implement the updating method<br>
      * it computes: y(t) <- delta * y(t-1) + (1.0-delta) * inputs
      */
     virtual void apply( RealVec& inputs, RealVec& outputs );
 
-    /*! \brief Clone this object
+    /*! Clone this object
      */
     virtual LeakyIntegratorFunction* clone() const;
 
-    /*! \brief resize itself to fit the size of Cluster
+    /*! resize itself to fit the size of Cluster
      */
     virtual void setCluster( Cluster* );
 
@@ -540,18 +527,14 @@ public:
     /*! \name Constructors */
     //@{
 
-    /*! \brief Constructor
-     *
-     *  Construct a PoolFunction contains dim elements all equal to prototype passed
+    /*! Construct a PoolFunction contains dim elements all equal to prototype passed
      */
     PoolFunction( const OutputFunction& prototype, u_int dim );
 
     //! Construct
     PoolFunction( PropertySettings& prop );
 
-    /*! \brief Constructor
-     *
-     *  Construct a PoolFunction with dimension dim, but with <b>unintialized</b> OutputFunction
+    /*! Construct a PoolFunction with dimension dim, but with <b>unintialized</b> OutputFunction
      */
     PoolFunction( u_int dim = 1 );
 
@@ -563,41 +546,40 @@ public:
     /*! \name Interface */
     //@{
 
-    /*! \brief Return the i-th OutputFunction setted
+    /*! Return the i-th OutputFunction setted
      */
     OutputFunction* getOutputFunction( u_int i );
 
-    /*! \brief Set the i-th element of this Pool to a OutputFunction of type prototype
+    /*! Set the i-th element of this Pool to a OutputFunction of type prototype
      */
     void setOutputFunction( u_int i, const OutputFunction& prototype );
 
-    /*! \brief Return the i-th OutputFunction setted (Variant version)
+    /*! Return the i-th OutputFunction setted (Variant version)
      */
     Variant getOutputFunctionV( u_int i );
 
-    /*! \brief Set the i-th element (Variant version)
+    /*! Set the i-th element (Variant version)
      */
     bool setOutputFunction( u_int i, const Variant& prototype );
 
-    /*! \brief Return the dimension
+    /*! Return the dimension
      */
     unsigned int size();
 
-    /*! \brief Return the dimension (Variant version)
+    /*! Return the dimension (Variant version)
      */
     Variant sizeV();
 
-    /*! \brief Implement the updating method
-     *
+    /*! Implement the updating method <br>
      *  Apply OutputFunctions setted by setOutputFunction to elements of RealVec inputs
      */
     virtual void apply( RealVec& inputs, RealVec& outputs );
 
-    /*! \brief Clone this object
+    /*! Clone this object
      */
     virtual PoolFunction* clone() const;
 
-    /*! \brief when it's inserted into a Cluster, it will be resized to fit the size of Cluster
+    /*! when it's inserted into a Cluster, it will be resized to fit the size of Cluster
      */
     virtual void setCluster( Cluster* );
 
@@ -640,33 +622,32 @@ public:
     /*! \name Interface */
     //@{
 
-    /*! \brief Set the first function of CompositeFunction
+    /*! Set the first function of CompositeFunction
      */
     bool setFirstFunction( const Variant& v );
 
-    /*! \brief Return the first function of CompositeFunction
+    /*! Return the first function of CompositeFunction
      */
     Variant getFirstFunction();
 
-    /*! \brief Set the second function of CompositeFunction
+    /*! Set the second function of CompositeFunction
      */
     bool setSecondFunction( const Variant& v );
 
-    /*! \brief Return the second function of CompositeFunction
+    /*! Return the second function of CompositeFunction
      */
     Variant getSecondFunction();
 
-    /*! \brief Implement the updating method
-     *
+    /*! Implement the updating method <br>
      * it computes: y(t) <- second( first( input, outputs ) )
      */
     virtual void apply( RealVec& inputs, RealVec& outputs );
 
-    /*! \brief Clone this object
+    /*! Clone this object
      */
     virtual CompositeFunction* clone() const;
 
-    /*! \brief recursive call setCluster on first and second function setted
+    /*! recursive call setCluster on first and second function setted
      */
     virtual void setCluster( Cluster* );
 

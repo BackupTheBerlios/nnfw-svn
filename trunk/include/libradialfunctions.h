@@ -62,27 +62,27 @@ public:
     /*! \name Interface */
     //@{
 
-    /*! \brief Set the centre
+    /*! Set the centre
      */
     bool setCentre( const Variant& v );
 
-    /*! \brief Return the centre
+    /*! Return the centre
      */
     Variant getCentre();
 
-    /*! \brief Set the Variance
+    /*! Set the Variance
      */
     bool setVariance( const Variant& v );
 
-    /*! \brief Return the variance
+    /*! Return the variance
      */
     Variant getVariance();
 
-    /*! \brief Set the Max value
+    /*! Set the Max value
      */
     bool setMax( const Variant& v );
 
-    /*! \brief Return the Max
+    /*! Return the Max
      */
     Variant getMax();
 
@@ -92,7 +92,7 @@ public:
     //! ???
     virtual void derivate( const RealVec& x, const RealVec& y, RealVec& d ) const;
 
-    /*! \brief Clone this object
+    /*! Clone this object
      */
     virtual GaussFunction* clone() const;
 

@@ -29,7 +29,6 @@
 
 /*! \file
  *  \brief This file contains the template MatrixData Class; Don't include this file directly, instead include types.h
- *  Details...
  */
 
 #include "memutils.h"
@@ -50,7 +49,7 @@ public:
     /*! \name Constructors */
     //@{
 
-    /*! \brief Construct an empty matrix of dimension size
+    /*! Construct an empty matrix of dimension size
      */
     MatrixData( u_int rows, u_int cols )
         : Observer(), Observable(), data(rows*cols), rowView(rows) {
@@ -65,7 +64,7 @@ public:
         view = false;
     };
 
-    /*! \brief Construct a Matrix view from VectorData passed
+    /*! Construct a Matrix view from VectorData passed
      *  \param src is the VectorData from which this method constructs a Matrix view.
      *         The VectorData must be the same as specified in template constructing ( class Vec template parameters )
      *
@@ -99,7 +98,7 @@ public:
         }
     };
 
-    /*! \brief Destructor
+    /*! Destructor
      */
     ~MatrixData() {
         // --- nothing to do
@@ -122,13 +121,13 @@ public:
         return tsize;
     };
 
-    /*! \brief Return True if it is a MatrixData view
+    /*! Return True if it is a MatrixData view
      */
     bool isView() const {
         return view;
     };
 
-    /*! \brief Equal Operator
+    /*! Equal Operator
      */
     bool operator==( const MatrixData<T,Vec>& b ) {
         // --- WARNING: don't implement this method using the operator== of private data vector
@@ -143,7 +142,7 @@ public:
         return true;
     };
 
-    /*! \brief Not-Equal Operator
+    /*! Not-Equal Operator
      */
     bool operator!=( const VectorData<T>& b ) {
         return !( *this == b );
@@ -208,7 +207,7 @@ public:
         return rowView[row][col];
     };
 
-    /*! \brief Indexing operator
+    /*! Indexing operator<br>
      *  Boundary check activated only when DEBUG if defined
      */
     Vec& operator[]( u_int row ) {
@@ -221,7 +220,7 @@ public:
         return rowView[row];
     };
 
-    /*! \brief Indexing operator (Const Version)
+    /*! Indexing operator (Const Version)<br>
      *  Boundary check activated only when DEBUG if defined
      */
     const Vec& operator[]( u_int row ) const {
@@ -234,7 +233,7 @@ public:
         return rowView[row];
     };
 
-    /*! \brief Assign elements
+    /*! Assign elements
      */
     MatrixData& assign( const MatrixData& src ) {
 #ifdef NNFW_DEBUG
@@ -247,7 +246,7 @@ public:
         return (*this);
     };
 
-    /*! \brief Set all values to zero
+    /*! Set all values to zero
      */
     void zeroing() {
         data.zeroing();
@@ -276,19 +275,19 @@ public:
     //! Difference pointer type
     typedef ptrdiff_t difference_type;
 
-    /*! \brief Max size allowed
+    /*! Max size allowed
      */
     size_type max_size() {
         return 300000; // <- FIXME it must return the maximum space of memory allocable
     };
 
-    /*! \brief Is Empty
+    /*! Is Empty
      */
     bool empty() {
         return (tsize==0);
     };
 
-    /*! \brief Clear: reduce the dimension to zero-zero matrix
+    /*! Clear: reduce the dimension to zero-zero matrix
      */
     void clear() {
         if ( view ) {
@@ -298,29 +297,29 @@ public:
         }
     };
 
-    /*! \brief Iterator at initial position
+    /*! Iterator at initial position
      */
     iterator begin() {
         return matrixdataIterator( *this );
     };
-    /*! \brief Iterator at initial position
+    /*! Iterator at initial position
      */
     const_iterator begin() const {
         return matrixdataIterator( ((MatrixData&)*this) );
     };
 
-    /*! \brief Iterator at past-end position
+    /*! Iterator at past-end position
      */
     iterator end() {
         return matrixdataIterator( *this, tsize );
     };
-    /*! \brief Iterator at past-end position
+    /*! Iterator at past-end position
      */
     const_iterator end() const {
         return matrixdataIterator( ((MatrixData&)*this), tsize );
     };
 
-    /*! \brief Inner-class implements iterator over MatrixData
+    /*! Inner-class implements iterator over MatrixData
      */
     class matrixdataIterator : public std::iterator<std::bidirectional_iterator_tag,T,ptrdiff_t> {
     public:
@@ -388,7 +387,7 @@ public:
 protected:
     friend class RealVec;
 
-    /*! \brief Return the VectorData of the data
+    /*! Return the VectorData of the data
      */
     Vec& rawdata() const {
         return (Vec&)data;

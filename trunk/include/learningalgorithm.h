@@ -33,12 +33,22 @@ namespace nnfw {
  */
 class NNFW_API LearningAlgorithm {
 public:
+	/*! \name Constructors */
+	//@{
+
     //! Constructor
     LearningAlgorithm() { /* Nothing to do */ };
     //! Destructor
     virtual ~LearningAlgorithm() { /* Nothing to do */ };
+
+	//@}
+	/*! \name Interface */
+	//@{
+
     //! Modify the object
     virtual void learn() = 0;
+
+	//@}
 };
 
 }

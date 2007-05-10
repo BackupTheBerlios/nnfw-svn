@@ -29,7 +29,6 @@
 
 /*! \file
  *  \brief This file contains the pattern Observer/Observable ; Don't include this file directly, instead include types.h
- *  Details...
  */
 
 #include <list>
@@ -46,12 +45,21 @@ namespace nnfw {
  */
 class NNFW_API NotifyEvent {
 public:
+	/*! \name Constructors */
+	//@{
     //! Constructor
     NotifyEvent( int type = 0 ) : etype(type) { /* Nothing to do */ };
+
+	//@}
+	/*! \name Interface */
+	//@{
+
     //! Return the type of this Notification Event 
     int type() const {
         return etype;
     };
+	//@}
+
 protected:
     //! type of event
     int etype;
@@ -65,16 +73,20 @@ protected:
 class NNFW_API Observer {
 public:
     /*! \name Constructors */
+	//@{
 
-    /*! \brief virtual Destructor
+    /*! virtual Destructor
      */
     virtual ~Observer() { /* -- Nothing to do -- */ };
 
-    /*! \name Interface */
+	//@}
+	/*! \name Interface */
+	//@{
 
-    /*! \brief called when the Observable notifies changes
+    /*! called when the Observable notifies changes
      */
     virtual void notify( const NotifyEvent& ) = 0;
+	//@}
 };
 
 
@@ -86,6 +98,7 @@ public:
 class NNFW_API Observable {
 public:
     /*! \name Constructors */
+	//@{
 
     /*! \brief Constructor
      */
@@ -93,9 +106,11 @@ public:
         // --- nothing to do
     };
 
-    /*! \name Interface */
+	//@}
+	/*! \name Interface */
+	//@{
 
-    /*! \brief Add a new Observer watching the event i-th
+    /*! Add a new Observer watching the event i-th
      */
     void addObserver( Observer* ob ) {
         std::list<Observer*>::iterator it = std::find( observers.begin(), observers.end(), ob );
@@ -103,7 +118,7 @@ public:
         observers.push_back( ob );
     };
 
-    /*! \brief Remove the Observer watching the event i-th
+    /*! Remove the Observer watching the event i-th
      */
     void delObserver( Observer* ob ) {
         std::list<Observer*>::iterator it = std::find( observers.begin(), observers.end(), ob );
@@ -111,7 +126,7 @@ public:
         observers.erase( it );
     };
 
-    /*! \brief Notify the event i-th
+    /*! Notify the event i-th
      */
     void notifyAll( const NotifyEvent& event = NotifyEvent() ) {
         std::list<Observer*>::iterator it = observers.begin();
@@ -121,6 +136,8 @@ public:
             it++;
         }
     };
+
+	//@}
 
 private:
     //! list of ObserverDelegate indexed by event

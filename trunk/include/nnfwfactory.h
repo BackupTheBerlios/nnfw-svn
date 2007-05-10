@@ -43,11 +43,11 @@ public:
     /*! \name Interface */
     //@{
 
-    /*! \brief create an instance of Propertized from PropertySettings specified
+    /*! create an instance of Propertized from PropertySettings specified
      */
     virtual Propertized* create( PropertySettings& param ) const = 0;
 
-    /*! \brief Virtual Copy-Constructor
+    /*! Virtual Copy-Constructor
      */
     virtual AbstractCreator* clone() const = 0;
     //@}
@@ -60,13 +60,13 @@ class Creator : public AbstractCreator {
     /*! \name Interface */
     //@{
 
-    /*! \brief create a new Propertized Object
+    /*! create a new Propertized Object
      */
     virtual Propertized* create( PropertySettings& param ) const {
         return ( new T(param) );
     };
 
-    /*! \brief Virtual Copy-Constructor
+    /*! Virtual Copy-Constructor
      */
     virtual Creator* clone() const {
         return new Creator();
@@ -85,82 +85,80 @@ class Creator : public AbstractCreator {
  */
 class NNFW_API Factory {
 public:
+	/*! \name Static Interface */
+	//@{
 
-    /*! \brief Create a Cluster of class type
+    /*! Create a Cluster of class type
      */
     static Cluster* createCluster( const char* type, PropertySettings& param );
 
-    /*! \brief Create a Linker of class type
+    /*! Create a Linker of class type
      */
     static Linker* createLinker( const char* type, PropertySettings& param );
 
-    /*! \brief Create a OutputFunction of class type
+    /*! Create a OutputFunction of class type
      */
     static OutputFunction* createOutputFunction( const char* type, PropertySettings& param );
 
-    /*! \brief Create a Propertized object different from Cluster, Linker and OutputFunction type
+    /*! Create a Propertized object different from Cluster, Linker and OutputFunction type
      */
     static Propertized* createPropertized( const char* type, PropertySettings& param );
 
-    /*! \brief Register a new Cluster type
-     *
+    /*! Register a new Cluster type<br>
      *  Return true on successuful insertion<br>
      *  It use the clone() method for copying the ClusterCreator
      */
     static bool registerCluster( const AbstractCreator& c, const char* type );
 
-    /*! \brief Register a new Linker type
-     *
+    /*! Register a new Linker type<br>
      *  Return true on successuful insertion<br>
      *  It use the clone() method for copying the LinkerCreator
      */
     static bool registerLinker( const AbstractCreator& c, const char* type );
 
-    /*! \brief Register a new OutputFunction type
-     *
+    /*! Register a new OutputFunction type<br>
      *  Return true on successuful insertion<br>
      *  It use the clone() method for copying the OutputFunctionCreator
      */
     static bool registerOutputFunction( const AbstractCreator& c, const char* type );
 
-    /*! \brief Register a new Propertized type
-     *
+    /*! Register a new Propertized type<br>
      *  Return true on successuful insertion<br>
      *  It use the clone() method for copying the OutputFunctionCreator
-     * \par Warnings:
-     *  Never use this method for registering Cluster, Linker or OutputFunction subclasses; These hierarchy
-     *  has own special methods in factory: registerCluster, registerLinker and registerOutputFunction
+     * \warning Never use this method for registering Cluster, Linker or OutputFunction subclasses;
+	 *  These hierarchy has own special methods in factory:
+	 *  registerCluster, registerLinker and registerOutputFunction
      */
     static bool registerPropertized( const AbstractCreator& c, const char* type );
 
 private:
-    /*! \brief The constructor is private, because there is no reason to instantiate this class
+    /*! The constructor is private, because there is no reason to instantiate this class
      */
     Factory() {
         // You can't instantiate this class
     };
 
-    /*! \brief Initialization of static data
+    /*! Initialization of static data
      */
     static void initFactory();
 
-    /*! \brief is Init ??
+    /*! is Init ??
      */
     static bool isInit;
 
-    /*! \brief Map of registered Cluster types
+    /*! Map of registered Cluster types
      */
     static std::map<std::string, AbstractCreator*> clustertypes;
 
-    /*! \brief Map of registered Linker types
+    /*! Map of registered Linker types
      */
     static std::map<std::string, AbstractCreator*> linkertypes;
 
-    /*! \brief Map of registered OutputFunction types
+    /*! Map of registered OutputFunction types
      */
     static std::map<std::string, AbstractCreator*> outfuntypes;
 
-    /*! \brief Map of registered Propertized types
+    /*! Map of registered Propertized types
      */
     static std::map<std::string, AbstractCreator*> proptypes;
 };

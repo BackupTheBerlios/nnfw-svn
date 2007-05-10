@@ -46,14 +46,6 @@ MatrixLinker::MatrixLinker( PropertySettings& prop )
 MatrixLinker::~MatrixLinker() {
 }
 
-u_int MatrixLinker::getRows() {
-    return nrows;
-}
-
-u_int MatrixLinker::getCols() {
-    return ncols;
-}
-
 u_int MatrixLinker::size() const {
     return nrows*ncols;
 }
@@ -97,15 +89,6 @@ void MatrixLinker::setMatrix( const RealMat& mat ) {
 bool MatrixLinker::setMatrix( const Variant& v ) {
     w.assign( *( v.getRealMat() ) );
     return true;
-}
-
-void MatrixLinker::update() {
-    // check if cluster 'To' needs a reset
-    if ( to()->needReset() ) {
-        to()->resetInputs();
-    }
-    RealMat::mul( to()->inputs(), from()->outputs(), w );
-    return;
 }
 
 }

@@ -15,6 +15,15 @@ S <mave> comment goes here
     'C' : means that something has been changed (e.g. implementation of a Class or a signature method)
 ==== End of Legend ====
 
+    ==> 198 - 10/05/2007 <==
+
+- <mave> removed deprecated methods: MatrixLinker::getRows() and getCols()
+B <mave> adjusted Doxygen documentation; now all methods are displayed corretcly
+C <mave> MatrixLinker is now Abstract; use DotLinker
++ <mave> added a method RealVec::neg() but with different signature that old VectorData::neg()
+- <mave> removed the method VectorData::neg()
+C <mave> changes in Doxygen documentation
+
     ==> 192 - 20/04/2007 - 0.8.1 release <==
 
 + <mave> added two method for convenience: BaseNeuralNet::addInputCluster and addOutputCluster
