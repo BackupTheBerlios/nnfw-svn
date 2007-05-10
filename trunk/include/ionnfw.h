@@ -66,15 +66,6 @@ NNFW_API std::ostream& operator<<(std::ostream& stream, const Variant var);
 NNFW_API std::ostream& operator<<(std::ostream& stream, const Propertized& p);
 
 //@}
-/*! \name Input Stream Operator --- these operator are all deprecated */
-//@{
-
-//! \deprecated Operator >> with RealMat
-NNFW_API std::istream& operator>>(std::istream& stream, RealMat& m);
-//! \deprecated Operator >> with RealVec
-NNFW_API std::istream& operator>>(std::istream& stream, RealVec& v);
-
-//@}
 
 }
 

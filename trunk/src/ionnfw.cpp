@@ -111,22 +111,4 @@ std::ostream& operator<<(std::ostream& stream, const Propertized& p) {
     return stream;    
 }
 
-// ----------------------------------------------------
-// --------------- DEPRECATED INPUT STREAM OPERATOR
-// ----------------------------------------------------
-
-std::istream& operator>>(std::istream& stream, RealVec& v) {
-    for ( u_int i = 0; i < v.size(); i++ ) {
-        stream >> (v[i]);
-    }
-    return stream;
-}
-
-std::istream& operator>>(std::istream& stream, RealMat& m) {
-    for( u_int i=0; i<m.rows(); i++ ) {
-        stream >> m[i];
-    }
-    return stream;
-}
-
 }

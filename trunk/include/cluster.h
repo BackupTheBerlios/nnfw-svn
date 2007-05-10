@@ -97,13 +97,6 @@ public:
     //@{
 
     /*! Return the number of neurons (the length of input and output arrays)
-	 *  \deprecated use numNeurons instead
-     */
-    u_int size() const {
-        return numNeurons();
-    };
-
-    /*! Return the number of neurons (the length of input and output arrays)
      */
     u_int numNeurons() const {
         return numneurons;
@@ -119,7 +112,7 @@ public:
      *  If accumulation is enabled (true) then linkers attached to this Cluster will never resetInput and accumulates data,
      *  otherwise the inputs will be resetted at each step of neural network
      */
-    void accumulate( bool mode ) {
+    void setAccumulate( bool mode ) {
         accOff = !mode;
     };
 
@@ -149,7 +142,7 @@ public:
     /*! Write Access to property 'accumulate'
      */
     bool setAccumP( const Variant& b ) {
-        accumulate( b.getBool() );
+        setAccumulate( b.getBool() );
         return true;
     };
 

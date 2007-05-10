@@ -15,7 +15,12 @@ S <mave> comment goes here
     'C' : means that something has been changed (e.g. implementation of a Class or a signature method)
 ==== End of Legend ====
 
-    ==> 198 - 10/05/2007 <==
+    ==> 200 - 10/05/2007 <==
+
+C <mave> Cluster::accumulate() renamed to setAccumulate()
+- <mave> remove Cluster::size(); use Cluster::numNeurons()
+
+    ==> 199 - 10/05/2007 <==
 
 - <mave> removed deprecated methods: MatrixLinker::getRows() and getCols()
 B <mave> adjusted Doxygen documentation; now all methods are displayed corretcly
