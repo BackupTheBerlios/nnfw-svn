@@ -17,78 +17,29 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA  *
  ********************************************************************************/
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef FBROWSER_H
+#define FBROWSER_H
 
-#include <QMainWindow>
-#include <QString>
-#include <QVector>
-#include <QFileInfo>
-#include <QTimer>
-
-class QAction;
-class QToolBar;
-class QLabel;
-class QProgressBar;
-class QBoxLayout;
-class QSlider;
-class QCheckBox;
-class QActionGroup;
-class NNRenderer;
-class FBrowser;
-
+#include <QWidget>
+#include "nnfw/nnfw.h"
 #include "fnnwrapper.h"
 
-class MainWindow : public QMainWindow {
-    Q_OBJECT
+class QTreeWidget;
+class QTreeWidgetItem;
+
+class FBrowser : public QWidget {
+	Q_OBJECT
 public:
-    MainWindow( QWidget* parent = 0 );
-	//~MainWindow();
-
+	FBrowser( QWidget* parent = 0 );
 public slots:
-	void fileNew();
-	void fileLoad();
-	bool fileSave();
-	bool fileSaveas();
-	void fileClose();
-
-    void credits();
-
-	void randStep();
+	//! set the neural net to browse
+	void setNeuralNet( FNNWrapper* nn );
 
 private:
-	bool askSaveFilename();
-	void createBrowser();
-
-	QAction* fileNewA;
-	QAction* fileLoadA;
-	QAction* fileSaveA;
-	QAction* fileSaveasA;
-	QAction* fileCloseA;
-
-	QAction* showCreditsA;
-
-    // --- Toolbar file
-    QToolBar* fileT;
-
-	//--- central Widget
-	NNRenderer* centre;
-
-	//--- DockWidgets
-	FBrowser* browse;
-	
-	//--- current NeuralNet opened
-	FNNWrapper* nn;
-
-	bool hasChanges;
-	QString filename;
-	QFileInfo infoFile;
-
-	//--- codice temporaneo per prova di ClusterPlotter
-	QTimer timer;
-	int steps;
-	//--- fine codice temporaneo per prova di ClusterPlotter
-
+    QTreeWidget* tree;
+	FNNWrapper* net;
+	QTreeWidgetItem* rootCluster;
+	QTreeWidgetItem* rootLinker;
 };
 
 #endif

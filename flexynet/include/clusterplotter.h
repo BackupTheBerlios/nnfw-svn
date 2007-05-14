@@ -17,78 +17,55 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA  *
  ********************************************************************************/
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef CLUSTERPLOTTER_H
+#define CLUSTERPLOTTER_H
 
-#include <QMainWindow>
-#include <QString>
-#include <QVector>
-#include <QFileInfo>
-#include <QTimer>
-
-class QAction;
-class QToolBar;
-class QLabel;
-class QProgressBar;
-class QBoxLayout;
-class QSlider;
-class QCheckBox;
-class QActionGroup;
-class NNRenderer;
-class FBrowser;
-
+#include "nnfw/cluster.h"
 #include "fnnwrapper.h"
+#include <QObject>
+#include <QGraphicsItem>
 
-class MainWindow : public QMainWindow {
-    Q_OBJECT
+class ClusterPlotter : public QObject, public QGraphicsItem {
+	Q_OBJECT
 public:
-    MainWindow( QWidget* parent = 0 );
-	//~MainWindow();
+	ClusterPlotter( FNNWrapper* net, nnfw::Cluster* cl );
+	
+	QRectF boundingRect() const;
+	QPainterPath shape() const;
+	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+	//! reset the plot zeroing all data registered so far
+	void resetToZero();
 
-public slots:
-	void fileNew();
-	void fileLoad();
-	bool fileSave();
-	bool fileSaveas();
-	void fileClose();
+protected:
+// 	void mousePressEvent( QGraphicsSceneMouseEvent *event );
+// 	void mouseReleaseEvent( QGraphicsSceneMouseEvent *event );
+// 	void mouseMoveEvent( QGraphicsSceneMouseEvent* event );
 
-    void credits();
-
-	void randStep();
+private slots:
+	//! update the plot
+	void updatePlot();
 
 private:
-	bool askSaveFilename();
-	void createBrowser();
-
-	QAction* fileNewA;
-	QAction* fileLoadA;
-	QAction* fileSaveA;
-	QAction* fileSaveasA;
-	QAction* fileCloseA;
-
-	QAction* showCreditsA;
-
-    // --- Toolbar file
-    QToolBar* fileT;
-
-	//--- central Widget
-	NNRenderer* centre;
-
-	//--- DockWidgets
-	FBrowser* browse;
-	
-	//--- current NeuralNet opened
-	FNNWrapper* nn;
-
-	bool hasChanges;
-	QString filename;
-	QFileInfo infoFile;
-
-	//--- codice temporaneo per prova di ClusterPlotter
-	QTimer timer;
-	int steps;
-	//--- fine codice temporaneo per prova di ClusterPlotter
-
+	//! used to connect the signal stepped to slot updatePlot
+	FNNWrapper* net;
+	//! cluster to plot
+	nnfw::Cluster* cl;
+	//! bounding rect
+	QRectF brect;
+	//! input data plotted
+	QVector<QPolygonF> ins;
+	//! output data plotted
+	QVector<QPolygonF> outs;
+	//! lastPoint, or last valid index of QPolygonFs
+	int lastPoint;
+	//! low Y value of ins data plotted
+	QVector<qreal> lowins;
+	//! high Y value of ins data plotted
+	QVector<qreal> highins;
+	//! low Y value of outs data plotted
+	QVector<qreal> lowouts;
+	//! high Y value of outs data plotted
+	QVector<qreal> highouts;
 };
 
 #endif

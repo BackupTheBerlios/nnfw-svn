@@ -24,6 +24,7 @@
 #include <QMap>
 
 #include "nnfw/nnfw.h"
+#include "fnnwrapper.h"
 
 class ClusterRenderer;
 class LinkerRenderer;
@@ -34,9 +35,9 @@ public:
 	NNRenderer( QWidget* parent = 0 );
 
 	//! set the neuralnet to display
-	void setNeuralNet( nnfw::BaseNeuralNet* nn );
+	void setNeuralNet( FNNWrapper* nn );
 	//! return the neuralnet displayed
-	nnfw::BaseNeuralNet* getNeuralNet() {
+	FNNWrapper* getNeuralNet() {
 		return nn;
 	};
 public slots:
@@ -53,7 +54,7 @@ protected:
 private:
 	//! when there is no neuralnet to display the zoom-in/out is disabled
 	bool scaleDisabled;
-	nnfw::BaseNeuralNet* nn;
+	FNNWrapper* nn;
 	//--- mappings
 	QMap<nnfw::Cluster*, ClusterRenderer*> clmap;
 	QMap<nnfw::Linker*, LinkerRenderer*> lkmap;

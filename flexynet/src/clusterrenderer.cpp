@@ -36,7 +36,7 @@ using namespace nnfw;
 ClusterRenderer::ClusterRenderer( NNRenderer* nnrenderer, Cluster* cl ) {
 	this->cl = cl;
 	this->nnr = nnrenderer;
-	dim = (int)cl->size();
+	dim = (int)cl->numNeurons();
 	//--- calculate the rectangle
 	recw = dim*14;
 	rech = 14;

@@ -20,6 +20,7 @@
 #include "nnrenderer.h"
 #include "linkerrenderer.h"
 #include "clusterrenderer.h"
+#include "clusterplotter.h"
 
 #include <QDebug>
 #include <QGraphicsScene>
@@ -49,7 +50,7 @@ NNRenderer::NNRenderer( QWidget* parent ): QGraphicsView(parent), clmap(), lkmap
 	setWindowTitle(tr("NNFW Neural Network Renderer"));
 }
 
-void NNRenderer::setNeuralNet( BaseNeuralNet* net ) {
+void NNRenderer::setNeuralNet( FNNWrapper* net ) {
 	QList<QGraphicsItem *> list = scene()->items();
 	QList<QGraphicsItem *>::Iterator it = list.begin();
 	for (; it != list.end(); ++it) {
@@ -76,6 +77,14 @@ void NNRenderer::setNeuralNet( BaseNeuralNet* net ) {
 		xpos += 30;
 		ypos += 30;
 		clmap[ cls[i] ] = cs;
+
+		// ----- codice temporaneo per provare il plotter
+		if ( i==0 ) {
+			ClusterPlotter* cp = new ClusterPlotter( nn, cls[i] );
+			scene()->addItem( cp );
+			//cp->setPos( 0, -100 );
+		}
+		// ----- fine codice temporaneo
 	}
 
 	const LinkerVec& lks = nn->linkers();

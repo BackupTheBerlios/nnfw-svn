@@ -21,14 +21,13 @@
 #define CLUSTERRENDERER_H
 
 #include "nnfw/cluster.h"
-#include <QObject>
 #include <QGraphicsItem>
 #include <QPainterPath>
 
 class LinkerRenderer;
 class NNRenderer;
 
-class ClusterRenderer : public QObject, public QGraphicsItem {
+class ClusterRenderer : public QGraphicsItem {
 public:
 	ClusterRenderer( NNRenderer* nnrenderer, nnfw::Cluster* cl );
 	

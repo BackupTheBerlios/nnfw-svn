@@ -41,9 +41,12 @@
 #include "mainWindow.h"
 #include "nnrenderer.h"
 #include "fbrowser.h"
+#include "nnfw/random.h"
+
+using namespace nnfw;
 
 MainWindow::MainWindow( QWidget* parent )
-    : QMainWindow( parent ), hasChanges(false), filename(), infoFile() {
+    : QMainWindow( parent ), hasChanges(false), filename(), infoFile(), timer() {
 
     fileNewA = new QAction( QIcon(":/fileNew.png"), tr( "New" ), this );
     fileNewA->setShortcut( tr("Ctrl+N") );
@@ -127,6 +130,9 @@ MainWindow::MainWindow( QWidget* parent )
     fileSaveA->setEnabled( false );
     fileSaveasA->setEnabled( false );
     fileCloseA->setEnabled( false );
+
+	connect( &timer, SIGNAL( timeout() ),
+			this, SLOT( randStep() ) );
 }
 
 void MainWindow::fileNew() {
@@ -145,7 +151,7 @@ void MainWindow::fileNew() {
     }
 	filename = QString();
 	if ( !nn ) delete nn;
-	nn = new BaseNeuralNet();
+	nn = new FNNWrapper( new BaseNeuralNet() );
 	// --- display it
 	centre->setNeuralNet( nn );
 	browse->setNeuralNet( nn );
@@ -177,13 +183,19 @@ void MainWindow::fileLoad() {
     infoFile = QFileInfo( filename );
 	if ( !nn ) delete nn;
 	// --- open the neural network
-	nn = loadXML( filename.toAscii().data() );
+	nn = new FNNWrapper( loadXML( filename.toAscii().data() ) );
 	// --- display it
 	centre->setNeuralNet( nn );
 	browse->setNeuralNet( nn );
     fileSaveA->setEnabled( true );
     fileSaveasA->setEnabled( true );
     fileCloseA->setEnabled( true );
+
+	//--- codice temporaneo per prova di ClusterPlotter
+	steps = 0;
+	timer.start( 100 );
+	//--- fine codice temporaneo per prova di ClusterPlotter
+
 }
 
 void MainWindow::fileClose() {
@@ -214,14 +226,14 @@ bool MainWindow::fileSave() {
             return false;
         }
     }
-	return saveXML( filename.toAscii().data(), nn );
+	return nn->saveTo( filename );
 }
 
 bool MainWindow::fileSaveas() {
 	if ( !askSaveFilename() ) {
 		return false;
 	}
-	return saveXML( filename.toAscii().data(), nn );
+	return nn->saveTo( filename );
 }
 
 void MainWindow::credits() {
@@ -271,3 +283,17 @@ void MainWindow::createBrowser() {
 	fb->layout()->addWidget( browse );
 }
 
+void MainWindow::randStep() {
+	//--- codice temporaneo per prova di ClusterPlotter
+	if ( steps < 5 ) {
+		const ClusterVec& cls = nn->inputClusters();
+		for( unsigned int i=0; i<cls.size(); i++ ) {
+			for( unsigned int k=0; k<cls[i]->numNeurons(); k++ ) {
+				cls[i]->inputs()[k] = Random::flatReal( -5.0, +5.0 );
+			}
+		}
+		nn->step();
+		steps++;
+	}
+	//--- fine codice temporaneo per prova di ClusterPlotter
+}
