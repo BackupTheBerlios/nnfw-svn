@@ -17,9 +17,8 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA  *
  ********************************************************************************/
 
-#include "nnrenderer.h"
-#include "linkerrenderer.h"
-#include "clusterrenderer.h"
+#include "nnplotter.h"
+#include "clusterplotter.h"
 
 #include <QDebug>
 #include <QGraphicsScene>
@@ -29,27 +28,31 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QPainter>
 #include <QStyleOption>
+#include <QGLWidget>
+#include <QGLFormat>
 #include <cmath>
 
 using namespace nnfw;
 
-NNRenderer::NNRenderer( QWidget* parent ): QGraphicsView(parent), clmap(), lkmap() {
+NNPlotter::NNPlotter( QWidget* parent ): QGraphicsView(parent) {
 	QGraphicsScene* scene = new QGraphicsScene(this);
 	scene->setItemIndexMethod(QGraphicsScene::NoIndex);
 	setScene(scene);
  	setCacheMode(CacheBackground);
-	setDragMode(RubberBandDrag);
+	setDragMode(ScrollHandDrag);
  	setRenderHint(QPainter::Antialiasing);
  	setTransformationAnchor(NoAnchor);
  	setResizeAnchor(NoAnchor);
 	setBackgroundBrush( QColor( 250, 240, 230 ) );
+//	setViewport(new QGLWidget( QGLFormat(QGL::SampleBuffers) ) );
 
 	scaleDisabled = true;
-	setMinimumSize(400, 400);
-	setWindowTitle(tr("NNFW Neural Network Renderer"));
+	nn = 0;
+	setMinimumSize(400, 200);
+	setWindowTitle(tr("NNFW Neural Network Plotter"));
 }
 
-void NNRenderer::setNeuralNet( FNNWrapper* net ) {
+void NNPlotter::setNeuralNet( FNNWrapper* net ) {
 	QList<QGraphicsItem *> list = scene()->items();
 	QList<QGraphicsItem *>::Iterator it = list.begin();
 	for (; it != list.end(); ++it) {
@@ -57,9 +60,9 @@ void NNRenderer::setNeuralNet( FNNWrapper* net ) {
 			delete *it;
 		}
 	}
-	scene()->setSceneRect( QRectF() );
-	clmap.clear();
-	lkmap.clear();
+	pls.clear();
+	disconnect( nn, SIGNAL( stepped() ),
+			this, SLOT( updatePlots() ) );
 	this->nn = net;
 	if ( net == 0 ) {
 		setMatrix( QMatrix() );
@@ -67,77 +70,49 @@ void NNRenderer::setNeuralNet( FNNWrapper* net ) {
 		update();
 		return;
 	}
-	const ClusterVec& cls = nn->clusters();
-	int xpos = -170; int ypos = -170;
-	for( unsigned int i=0; i<cls.size(); i++ ) {
-		ClusterRenderer* cs = new ClusterRenderer( this, cls[i] );
-		scene()->addItem( cs );
-		cs->setPos( xpos, ypos );
-		xpos += 30;
-		ypos += 30;
-		clmap[ cls[i] ] = cs;
-	}
 
-	const LinkerVec& lks = nn->linkers();
-	for( unsigned int i=0; i<lks.size(); i++ ) {
-		ClusterRenderer* src = clmap[ lks[i]->from() ];
-		ClusterRenderer* dst = clmap[ lks[i]->to() ];
-		LinkerRenderer* lr = new LinkerRenderer( src, dst );
-		scene()->addItem( lr );
-		lkmap[ lks[i] ] = lr;
+	const ClusterVec& cls = nn->clusters();
+	for( unsigned int i=0; i<cls.size(); i++ ) {
+		ClusterPlotter* cp = new ClusterPlotter( cls[i] );
+		scene()->addItem( cp );
+		pls.append( cp );
+		connect( cp, SIGNAL( heightChanged() ),
+				this, SLOT( updatePositions() ) );
 	}
 	setMatrix( QMatrix() );
 	scaleDisabled = false;
-	defaultPositioning();
+	connect( nn, SIGNAL( stepped() ),
+			this, SLOT( updatePlots() ) );
 	update();
 }
 
-void NNRenderer::defaultPositioning() {
+void NNPlotter::updatePlots() {
 	if ( nn == 0 ) {
 		return;
 	}
-	float xspace = 15;
-	float yspace = 70;
-	float xpos = 0;
-	float ypos = 0;
-	const ClusterVec& cls = nn->inputClusters();
-	QVector<ClusterRenderer*> lays;
-	for( unsigned int i=0; i<cls.size(); i++ ) {
-		lays.append( clmap[cls[i]] );
+	qreal prevoff = 0.0f;
+	for( int i=0; i<pls.size(); i++ ) {
+		pls[i]->updatePlot();
+		pls[i]->setPos( 0, prevoff );
+		prevoff += pls[i]->boundingRect().height()+10;
 	}
-	// --- start to set positions
-	bool ended = false;
-	int idstart = 0;
-	int idend = lays.size();
-	while( !ended ) {
-		ended = true;
-		for( int i=idstart; i<idend; i++ ) {
-			ClusterRenderer* r = lays[i];
-			QRectF rect = r->boundingRect();
-			r->setPos( xpos+rect.width()/2.0f, ypos+rect.height()/2.0f );
-			xpos += rect.width()+xspace;
-			// add to next layers
-			const LinkerVec& lks = nn->linkers( clmap.key(lays[i]), true );
-			for( unsigned int j=0; j<lks.size(); j++ ) {
-				ClusterRenderer* tor = clmap[lks[j]->to()];
-				if ( lays.indexOf( tor ) != -1 ) continue;
-				lays.append( tor );
-				ended = false;
-			}
-		}
-		xpos = 0;
-		ypos -= yspace;
-		idstart = idend;
-		idend = lays.size();
-	}
-	QList<LinkerRenderer*> lsr = lkmap.values();
-	for( int i=0; i<lsr.size(); i++ ) {
-		lsr[i]->adjust();
-	};
 	scene()->setSceneRect( scene()->itemsBoundingRect() );
 }
 
-void NNRenderer::keyPressEvent(QKeyEvent *event) {
+void NNPlotter::updatePositions() {
+	if ( nn == 0 ) {
+		return;
+	}
+	qreal prevoff = 0.0f;
+	for( int i=0; i<pls.size(); i++ ) {
+		pls[i]->setPos( 0, prevoff );
+		prevoff += pls[i]->boundingRect().height()+10;
+	}
+	scene()->setSceneRect( scene()->itemsBoundingRect() );
+}
+
+
+void NNPlotter::keyPressEvent(QKeyEvent *event) {
 	switch (event->key()) {
 	case Qt::Key_Plus:
 		scaleView(1.2);
@@ -150,34 +125,16 @@ void NNRenderer::keyPressEvent(QKeyEvent *event) {
 	}
 }
 
-void NNRenderer::wheelEvent(QWheelEvent *event) {
+void NNPlotter::wheelEvent(QWheelEvent *event) {
 	scaleView(pow((double)2, -event->delta() / 240.0));
 }
 
-void NNRenderer::drawBackground(QPainter *painter, const QRectF &rect) {
+void NNPlotter::drawBackground(QPainter *painter, const QRectF &rect) {
 	QGraphicsView::drawBackground( painter, rect );
-
-// 	painter->setBrush(Qt::black);
-// 	painter->drawLine( -30, 0, +30, 0 );
-// 	painter->drawLine( 0, -30, 0, +30 );
-
-	// draw SceneRect
-/*	painter->setBrush(Qt::transparent);
-	QRectF sceneRect = this->sceneRect();
-	painter->drawRect( sceneRect );*/
-	
-/*	// Shadow
-	QRectF sceneRect = this->sceneRect();
-	QRectF rightShadow(sceneRect.right(), sceneRect.top() + 5, 5, sceneRect.height());
-	QRectF bottomShadow(sceneRect.left() + 5, sceneRect.bottom(), sceneRect.width(), 5);
-	if (rightShadow.intersects(rect) || rightShadow.contains(rect))
-		painter->fillRect(rightShadow, Qt::darkGray);
-	if (bottomShadow.intersects(rect) || bottomShadow.contains(rect))
-		painter->fillRect(bottomShadow, Qt::darkGray);*/
 
 }
 
-void NNRenderer::scaleView( qreal scaleFactor ) {
+void NNPlotter::scaleView( qreal scaleFactor ) {
 	if ( scaleDisabled ) {
 		return;
 	}

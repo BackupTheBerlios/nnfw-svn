@@ -41,6 +41,7 @@
 #include "mainWindow.h"
 #include "nnrenderer.h"
 #include "fbrowser.h"
+#include "nnplotter.h"
 #include "nnfw/random.h"
 
 using namespace nnfw;
@@ -119,6 +120,7 @@ MainWindow::MainWindow( QWidget* parent )
 	setCentralWidget( centre );
 
 	createBrowser();
+	createPlotter();
 
 	// --- add view/hide checkboxes in the view menu for Toolbars/DockWidgets
 	QMenu* tmp = createPopupMenu();
@@ -155,6 +157,7 @@ void MainWindow::fileNew() {
 	// --- display it
 	centre->setNeuralNet( nn );
 	browse->setNeuralNet( nn );
+	plotter->setNeuralNet( nn );
     fileSaveA->setEnabled( true );
     fileSaveasA->setEnabled( true );
     fileCloseA->setEnabled( true );
@@ -187,13 +190,14 @@ void MainWindow::fileLoad() {
 	// --- display it
 	centre->setNeuralNet( nn );
 	browse->setNeuralNet( nn );
+	plotter->setNeuralNet( nn );
     fileSaveA->setEnabled( true );
     fileSaveasA->setEnabled( true );
     fileCloseA->setEnabled( true );
 
 	//--- codice temporaneo per prova di ClusterPlotter
 	steps = 0;
-	timer.start( 100 );
+	timer.start( 0 );
 	//--- fine codice temporaneo per prova di ClusterPlotter
 
 }
@@ -215,6 +219,7 @@ void MainWindow::fileClose() {
 	// --- empty the display
 	centre->setNeuralNet( 0 );
 	browse->setNeuralNet( 0 );
+	plotter->setNeuralNet( 0 );
     fileSaveA->setEnabled( false );
     fileSaveasA->setEnabled( false );
     fileCloseA->setEnabled( false );
@@ -283,9 +288,20 @@ void MainWindow::createBrowser() {
 	fb->layout()->addWidget( browse );
 }
 
+void MainWindow::createPlotter() {
+	QDockWidget* fb = new QDockWidget( tr("Plotter"), this );
+	addDockWidget( Qt::BottomDockWidgetArea, fb );
+	// --- create the content
+	plotter = new NNPlotter( fb );
+	fb->layout()->addWidget( plotter );
+}
+
 void MainWindow::randStep() {
 	//--- codice temporaneo per prova di ClusterPlotter
-	if ( steps < 5 ) {
+	if ( steps == 0 ) {
+		nn->randomize( -10.0, +10.0 );
+	}
+	if ( steps < 500 ) {
 		const ClusterVec& cls = nn->inputClusters();
 		for( unsigned int i=0; i<cls.size(); i++ ) {
 			for( unsigned int k=0; k<cls[i]->numNeurons(); k++ ) {
@@ -294,6 +310,7 @@ void MainWindow::randStep() {
 		}
 		nn->step();
 		steps++;
+		qDebug() << "Step: " << steps;
 	}
 	//--- fine codice temporaneo per prova di ClusterPlotter
 }

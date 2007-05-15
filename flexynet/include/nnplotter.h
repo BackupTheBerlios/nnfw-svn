@@ -17,81 +17,47 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA  *
  ********************************************************************************/
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef NNPLOTTER_H
+#define NNPLOTTER_H
 
-#include <QMainWindow>
-#include <QString>
+#include <QGraphicsView>
 #include <QVector>
-#include <QFileInfo>
-#include <QTimer>
 
-class QAction;
-class QToolBar;
-class QLabel;
-class QProgressBar;
-class QBoxLayout;
-class QSlider;
-class QCheckBox;
-class QActionGroup;
-class NNRenderer;
-class FBrowser;
-class NNPlotter;
-
+#include "nnfw/nnfw.h"
 #include "fnnwrapper.h"
 
-class MainWindow : public QMainWindow {
-    Q_OBJECT
+class ClusterPlotter;
+
+class NNPlotter : public QGraphicsView {
+	Q_OBJECT
 public:
-    MainWindow( QWidget* parent = 0 );
-	//~MainWindow();
+	NNPlotter( QWidget* parent = 0 );
 
+	//! set the neuralnet to display
+	void setNeuralNet( FNNWrapper* nn );
+	//! return the neuralnet displayed
+	FNNWrapper* getNeuralNet() {
+		return nn;
+	};
 public slots:
-	void fileNew();
-	void fileLoad();
-	bool fileSave();
-	bool fileSaveas();
-	void fileClose();
+	//! update the plots
+	void updatePlots();
+	//! update positions
+	void updatePositions();
 
-    void credits();
-
-	void randStep();
-
-private:
-	bool askSaveFilename();
-	void createBrowser();
-	void createPlotter();
-
-	QAction* fileNewA;
-	QAction* fileLoadA;
-	QAction* fileSaveA;
-	QAction* fileSaveasA;
-	QAction* fileCloseA;
-
-	QAction* showCreditsA;
-
-    // --- Toolbar file
-    QToolBar* fileT;
-
-	//--- central Widget
-	NNRenderer* centre;
-
-	//--- DockWidgets
-	FBrowser* browse;
-	NNPlotter* plotter;
+protected:
+	void keyPressEvent(QKeyEvent *event);
+	void wheelEvent(QWheelEvent *event);
+	void drawBackground(QPainter *painter, const QRectF &rect);
 	
-	//--- current NeuralNet opened
+	void scaleView(qreal scaleFactor);
+	
+private:
+	//! when there is no neuralnet to display the zoom-in/out is disabled
+	bool scaleDisabled;
 	FNNWrapper* nn;
-
-	bool hasChanges;
-	QString filename;
-	QFileInfo infoFile;
-
-	//--- codice temporaneo per prova di ClusterPlotter
-	QTimer timer;
-	int steps;
-	//--- fine codice temporaneo per prova di ClusterPlotter
-
+	//! ClusterPlotter inserted
+	QVector<ClusterPlotter*> pls;
 };
 
 #endif

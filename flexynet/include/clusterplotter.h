@@ -22,36 +22,49 @@
 
 #include "nnfw/cluster.h"
 #include "fnnwrapper.h"
-#include <QObject>
 #include <QGraphicsItem>
+#include <QObject>
+
+class QAction;
+class QMenu;
 
 class ClusterPlotter : public QObject, public QGraphicsItem {
 	Q_OBJECT
 public:
-	ClusterPlotter( FNNWrapper* net, nnfw::Cluster* cl );
+	ClusterPlotter( nnfw::Cluster* cl );
+	~ClusterPlotter();
 	
 	QRectF boundingRect() const;
 	QPainterPath shape() const;
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 	//! reset the plot zeroing all data registered so far
 	void resetToZero();
+	//! update the plot
+	void updatePlot();
+	//! resize the plots in such way that each plots fit the height specified
+	//void fitToHeight( qreal hf );
+
+public slots:
+	//! show/hide outputs plot
+	void showOutputs( bool );
+	//! show/hide inputs plot
+	void showInputs( bool );
+
+signals:
+	//! emitted when the height change
+	void heightChanged();
 
 protected:
 // 	void mousePressEvent( QGraphicsSceneMouseEvent *event );
 // 	void mouseReleaseEvent( QGraphicsSceneMouseEvent *event );
 // 	void mouseMoveEvent( QGraphicsSceneMouseEvent* event );
-
-private slots:
-	//! update the plot
-	void updatePlot();
+	void contextMenuEvent( QGraphicsSceneContextMenuEvent* event );
 
 private:
-	//! used to connect the signal stepped to slot updatePlot
-	FNNWrapper* net;
 	//! cluster to plot
 	nnfw::Cluster* cl;
 	//! bounding rect
-	QRectF brect;
+	mutable QRectF brect;
 	//! input data plotted
 	QVector<QPolygonF> ins;
 	//! output data plotted
@@ -66,6 +79,23 @@ private:
 	QVector<qreal> lowouts;
 	//! high Y value of outs data plotted
 	QVector<qreal> highouts;
+
+	//! scale factor of data plotted
+	QVector<qreal> myins;
+	//! scale factor of data plotted
+	QVector<qreal> myouts;
+
+	//! Action for hide/show outputs
+	QAction* showOutsA;
+	//! Action for hide/show inputs
+	QAction* showInsA;
+	//! Popup menu
+	QMenu* menu;
+
+	bool showouts;
+	bool showins;
+	//! true when data is changed (useful for speedup boundingRect calculations)
+	bool changed;
 };
 
 #endif
