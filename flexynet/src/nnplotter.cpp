@@ -43,7 +43,7 @@ NNPlotter::NNPlotter( QWidget* parent ): QGraphicsView(parent) {
  	setRenderHint(QPainter::Antialiasing);
  	setTransformationAnchor(NoAnchor);
  	setResizeAnchor(NoAnchor);
-	setBackgroundBrush( QColor( 250, 240, 230 ) );
+	//setBackgroundBrush( QColor( 250, 250, 250 ) );
 //	setViewport(new QGLWidget( QGLFormat(QGL::SampleBuffers) ) );
 
 	scaleDisabled = true;
@@ -83,7 +83,7 @@ void NNPlotter::setNeuralNet( FNNWrapper* net ) {
 	scaleDisabled = false;
 	connect( nn, SIGNAL( stepped() ),
 			this, SLOT( updatePlots() ) );
-	update();
+	scene()->update();
 }
 
 void NNPlotter::updatePlots() {
@@ -97,6 +97,7 @@ void NNPlotter::updatePlots() {
 		prevoff += pls[i]->boundingRect().height()+10;
 	}
 	scene()->setSceneRect( scene()->itemsBoundingRect() );
+	scene()->update();
 }
 
 void NNPlotter::updatePositions() {
@@ -109,7 +110,7 @@ void NNPlotter::updatePositions() {
 		prevoff += pls[i]->boundingRect().height()+10;
 	}
 	scene()->setSceneRect( scene()->itemsBoundingRect().adjusted(-20,-20,+20,+20) );
-	update();
+	scene()->update();
 }
 
 
@@ -132,8 +133,6 @@ void NNPlotter::wheelEvent(QWheelEvent *event) {
 
 void NNPlotter::drawBackground(QPainter *painter, const QRectF &rect) {
 	QGraphicsView::drawBackground( painter, rect );
-	painter->fillRect( sceneRect(), Qt::white );
-
 }
 
 void NNPlotter::scaleView( qreal scaleFactor ) {

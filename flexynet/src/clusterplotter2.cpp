@@ -107,6 +107,7 @@ void ClusterPlotter2::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
 	}
 
 	painter->setPen( QPen(Qt::NoPen) );
+	int skips = qMax( 1, (int)floor(2.0f / option->levelOfDetail) );
 	// plot outputs
 	for( int i=0; i<dim && showouts; i++ ) {
 		qreal m = 255.0f/( highouts[i]-lowouts[i] );
@@ -127,7 +128,7 @@ void ClusterPlotter2::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
 		}
 	}
 	// Legend
-	if ( legendActive ) {
+	if ( legendActive && option->levelOfDetail>2.0f ) {
 		//--- setup Gradients and Text to display
 		int h = (int)brect.height() - 10;
 		QLinearGradient linearGrad( QPointF(-20, 0), QPointF(-20, h) );

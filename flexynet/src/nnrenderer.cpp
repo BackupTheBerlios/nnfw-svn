@@ -64,7 +64,7 @@ void NNRenderer::setNeuralNet( FNNWrapper* net ) {
 	if ( net == 0 ) {
 		setMatrix( QMatrix() );
 		scaleDisabled = true;
-		update();
+		scene()->update();
 		return;
 	}
 	const ClusterVec& cls = nn->clusters();
@@ -89,7 +89,7 @@ void NNRenderer::setNeuralNet( FNNWrapper* net ) {
 	setMatrix( QMatrix() );
 	scaleDisabled = false;
 	defaultPositioning();
-	update();
+	scene()->update();
 }
 
 void NNRenderer::defaultPositioning() {
