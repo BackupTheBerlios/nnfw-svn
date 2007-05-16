@@ -45,7 +45,7 @@ NNRenderer::NNRenderer( QWidget* parent ): QGraphicsView(parent), clmap(), lkmap
 	setBackgroundBrush( QColor( 250, 240, 230 ) );
 
 	scaleDisabled = true;
-	setMinimumSize(400, 400);
+	setMinimumSize(400, 200);
 	setWindowTitle(tr("NNFW Neural Network Renderer"));
 }
 

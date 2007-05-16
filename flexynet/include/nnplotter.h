@@ -26,7 +26,7 @@
 #include "nnfw/nnfw.h"
 #include "fnnwrapper.h"
 
-class ClusterPlotter;
+class ClusterPlotter2;
 
 class NNPlotter : public QGraphicsView {
 	Q_OBJECT
@@ -57,7 +57,7 @@ private:
 	bool scaleDisabled;
 	FNNWrapper* nn;
 	//! ClusterPlotter inserted
-	QVector<ClusterPlotter*> pls;
+	QVector<ClusterPlotter2*> pls;
 };
 
 #endif

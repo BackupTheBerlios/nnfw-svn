@@ -310,7 +310,6 @@ void MainWindow::randStep() {
 		}
 		nn->step();
 		steps++;
-		qDebug() << "Step: " << steps;
 	}
 	//--- fine codice temporaneo per prova di ClusterPlotter
 }

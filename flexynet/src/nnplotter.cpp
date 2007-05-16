@@ -18,7 +18,7 @@
  ********************************************************************************/
 
 #include "nnplotter.h"
-#include "clusterplotter.h"
+#include "clusterplotter2.h"
 
 #include <QDebug>
 #include <QGraphicsScene>
@@ -73,7 +73,7 @@ void NNPlotter::setNeuralNet( FNNWrapper* net ) {
 
 	const ClusterVec& cls = nn->clusters();
 	for( unsigned int i=0; i<cls.size(); i++ ) {
-		ClusterPlotter* cp = new ClusterPlotter( cls[i] );
+		ClusterPlotter2* cp = new ClusterPlotter2( cls[i] );
 		scene()->addItem( cp );
 		pls.append( cp );
 		connect( cp, SIGNAL( heightChanged() ),
@@ -108,7 +108,8 @@ void NNPlotter::updatePositions() {
 		pls[i]->setPos( 0, prevoff );
 		prevoff += pls[i]->boundingRect().height()+10;
 	}
-	scene()->setSceneRect( scene()->itemsBoundingRect() );
+	scene()->setSceneRect( scene()->itemsBoundingRect().adjusted(-20,-20,+20,+20) );
+	update();
 }
 
 
@@ -131,6 +132,7 @@ void NNPlotter::wheelEvent(QWheelEvent *event) {
 
 void NNPlotter::drawBackground(QPainter *painter, const QRectF &rect) {
 	QGraphicsView::drawBackground( painter, rect );
+	painter->fillRect( sceneRect(), Qt::white );
 
 }
 
