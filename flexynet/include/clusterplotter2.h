@@ -19,6 +19,7 @@
 
 #ifndef CLUSTERPLOTTER2_H
 #define CLUSTERPLOTTER2_H
+#include "types.h"
 
 #include "nnfw/cluster.h"
 #include "fnnwrapper.h"
@@ -29,7 +30,7 @@
 class QAction;
 class QMenu;
 
-class ClusterPlotter2 : public QObject, public QGraphicsItem {
+class FLEX_API ClusterPlotter2 : public QObject, public QGraphicsItem {
 	Q_OBJECT
 public:
 	ClusterPlotter2( nnfw::Cluster* cl );

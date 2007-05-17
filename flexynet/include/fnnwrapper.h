@@ -19,13 +19,14 @@
 
 #ifndef FNNWRAPPER_H
 #define FNNWRAPPER_H
+#include "types.h"
 
 #include "nnfw/neuralnet.h"
 #include "nnfw/ionnfw.h"
 #include <QObject>
 #include <QString>
 
-class FNNWrapper : public QObject {
+class FLEX_API FNNWrapper : public QObject {
 	Q_OBJECT
 public:
 	//! create a Wrapper for the net passed

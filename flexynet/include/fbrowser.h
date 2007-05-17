@@ -19,6 +19,7 @@
 
 #ifndef FBROWSER_H
 #define FBROWSER_H
+#include "types.h"
 
 #include <QWidget>
 #include "nnfw/nnfw.h"
@@ -27,7 +28,7 @@
 class QTreeWidget;
 class QTreeWidgetItem;
 
-class FBrowser : public QWidget {
+class FLEX_API FBrowser : public QWidget {
 	Q_OBJECT
 public:
 	FBrowser( QWidget* parent = 0 );

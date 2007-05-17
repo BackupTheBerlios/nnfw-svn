@@ -19,6 +19,7 @@
 
 #ifndef LINKERRENDERER_H
 #define LINKERRENDERER_H
+#include "types.h"
 
 #include "linkerrenderer.h"
 #include <QGraphicsItem>
@@ -26,7 +27,7 @@
 
 class ClusterRenderer;
 
-class LinkerRenderer : public QGraphicsItem {
+class FLEX_API LinkerRenderer : public QGraphicsItem {
 public:
 	LinkerRenderer(ClusterRenderer *sourceNode, ClusterRenderer *destNode);
 	void adjust();

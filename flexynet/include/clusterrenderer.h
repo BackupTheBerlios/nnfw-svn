@@ -19,6 +19,7 @@
 
 #ifndef CLUSTERRENDERER_H
 #define CLUSTERRENDERER_H
+#include "types.h"
 
 #include "nnfw/cluster.h"
 #include <QGraphicsItem>
@@ -27,7 +28,7 @@
 class LinkerRenderer;
 class NNRenderer;
 
-class ClusterRenderer : public QGraphicsItem {
+class FLEX_API ClusterRenderer : public QGraphicsItem {
 public:
 	ClusterRenderer( NNRenderer* nnrenderer, nnfw::Cluster* cl );
 	

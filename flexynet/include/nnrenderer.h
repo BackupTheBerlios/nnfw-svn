@@ -19,6 +19,7 @@
 
 #ifndef NNRENDERER_H
 #define NNRENDERER_H
+#include "types.h"
 
 #include <QGraphicsView>
 #include <QMap>
@@ -29,7 +30,7 @@
 class ClusterRenderer;
 class LinkerRenderer;
 
-class NNRenderer : public QGraphicsView {
+class FLEX_API NNRenderer : public QGraphicsView {
 	Q_OBJECT
 public:
 	NNRenderer( QWidget* parent = 0 );
