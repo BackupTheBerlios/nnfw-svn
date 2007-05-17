@@ -28,8 +28,6 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QPainter>
 #include <QStyleOption>
-#include <QGLWidget>
-#include <QGLFormat>
 #include <cmath>
 
 using namespace nnfw;
@@ -44,7 +42,6 @@ NNPlotter::NNPlotter( QWidget* parent ): QGraphicsView(parent) {
  	setTransformationAnchor(NoAnchor);
  	setResizeAnchor(NoAnchor);
 	//setBackgroundBrush( QColor( 250, 250, 250 ) );
-//	setViewport(new QGLWidget( QGLFormat(QGL::SampleBuffers) ) );
 
 	scaleDisabled = true;
 	nn = 0;

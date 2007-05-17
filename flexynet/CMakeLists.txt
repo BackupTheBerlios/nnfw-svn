@@ -11,6 +11,17 @@ FILE( GLOB QTNNFW_SRCS ./src/*.cpp )
 FILE( GLOB QTNNFW_HDRS ./include/*.h )
 
 INCLUDE_DIRECTORIES( ./include )
+### Directory where Library will be installed
+SET( LIB_DIR "lib" )
+IF (UNIX)
+	### check the type of machine
+	EXEC_PROGRAM( uname ARGS -m OUTPUT_VARIABLE ARCHTYPE )
+	IF ( ARCHTYPE MATCHES "x86_64" )
+		SET( LIB_DIR "lib64" )
+	ENDIF ( ARCHTYPE MATCHES "x86_64" )
+ENDIF (UNIX)
+ADD_LIBRARY( flexynet SHARED ${QTNNFW_SRCS} )
+INSTALL( TARGETS flexynet LIBRARY DESTINATION ${LIB_DIR} )
 
 ## extracting information from nnfw-config
 EXEC_PROGRAM( nnfw-config ARGS --libs OUTPUT_VARIABLE NNFW_LIBS )
@@ -18,10 +29,8 @@ EXEC_PROGRAM( nnfw-config ARGS --cflags OUTPUT_VARIABLE NNFW_CFLAGS )
 
 ### RESOURCES
 QT4_ADD_RESOURCES( QTNNFW_SRCS "icons/icons.qrc" )
-
 ### MOC WRAPPING
 QT4_WRAP_CPP( QTNNFW_SRCS ${QTNNFW_HDRS} )
-
 ### EXE SETTING
 ADD_EXECUTABLE( qtnnfw ${QTNNFW_SRCS} )
 SET_TARGET_PROPERTIES( qtnnfw PROPERTIES COMPILE_FLAGS " ${NNFW_FLAGS}" )
@@ -32,6 +41,7 @@ TARGET_LINK_LIBRARIES( qtnnfw "QtXml" )
 TARGET_LINK_LIBRARIES( qtnnfw "QtGui" )
 TARGET_LINK_LIBRARIES( qtnnfw "QtCore" )
 
+IF (UNIX)
     MESSAGE( "-- Setting compiler for Linux" )
     SET( CMAKE_CXX_COMPILER "g++" )
     SET( CMAKE_CXX_FLAGS "-pipe -fPIC -Wall -W " )
@@ -39,4 +49,5 @@ TARGET_LINK_LIBRARIES( qtnnfw "QtCore" )
     SET( CMAKE_CXX_FLAGS_RELEASE "-O3 " )
     SET( CMAKE_CXX_FLAGS_RELWITHDEBINFO "-g -O2" )
     SET( CMAKE_CXX_FLAGS_MINSIZEREL "-O2 -Os" )
+ENDIF (UNIX)
 

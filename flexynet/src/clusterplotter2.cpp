@@ -45,7 +45,7 @@ ClusterPlotter2::ClusterPlotter2( Cluster* cl ) {
 	setFlag(ItemIsSelectable, false);
 	setAcceptsHoverEvents( true );
 	setZValue(1);
-	setToolTip( QString("Plotting of %1").arg(cl->getName()) );
+	//setToolTip( QString("Plotting of %1").arg(cl->getName()) );
 
 	ins.resize( dim );
 	lowins.resize( dim );
@@ -93,6 +93,9 @@ QPainterPath ClusterPlotter2::shape() const {
 	return path;
 }
 
+#include <QTime>
+QTime crono;
+
 void ClusterPlotter2::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
 	Q_UNUSED(option);
 	Q_UNUSED(widget);
@@ -107,14 +110,19 @@ void ClusterPlotter2::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
 	}
 
 	painter->setPen( QPen(Qt::NoPen) );
-	int skips = qMax( 1, (int)floor(2.0f / option->levelOfDetail) );
+	int steps = qMax( 1, (int)round(10.0f/(1.0f+option->levelOfDetail))-3 );
 	// plot outputs
 	for( int i=0; i<dim && showouts; i++ ) {
 		qreal m = 255.0f/( highouts[i]-lowouts[i] );
 		qreal q = -m*lowouts[i];
-		for( int r=0; r<lastPoint; r++ ) {
-			qreal v = outs[i][r];
-			painter->fillRect( r*rside, i*(rside+ymarg), rside, rside, QColor( (int)(m*v+q), 0, 0 ) );
+		for( int r=0; r<lastPoint; r=r+steps ) {
+			qreal v = 0.0f;
+			int eff = qMin( lastPoint-r, steps );
+			for( int s=0; s<eff; s++ ) {
+				v += outs[i][r+s];
+			}
+			v /= eff;
+			painter->fillRect( r*rside, i*(rside+ymarg), rside*eff, rside, QColor( (int)(m*v+q), 0, 0 ) );
 		}
 	}
 	int offset = showouts*dim*(rside+ymarg) /*+ 2*ymarg*/;
@@ -122,15 +130,20 @@ void ClusterPlotter2::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
 	for( int i=0; i<dim && showins; i++ ) {
 		qreal m = 255.0f/( highins[i]-lowins[i] );
 		qreal q = -m*lowins[i];
-		for( int r=0; r<lastPoint; r++ ) {
-			qreal v = ins[i][r];
-			painter->fillRect( r*rside, i*(rside+ymarg)+offset, rside, rside, QColor( 0, (int)(m*v+q), 0 ) );
+		for( int r=0; r<lastPoint; r=r+steps ) {
+			qreal v = 0.0f;
+			int eff = qMin( lastPoint-r, steps );
+			for( int s=0; s<eff; s++ ) {
+				v += ins[i][r+s];
+			}
+			v /= eff;
+			painter->fillRect( r*rside, i*(rside+ymarg)+offset, rside*eff, rside, QColor( 0, (int)(m*v+q), 0 ) );
 		}
 	}
 	// Legend
-	if ( legendActive && option->levelOfDetail>2.0f ) {
+	if ( legendActive && steps==1/*option->levelOfDetail>2.0f*/ ) {
 		//--- setup Gradients and Text to display
-		int h = (int)brect.height() - 10;
+		int h = (int)brect.height() - 13;
 		QLinearGradient linearGrad( QPointF(-20, 0), QPointF(-20, h) );
 		QString top; QString bot; QString val;
 		if ( legendTop ) {
@@ -164,8 +177,15 @@ void ClusterPlotter2::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
 		painter->setPen( Qt::blue );
 		painter->drawText( -20, -1, top );
 		painter->drawText( -20, (int)brect.bottom()-1, bot );
-
-		painter->drawText( legendT*rside, (legendId+1)*(rside+ymarg)+(!legendTop)*dim*(rside+ymarg)+4, val );
+		QFontMetrics fm = painter->fontMetrics();
+		QRect rec = fm.boundingRect( val );
+		rec.moveTo( legendT*rside, (legendId+1)*(rside+ymarg)+(!legendTop)*dim*(rside+ymarg)-1 );
+		rec.adjust( -1, +1, +1, -1 );
+		painter->fillRect( rec.x()+1, rec.y()+1, rec.width(), rec.height(), Qt::gray );
+		painter->fillRect( rec, Qt::white );
+		painter->drawRect( rec );
+		rec.setY( rec.y()+1 );
+		painter->drawText( rec, Qt::AlignCenter | Qt::AlignVCenter, val );
 	}
 }
 
@@ -234,15 +254,14 @@ void ClusterPlotter2::hoverMoveEvent( QGraphicsSceneHoverEvent * event ) {
 	// --- calculate the t-index, the index of data where the mouse is (the colored-rectangle)
 	int x = event->pos().toPoint().x();
 	legendT = x/rside;
-	legendActive = ( legendId >= 0 && legendId < dim && x>0 );
-
+	legendActive = ( legendId >= 0 && legendId < dim && y<((showouts*dim + showins*dim)*(rside+ymarg)) && x>0 );
 	update();
 }
 
 void ClusterPlotter2::recalcBRect() {
 	if ( !showouts && !showins ) {
 		brect = QRectF( 0, 0, lastPoint*rside, qMin( 50, 2*dim*(rside+ymarg) )/*+2*ymarg*/ )
-					.adjusted(-23,-3,+3,+3);
+					.adjusted(-23,-6,+3,+6);
 	} else {
 		brect = QRectF( 0, 0, lastPoint*rside, (showouts*dim + showins*dim)*(rside+ymarg)/*+2*ymarg*/ )
 					.adjusted(-23,-6,+3,+6);
