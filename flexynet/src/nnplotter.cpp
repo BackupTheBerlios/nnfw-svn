@@ -93,7 +93,9 @@ void NNPlotter::updatePlots() {
 		pls[i]->setPos( 0, prevoff );
 		prevoff += pls[i]->boundingRect().height()+10;
 	}
-	scene()->setSceneRect( scene()->itemsBoundingRect() );
+	scene()->setSceneRect( scene()->itemsBoundingRect().adjusted(-20,-20,+20,+20) );
+	QRectF rec( scene()->sceneRect().topRight(), QSizeF( 10, scene()->sceneRect().height() ) );
+	ensureVisible( rec );
 	scene()->update();
 }
 
@@ -108,6 +110,12 @@ void NNPlotter::updatePositions() {
 	}
 	scene()->setSceneRect( scene()->itemsBoundingRect().adjusted(-20,-20,+20,+20) );
 	scene()->update();
+}
+
+void NNPlotter::resetToZero() {
+	foreach( ClusterPlotter2* c, pls ) {
+		c->resetToZero();
+	}
 }
 
 

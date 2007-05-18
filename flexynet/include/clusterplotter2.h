@@ -39,16 +39,16 @@ public:
 	QRectF boundingRect() const;
 	QPainterPath shape() const;
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-	//! reset the plot zeroing all data registered so far
-	void resetToZero();
-	//! update the plot
-	void updatePlot();
 
 public slots:
 	//! show/hide outputs plot
 	void showOutputs( bool );
 	//! show/hide inputs plot
 	void showInputs( bool );
+	//! reset the plot zeroing all data registered so far
+	void resetToZero();
+	//! update the plot
+	void updatePlot();
 
 signals:
 	//! emitted when the height change

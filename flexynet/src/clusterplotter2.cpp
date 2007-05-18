@@ -192,11 +192,11 @@ void ClusterPlotter2::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
 void ClusterPlotter2::resetToZero() {
 	for( int i=0; i<dim; i++ ) {
 		ins[i].resize( 0 );
-		lowins[i] = 0.0f;
-		highins[i] = 0.0f;
+		lowins[i] = -0.1f;
+		highins[i] = +0.1f;
 		outs[i].resize(0);
-		lowouts[i] = 0.0f;
-		highouts[i] = 0.0f;
+		lowouts[i] = -0.1f;
+		highouts[i] = +0.1f;
 	}
 	lastPoint = 0;
 }
@@ -254,7 +254,9 @@ void ClusterPlotter2::hoverMoveEvent( QGraphicsSceneHoverEvent * event ) {
 	// --- calculate the t-index, the index of data where the mouse is (the colored-rectangle)
 	int x = event->pos().toPoint().x();
 	legendT = x/rside;
-	legendActive = ( legendId >= 0 && legendId < dim && y<((showouts*dim + showins*dim)*(rside+ymarg)) && x>0 );
+	legendActive = ( legendId >= 0 && legendId < dim && 
+					 y<((showouts*dim + showins*dim)*(rside+ymarg)) &&
+					 x>0 && x<(rside*lastPoint) );
 	update();
 }
 

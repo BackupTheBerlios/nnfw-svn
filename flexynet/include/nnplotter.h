@@ -45,6 +45,8 @@ public slots:
 	void updatePlots();
 	//! update positions
 	void updatePositions();
+	//! Reset all plot to zero
+	void resetToZero();
 
 protected:
 	void keyPressEvent(QKeyEvent *event);

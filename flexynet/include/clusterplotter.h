@@ -38,18 +38,18 @@ public:
 	QRectF boundingRect() const;
 	QPainterPath shape() const;
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-	//! reset the plot zeroing all data registered so far
-	void resetToZero();
-	//! update the plot
-	void updatePlot();
-	//! resize the plots in such way that each plots fit the height specified
-	//void fitToHeight( qreal hf );
 
 public slots:
 	//! show/hide outputs plot
 	void showOutputs( bool );
 	//! show/hide inputs plot
 	void showInputs( bool );
+	//! reset the plot zeroing all data registered so far
+	void resetToZero();
+	//! update the plot
+	void updatePlot();
+	//! resize the plots in such way that each plots fit the height specified
+	//void fitToHeight( qreal hf );
 
 signals:
 	//! emitted when the height change
