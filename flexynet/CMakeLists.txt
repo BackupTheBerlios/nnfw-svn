@@ -23,6 +23,10 @@ IF (UNIX)
 	ENDIF ( ARCHTYPE MATCHES "x86_64" )
 ENDIF (UNIX)
 
+## extracting information from nnfw-config
+EXEC_PROGRAM( nnfw-config ARGS --libs OUTPUT_VARIABLE NNFW_LIBS )
+EXEC_PROGRAM( nnfw-config ARGS --cflags OUTPUT_VARIABLE NNFW_CFLAGS )
+
 ####################### FLEYNET LIBRARY ################
 ### MOC WRAPPING
 QT4_WRAP_CPP( FLEXLIB_SRCS ${FLEXLIB_HDRS} )
@@ -31,9 +35,6 @@ SET_TARGET_PROPERTIES( flexynet PROPERTIES COMPILE_FLAGS " ${NNFW_FLAGS}" )
 SET_TARGET_PROPERTIES( flexynet PROPERTIES LINK_FLAGS "${NNFW_LIBS}" )
 
 ####################### FLEYNET APPLICATION ############
-## extracting information from nnfw-config
-EXEC_PROGRAM( nnfw-config ARGS --libs OUTPUT_VARIABLE NNFW_LIBS )
-EXEC_PROGRAM( nnfw-config ARGS --cflags OUTPUT_VARIABLE NNFW_CFLAGS )
 ### RESOURCES
 QT4_ADD_RESOURCES( FLEXBIN_SRCS "icons/icons.qrc" )
 ### MOC WRAPPING
