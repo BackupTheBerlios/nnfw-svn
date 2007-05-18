@@ -17,57 +17,16 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA  *
  ********************************************************************************/
 
-#ifndef LEARNINGALGORITHM_H
-#define LEARNINGALGORITHM_H
-
-/*! \file
- */
-
-#include "types.h"
+#include "backpropagationalgo.h"
 
 namespace nnfw {
 
-class BaseNeuralNet;
+BackPropagationAlgo::BackPropagationAlgo( BaseNeuralNet* net ) {
 
-/*! \brief LearningAlgorithm object
- *
- *  The LearningAlgorithm object is a the abstract class from which to implement learning algorithms
- */
-class NNFW_API LearningAlgorithm {
-public:
-	/*! \name Constructors */
-	//@{
-
-    //! Constructor
-    LearningAlgorithm( BaseNeuralNet* net );
-    //! Destructor
-    virtual ~LearningAlgorithm();
-
-	//@}
-	/*! \name Interface */
-	//@{
-
-	//! Return the BaseNeuralNet setted
-	BaseNeuralNet* net() {
-		return netp;
-	};
-    //! Modify the object
-    virtual void learn() = 0;
-
-	/*! Configure a VectorModifier for learning the Cluster's property specified
-	 *  \param c Cluster to learn
-	 *  \param propname the property of Cluster to be learned (it must be a RealVec)
-	 *  \param vm the VectorModifier that modify the propname of Cluster specified
-	 */
-	void setVectorModifier( Cluster* c, const char* propname, const VectorModifer& vm );
-
-	//@}
-
-private:
-	BaseNeuralNet* net;
-};
-
+BackPropagationAlgo::~BackPropagationAlgo() {
 }
 
-#endif
+void BackPropagationAlgo::learn() {
+}
 
+}
