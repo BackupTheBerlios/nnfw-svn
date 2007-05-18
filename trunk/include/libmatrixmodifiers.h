@@ -66,7 +66,7 @@ public:
     virtual void modify();
 
     //! Get the input vector
-	RealVec& getInputVector(){
+	RealVec& inputVector() const {
 		return inp;
 	};
 
@@ -77,7 +77,7 @@ public:
 	};
 
     //! Get the output vector
-	RealVec& getOutputVector(){
+	RealVec& outputVector() const {
 		return out;
 	};
 
@@ -88,13 +88,18 @@ public:
 	};
 
     //! Get the learning rate vector
-	Real getLearningRate(){
+	Real learningRate() const {
 		return lr;
 	};
 
     //! Set the learning rate vector
 	void setLearningRate( Real lRate ) {
 		lr = lRate;	
+	};
+
+	//! Clone this object
+	BasicMatrixModifier* clone() const {
+		return new BasicMatrixModifier( matrix(), inp, out, lr );
 	};
 
 	//@}
@@ -129,6 +134,11 @@ public:
     //! Modify only the existing connections according to the simple Hebb rule
     virtual void modify();
 
+	//! Clone this object
+	SparseMatrixModifier* clone() const {
+		return new SparseMatrixModifier( matrix(), inputVector(), outputVector(), mask, learningRate() );
+	};
+
 private:
 	//! The mask for existing connections
 	MatrixData<bool>& mask;
@@ -153,7 +163,7 @@ public:
     ~SparseCovarianceMatrixModifier() { /* Nothing to do */ };
 
 	//! Get the meanInput vector
-	RealVec& getMeanInputVector(){
+	RealVec& meanInputVector() const {
 		return mInp;
 	};
 
@@ -164,7 +174,7 @@ public:
 	};
 
     //! Get the meanOutput vector
-	RealVec& getMeanOutputVector(){
+	RealVec& meanOutputVector() const {
 		return mOut;
 	};
 
@@ -177,6 +187,11 @@ public:
     //! Modify only the existing connections according to the simple Hebb rule
     virtual void modify();
 
+	//! Clone this object
+	SparseCovarianceMatrixModifier* clone() const {
+		return new SparseCovarianceMatrixModifier( matrix(), inputVector(), outputVector(), mask, mInp, mOut, learningRate() );
+	};
+
 private:
 	//! The mask for existing connections
 	MatrixData<bool>& mask;
@@ -185,7 +200,6 @@ private:
 	//! The mean output activation vector
 	RealVec& mOut;
 };
-
 
 }
 

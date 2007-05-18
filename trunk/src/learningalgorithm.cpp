@@ -19,6 +19,7 @@
 
 #include "neuralnet.h"
 #include "learningalgorithm.h"
+#include "message.h"
 
 namespace nnfw {
 
@@ -27,6 +28,86 @@ LearningAlgorithm::LearningAlgorithm( BaseNeuralNet* net ) {
 }
 
 LearningAlgorithm::~LearningAlgorithm() {
+}
+
+void LearningAlgorithm::setVectorModifier( Cluster* c, const char* propname, const VectorModifier& vm ) {
+	if ( cmods.find(c) != cmods.end() ) {
+		Modifier* m = cmods[c];
+		cmods[c] = vm.clone();
+		delete m;
+	} else {
+		cmods[c] = vm.clone();
+	}
+#ifdef NNFW_DEBUG
+	Variant v = c->property( propname );
+	if ( v.type() != Variant::t_realvec ) {
+		nnfwMessage( NNFW_ERROR, "The property specified in setVectorModifier is not a RealVec or doesn't exist in Cluster passed; operation ignored" );
+	} else {
+		cmods[c]->setVector( *(v.getRealVec()) );
+	}
+#else
+	cmods[c]->setVector( *(c->property( propname ).getRealVec()) );
+#endif
+}
+
+void LearningAlgorithm::setMatrixModifier( Cluster* c, const char* propname, const MatrixModifier& mm ) {
+	if ( cmods.find(c) != cmods.end() ) {
+		Modifier* m = cmods[c];
+		cmods[c] = mm.clone();
+		delete m;
+	} else {
+		cmods[c] = mm.clone();
+	}
+#ifdef NNFW_DEBUG
+	Variant v = c->property( propname );
+	if ( v.type() != Variant::t_realmat ) {
+		nnfwMessage( NNFW_ERROR, "The property specified in setMatrixModifier is not a RealMat or doesn't exist in Cluster passed; operation ignored" );
+	} else {
+		cmods[c]->setMatrix( *(v.getRealMat()) );
+	}
+#else
+	cmods[c]->setVector( *(c->property( propname ).getRealMat()) );
+#endif
+}
+
+void LearningAlgorithm::setVectorModifier( Linker* c, const char* propname, const VectorModifier& vm ) {
+	if ( lmods.find(c) != lmods.end() ) {
+		Modifier* m = lmods[c];
+		lmods[c] = vm.clone();
+		delete m;
+	} else {
+		lmods[c] = vm.clone();
+	}
+#ifdef NNFW_DEBUG
+	Variant v = c->property( propname );
+	if ( v.type() != Variant::t_realvec ) {
+		nnfwMessage( NNFW_ERROR, "The property specified in setVectorModifier is not a RealVec or doesn't exist in Linker passed; operation ignored" );
+	} else {
+		lmods[c]->setVector( *(v.getRealVec()) );
+	}
+#else
+	lmods[c]->setVector( *(c->property( propname ).getRealVec()) );
+#endif
+}
+
+void LearningAlgorithm::setMatrixModifier( Linker* c, const char* propname, const MatrixModifier& mm ) {
+	if ( lmods.find(c) != lmods.end() ) {
+		Modifier* m = lmods[c];
+		lmods[c] = mm.clone();
+		delete m;
+	} else {
+		lmods[c] = mm.clone();
+	}
+#ifdef NNFW_DEBUG
+	Variant v = c->property( propname );
+	if ( v.type() != Variant::t_realmat ) {
+		nnfwMessage( NNFW_ERROR, "The property specified in setMatrixModifier is not a RealMat or doesn't exist in Linker passed; operation ignored" );
+	} else {
+		lmods[c]->setVector( *(v.getRealMat()) );
+	}
+#else
+	lmods[c]->setVector( *(c->property( propname ).getRealMat()) );
+#endif
 }
 
 }

@@ -24,6 +24,7 @@
  */
 
 #include "types.h"
+#include "learningalgorithm.h"
 
 namespace nnfw {
 

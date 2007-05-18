@@ -24,6 +24,7 @@
  */
 
 #include "types.h"
+#include "clonable.h"
 
 namespace nnfw {
 
@@ -31,7 +32,7 @@ namespace nnfw {
  *
  *  The modifier object is a the basic building blok for any kind of learning algorithm
  */
-class NNFW_API Modifier {
+class NNFW_API Modifier : public Clonable {
 public:
 	/*! \name Constructors */
 	//@{
@@ -74,7 +75,7 @@ public:
     virtual void modify() = 0;
     
 	//! Get the matrix
-	RealMat& getMatrix(){
+	RealMat& matrix() const {
 		return m;
 	};
     
@@ -113,7 +114,7 @@ public:
     virtual void modify() = 0;
     
 	//! Get the vector
-	RealVec& getVector(){
+	RealVec& vector() const {
 		return v;
 	};
     

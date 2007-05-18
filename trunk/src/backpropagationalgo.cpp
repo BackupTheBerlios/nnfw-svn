@@ -21,7 +21,9 @@
 
 namespace nnfw {
 
-BackPropagationAlgo::BackPropagationAlgo( BaseNeuralNet* net ) {
+BackPropagationAlgo::BackPropagationAlgo( BaseNeuralNet* net )
+	: LearningAlgorithm(net) {
+}
 
 BackPropagationAlgo::~BackPropagationAlgo() {
 }
