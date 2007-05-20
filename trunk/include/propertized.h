@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2007 Gianluca Massera <emmegian@yahoo.it>                     *
+ *  Copyright (C) 2005-2007 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -116,9 +116,9 @@ public:
     //! return the const char* (constant string) value
     const char* getString() const;
     //! return the RealVec value
-    const RealVec* getRealVec() const;
+    RealVec* getRealVec() const;
     //! return the RealMat value
-    const RealMat* getRealMat() const;
+    RealMat* getRealMat() const;
     //! return the OutputFunction value
     OutputFunction* getOutputFunction() const;
     //! return the Cluster value

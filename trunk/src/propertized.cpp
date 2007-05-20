@@ -184,12 +184,12 @@ const char* Variant::getString() const {
     return dstring;
 }
 
-const RealVec* Variant::getRealVec() const {
+RealVec* Variant::getRealVec() const {
     checkType( t_realvec );
     return drealvec;
 }
 
-const RealMat* Variant::getRealMat() const {
+RealMat* Variant::getRealMat() const {
     checkType( t_realmat );
     return drealmat;
 }

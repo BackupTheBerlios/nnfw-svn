@@ -49,6 +49,9 @@ public:
     //! Modify the object
     virtual void modify() = 0;
 
+	//! Clone
+	virtual Modifier* clone() const = 0;
+
 	//@}
 };
 

@@ -19,7 +19,6 @@
 
 #include "neuralnet.h"
 #include "learningalgorithm.h"
-#include "message.h"
 
 namespace nnfw {
 
@@ -43,10 +42,10 @@ void LearningAlgorithm::setVectorModifier( Cluster* c, const char* propname, con
 	if ( v.type() != Variant::t_realvec ) {
 		nnfwMessage( NNFW_ERROR, "The property specified in setVectorModifier is not a RealVec or doesn't exist in Cluster passed; operation ignored" );
 	} else {
-		cmods[c]->setVector( *(v.getRealVec()) );
+		((VectorModifier*)cmods[c])->setVector( *(v.getRealVec()) );
 	}
 #else
-	cmods[c]->setVector( *(c->property( propname ).getRealVec()) );
+	((VectorModifier*)cmods[c])->setVector( *(c->property( propname ).getRealVec()) );
 #endif
 }
 
@@ -63,10 +62,10 @@ void LearningAlgorithm::setMatrixModifier( Cluster* c, const char* propname, con
 	if ( v.type() != Variant::t_realmat ) {
 		nnfwMessage( NNFW_ERROR, "The property specified in setMatrixModifier is not a RealMat or doesn't exist in Cluster passed; operation ignored" );
 	} else {
-		cmods[c]->setMatrix( *(v.getRealMat()) );
+		((MatrixModifier*)cmods[c])->setMatrix( *(v.getRealMat()) );
 	}
 #else
-	cmods[c]->setVector( *(c->property( propname ).getRealMat()) );
+	((MatrixModifier*)cmods[c])->setMatrix( *(c->property( propname ).getRealMat()) );
 #endif
 }
 
@@ -83,10 +82,10 @@ void LearningAlgorithm::setVectorModifier( Linker* c, const char* propname, cons
 	if ( v.type() != Variant::t_realvec ) {
 		nnfwMessage( NNFW_ERROR, "The property specified in setVectorModifier is not a RealVec or doesn't exist in Linker passed; operation ignored" );
 	} else {
-		lmods[c]->setVector( *(v.getRealVec()) );
+		((VectorModifier*)lmods[c])->setVector( *(v.getRealVec()) );
 	}
 #else
-	lmods[c]->setVector( *(c->property( propname ).getRealVec()) );
+	((VectorModifier*)lmods[c])->setVector( *(c->property( propname ).getRealVec()) );
 #endif
 }
 
@@ -103,10 +102,10 @@ void LearningAlgorithm::setMatrixModifier( Linker* c, const char* propname, cons
 	if ( v.type() != Variant::t_realmat ) {
 		nnfwMessage( NNFW_ERROR, "The property specified in setMatrixModifier is not a RealMat or doesn't exist in Linker passed; operation ignored" );
 	} else {
-		lmods[c]->setVector( *(v.getRealMat()) );
+		((MatrixModifier*)lmods[c])->setMatrix( *(v.getRealMat()) );
 	}
 #else
-	lmods[c]->setVector( *(c->property( propname ).getRealMat()) );
+	((MatrixModifier*)lmods[c])->setMatrix( *(c->property( propname ).getRealMat()) );
 #endif
 }
 
