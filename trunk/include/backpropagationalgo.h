@@ -45,10 +45,28 @@ public:
 	/*! \name Interface */
 	//@{
 
-    //! Modify the object
+	//! Set the global learning rate
+	void setLearnRate( Real lr ) {
+		lrate = lr;
+	};
+	//! return the learning rate setted
+	Real learningRate() {
+		return lrate;
+	};
+	/*! Initialize BackPropagation algorithm; in details, it prepare internal structure in order to
+	 *  apply the backpropagation of error through the modifier configured by setVector/setMatrix methods
+	 *  of LearningAlgorithm class, and it resets all previous states.<br>
+	 *  This method must be called everytime you change the modifier associated with Clusters and Linkers and
+	 *  when the BaseNeuralNet associated has been changed.
+	 */
+	void init();
+    //! Modify the object using the BackPropagation Algorithm
     virtual void learn();
 
 	//@}
+private:
+	//! learning rate
+	Real lrate;
 };
 
 }

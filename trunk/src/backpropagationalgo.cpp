@@ -18,6 +18,7 @@
  ********************************************************************************/
 
 #include "backpropagationalgo.h"
+#include <stack>
 
 namespace nnfw {
 
@@ -26,6 +27,9 @@ BackPropagationAlgo::BackPropagationAlgo( BaseNeuralNet* net )
 }
 
 BackPropagationAlgo::~BackPropagationAlgo() {
+}
+
+void BackPropagationAlgo::init() {
 }
 
 void BackPropagationAlgo::learn() {

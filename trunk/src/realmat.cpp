@@ -85,6 +85,30 @@ RealVec& RealMat::mul( RealVec& y, const RealMat& m, const RealVec& x ) {
     return y;
 }
 
+RealMat& RealMat::deltarule( Real rate, const RealVec& x, const RealVec& y ) {
+#ifdef NNFW_USE_MKL
+    Real* mRaw = rawdata().rawdata();
+    Real* xRaw = x.rawdata();
+    Real* yRaw = y.rawdata();
+#ifndef NNFW_DOUBLE_PRECISION
+    cblas_sgemm( CblasRowMajor, CblasNoTrans, CblasNoTrans,
+                rows(), cols(), 1, rate, xRaw, 1, yRaw, cols(), 1.0f, mRaw, cols() );
+#else
+    cblas_dgemm( CblasRowMajor, CblasNoTrans, CblasNoTrans,
+                rows(), cols(), 1, rate, xRaw, 1, yRaw, cols(), 1.0f, mRaw, cols() );
+#endif
+	return (*this);
+#else
+	RealMat& self = *this;
+	for ( u_int r=0; r<rows(); r++ ) {
+		for ( u_int c=0; c<cols(); c++ ) {
+			self[r][c] += rate * x[r] * y[c];
+		}
+	}
+	return self;
+#endif
+}
+
 
     // ****************************
     // *** MATH FUNCTION **********

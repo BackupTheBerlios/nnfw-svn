@@ -179,6 +179,14 @@ public:
      */
     static RealVec& mul( RealVec& y, const RealMat& m, const RealVec& x );
 
+	/*! Delta-Rule: m += rate * x * y<br>
+	 *  It return itself
+	 *  \param rate is the factor of multiplicaton
+	 *  \param x is the first vector, its dimension have to be the same of matrix's rows
+	 *  \param y is the second vector, its dimension have to be the same of matrix's columns
+	 */
+	RealMat& deltarule( Real rate, const RealVec& x, const RealVec& y );
+
     //@}
     /*! \name Matrix-Matrix Operators */
     //@{

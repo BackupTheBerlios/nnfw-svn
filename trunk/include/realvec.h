@@ -306,20 +306,6 @@ public:
 		}
 	}
 
-    //@}
-    /*! \name Vector-Vector Operators */
-    //@{
-
-    /*! Outer Product: m += x'*y
-     *  \param m the matrix result of multiplication
-     *  \param x the first vector
-     *  \param y the second vector
-     *  \return the matrix m
-     */ 
-    static RealMat& mul( RealMat& m, const RealVec& x, const RealVec& y );
-
-    //@}
-	
     /*! Create all the binary vectors of a given dimension
      */
 	static void createAllBinaries( RealVec* vector, unsigned long int pats, u_int dims );
@@ -328,6 +314,35 @@ public:
      */
 	static Real mse( const RealVec& target, const RealVec& actual );
 
+	/*! Delta-Rule: r += rate * x * y<br>
+	 *  Add to itselt the scaled by rate of the element-by-element multiplication of x with y
+	 *  \param rate is the scaling factor of multiplication
+	 *  \param x is the first vector
+	 *  \param y is the second vector
+	 */
+	RealVec& deltarule( Real rate, const RealVec& x, const RealVec& y ) {
+		for( u_int i=0; i<vsize; i++ ) {
+			data[i] += rate*x[i]*y[i];
+		}
+		return (*this);
+	};
+
+    //@}
+    /*! \name Vector-Vector Operators */
+    //@{
+
+    /*! Outer Product: m += x'*y<br>
+	 *  The x vector will be taken as a matrix of Rx1 dimension and y as a matrix of 1xC dimension,
+	 *  where RxC is the dimension of m<br>
+     *  \param m the matrix result of multiplication
+     *  \param x the first vector; the dimesion must be the same of matrix's rows
+     *  \param y the second vector; the dimension must be the same of matrix's columns
+     *  \return the matrix m 
+     */ 
+    static RealMat& outprod( RealMat& m, const RealVec& x, const RealVec& y );
+
+    //@}
+	
 
 protected:
 

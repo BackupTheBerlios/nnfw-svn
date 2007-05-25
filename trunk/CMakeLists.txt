@@ -98,8 +98,12 @@ IF (UNIX)
     STRING( REPLACE "/" "\\/" PREF "${CMAKE_INSTALL_PREFIX}" )
     ## CFLAGS
     IF ( NNFW_CONFIG MATCHES double )
-        SET( CFL " -DNNFW_DOUBLE_PRECISION " )
+        SET( CFLA " -DNNFW_DOUBLE_PRECISION " )
     ENDIF ( NNFW_CONFIG MATCHES double )
+    IF ( NNFW_CONFIG MATCHES mkl )
+		SET( CFLA "${CFLA} -I${MKL_PATH}" )
+	ENDIF ( NNFW_CONFIG MATCHES mkl )
+	STRING( REPLACE "/" "\\/" CFL "${CFLA}" )
     ## Library
     IF ( NNFW_CONFIG MATCHES mkl )
         SET( LFLA "-Wl,-rpath,${MKL_PATH}/../lib/32 -L${MKL_PATH}/../lib/32 -lmkl_ia32 -lmkl -lvml -lguide" )

@@ -104,24 +104,24 @@ Real RealVec::norm() {
 #endif
 }
 
-RealMat& RealVec::mul( RealMat& m, const RealVec& x, const RealVec& y ) {
+RealMat& RealVec::outprod( RealMat& m, const RealVec& x, const RealVec& y ) {
 #ifdef NNFW_USE_MKL
     Real* mRaw = m.rawdata().rawdata();
     Real* xRaw = x.rawdata();
     Real* yRaw = y.rawdata();
 #ifndef NNFW_DOUBLE_PRECISION
-    cblas_sgemm( CblasRowMajor, CblasTrans, CblasNoTrans,
-                m.rows(), m.cols(), 1, 1.0f, xRaw, m.rows(), yRaw, m.cols(), 1.0f, mRaw, m.cols() );
+    cblas_sgemm( CblasRowMajor, CblasNoTrans, CblasNoTrans,
+                m.rows(), m.cols(), 1, 1.0f, xRaw, 1, yRaw, m.cols(), 1.0f, mRaw, m.cols() );
 #else
-    cblas_dgemm( CblasRowMajor, CblasTrans, CblasNoTrans,
-                m.rows(), m.cols(), 1, 1.0f, xRaw, m.rows(), yRaw, m.cols(), 1.0f, mRaw, m.cols() );
+    cblas_dgemm( CblasRowMajor, CblasNoTrans, CblasNoTrans,
+                m.rows(), m.cols(), 1, 1.0f, xRaw, 1, yRaw, m.cols(), 1.0f, mRaw, m.cols() );
 #endif
 #else
-    for( u_int j = 0; j<y.size(); j++ ) {
-        for( u_int i = 0; i<x.size(); i++ ) {
-            m[j][i] +=  x[i] * y[j];
-        }
-    }
+	for ( u_int r=0; r<m.rows(); r++ ) {
+		for ( u_int c=0; c<m.cols(); c++ ) {
+			m[r][c] += x[r] * y[c];
+		}
+	}
 #endif
     return m;
 }
