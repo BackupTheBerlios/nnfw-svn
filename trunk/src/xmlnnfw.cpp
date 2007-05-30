@@ -35,17 +35,14 @@ namespace nnfw {
 void parseProperty_10( QDomElement cur, const Propertized* obj ) {
     AbstractPropertyAccess* pacc = obj->propertySearch( cur.tagName().toAscii().constData() );
     if ( !pacc ) {
-        char msg[100];
-        sprintf( msg, "the property %s doesn't exist in %s",
-                cur.tagName().toAscii().constData(), obj->getTypename().getString() );
-        nnfwMessage( NNFW_ERROR, msg );
+        nError() << "the property " << cur.tagName().toAscii().constData() << " doesn't exist in "
+                 << obj->getTypename().getString();
+		return;
     }
     // --- check if it's writable
     if ( !pacc->isWritable() ) {
-        char msg[100];
-        sprintf( msg, "Attempt to set the read-only property %s",
-                cur.tagName().toAscii().constData() );
-        nnfwMessage( NNFW_ERROR, msg );
+        nError() << "Attempt to set the read-only property " << cur.tagName().toAscii().constData();
+		return;
     }
     // --- check if it's a Vector Property
     int index = -1;
@@ -53,10 +50,9 @@ void parseProperty_10( QDomElement cur, const Propertized* obj ) {
         // at the moment, it's mandatory to speficy the index with attribute 'i'
         QString is = cur.attribute( "i" );
         if ( is.isNull() ) {
-            char msg[100];
-            sprintf( msg, "the property %s is a vector and you have to specify the attribute 'i'",
-                    cur.tagName().toAscii().constData() );
-            nnfwMessage( NNFW_ERROR, msg );
+            nError() << "the property " << cur.tagName().toAscii().constData()
+					 << " is a vector and you have to specify the attribute 'i'";
+			return;
         }
         index = is.toInt();
     }
@@ -74,7 +70,7 @@ void parseProperty_10( QDomElement cur, const Propertized* obj ) {
     Propertized* sub = 0; // --- when != 0 then it'll recursively call parseProperty_10 onto sub's child nodes
     switch( pacc->type() ) {
     case Variant::t_null:
-        nnfwMessage( NNFW_WARNING, "Setting a Null type Variant" );
+        nWarning() << "Setting a Null type Variant" ;
         break;
     case Variant::t_real:
 #ifdef NNFW_DOUBLE_PRECISION
@@ -127,7 +123,7 @@ void parseProperty_10( QDomElement cur, const Propertized* obj ) {
         rows = vmat->rows();
         cols = vmat->cols();
         if ( list.size() != rows*cols ) {
-            nnfwMessage( NNFW_ERROR, "Wrong RealMat dimension" );
+            nError() << "Wrong RealMat dimension; passed: " << list.size() << "; expected: " << rows*cols;
             return;
         }
         mat.resize( rows, cols );
@@ -159,7 +155,7 @@ void parseProperty_10( QDomElement cur, const Propertized* obj ) {
         break;
     case Variant::t_cluster:
     case Variant::t_linker:
-        nnfwMessage( NNFW_ERROR, "Cluster and Linker are own tags" );
+        nError() << "Cluster and Linker are own tags" ;
         return;
     case Variant::t_propertized:
         type = cur.attribute( "type" );
@@ -182,9 +178,8 @@ void parseProperty_10( QDomElement cur, const Propertized* obj ) {
         ok = pacc->set( ret );
     }
     if ( !ok ) {
-        char msg[100];
-        sprintf( msg, "There was an error settings the property %s", cur.tagName().toAscii().constData() );
-        nnfwMessage( NNFW_ERROR, msg );
+		nError() << "There was an error settings the property " << cur.tagName().toAscii().constData();
+		return;
     }
     if ( sub ) {
         // --- re-get again because the value passed by Variant is temporary
@@ -222,15 +217,18 @@ void parseCluster_10( QDomElement cur, BaseNeuralNet* net ) {
     // --- parsing tag <cluster>
     QString name = cur.attribute( "name" );
     if ( name.isNull() ) {
-        nnfwMessage( NNFW_ERROR, "attribute name of <cluster> is mandatory" );
+        nError() << "attribute name of <cluster> is mandatory" ;
+		return;
     }
     QString type = cur.attribute( "type" );
     if ( type.isNull() ) {
-        nnfwMessage( NNFW_ERROR, "attribute type of <cluster> is mandatory" );
+        nError() << "attribute type of <cluster> is mandatory" ;
+		return;
     }
     QString size = cur.attribute( "size" );
     if ( size.isNull() ) {
-        nnfwMessage( NNFW_ERROR, "attribute size of <cluster> is mandatory" );
+        nError() << "attribute size of <cluster> is mandatory" ;
+		return;
     }
     PropertySettings prop;
     prop["name"] = name.toAscii().constData();
@@ -251,7 +249,8 @@ void parseCluster_10( QDomElement cur, BaseNeuralNet* net ) {
             QString min = e.attribute( "min" );
             QString max = e.attribute( "max" );
             if ( min.isNull() || max.isNull() ) {
-                nnfwMessage( NNFW_ERROR, "attributes min and max are mandatory in <randomize> tag" );
+                nError() << "attributes min and max are mandatory in <randomize> tag" ;
+				continue;
             }
 #ifdef NNFW_DOUBLE_PRECISION
             double minV = min.toDouble();
@@ -273,30 +272,36 @@ void parseLinker_10( QDomElement cur, BaseNeuralNet* net ) {
     // --- parsing tag <linker>
     QString name = cur.attribute( "name" );
     if ( name.isNull() ) {
-        nnfwMessage( NNFW_ERROR, "attribute name of <linker> is mandatory" );
+        nError() << "attribute name of <linker> is mandatory" ;
+		return;
     }
     QString type = cur.attribute( "type" );
     if ( type.isNull() ) {
-        nnfwMessage( NNFW_ERROR, "attribute type of <linker> is mandatory" );
+        nError() << "attribute type of <linker> is mandatory" ;
+		return;
     }
     QString from = cur.attribute( "from" );
     if ( from.isNull() ) {
-        nnfwMessage( NNFW_ERROR, "attribute from of <linker> is mandatory" );
+        nError() << "attribute from of <linker> is mandatory" ;
+		return;
     }
     QString to = cur.attribute( "to" );
     if ( to.isNull() ) {
-        nnfwMessage( NNFW_ERROR, "attribute to of <linker> is mandatory" );
+        nError() << "attribute to of <linker> is mandatory" ;
+		return;
     }
     PropertySettings prop;
     prop["name"] = name.toAscii().constData();
     Cluster* fromcl = (Cluster*)( net->getByName( from.toAscii().constData() ) );
     if ( !fromcl ) {
-        nnfwMessage( NNFW_ERROR, "the 'from' Cluster doesn't exist; creation of linker skipped" );
+        nError() << "the 'from' Cluster doesn't exist; creation of linker "
+				 << name.toAscii().constData() << "skipped" ;
         return;
     }
     Cluster* tocl = (Cluster*)( net->getByName( to.toAscii().constData() ) );
     if ( !tocl ) {
-        nnfwMessage( NNFW_ERROR, "the 'to' Cluster doesn't exist; creation of linker skipped" );
+        nError() << "the 'to' Cluster doesn't exist; creation of linker "
+				 << name.toAscii().constData() << " skipped" ;
         return;
     }
     prop["from"] = fromcl;
@@ -317,7 +322,8 @@ void parseLinker_10( QDomElement cur, BaseNeuralNet* net ) {
             QString min = e.attribute( "min" );
             QString max = e.attribute( "max" );
             if ( min.isNull() || max.isNull() ) {
-                nnfwMessage( NNFW_ERROR, "attributes min and max are mandatory in <randomize> tag" );
+                nError() << "attributes min and max are mandatory in <randomize> tag" ;
+				continue;
             }
 #ifdef NNFW_DOUBLE_PRECISION
             double minV = min.toDouble();
@@ -344,9 +350,8 @@ void parseOrder_10( QDomElement cur, BaseNeuralNet* net ) {
         if ( up ) {
             ord << up;
         } else {
-            char msg[100];
-            sprintf( msg, "The Updatable %s specified in <order> doesn't exists", list[i].toAscii().constData() );
-            nnfwMessage( NNFW_ERROR, msg );
+            nWarning() << "The Updatable " << list[i].toAscii().constData() 
+					   << " specified in <order> doesn't exists";
         }
     }
     net->setOrder( ord );
@@ -360,9 +365,8 @@ void parseOutputs_10( QDomElement cur, BaseNeuralNet* net ) {
         if ( up ) {
             net->markAsOutput( up );
         } else {
-            char msg[100];
-            sprintf( msg, "The Cluster %s specified in <outputs> doesn't exists", list[i].toAscii().constData() );
-            nnfwMessage( NNFW_ERROR, msg );
+            nWarning() << "The Cluster %s " << list[i].toAscii().constData()
+					   << " specified in <outputs> doesn't exists";
         }
     }
 }
@@ -375,9 +379,8 @@ void parseInputs_10( QDomElement cur, BaseNeuralNet* net ) {
         if ( up ) {
             net->markAsInput( up );
         } else {
-            char msg[100];
-            sprintf( msg, "The Cluster %s specified in <inputs> doesn't exists", list[i].toAscii().constData() );
-            nnfwMessage( NNFW_ERROR, msg );
+            nWarning() << "The Cluster %s " << list[i].toAscii().constData()
+					   << " specified in <inpputs> doesn't exists";
         }
     }
 }
@@ -386,13 +389,13 @@ void parseConfigure_10( QDomElement cur, BaseNeuralNet* net ) {
     // --- parsing tag <configure>
     QString name = cur.attribute( "name" );
     if ( name.isNull() ) {
-        nnfwMessage( NNFW_ERROR, "attribute name of <configure> is mandatory" );
+        nError() << "attribute name of <configure> is mandatory" ;
+		return;
     }
     Updatable* up = net->getByName( name.toAscii().constData() );
     if ( !up ) {
-        char msg[100];
-        sprintf( msg, "Updatable %s doesn't exist in the neural network", name.toAscii().constData() );
-        nnfwMessage( NNFW_ERROR, msg );
+        nError() << "Updatable " << name.toAscii().constData() << " doesn't exist in the neural network";
+		return;
     }
     // --- parsing children nodes for settings properties
     QDomNode child = cur.firstChild();
@@ -410,11 +413,11 @@ void parseConfigure_10( QDomElement cur, BaseNeuralNet* net ) {
 void parseNeuralnet_10( QDomElement cur, BaseNeuralNet* net ) {
     QDomNode child = cur.firstChild().toElement();
     if ( child.toElement().isNull() ) {
-        nnfwMessage( NNFW_ERROR, "Syntax error" );
+        nError() << "Syntax error" ;
         return;
     }
     if ( child.toElement().tagName() != QString( "neuralnet" ) ) {
-        nnfwMessage( NNFW_ERROR, "Syntax error" );
+        nError() << "Syntax error; Do you forget the <neuralnet> tag ??" ;
         return;
     }
 
@@ -445,9 +448,7 @@ void parseNeuralnet_10( QDomElement cur, BaseNeuralNet* net ) {
             // --- <configure>
             parseConfigure_10( e, net );
         } else {
-            char msg[100];
-            sprintf( msg, "Unrecognized tag: %s", e.tagName().toAscii().constData() );
-            nnfwMessage( NNFW_WARNING, msg );
+            nWarning() << "Unrecognized tag: " << e.tagName().toAscii().constData();
         }
         child = child.nextSibling();
     }
@@ -459,22 +460,18 @@ BaseNeuralNet* loadXML( const char* filename ) {
     QDomDocument doc( "xmldocument" );
     QFile file( filename );
     if ( !file.open( QIODevice::ReadOnly ) ) {
-        char msg[100];
-        sprintf( msg, "Unable to open file %s", filename );
-        nnfwMessage( NNFW_ERROR, msg );
+        nError() << "Unable to open file " << filename;
         return net;
     }
     if ( !doc.setContent( &file ) ) {
-        char msg[100];
-        sprintf( msg, "Error reading file %s", filename );
-        nnfwMessage( NNFW_ERROR, msg );
+        nError() << "Error reading file " << filename ;
         return net;
     }
     file.close();
 
     QDomElement rootnode = doc.documentElement();
     if ( rootnode.tagName() != QString( "nnfw" ) ) {
-        nnfwMessage( NNFW_ERROR, "Wrong type of document" );
+        nError() << "Wrong type of document; Do you forget the root node <nnfw> ??" ;
         return net;
     }
     // --- checking the version of XML file
@@ -545,10 +542,10 @@ QDomNode createPropertyFragment( Variant v, QDomDocument doc, QDomElement elem )
         saveProperties( doc, elem, v.getOutputFunction(), QStringList() << "typename" );
         break;
     case Variant::t_cluster:
-        nnfwMessage( NNFW_ERROR, "Saving a property of type Cluster is not handled" );
+        nError() << "Saving a property of type Cluster is not handled" ;
         break;
     case Variant::t_linker:
-        nnfwMessage( NNFW_ERROR, "Saving a property of type Linker is not handled" );
+        nError() << "Saving a property of type Linker is not handled" ;
         break;
     case Variant::t_propertized:
         elem.setAttribute( "type", v.getPropertized()->getTypename().getString() );
@@ -649,9 +646,7 @@ bool saveXML( const char* filename, BaseNeuralNet* net ) {
 
     QFile file( filename );
     if ( !file.open( QIODevice::WriteOnly | QIODevice::Text ) ) {
-        char msg[100];
-        sprintf( msg, "Unable to open file %s", filename );
-        nnfwMessage( NNFW_ERROR, msg );
+        nError() << "Unable to open file " << filename ;
         return false;
     }
     QTextStream out(&file);

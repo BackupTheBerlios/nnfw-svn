@@ -87,12 +87,12 @@ void Cluster::setFunction( const OutputFunction& up ) {
 }
 
 void Cluster::setInput( u_int neuron, Real value ) {
+#ifdef NNFW_DEBUG
     if ( neuron >= numneurons ) {
-        char msg[100];
-        sprintf( msg, "The neuron %u doesn't exists! The operation setInput will be ignored", neuron );
-        nnfwMessage( NNFW_ERROR, msg );
+		nError() << "The neuron " << neuron << " doesn't exists! The operation setInput will be ignored";
         return;
     }
+#endif
     inputdata[neuron] = value;
 }
 
@@ -111,22 +111,22 @@ void Cluster::resetInputs() {
 }
 
 Real Cluster::getInput( u_int neuron ) const {
+#ifdef NNFW_DEBUG
     if ( neuron >= numneurons ) {
-        char msg[100];
-        sprintf( msg, "The neuron %u doesn't exists! The operation getInput will return 0.0", neuron );
-        nnfwMessage( NNFW_ERROR, msg );
+        nError() << "The neuron " << neuron << " doesn't exists! The operation getInput will return 0.0";
         return 0.0;
     }
+#endif
     return inputdata[neuron];
 }
 
 void Cluster::setOutput( u_int neuron, Real value ) {
+#ifdef NNFW_DEBUG
     if ( neuron >= numneurons ) {
-        char msg[100];
-        sprintf( msg, "The neuron %u doesn't exists! The operation setOutput will be ignored", neuron );
-        nnfwMessage( NNFW_ERROR, msg );
+        nError() << "The neuron " << neuron << " doesn't exists! The operation setOutput will be ignored";
         return;
     }
+#endif
     outputdata[neuron] = value;
 }
 
@@ -135,12 +135,12 @@ void Cluster::setOutputs( const RealVec& outputs ) {
 }
 
 Real Cluster::getOutput( u_int neuron ) const {
+#ifdef NNFW_DEBUG
     if ( neuron >= numneurons ) {
-        char msg[100];
-        sprintf( msg, "The neuron %u doesn't exists! The operation getOutput will return 0.0", neuron );
-        nnfwMessage( NNFW_ERROR, msg );
+        nError() << "The neuron " << neuron << " doesn't exists! The operation getOutput will return 0.0";
         return 0.0;
     }
+#endif
     return outputdata[neuron];
 }
 

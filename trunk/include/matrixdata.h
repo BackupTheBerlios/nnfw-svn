@@ -81,7 +81,7 @@ public:
         : Observer(), Observable(), data(src, rstart, rend), rowView() {
         // --- Check the validity of dimensions
         if ( data.size() != rows*cols ) {
-            nnfwMessage( NNFW_ERROR, "Wrongs dimensions specified in MatrixData view constructor; This MatrixData will be invalidate" );
+            nError() << "Wrongs dimensions specified in MatrixData view constructor; This MatrixData will be invalidate" ;
             rows = 0;
             cols = 0;
         }
@@ -151,7 +151,7 @@ public:
     //! Resize the matrix
     void resize( u_int rows, u_int cols ) {
         if ( view ) {
-            nnfwMessage( NNFW_ERROR, "you can't resize a MatrixData view - use setView instead" );
+            nError() << "you can't resize a MatrixData view - use setView instead" ;
             return;
         }
         nrows = rows;
@@ -181,11 +181,11 @@ public:
     T& at( u_int row, u_int col ) {
 #ifdef NNFW_DEBUG
         if ( row >= nrows ) {
-            nnfwMessage( NNFW_ERROR, "Accessing an element beyond Row boundary of matrix" );
+            nError() << "Accessing an element beyond Row boundary of matrix" ;
             return data[0];
         }
         if ( col >= ncols ) {
-            nnfwMessage( NNFW_ERROR, "Accessing an element beyond Column boundary of matrix" );
+            nError() << "Accessing an element beyond Column boundary of matrix" ;
             return data[0];
         }
 #endif
@@ -196,11 +196,11 @@ public:
     const T& at( u_int row, u_int col ) const {
 #ifdef NNFW_DEBUG
         if ( row >= nrows ) {
-            nnfwMessage( NNFW_ERROR, "Accessing an element beyond Row boundary of matrix" );
+            nError() << "Accessing an element beyond Row boundary of matrix" ;
             return data[0];
         }
         if ( col >= ncols ) {
-            nnfwMessage( NNFW_ERROR, "Accessing an element beyond Column boundary of matrix" );
+            nError() << "Accessing an element beyond Column boundary of matrix" ;
             return data[0];
         }
 #endif
@@ -213,7 +213,7 @@ public:
     Vec& operator[]( u_int row ) {
 #ifdef NNFW_DEBUG
         if( row >= nrows ) {
-            nnfwMessage( NNFW_ERROR, "Accessing elements outside boundary" );
+            nError() << "Accessing elements outside boundary" ;
             return rowView[0];
         }
 #endif
@@ -226,7 +226,7 @@ public:
     const Vec& operator[]( u_int row ) const {
 #ifdef NNFW_DEBUG
         if( row >= nrows ) {
-            nnfwMessage( NNFW_ERROR, "Accessing elements outside boundary" );
+            nError() << "Accessing elements outside boundary" ;
             return rowView[0];
         }
 #endif
@@ -238,7 +238,7 @@ public:
     MatrixData& assign( const MatrixData& src ) {
 #ifdef NNFW_DEBUG
         if( rows() != src.rows() || cols() != src.cols() ) {
-            nnfwMessage( NNFW_ERROR, "Different dimension" );
+            nError() << "Different dimension" ;
             return (*this);
         }
 #endif
@@ -291,7 +291,7 @@ public:
      */
     void clear() {
         if ( view ) {
-            nnfwMessage( NNFW_ERROR, "you can't clear a MatrixData view" );
+            nError() << "you can't clear a MatrixData view" ;
         } else {
             resize( 0, 0 );
         }
@@ -412,7 +412,9 @@ private:
     virtual void notify( const NotifyEvent& event ) {
         switch( event.type() ) {
         case Vec::datachanged:
-            nnfwMessage( NNFW_INFORMATION, "Arrange a MatrixData view after a VectorData resizing can lead to inconsistent settings - see documentation if you not sure" );
+#ifdef NNFW_DEBUG
+            nWarning() << "Arrange a MatrixData view after a VectorData resizing can lead to inconsistent settings - see documentation if you not sure" );
+#endif
             ncols = data.size() / nrows ;
             if ( ncols == 0 ) {
                 nrows = 0;
@@ -428,7 +430,9 @@ private:
             }
             break;
         case Vec::datadestroying:
-            nnfwMessage( NNFW_WARNING, "Destroying a VectorData before its views!!!" );
+#ifdef NNFW_DEBUG
+            nWarning() << "Destroying a VectorData before its views!!!" ;
+#endif
             // --- reconvert to a regular MatrixData with size zero
             view = false;
             nrows = 0;

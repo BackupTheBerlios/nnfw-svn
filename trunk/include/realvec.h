@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2007 Gianluca Massera <emmegian@yahoo.it>                     *
+ *  Copyright (C) 2005-2007 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -109,7 +109,7 @@ public:
     RealVec& operator+=(const RealVec& r ) {
 #ifdef NNFW_DEBUG
         if( vsize != r.vsize ) {
-            nnfwMessage( NNFW_ERROR, "Different numbers of element" );
+            nError() << "Different numbers of element" ;
             return (*this);
         }
 #endif
@@ -129,7 +129,7 @@ public:
     RealVec& operator-=(const RealVec& r ) {
 #ifdef NNFW_DEBUG
         if( vsize != r.vsize ) {
-            nnfwMessage( NNFW_ERROR, "Different numbers of element" );
+            nError() << "Different numbers of element" ;
             return *this;
         }
 #endif
@@ -149,7 +149,7 @@ public:
     RealVec& operator*=(const RealVec& r ) {
 #ifdef NNFW_DEBUG
         if( vsize != r.vsize ) {
-            nnfwMessage( NNFW_ERROR, "Different numbers of element" );
+            nError() << "Different numbers of element" ;
             return (*this);
         }
 #endif
@@ -169,7 +169,7 @@ public:
     RealVec& operator/=(const RealVec& r ) {
 #ifdef NNFW_DEBUG
         if( vsize != r.vsize ) {
-            nnfwMessage( NNFW_ERROR, "Different numbers of element" );
+            nError() << "Different numbers of element" ;
             return (*this);
         }
 #endif
@@ -190,7 +190,7 @@ public:
     Real dot( const RealVec& r ) {
 #ifdef NNFW_DEBUG
         if( vsize != r.vsize ) {
-            nnfwMessage( NNFW_ERROR, "Different numbers of element" );
+            nError() << "Different numbers of element" ;
             return 0.0;
         }
 #endif

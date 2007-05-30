@@ -15,6 +15,19 @@ S <mave> comment goes here
     'C' : means that something has been changed (e.g. implementation of a Class or a signature method)
 ==== End of Legend ====
 
+    ==> 220 - 25/05/2007 <==
+
+C <mave> improved error messages in xml processing
+B <mave> added more exit-points in xml processing to avoid data corruption when
+		mandatory tags are not present
+B <mave> bugfixed segmentation fault when it's omitted the attribute 'i' in the xml 
+		file for vector properties
+B <mave> bugfixed segmentation fault when processed a non-existing property in xml files
++ <mave> added an experimental class nnfwString for future Unicode support
+- <mave> the old nnfwMessage is not present anymore
+C <mave> created a new system for warning, error and fatal messages
+C <mave> NNFW_DEBUG is defined also when CMake built type is ReleaseWithDebugInfo
+
     ==> 218 - 25/05/2007 <==
 
 B <mave> now nnfw-config report correctly the MKL include directory

@@ -109,7 +109,7 @@ public:
     VectorData( VectorData<T>& src, u_int idStart, u_int idEnd )
         : Observer(), Observable() {
         if ( idStart > src.vsize || idEnd > src.vsize || idStart >= idEnd ) {
-            nnfwMessage( NNFW_ERROR, "Wrongs indexes specified in VectorData constructor; using 0 and src.size()" );
+            nError() << "Wrongs indexes specified in VectorData constructor; using 0 and src.size()" ;
             idstart = 0;
             idend = src.size();
         } else {
@@ -237,7 +237,7 @@ public:
     VectorData<T>& assign( u_int num, const T& value ) {
 #ifdef NNFW_DEBUG
         if ( num > vsize ) {
-            nnfwMessage( NNFW_ERROR, "Wrong number of elements passed to assign method" );
+            nError() << "Wrong number of elements passed to assign method" ;
             num = vsize;
         }
 #endif
@@ -252,7 +252,7 @@ public:
     VectorData<T>& assign( const VectorData<T>& src ) {
 #ifdef NNFW_DEBUG
         if ( vsize != src.vsize ) {
-            nnfwMessage( NNFW_ERROR, "Wrong number of elements between VectorData to assign method" );
+            nError() << "Wrong number of elements between VectorData to assign method" ;
             return (*this);
         }
 #endif
@@ -266,7 +266,7 @@ public:
     VectorData<T>& assign( const VectorData<T>& src, u_int sizec ) {
 #ifdef NNFW_DEBUG
         if ( vsize < sizec || src.size() < sizec ) {
-            nnfwMessage( NNFW_ERROR, "Wrong size specified in assign method" );
+            nError() << "Wrong size specified in assign method" ;
             return (*this);
         }
 #endif
@@ -285,7 +285,7 @@ public:
     VectorData<int>& compare( const VectorData<T>& b, VectorData<int>& comparison ) {
 #ifdef NNFW_DEBUG
         if ( vsize != b.vsize ) {
-            nnfwMessage( NNFW_ERROR, "Wrong number of elements between VectorData to compare method" );
+            nError() << "Wrong number of elements between VectorData to compare method" ;
             return (*this);
         }
 #endif
@@ -308,7 +308,7 @@ public:
     T& operator[]( u_int index ) {
 #ifdef NNFW_DEBUG
         if( index >= vsize ) {
-            nnfwMessage( NNFW_ERROR, "Accessing elements outside boundary" );
+            nError() << "Accessing elements outside boundary" ;
             return data[0];
         }
 #endif
@@ -321,7 +321,7 @@ public:
     const T& operator[]( u_int index ) const {
 #ifdef NNFW_DEBUG
         if( index >= vsize ) {
-            nnfwMessage( NNFW_ERROR, "Accessing elements outside boundary" );
+            nError() << "Accessing elements outside boundary" ;
             return data[0];
         }
 #endif
@@ -334,7 +334,7 @@ public:
     T& at( u_int index ) {
 #ifdef NNFW_DEBUG
         if( index >= vsize ) {
-            nnfwMessage( NNFW_ERROR, "Accessing elements outside boundary" );
+            nError() << "Accessing elements outside boundary" ;
             return data[0];
         }
 #endif
@@ -347,7 +347,7 @@ public:
     const T& at( u_int index ) const {
 #ifdef NNFW_DEBUG
         if( index >= vsize ) {
-            nnfwMessage( NNFW_ERROR, "Accessing elements outside boundary" );
+            nError() << "Accessing elements outside boundary" ;
             return data[0];
         }
 #endif
@@ -358,7 +358,7 @@ public:
      */
     void resize( u_int newsize ) {
         if ( view ) {
-            nnfwMessage( NNFW_ERROR, "It's not possible resize RealVec views" );
+            nError() << "It's not possible resize RealVec views" ;
             return;
         }
         if ( allocated < newsize ) {
@@ -403,11 +403,11 @@ public:
      */
     void setView( u_int idStart, u_int idEnd ) {
         if ( !view ) {
-            nnfwMessage( NNFW_ERROR, "setView can be called only if VectorData is a view" );
+            nError() << "setView can be called only if VectorData is a view" ;
             return;
         }
         if ( idStart > observed->vsize || idEnd > observed->vsize || idStart >= idEnd ) {
-            nnfwMessage( NNFW_ERROR, "Wrongs indexes specified in VectorData setView; using 0 and observed->size()" );
+            nError() << "Wrongs indexes specified in VectorData setView; using 0 and observed->size()" ;
             idstart = 0;
             idend = observed->size();
         }
@@ -424,7 +424,6 @@ public:
     void convertToView( VectorData<T>& src, u_int idStart, u_int idEnd ) {
         if ( observed == (&src) ) {
             setView( idStart, idEnd );
-            //nnfwMessage( NNFW_ERROR, "Already view of VectorData passed to convertToView; method ignored" );
             return;
         }
         if ( view ) {
@@ -436,7 +435,7 @@ public:
         }
     
         if ( idStart > src.vsize || idEnd > src.vsize || idStart >= idEnd ) {
-            nnfwMessage( NNFW_ERROR, "Wrongs indexes specified in convertToView; using 0 and src.size()" );
+            nError() << "Wrongs indexes specified in convertToView; using 0 and src.size()" ;
             idstart = 0;
             idend = src.size();
         } else {
@@ -518,7 +517,7 @@ public:
      */
     iterator erase( iterator pos ) {
         if ( view ) {
-            nnfwMessage( NNFW_ERROR, "you can't erase element from a VectorData view" );
+            nError() << "you can't erase element from a VectorData view" ;
         } else {
             u_int id = pos.getIndex();
             for( u_int i=id; i<vsize-1; i++ ) {
@@ -534,7 +533,7 @@ public:
      */
     void clear() {
         if ( view ) {
-            nnfwMessage( NNFW_ERROR, "you can't clear a VectorData view" );
+            nError() << "you can't clear a VectorData view" ;
         } else {
             vsize = 0;
             notifyAll( NotifyEvent( datachanged ) );
@@ -632,7 +631,7 @@ protected:
         switch( event.type() ) {
         case datachanged:
             if ( idstart > observed->vsize || idend > observed->vsize ) {
-                nnfwMessage( NNFW_ERROR, "Indexes become invalid after data changing; using 0 and viewed->size()" );
+                nError() << "Indexes become invalid after data changing; using 0 and viewed->size()" ;
                 idstart = 0;
                 idend = observed->size();
             }
@@ -641,7 +640,9 @@ protected:
             allocated = 0;
             break;
         case datadestroying:
-            nnfwMessage( NNFW_WARNING, "Destroying a VectorData before its views!!!" );
+#ifdef NNFW_DEBUG
+            nWarning() << "Destroying a VectorData before its views!!!" ;
+#endif
             // --- reconvert to a regular VectorData with size zero
             view = false;
             data = 0;

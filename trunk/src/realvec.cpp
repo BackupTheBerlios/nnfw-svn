@@ -127,15 +127,15 @@ RealMat& RealVec::outprod( RealMat& m, const RealVec& x, const RealVec& y ) {
 }
 
 void RealVec::createAllBinaries( RealVec* v, unsigned long int pats, u_int dims ) {
-//#ifdef NNFW_DEBUG
 	unsigned long int totPat = 1;
 	for (u_int x = 0; x < dims; x++)
 		totPat *= 2;
+#ifdef NNFW_DEBUG
 	if ( totPat != pats ) {
-		nnfwMessage( NNFW_ERROR, "Error in createAllBinaries: total patterns are not how many you think they are" );
+		nError() << "Error in createAllBinaries: total patterns are not how many you think they are" ;
 		return;
 	}
-//#endif	
+#endif	
 	//Create the first string of all 0s
 	u_int i;
 	for (i = 0; i < dims; i++)
@@ -158,7 +158,7 @@ void RealVec::createAllBinaries( RealVec* v, unsigned long int pats, u_int dims 
 Real RealVec::mse( const RealVec& target, const RealVec& actual ) {
 #ifdef NNFW_DEBUG
 	if ( target.size() != actual.size() ) {
-		nnfwMessage( NNFW_ERROR, "Error in mse: target and actual vectors have different size" );
+		nError() << "Error in mse: target and actual vectors have different size" ;
 		return 0.0;
 	}
 #endif

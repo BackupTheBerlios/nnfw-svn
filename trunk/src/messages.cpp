@@ -19,31 +19,93 @@
 
 #include "types.h"
 #include <iostream>
+#include <QString>
 
 extern void exit( int status );
 
 
 namespace nnfw {
 
-//using namespace std;
+class nnfwStringPrivate {
+public:
+	QString qstr;
+};
 
-void nnfwMessage( unsigned int category, const char* msg ) {
-    switch( category ) {
-    case NNFW_INFORMATION:
-        std::cout << "== Information: " << msg << std::endl;
-        return;
-    case NNFW_WARNING:
-        std::cout << "== Warning: " << msg << std::endl;
-        return;
-    case NNFW_ERROR:
-        std::cout << "== ERROR: " << msg << std::endl;
-        return;
-    case NNFW_CRITICAL:
-        std::cout << "== CRITICAL ERROR: " << msg << std::endl;
-        exit( 1 );
-    }
-    std::cout << "== Unrecognized Category: " << msg << std::endl;
+nnfwString::nnfwString() {
+	prv = new nnfwStringPrivate();
+}
+
+nnfwString::~nnfwString() {
+	delete prv;
+}
+
+nnfwString::nnfwString( const nnfwString& src ) {
+	prv = new nnfwStringPrivate();
+	prv->qstr = src.prv->qstr;
+}
+
+nnfwString::nnfwString( int i ) {
+	prv = new nnfwStringPrivate();
+	prv->qstr = QString("%1").arg(i);
+}
+
+nnfwString::nnfwString( u_int i ) {
+	prv = new nnfwStringPrivate();
+	prv->qstr = QString("%1").arg(i);
+}
+
+nnfwString::nnfwString( double v ) {
+	prv = new nnfwStringPrivate();
+	prv->qstr = QString("%1").arg(v);
+}
+
+nnfwString::nnfwString( float v ) {
+	prv = new nnfwStringPrivate();
+	prv->qstr = QString("%1").arg(v);
+}
+
+nnfwString::nnfwString( char c ) {
+	prv = new nnfwStringPrivate();
+	prv->qstr = QString("%1").arg(c);
+}
+
+nnfwString::nnfwString( const char* s ) {
+	prv = new nnfwStringPrivate();
+	prv->qstr = QString("%1").arg(s);
+}
+
+nnfwString& nnfwString::append( const nnfwString& p ) {
+	prv->qstr.append( p.prv->qstr );
+	return (*this);
+}
+
+nnfwString& nnfwString::operator=( const nnfwString& left ) {
+	prv->qstr = left.prv->qstr;
+	return (*this);
+}
+
+const char* nnfwString::toUtf8() const {
+	return prv->qstr.toUtf8().data();
+}
+
+nMessage::nMessage() {
+	linePending = false;
+}
+
+nMessage::msgLine::msgLine( nMessage* parent ) : msg() {
+	this->parent = parent;
+	if ( parent->linePending ) {
+		delete (parent->pending);
+	}
+	parent->linePending = true;
+	parent->pending = this;
+}
+
+nMessage::msgLine::~msgLine() {
+	printf( "%s\n", msg.toUtf8() );
+	parent->linePending = false;
     return;
 }
 
 }
+

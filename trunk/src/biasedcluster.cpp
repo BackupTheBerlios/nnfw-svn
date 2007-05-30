@@ -56,12 +56,12 @@ void BiasedCluster::update() {
 }
 
 void BiasedCluster::setBias( u_int neuron, Real bias ) {
+#ifdef NNFW_DEBUG
     if ( neuron >= numNeurons() ) {
-        char msg[100];
-        sprintf( msg, "The neuron %u doesn't exists! The operation setBias will be ignored", neuron );
-        nnfwMessage( NNFW_ERROR, msg );
+		nError() << "The neuron " << neuron << " doesn't exists! The operation setBias will be ignored";
         return;
     }
+#endif
     biasesdata[neuron] = bias;
 }
 
@@ -74,12 +74,12 @@ void BiasedCluster::setBiases( const RealVec& bias ) {
 }
 
 Real BiasedCluster::getBias( u_int neuron ) {
+#ifdef NNFW_DEBUG
     if ( neuron >= numNeurons() ) {
-        char msg[100];
-        sprintf( msg, "The neuron %u doesn't exists! The operation getBias will return 0.0", neuron );
-        nnfwMessage( NNFW_ERROR, msg );
+		nError() << "The neuron " << neuron << "doesn't exists! The operation getBias will return 0.0";
         return 0.0;
     }
+#endif
     return biasesdata[neuron];
 }
 

@@ -25,38 +25,130 @@
 #ifndef MESSAGGES_H
 #define MESSAGGES_H
 
-
 namespace nnfw {
 
 /*! \file
- *  \brief This file contains the declaration of function nnfwMessage for displaying debug messages; Don't include this file directly, instead include types.h
+ *  \brief This file contains the declaration of classes for displaying warning, error and fatal messages; Don't include this file directly, instead include types.h
  *
  */
 
-//! Categories of messages
-enum {
-    NNFW_INFORMATION = 0,
-    NNFW_WARNING = 1,
-    NNFW_ERROR = 2,
-    NNFW_CRITICAL = 3
+//--- This is for internal use; it encapsulate string-data
+class nnfwStringPrivate;
+
+/*! A String class that supports Unicode encodings
+ */
+class NNFW_API nnfwString {
+public:
+	/*! \name Constructors */
+	//@{
+	//! Construct an empty nnfwString
+	nnfwString();
+	//! destructor
+	~nnfwString();
+	//! Copy-Constructor
+	nnfwString( const nnfwString& );
+	//! Converter
+	nnfwString( int );
+	//! Converter
+	nnfwString( u_int );
+	//! Converter
+	nnfwString( double );
+	//! Converter
+	nnfwString( float );
+	//! Converter
+	nnfwString( char );
+	//! Converter (it suppose an ASCII encoding)
+	nnfwString( const char* );
+	//@}
+	/*! \name Interface */
+	//@{
+	//! append a nnfwString to this
+	nnfwString& append( const nnfwString& p );
+	//! assignment operator
+	nnfwString& operator=( const nnfwString& left );
+	//! return the UTF8 representation
+	const char* toUtf8() const;
+	//@}
+private:
+	nnfwStringPrivate* prv;
 };
 
-/*! Print out a message<br>
- *  The messages are divided in four categories:
- *  <ul>
- *     <li><b>NNFW_INFORMATION</b>: it's only an informational message, this is not an error </li>
- *     <li><b>NNFW_WARNING</b>: it isn't a true error, and maybe you can ignore this messages...
- *          but it's not guaranteed that an error may happens in other methods during the simulation </li>
- *     <li><b>NNFW_ERROR</b>: it's a error. The program will not be terminated, but the error will be corrected
- *         in such way that the program can go on. In the message will be indicated the correction procedure applied.
- *         The user of library must avoid that this messages arises </li>
- *     <li><b>NNFW_CRITICAL</b>: it's a critical error. It's not possibile go on !!! The program will be
- *         terminated. The user of library must avoid that this messages arises </li>
- *  </ul>
- *
+/*! Base class for printing messages<br>
  */
-NNFW_API void nnfwMessage( unsigned int category, const char* msg );
+class NNFW_API nMessage {
+public:
+	/*! \name Constructors */
+	//@{
+	//! Constructor
+	nMessage();
+	//! Destructor
+	~nMessage() { /* nothing to do */ };
+	//@}
+protected:
+	//--- Helper class for printing messages
+	class msgLine {
+	public:
+		msgLine( nMessage* parent );
+		~msgLine();
+		msgLine& operator<<( const nnfwString& part ) {
+			msg.append( part );
+			return (*this);
+		};
+		void set( const nnfwString& str ) {
+			msg = str;
+		};
+	private:
+		nMessage* parent;
+		nnfwString msg;
+	};
+	bool linePending;
+	msgLine* pending;
+};
+
+/*! Print Warning Messages
+ */
+class NNFW_API nWarning : public nMessage {
+public:
+	/*! \name Interface */
+	//@{
+    nMessage::msgLine operator<<( const nnfwString& part ) {
+		nMessage::msgLine line(this);
+		line.set( nnfwString("== WARNING: ").append(part) );
+		return line;
+	};
+	//@}
+};
+
+/*! Print Error Messages
+ */
+class NNFW_API nError : public nMessage {
+public:
+	/*! \name Interface */
+	//@{
+    nMessage::msgLine operator<<( const nnfwString& part ) {
+		nMessage::msgLine line(this);
+		line.set( nnfwString("== ERROR: ").append(part) );
+		return line;
+	};
+	//@}
+};
+
+/*! Print Fatal Messages
+ */
+class NNFW_API nFatal : public nMessage {
+public:
+	/*! \name Interface */
+	//@{
+    nMessage::msgLine operator<<( const nnfwString& part ) {
+		nMessage::msgLine line(this);
+		line.set( nnfwString("== FATAL: ").append(part) );
+		return line;
+	};
+	//@}
+};
 
 }
 
 #endif
+
+

@@ -37,13 +37,17 @@ BaseNeuralNet::~BaseNeuralNet() {
 }
 
 void BaseNeuralNet::addCluster( Cluster* c, bool isInput, bool isOutput ) {
+#ifdef NNFW_DEBUG
     if ( !c ) {
-        nnfwMessage( NNFW_ERROR, "Null Pointer passed to addCluster! This operation will be ignored" );
+        nError() << "Null Pointer passed to addCluster! This operation will be ignored" ;
         return;
     }
+#endif
     // Check if the Cluster is already added
     if ( find( c ) ) {
-        nnfwMessage( NNFW_ERROR, "Cluster already added! addCluster will be ignored" );
+#ifdef NNFW_DEBUG
+        nError() << "Cluster already added! addCluster will be ignored" ;
+#endif
         return;
     }
     clustersv.push_back( c );
@@ -57,10 +61,12 @@ void BaseNeuralNet::addCluster( Cluster* c, bool isInput, bool isOutput ) {
 }
 
 bool BaseNeuralNet::removeCluster( Cluster* c ) {
+#ifdef NNFW_DEBUG
     if ( !c ) {
-        nnfwMessage( NNFW_ERROR, "Null Pointer passed to removeCluster! This operation will return false" );
+        nError() << "Null Pointer passed to removeCluster! This operation will return false" ;
         return false;
     }
+#endif
     unmark( c );
     ClusterVec::iterator it = std::find( clustersv.begin(), clustersv.end(), c );
     if ( it == clustersv.end() ) {
@@ -79,15 +85,17 @@ bool BaseNeuralNet::removeCluster( Cluster* c ) {
 }
 
 void BaseNeuralNet::markAsInput( Cluster* c ) {
+#ifdef NNFW_DEBUG
     if ( !c ) {
-        nnfwMessage( NNFW_ERROR, "Null Pointer passed to addCluster! This operation will be ignored" );
+        nError() << "Null Pointer passed to addCluster! This operation will be ignored" ;
         return;
     }
     // Check if the Cluster is already added
     if ( !find( c ) ) {
-        nnfwMessage( NNFW_ERROR, "attempt to mark a Cluster not present in this net!" );
+        nError() << "attempt to mark a Cluster not present in this net!" ;
         return;
     }
+#endif
     ClusterVec::iterator it = std::find( inclusters.begin(), inclusters.end(), c );
     if ( it != inclusters.end() ) {
         // --- already marked as Input
@@ -97,15 +105,17 @@ void BaseNeuralNet::markAsInput( Cluster* c ) {
 }
 
 void BaseNeuralNet::markAsOutput( Cluster* c ) {
+#ifdef NNFW_DEBUG
     if ( !c ) {
-        nnfwMessage( NNFW_ERROR, "Null Pointer passed to addCluster! This operation will be ignored" );
+        nError() << "Null Pointer passed to addCluster! This operation will be ignored" ;
         return;
     }
     // Check if the Cluster is already added
     if ( !find( c ) ) {
-        nnfwMessage( NNFW_ERROR, "attempt to mark a Cluster not present in this net!" );
+        nError() << "attempt to mark a Cluster not present in this net!" ;
         return;
     }
+#endif
     ClusterVec::iterator it = std::find( outclusters.begin(), outclusters.end(), c );
     if ( it != outclusters.end() ) {
         // --- already marked as Output
@@ -115,10 +125,12 @@ void BaseNeuralNet::markAsOutput( Cluster* c ) {
 }
 
 void BaseNeuralNet::unmark( Cluster* c ) {
+#ifdef NNFW_DEBUG
     if ( !c ) {
-        nnfwMessage( NNFW_ERROR, "Null Pointer passed to addCluster! This operation will be ignored" );
+        nError() << "Null Pointer passed to addCluster! This operation will be ignored" ;
         return;
     }
+#endif
     ClusterVec::iterator it = std::find( inclusters.begin(), inclusters.end(), c );
     if ( it != inclusters.end() ) {
         inclusters.erase( it );
@@ -137,10 +149,12 @@ void BaseNeuralNet::unmarkAll( ) {
 }
 
 bool BaseNeuralNet::isIsolated( Cluster* c ) const {
+#ifdef NNFW_DEBUG
     if ( !c ) {
-        nnfwMessage( NNFW_ERROR, "Null Pointer passed to isIsolato! This operation will return false" );
+        nError() << "Null Pointer passed to isIsolato! This operation will return false" ;
         return false;
     }
+#endif
     return ( inLinks.count( c ) == 0 && outLinks.count( c ) == 0 );
 }
 
@@ -157,26 +171,32 @@ const ClusterVec& BaseNeuralNet::outputClusters() const {
 }
 
 void BaseNeuralNet::addLinker( Linker* l ) {
+#ifdef NNFW_DEBUG
     if ( !l ) {
-        nnfwMessage( NNFW_ERROR, "Null Pointer passed to addLinker! This operation will be ignored" );
+        nError() << "Null Pointer passed to addLinker! This operation will be ignored" ;
         return;
     }
+#endif
     // Check if the Linker is already added
     if ( find( l ) ) {
-        nnfwMessage( NNFW_ERROR, "Linker already added! addLinker will be ignored" );
+#ifdef NNFW_DEBUG
+        nError() << "Linker already added! addLinker will be ignored" ;
+#endif
         return;
     }
+#ifdef NNFW_DEBUG
     // --- Check: Are There in this net the Clusters that linker l connects ???
     if ( ! find( l->getFrom() ) ) {
-        nnfwMessage( NNFW_ERROR, "The linker that you want add links clusters that doesn't exist in this net! \
-                                  This operation will be ignored" );
+        nError() << "The linker that you want add links clusters that doesn't exist in this net! \
+                                  This operation will be ignored" ;
         return;
     }
     if ( ! find( l->getTo() ) ) {
-        nnfwMessage( NNFW_ERROR, "The linker that you want add links clusters that doesn't exist in this net! \
-                                  This operation will be ignored" );
+        nError() << "The linker that you want add links clusters that doesn't exist in this net! \
+                                  This operation will be ignored" ;
         return;
     }
+#endif
     linkersv.push_back( l );
 
     // Adding information in outLinks map
@@ -187,10 +207,12 @@ void BaseNeuralNet::addLinker( Linker* l ) {
 }
 
 bool BaseNeuralNet::removeLinker( Linker* l ) {
+#ifdef NNFW_DEBUG
     if ( !l ) {
-        nnfwMessage( NNFW_ERROR, "Null Pointer passed to removeLinker! This operation will return false" );
+        nError() << "Null Pointer passed to removeLinker! This operation will return false" ;
         return false;
     }
+#endif
     LinkerVec::iterator it1 = std::find( linkersv.begin(), linkersv.end(), l );
     if ( it1 == linkersv.end() ) {
         return false;
@@ -219,10 +241,12 @@ const LinkerVec& BaseNeuralNet::linkers() const {
 }
 
 const LinkerVec& BaseNeuralNet::linkers( Cluster* c, bool out ) const {
+#ifdef NNFW_DEBUG
     if ( !c ) {
-        nnfwMessage( NNFW_ERROR, "Null Pointer passed to linkers! This operation will return an empty LinkerGroup" );
+        nError() << "Null Pointer passed to linkers! This operation will return an empty LinkerGroup" ;
         return emptyLinkerVec;
     }
+#endif
     if ( out ) {
         // Return outgoing linkers
         if ( outLinks.count( c ) > 0 ) {
@@ -280,7 +304,9 @@ Updatable* BaseNeuralNet::getByName( const char* name ) {
             return *it2;
         }
     }
-    nnfwMessage( NNFW_WARNING, "Updatable not present in BaseNeuralNet!!!" );
+#ifdef NNFW_DEBUG
+    nWarning() << "Updatable not present in BaseNeuralNet!!!";
+#endif
     return NULL;
 }
 

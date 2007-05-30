@@ -35,13 +35,15 @@ Linker::Linker( PropertySettings& prop )
     : Updatable( prop ) {
     Variant& v = prop["from"];
     if ( v.isNull() ) {
-        nnfwMessage( NNFW_ERROR, "You can't construct a Linker wihout specifying a Cluster From" );
+        nFatal() << "You can't construct a Linker wihout specifying a Cluster From";
+		exit(1);
     } else {
         fromc = (Cluster*)( v.getCluster() );
     }
     v = prop["to"];
     if ( v.isNull() ) {
-        nnfwMessage( NNFW_ERROR, "You can't construct a Linker wihout specifying a Cluster To" );
+        nFatal() << "You can't construct a Linker wihout specifying a Cluster To" ;
+		exit(1);
     } else {
         toc = (Cluster*)( v.getCluster() );
     }

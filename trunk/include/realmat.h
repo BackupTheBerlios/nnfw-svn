@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2007 Gianluca Massera <emmegian@yahoo.it>                     *
+ *  Copyright (C) 2005-2007 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -90,7 +90,7 @@ public:
     RealMat& operator+=(const RealMat& r ) {
 #ifdef NNFW_DEBUG
         if( rows() != r.rows() || cols() != r.cols() ) {
-            nnfwMessage( NNFW_ERROR, "Different dimension" );
+            nError() << "Different dimension";
             return (*this);
         }
 #endif
@@ -108,7 +108,7 @@ public:
     RealMat& operator-=(const RealMat& r ) {
 #ifdef NNFW_DEBUG
         if( rows() != r.rows() || cols() != r.cols() ) {
-            nnfwMessage( NNFW_ERROR, "Different dimension" );
+            nError() << "Different dimension";
             return (*this);
         }
 #endif
@@ -126,7 +126,7 @@ public:
     RealMat& operator*=(const RealMat& r ) {
 #ifdef NNFW_DEBUG
         if( rows() != r.rows() || cols() != r.cols() ) {
-            nnfwMessage( NNFW_ERROR, "Different dimension" );
+            nError() << "Different dimension";
             return (*this);
         }
 #endif
@@ -144,7 +144,7 @@ public:
     RealMat& operator/=(const RealMat& r ) {
 #ifdef NNFW_DEBUG
         if( rows() != r.rows() || cols() != r.cols() ) {
-            nnfwMessage( NNFW_ERROR, "Different dimension" );
+            nError() << "Different dimension";
             return (*this);
         }
 #endif

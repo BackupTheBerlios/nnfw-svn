@@ -220,9 +220,8 @@ const char* Variant::typeName( types t ) {
 
 void Variant::checkType( types t ) const {
     if ( t != dtype ) {
-        char msg[100];
-        sprintf( msg, "Attempt to access a %s type instead of the right type %s; unpredictable result", typen[t], typen[dtype] );
-        nnfwMessage( NNFW_ERROR, msg );
+        nError() << "Attempt to access a " << typen[t] << " type instead of the right type " << typen[dtype]
+				 << " unpredictable result";
     }
     return;
 }

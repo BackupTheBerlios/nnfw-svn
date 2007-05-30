@@ -93,7 +93,7 @@ void GradientBiasedCluster::learn() {
     const DerivableOutputFunction* dup = dynamic_cast<const DerivableOutputFunction*>( cl->getFunction() );
     if ( dup == 0 ) {
 #ifdef NNFW_DEBUG
-        nnfwMessage( NNFW_ERROR, "Error: you are trying to do the derivative of an underivable function!" );
+        nWarning() << "you are trying to do the derivative of an underivable function!" ;
 #endif
     } else {
         dup->derivate( in, cl->outputs(), tmp );

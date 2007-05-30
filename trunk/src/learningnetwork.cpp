@@ -35,7 +35,7 @@ LearningNetwork::~LearningNetwork() {
 
 void LearningNetwork::addTeachBlock( BaseTeachBlock* b ) {
     if ( find( b ) ) {
-        nnfwMessage( NNFW_ERROR, "TeachBlock already added! addTeachBlock will be ignored" );
+        nError() << "TeachBlock already added! addTeachBlock will be ignored" ;
         return;    
     }
     blocksv.push_back(b);
@@ -108,7 +108,7 @@ bool LearningNetwork::isEnabled( BaseTeachBlock* b ) {
             return mask[i];
         }
     }
-    nnfwMessage( NNFW_WARNING, "BaseTeachBlock not present" );
+    nWarning() << "BaseTeachBlock not present" ;
     return false;
 }
 

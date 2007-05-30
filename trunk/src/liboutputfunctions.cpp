@@ -70,7 +70,7 @@ SigmoidFunction::SigmoidFunction( PropertySettings& prop )
 void SigmoidFunction::apply( RealVec& inputs, RealVec& outputs ) {
 #ifdef NNFW_DEBUG
     if ( inputs.size() != outputs.size() ) {
-        nnfwMessage( NNFW_ERROR, "The output dimension doesn't match the input dimension" );
+        nError() << "The output dimension doesn't match the input dimension" ;
         return;
     }
 #endif
@@ -118,7 +118,7 @@ FakeSigmoidFunction::FakeSigmoidFunction( PropertySettings& prop )
 void FakeSigmoidFunction::apply( RealVec& inputs, RealVec& outputs ) {
 #ifdef NNFW_DEBUG
     if ( inputs.size() != outputs.size() ) {
-        nnfwMessage( NNFW_ERROR, "The output dimension doesn't match the input dimension" );
+        nError() << "The output dimension doesn't match the input dimension" ;
         return;
     }
 #endif
@@ -188,7 +188,7 @@ ScaledSigmoidFunction::ScaledSigmoidFunction( PropertySettings& prop )
 void ScaledSigmoidFunction::apply( RealVec& inputs, RealVec& outputs ) {
 #ifdef NNFW_DEBUG
     if ( inputs.size() != outputs.size() ) {
-        nnfwMessage( NNFW_ERROR, "The output dimension doesn't match the input dimension" );
+        nError() << "The output dimension doesn't match the input dimension" ;
         return;
     }
 #endif
@@ -268,7 +268,7 @@ LinearFunction::LinearFunction( PropertySettings& prop )
 void LinearFunction::apply( RealVec& inputs, RealVec& outputs ) {
 #ifdef NNFW_DEBUG
     if ( inputs.size() != outputs.size() ) {
-        nnfwMessage( NNFW_ERROR, "The output dimension doesn't match the input dimension" );
+        nError() << "The output dimension doesn't match the input dimension" ;
         return;
     }
 #endif
@@ -366,7 +366,7 @@ void StepFunction::apply( RealVec& inputs, RealVec& outputs ) {
     u_int size = inputs.size();
 #ifdef NNFW_DEBUG
     if ( inputs.size() != outputs.size() ) {
-        nnfwMessage( NNFW_ERROR, "The output dimension doesn't match the input dimension" );
+        nError() << "The output dimension doesn't match the input dimension" ;
         return;
     }
 #endif
@@ -436,7 +436,7 @@ LeakyIntegratorFunction::LeakyIntegratorFunction( PropertySettings& prop )
 void LeakyIntegratorFunction::apply( RealVec& inputs, RealVec& outputs ) {
 #ifdef NNFW_DEBUG
     if ( inputs.size() != outputs.size() ) {
-        nnfwMessage( NNFW_ERROR, "The output dimension doesn't match the input dimension" );
+        nError() << "The output dimension doesn't match the input dimension" ;
         return;
     }
 #endif
@@ -482,7 +482,9 @@ PoolFunction::PoolFunction( const OutputFunction& prototype, u_int dim )
     }
     // --- if dimension is zero, set at least one element to OutputFunction
     if ( dim == 0 ) {
-        nnfwMessage( NNFW_ERROR, "The dimension of PoolFunction must be at least one" );
+#ifdef NNFW_DEBUG
+        nWarning() << "The dimension of PoolFunction must be at least one";
+#endif
         ups.resize( 1 );
         ups[0] = prototype.clone();
     }
@@ -495,7 +497,9 @@ PoolFunction::PoolFunction( u_int dim )
     : OutputFunction(), ups(dim) {
     // --- if dimension is zero, set at least one element to OutputFunction
     if ( dim == 0 ) {
-        nnfwMessage( NNFW_ERROR, "The dimension of PoolFunction must be at least one" );
+#ifdef NNFW_DEBUG
+        nWarning() << "The dimension of PoolFunction must be at least one" ;
+#endif
         ups.resize( 1 );
     }
     addProperty( "size", Variant::t_uint, this, &PoolFunction::sizeV );
@@ -528,7 +532,7 @@ PoolFunction::~PoolFunction() {
 OutputFunction* PoolFunction::getOutputFunction( u_int i ) {
 #ifdef NNFW_DEBUG
     if ( i >= ups.size() ) {
-        nnfwMessage( NNFW_ERROR, "Accessing beyond boundary of this PoolFunction" );
+        nError() << "Accessing beyond boundary of this PoolFunction" ;
         return 0;
     }
 #endif
@@ -538,7 +542,7 @@ OutputFunction* PoolFunction::getOutputFunction( u_int i ) {
 void PoolFunction::setOutputFunction( u_int i, const OutputFunction& prototype ) {
 #ifdef NNFW_DEBUG
     if ( i >= ups.size() ) {
-        nnfwMessage( NNFW_ERROR, "Setting a OutputFunction beyond boundary of this PoolFunction" );
+        nError() << "Setting a OutputFunction beyond boundary of this PoolFunction";
         return;
     }
 #endif
@@ -623,7 +627,7 @@ CompositeFunction::~CompositeFunction() {
 void CompositeFunction::apply( RealVec& inputs, RealVec& outputs ) {
 #ifdef NNFW_DEBUG
     if ( inputs.size() != outputs.size() ) {
-        nnfwMessage( NNFW_ERROR, "The output dimension doesn't match the input dimension" );
+        nError() << "The output dimension doesn't match the input dimension" ;
         return;
     }
 #endif

@@ -50,7 +50,7 @@ SparseMatrixLinker::SparseMatrixLinker( Cluster* from, Cluster* to, Real prob, b
     : MatrixLinker( from, to, name ), mask(rows(), cols()) {
 #ifdef NNFW_DEBUG
     if( rows() != cols() ) {
-        nnfwMessage( NNFW_ERROR, "SparseMatrixLinker constructor which assumes square matrix used with a non square matrix!" );
+        nError() << "SparseMatrixLinker constructor which assumes square matrix used with a non square matrix!";
         return;
     }
 #endif

@@ -59,26 +59,30 @@ void MatrixLinker::randomize( Real min, Real max ) {
 }
 
 void MatrixLinker::setWeight( u_int from, u_int to, Real weight ) {
+#ifdef NNFW_DEBUG
     if ( from >= nrows ) {
-        nnfwMessage( NNFW_ERROR, "Accessing out of Rows Boundary" );
+        nError() << "Accessing out of Rows Boundary" ;
         return;
     }
     if ( to >= ncols ) {
-        nnfwMessage( NNFW_ERROR, "Accessing out of Columns Boundary" );
+        nError() << "Accessing out of Columns Boundary" ;
         return;
     }
+#endif
     w[from][to] = weight;
 }
 
 Real MatrixLinker::getWeight( u_int from, u_int to ) {
+#ifdef NNFW_DEBUG
     if ( from >= nrows ) {
-        nnfwMessage( NNFW_ERROR, "Accessing out of Rows Boundary" );
+        nError() << "Accessing out of Rows Boundary" ;
         return 0.0;
     }
     if ( to >= ncols ) {
-        nnfwMessage( NNFW_ERROR, "Accessing out of Columns Boundary" );
+        nError() << "Accessing out of Columns Boundary" ;
         return 0.0;
     }
+#endif
     return w[from][to];
 }
 
