@@ -18,6 +18,7 @@
  ********************************************************************************/
 
 #include "propertized.h"
+#include <QString>
 
 
 namespace nnfw {
@@ -258,6 +259,59 @@ void Propertized::setTypename( const char* type ) {
     u_int size = strlen(type);
     vtypename = new char[size+1];
     strcpy( vtypename, type );
+}
+
+Variant Propertized::convertStringTo( const Variant& str, Variant::types t ) {
+	if ( str.type() != Variant::t_string ) {
+		nError() << "convertStringTo require a string-type Variant; "
+				 << "passed type " << str.typeName();
+		return Variant();
+	}
+	QString qstr( str.getString() );
+	char ch;
+    switch( t ) {
+    case Variant::t_null: 
+		return Variant();
+		break;
+    case Variant::t_real:
+#ifdef NNFW_DOUBLE_PRECISION
+		return Variant( qstr.toDouble() );
+#else
+		return Variant( qstr.toFloat() );
+#endif
+		break;
+    case Variant::t_int:
+		return Variant( qstr.toInt() );
+		break;
+    case Variant::t_uint: 
+		return Variant( qstr.toUInt() );
+		break;
+    case Variant::t_char:
+		ch = qstr[0].toAscii();
+		return Variant( ch );
+		break;
+    case Variant::t_uchar:
+		ch = qstr[0].toAscii();
+		return Variant( (unsigned char)(ch) );
+		break;
+    case Variant::t_bool:
+		if ( qstr == "true" ) {
+			return Variant( true );
+		} else {
+			return Variant( false );
+		}
+		break;
+    case Variant::t_string:
+    case Variant::t_realvec:
+    case Variant::t_realmat:
+    case Variant::t_outfunction:
+    case Variant::t_cluster:
+    case Variant::t_linker:
+    case Variant::t_propertized:
+		nError() << "Unsupported convertion type: " << Variant::typeName(t);
+		break;
+    }
+	return Variant();
 }
 
 }

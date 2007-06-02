@@ -29,6 +29,7 @@
 #include <QTextStream>
 #include <QString>
 #include <QStringList>
+#include <QDebug>
 
 namespace nnfw {
 
@@ -268,6 +269,65 @@ void parseCluster_10( QDomElement cur, BaseNeuralNet* net ) {
     }
 }
 
+void parseCluster_11( QDomElement cur, BaseNeuralNet* net ) {
+    // --- parsing tag <cluster>
+    PropertySettings prop;
+	QDomNamedNodeMap amap = cur.attributes();
+	for( int i=0; i<amap.count(); i++ ) {
+		QDomAttr item = amap.item( i ).toAttr();
+		std::string name = item.name().toStdString();
+		std::string value = item.value().toStdString();
+		prop[name] = Variant( value.data() );
+	}
+    if ( prop["name"].isNull() ) {
+        nError() << "attribute name of <cluster> is mandatory" ;
+		return;
+    }
+    if ( prop["type"].isNull() ) {
+        nError() << "attribute type of <cluster> is mandatory" ;
+		return;
+    }
+    if ( prop["numNeurons"].isNull() ) {
+        nError() << "attribute size of <cluster> is mandatory" ;
+		return;
+    }
+/*    prop["name"] = name.toAscii().constData();
+    prop["numNeurons"] = Variant( size.toUInt() );*/
+    Cluster* cl = Factory::createCluster( prop["type"].getString(), prop );
+    net->addCluster( cl );
+
+    // --- parsing children nodes for settings others properties
+    QDomNode child = cur.firstChild();
+    while( ! child.isNull() ) {
+        QDomElement e = child.toElement();
+        if ( e.isNull() ) {
+            child = child.nextSibling();
+            continue;
+        }
+        if ( e.tagName() == QString( "randomize" ) ) {
+            // --- <randomize>
+            QString min = e.attribute( "min" );
+            QString max = e.attribute( "max" );
+            if ( min.isNull() || max.isNull() ) {
+                nError() << "attributes min and max are mandatory in <randomize> tag" ;
+				continue;
+            }
+#ifdef NNFW_DOUBLE_PRECISION
+            double minV = min.toDouble();
+            double maxV = max.toDouble();
+#else
+            float minV = min.toFloat();
+            float maxV = max.toFloat();
+#endif
+            cl->randomize( minV, maxV );
+        } else {
+            // --- nodo proprieta'
+            parseProperty_10( e, cl );
+        }
+        child = child.nextSibling();
+    }
+}
+
 void parseLinker_10( QDomElement cur, BaseNeuralNet* net ) {
     // --- parsing tag <linker>
     QString name = cur.attribute( "name" );
@@ -454,6 +514,51 @@ void parseNeuralnet_10( QDomElement cur, BaseNeuralNet* net ) {
     }
 }
 
+void parseNeuralnet_11( QDomElement cur, BaseNeuralNet* net ) {
+    QDomNode child = cur.firstChild().toElement();
+    if ( child.toElement().isNull() ) {
+        nError() << "Syntax error" ;
+        return;
+    }
+    if ( child.toElement().tagName() != QString( "neuralnet" ) ) {
+        nError() << "Syntax error; Do you forget the <neuralnet> tag ??" ;
+        return;
+    }
+
+    // --- parsing tag <neuralnet>
+    child = child.firstChild();
+    while( ! child.isNull() ) {
+        QDomElement e = child.toElement();
+        if ( e.isNull() ) {
+            child = child.nextSibling();
+            continue;
+        }
+        if ( e.tagName() == QString( "cluster" ) ) {
+            // --- <cluster>
+            parseCluster_11( e, net );
+        } else if ( e.tagName() == QString( "linker" ) ) {
+            // --- <linker>
+            parseLinker_10( e, net );
+			// to create -- parseLinker_11( e, net );
+        } else if ( e.tagName() == QString( "order" ) ) {
+            // --- <order>
+            parseOrder_10( e, net );
+        } else if ( e.tagName() == QString( "outputs" ) ) {
+            // --- <outputs>
+            parseOutputs_10( e, net );
+        } else if ( e.tagName() == QString( "inputs" ) ) {
+            // --- <inputs>
+            parseInputs_10( e, net );
+        } else if ( e.tagName() == QString( "configure" ) ) {
+            // --- <configure>
+            parseConfigure_10( e, net );
+        } else {
+            nWarning() << "Unrecognized tag: " << e.tagName().toAscii().constData();
+        }
+        child = child.nextSibling();
+    }
+}
+
 BaseNeuralNet* loadXML( const char* filename ) {
     BaseNeuralNet* net = new BaseNeuralNet();
 
@@ -479,7 +584,10 @@ BaseNeuralNet* loadXML( const char* filename ) {
     if ( ver == QString( "1.0" ) ) {
         //--- version 1.0
         parseNeuralnet_10( rootnode, net );
-    }
+    } else if ( ver == QString( "1.1" ) ) {
+        //--- version 1.1
+        parseNeuralnet_11( rootnode, net );
+	}
     return net;
 }
 
@@ -555,6 +663,82 @@ QDomNode createPropertyFragment( Variant v, QDomDocument doc, QDomElement elem )
     return sub;
 }
 
+QString createAttributeContent( Variant v ) {
+    //QString complex; // --- used for create string representation of RealVec and RealMat
+/*    const RealVec* rv;
+    const RealMat* mv;*/
+    switch( v.type() ) {
+    case Variant::t_null:
+        break;
+    case Variant::t_real:
+        return QString("%1").arg( v.getReal() );
+        break;
+    case Variant::t_int:
+        return QString("%1").arg( v.getInt() );
+        break;
+    case Variant::t_uint:
+        return QString("%1").arg( v.getUInt() );
+        break;
+    case Variant::t_char:
+        return QString("%1").arg( v.getChar() );
+        break;
+    case Variant::t_uchar:
+        return QString("%1").arg( v.getUChar() );
+        break;
+    case Variant::t_bool:
+        if ( v.getBool() ) {
+            return QString("true");
+        } else {
+            return QString("false");
+        }
+        break;
+    case Variant::t_string:
+        return QString("%1").arg( v.getString() );
+        break;
+    case Variant::t_realvec:
+		nWarning() << "RealVec read-only property not handled yet";
+		return QString();
+/*        rv = v.getRealVec();
+        for( u_int i=0; i<rv->size(); i++ ) {
+            complex.append( QString(" %1").arg( rv->at(i) ) );
+        }
+        complex.append( " " );
+        sub = doc.createTextNode( complex );*/
+        break;
+    case Variant::t_realmat:
+		nWarning() << "RealMat read-only property not handled yet";
+		return QString();
+/*        mv = v.getRealMat();
+        for( u_int r=0; r<mv->rows(); r++ ) {
+            for( u_int c=0; c<mv->cols(); c++ ) {
+                complex.append( QString(" %1").arg( mv->at( r, c ) ) );
+            }
+            complex.append( " " );
+            //complex.append( "\n" );
+        }
+        sub = doc.createTextNode( complex );*/
+        break;
+    case Variant::t_outfunction:
+		nWarning() << "OutFunction read-only property not handled yet";
+		return QString();
+/*        elem.setAttribute( "type", v.getOutputFunction()->getTypename().getString() );
+        saveProperties( doc, elem, v.getOutputFunction(), QStringList() << "typename" );*/
+        break;
+    case Variant::t_cluster:
+        nError() << "Saving a property of type Cluster is not handled" ;
+        break;
+    case Variant::t_linker:
+        nError() << "Saving a property of type Linker is not handled" ;
+        break;
+    case Variant::t_propertized:
+        nError() << "Saving a property of type Cluster is not handled" ;
+/*        elem.setAttribute( "type", v.getPropertized()->getTypename().getString() );
+        saveProperties( doc, elem, v.getPropertized(), QStringList() << "typename" );*/
+        break;
+    }
+    return QString();
+}
+
 void saveProperties( QDomDocument doc, QDomElement parent, Propertized* obj, QStringList skip ) {
     PropertyAccessVec& pvec = obj->properties();
     for( u_int i=0; i<pvec.size(); i++ ) {
@@ -563,12 +747,16 @@ void saveProperties( QDomDocument doc, QDomElement parent, Propertized* obj, QSt
             continue;
         }
         if ( ! p->isVector() ) {
-            QDomElement elem = doc.createElement( p->name() );
-            parent.appendChild( elem );
-            QDomNode sub = createPropertyFragment( p->get(), doc, elem );
-            if ( !sub.isNull() ) {
-                elem.appendChild( sub );
-            }
+			if ( p->isWritable() ) {
+				QDomElement elem = doc.createElement( p->name() );
+				parent.appendChild( elem );
+				QDomNode sub = createPropertyFragment( p->get(), doc, elem );
+				if ( !sub.isNull() ) {
+					elem.appendChild( sub );
+				}
+			} else {
+				parent.setAttribute( p->name(), createAttributeContent( p->get() ) );
+			}
             continue;
         }
         // --- Vector property
@@ -590,7 +778,7 @@ void saveProperties( QDomDocument doc, QDomElement parent, Propertized* obj, QSt
 bool saveXML( const char* filename, BaseNeuralNet* net ) {
     QDomDocument doc("nnfw-xml");
     QDomElement root = doc.createElement( "nnfw" );
-    root.setAttribute( "version", "1.0" );
+    root.setAttribute( "version", "1.1" );
     doc.appendChild( root );
 
     QDomElement nn = doc.createElement( "neuralnet" );
@@ -599,11 +787,11 @@ bool saveXML( const char* filename, BaseNeuralNet* net ) {
     const ClusterVec& cls = net->clusters();
     for( unsigned int i=0; i<cls.size(); i++ ) {
         QDomElement elem = doc.createElement( "cluster" );
-        elem.setAttribute( "size", cls[i]->numNeurons() );
+        elem.setAttribute( "numNeurons", cls[i]->numNeurons() );
         elem.setAttribute( "type", cls[i]->getTypename().getString() );
         elem.setAttribute( "name", cls[i]->getName() );
-        nn.appendChild( elem );
         saveProperties( doc, elem, cls[i], QStringList() << "numNeurons" << "typename" << "name" );
+        nn.appendChild( elem );
     }
 
     const LinkerVec& ls = net->linkers();

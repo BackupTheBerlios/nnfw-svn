@@ -15,6 +15,14 @@ S <mave> comment goes here
     'C' : means that something has been changed (e.g. implementation of a Class or a signature method)
 ==== End of Legend ====
 
+    ==> 221 - 2/06/2007 <==
+
+C <mave> new version of XML files; now the read-only properties are written
+		as attributes of node <cluster> and passed to the constructor via
+		Creatore registered into the Factory
++ <mave> add the method Propertized::convertStringTo for converting the string-type
+		Variant readed from XML into the type required by class
+
     ==> 220 - 25/05/2007 <==
 
 C <mave> improved error messages in xml processing

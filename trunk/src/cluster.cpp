@@ -53,7 +53,15 @@ Cluster::Cluster( PropertySettings& prop )
         setName( prop["name"].getString() );
     }
     // --- Configuring Dimension
-    this->numneurons = prop["numNeurons"].getUInt();
+	// --- sistemare questo if che non dovrebbe esistere,
+	// e' dovuto al fatto che quando si carica un file versione 1.0
+	// la prop numNeurons è di tipo u_int, mentre dalla 1.1 sono tutte string
+	if ( prop["numNeurons"].type() == Variant::t_string ) {
+    	this->numneurons =
+			convertStringTo( prop["numNeurons"], Variant::t_uint ).getUInt();
+	} else {
+		this->numneurons = prop["numNeurons"].getUInt();
+	}
     inputdata.resize( numneurons );
     outputdata.resize( numneurons );
     // --- Configuring Accumulate modality

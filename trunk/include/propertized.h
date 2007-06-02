@@ -451,6 +451,11 @@ public:
         return Variant( vtypename );
     };
 
+	/*! Create a Variant of type required from String-type Variant passed
+	 *  \warning is not possible convert to pointer-type.
+	 */
+	Variant convertStringTo( const Variant& str, Variant::types t );
+
     //@}
 
 protected:

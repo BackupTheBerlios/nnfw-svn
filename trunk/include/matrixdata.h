@@ -413,7 +413,7 @@ private:
         switch( event.type() ) {
         case Vec::datachanged:
 #ifdef NNFW_DEBUG
-            nWarning() << "Arrange a MatrixData view after a VectorData resizing can lead to inconsistent settings - see documentation if you not sure" );
+            nWarning() << "Arrange a MatrixData view after a VectorData resizing can lead to inconsistent settings - see documentation if you not sure" ;
 #endif
             ncols = data.size() / nrows ;
             if ( ncols == 0 ) {
