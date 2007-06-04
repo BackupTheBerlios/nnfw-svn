@@ -67,7 +67,6 @@ bool BaseNeuralNet::removeCluster( Cluster* c ) {
         return false;
     }
 #endif
-    unmark( c );
     ClusterVec::iterator it = std::find( clustersv.begin(), clustersv.end(), c );
     if ( it == clustersv.end() ) {
         return false;

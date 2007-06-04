@@ -91,7 +91,7 @@ void GaussFunction::derivate( const RealVec& x, const RealVec& y, RealVec& d ) c
 }
 
 GaussFunction* GaussFunction::clone() const {
-    return (new GaussFunction( centre, variance ) );
+    return (new GaussFunction( centre, variance, max ) );
 }
 
 }
