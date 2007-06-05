@@ -23,8 +23,10 @@
 
 namespace nnfw {
 
-const char* Variant::typen[t_propertized+1] = { "Null", "Real", "int", "unsigned int", "char", "unsigned char", "bool",
-    "String (const char*)", "RealVec*", "RealMat*", "OutputFunction*", "Cluster*", "Linker*", "Propertized*" };
+const char* Variant::typen[t_dataptr+1] = { 
+	"Null", "Real", "int", "unsigned int", "char", "unsigned char", "bool",
+    "String (const char*)", "RealVec*", "RealMat*", "OutputFunction*", "Cluster*",
+	"Linker*", "Propertized*", "Generic Data Pointer" };
 
 Variant::Variant() {
     dtype = t_null;
@@ -47,6 +49,7 @@ Variant::Variant( const Variant& src ) {
     case t_cluster: dcluster = src.dcluster; break;
     case t_linker: dlinker = src.dlinker; break;
     case t_propertized: dprop = src.dprop; break;
+    case t_dataptr: ddataptr = src.ddataptr; break;
     }
 }
 
@@ -81,6 +84,13 @@ Variant::Variant( bool d ) {
 }
 
 Variant::Variant( const char* d ) {
+    dtype = t_string;
+    u_int size = strlen(d);
+    dstring = new char[size+1];
+    strcpy( dstring, d );
+}
+
+Variant::Variant( char* d ) {
     dtype = t_string;
     u_int size = strlen(d);
     dstring = new char[size+1];
@@ -134,6 +144,7 @@ Variant& Variant::operator=( const Variant& src ) {
     case t_cluster: dcluster = src.dcluster; break;
     case t_linker: dlinker = src.dlinker; break;
     case t_propertized: dprop = src.dprop; break;
+    case t_dataptr: ddataptr = src.ddataptr; break;
     }
     return (*this);
 }
@@ -308,6 +319,7 @@ Variant Propertized::convertStringTo( const Variant& str, Variant::types t ) {
     case Variant::t_cluster:
     case Variant::t_linker:
     case Variant::t_propertized:
+    case Variant::t_dataptr:
 		nError() << "Unsupported convertion type: " << Variant::typeName(t);
 		break;
     }

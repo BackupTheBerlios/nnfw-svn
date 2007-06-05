@@ -28,7 +28,6 @@
 #include "propertized.h"
 #include <stack>
 
-
 namespace nnfw {
 
 BaseNeuralNet* feedForwardNet( U_IntVec layers, const char* clusterType, const char* linkerType ) {
@@ -37,13 +36,14 @@ BaseNeuralNet* feedForwardNet( U_IntVec layers, const char* clusterType, const c
     Cluster* curr = 0;
     Linker* ml = 0;
     UpdatableVec ord;
-    char buf[50];
+    char buf[150];
     u_int clCount = 1;
     u_int mlCount = 1;
     for( u_int i=0; i<layers.size(); i++ ) {
-        sprintf( buf, "%s%d", clusterType, clCount );
         PropertySettings prop;
-        prop["numNeurons"] = layers[i];
+        sprintf( buf, "%d", layers[i] );
+        prop["numNeurons"] = buf;
+        sprintf( buf, "%s%d", clusterType, clCount );
         prop["name"] = buf;
         curr = Factory::createCluster( clusterType, prop );
         if ( i == 0 ) {
@@ -56,10 +56,13 @@ BaseNeuralNet* feedForwardNet( U_IntVec layers, const char* clusterType, const c
         clCount++;
         //ord << curr;
         if ( prec != 0 ) {
-            sprintf( buf, "%s%d", linkerType, mlCount );
             PropertySettings prop;
-            prop["from"] = prec;
+			prop["baseneuralnet"] = Variant( net );
+            sprintf( buf, "%s", prec->getName() );
+            prop["from"] = buf;
+            sprintf( buf, "%s", curr->getName() );
             prop["to"]   = curr;
+            sprintf( buf, "%s%d", linkerType, mlCount );
             prop["name"] = buf;
             ml = Factory::createLinker( linkerType, prop );
             net->addLinker( ml );

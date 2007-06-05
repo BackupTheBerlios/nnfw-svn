@@ -71,8 +71,13 @@ void parseProperty_10( QDomElement cur, const Propertized* obj ) {
     Propertized* sub = 0; // --- when != 0 then it'll recursively call parseProperty_10 onto sub's child nodes
     switch( pacc->type() ) {
     case Variant::t_null:
-        nWarning() << "Setting a Null type Variant" ;
+		nError() << "Specified a Null type in property " << cur.tagName().toAscii().constData();
+		return;
         break;
+	case Variant::t_dataptr:
+		nError() << "Specified unhandled type in property " << cur.tagName().toAscii().constData();
+		return;
+		break;
     case Variant::t_real:
 #ifdef NNFW_DOUBLE_PRECISION
         ret = Variant( text.toDouble() );
@@ -233,7 +238,7 @@ void parseCluster_10( QDomElement cur, BaseNeuralNet* net ) {
     }
     PropertySettings prop;
     prop["name"] = name.toAscii().constData();
-    prop["numNeurons"] = Variant( size.toUInt() );
+    prop["numNeurons"] = Variant( size.toAscii().data() );
     Cluster* cl = Factory::createCluster( type.toAscii().constData(), prop );
     net->addCluster( cl );
 
@@ -279,20 +284,12 @@ void parseCluster_11( QDomElement cur, BaseNeuralNet* net ) {
 		std::string value = item.value().toStdString();
 		prop[name] = Variant( value.data() );
 	}
-    if ( prop["name"].isNull() ) {
-        nError() << "attribute name of <cluster> is mandatory" ;
-		return;
-    }
     if ( prop["type"].isNull() ) {
         nError() << "attribute type of <cluster> is mandatory" ;
 		return;
     }
-    if ( prop["numNeurons"].isNull() ) {
-        nError() << "attribute size of <cluster> is mandatory" ;
-		return;
-    }
-/*    prop["name"] = name.toAscii().constData();
-    prop["numNeurons"] = Variant( size.toUInt() );*/
+	//--- add meta-informations
+	prop["baseneuralnet"] = Variant( net );
     Cluster* cl = Factory::createCluster( prop["type"].getString(), prop );
     net->addCluster( cl );
 
@@ -364,9 +361,62 @@ void parseLinker_10( QDomElement cur, BaseNeuralNet* net ) {
 				 << name.toAscii().constData() << " skipped" ;
         return;
     }
-    prop["from"] = fromcl;
-    prop["to"] = tocl;
+	//--- add meta-informations ... required from version 0.9.0
+	prop["baseneuralnet"] = Variant( net );
+    prop["from"] = Variant( from.toAscii().constData() ); // from version 0.9.0 constructors require strings;
+    prop["to"] = Variant( to.toAscii().constData() );     // from version 0.9.0 constructors require strings;
     Linker* link = Factory::createLinker( type.toAscii().constData(), prop );
+    net->addLinker( link );
+
+    // --- parsing children nodes for settings others properties
+    QDomNode child = cur.firstChild();
+    while( ! child.isNull() ) {
+        QDomElement e = child.toElement();
+        if ( e.isNull() ) {
+            child = child.nextSibling();
+            continue;
+        }
+        if ( e.tagName() == QString( "randomize" ) ) {
+            // --- <randomize>
+            QString min = e.attribute( "min" );
+            QString max = e.attribute( "max" );
+            if ( min.isNull() || max.isNull() ) {
+                nError() << "attributes min and max are mandatory in <randomize> tag" ;
+				continue;
+            }
+#ifdef NNFW_DOUBLE_PRECISION
+            double minV = min.toDouble();
+            double maxV = max.toDouble();
+#else
+            float minV = min.toFloat();
+            float maxV = max.toFloat();
+#endif
+            link->randomize( minV, maxV );
+        } else {
+            // --- nodo proprieta'
+            parseProperty_10( e, link );
+        }
+        child = child.nextSibling();
+    }
+}
+
+void parseLinker_11( QDomElement cur, BaseNeuralNet* net ) {
+    // --- parsing tag <linker>
+    PropertySettings prop;
+	QDomNamedNodeMap amap = cur.attributes();
+	for( int i=0; i<amap.count(); i++ ) {
+		QDomAttr item = amap.item( i ).toAttr();
+		std::string name = item.name().toStdString();
+		std::string value = item.value().toStdString();
+		prop[name] = Variant( value.data() );
+	}
+    if ( prop["type"].isNull() ) {
+        nFatal() << "attribute type of <linker> is mandatory" ;
+		return;
+    }
+	//--- add meta-informations
+	prop["baseneuralnet"] = Variant( net );
+    Linker* link = Factory::createLinker( prop["type"].getString(), prop );
     net->addLinker( link );
 
     // --- parsing children nodes for settings others properties
@@ -538,8 +588,7 @@ void parseNeuralnet_11( QDomElement cur, BaseNeuralNet* net ) {
             parseCluster_11( e, net );
         } else if ( e.tagName() == QString( "linker" ) ) {
             // --- <linker>
-            parseLinker_10( e, net );
-			// to create -- parseLinker_11( e, net );
+			parseLinker_11( e, net );
         } else if ( e.tagName() == QString( "order" ) ) {
             // --- <order>
             parseOrder_10( e, net );
@@ -601,6 +650,9 @@ QDomNode createPropertyFragment( Variant v, QDomDocument doc, QDomElement elem )
     switch( v.type() ) {
     case Variant::t_null:
         break;
+	case Variant::t_dataptr:
+		nError() << "Impossible to save a generic data pointer";
+		break;
     case Variant::t_real:
         sub = doc.createTextNode( QString(" %1 ").arg( v.getReal() ) );
         break;
@@ -670,6 +722,10 @@ QString createAttributeContent( Variant v ) {
     switch( v.type() ) {
     case Variant::t_null:
         break;
+	case Variant::t_dataptr:
+		nError() << "Impossible to save a generic data pointer";
+		return QString();
+		break;
     case Variant::t_real:
         return QString("%1").arg( v.getReal() );
         break;

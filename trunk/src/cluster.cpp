@@ -51,16 +51,18 @@ Cluster::Cluster( PropertySettings& prop )
     Variant& v = prop["name"];
     if ( !v.isNull() ) {
         setName( prop["name"].getString() );
-    }
+    } else {
+		nFatal() << "the property name of Cluster is mandatory";
+		exit(1);
+	}
     // --- Configuring Dimension
-	// --- sistemare questo if che non dovrebbe esistere,
-	// e' dovuto al fatto che quando si carica un file versione 1.0
-	// la prop numNeurons è di tipo u_int, mentre dalla 1.1 sono tutte string
-	if ( prop["numNeurons"].type() == Variant::t_string ) {
+	v = prop["numNeurons"];
+	if ( !v.isNull() ) {
     	this->numneurons =
 			convertStringTo( prop["numNeurons"], Variant::t_uint ).getUInt();
 	} else {
-		this->numneurons = prop["numNeurons"].getUInt();
+		nFatal() << "the dimension of Cluster is mandatory";
+		exit(1);
 	}
     inputdata.resize( numneurons );
     outputdata.resize( numneurons );

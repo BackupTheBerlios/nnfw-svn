@@ -44,7 +44,7 @@ namespace nnfw {
  *  \par Warnings
  */
 template<class T, class Vec = VectorData<T> >
-class NNFW_API MatrixData : private Observer, private Observable {
+class NNFW_TEMPLATE MatrixData : private Observer, private Observable {
 public:
     /*! \name Constructors */
     //@{

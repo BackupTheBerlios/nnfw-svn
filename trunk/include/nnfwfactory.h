@@ -56,7 +56,7 @@ public:
 /*! \brief Template facility to create Creator specialization
  */
 template<class T>
-class Creator : public AbstractCreator {
+class NNFW_TEMPLATE Creator : public AbstractCreator {
     /*! \name Interface */
     //@{
 

@@ -47,7 +47,8 @@ class NNFW_API Variant {
 public:
     //! type of registrable data
     typedef enum { t_null=0, t_real, t_int, t_uint, t_char, t_uchar, t_bool, t_string,
-                t_realvec, t_realmat, t_outfunction, t_cluster, t_linker, t_propertized } types;
+                t_realvec, t_realmat, t_outfunction, t_cluster, t_linker, t_propertized,
+				t_dataptr } types;
 
     /*! \name Constructors */
     //@{
@@ -70,6 +71,8 @@ public:
     //! Constructor
     Variant( const char* d );
     //! Constructor
+    Variant( char* d );
+    //! Constructor
     Variant( RealVec* d );
     //! Constructor
     Variant( RealMat* d );
@@ -81,6 +84,12 @@ public:
     Variant( Linker* d );
     //! Constructor
     Variant( Propertized* d );
+	//! Generic data pointer constructor
+	template<typename T>
+	Variant( T* d ) {
+		dtype = t_dataptr;
+	    ddataptr = d;
+	};
     //@}
     /*! \name Operators */
     //@{
@@ -127,6 +136,16 @@ public:
     Linker* getLinker() const;
     //! return the Propertized value
     Propertized* getPropertized() const;
+	//! template to Return Generic data type
+	template<typename T>
+	T* getDataPtr() const {
+	    checkType( t_dataptr );
+		T* r = static_cast<T*>( ddataptr );
+		if ( r == 0 ) {
+			nError() << "Called getDataPtr with wrong type; returning NULL pointer ";
+		}
+		return r;
+	};
     //@}
 
     /*! Return the name of type passed by argument
@@ -137,7 +156,7 @@ private:
     //! type registered
     types dtype;
     //! Name of type
-    static const char* typen[ t_propertized+1 ];
+    static const char* typen[ t_dataptr+1 ];
     Real    dreal;
     int     dint;
     u_int   duint;
@@ -151,6 +170,7 @@ private:
     Cluster*         dcluster;
     Linker*          dlinker;
     Propertized*     dprop;
+	void*            ddataptr;
 
     //! Check type
     void checkType( types t ) const;
@@ -225,7 +245,7 @@ protected:
  *  you don't have to use it directly, it's automatically instanciated by Propertized's methods
  */
 template<class T>
-class NNFW_API PropertyAccess : public AbstractPropertyAccess {
+class NNFW_TEMPLATE PropertyAccess : public AbstractPropertyAccess {
 public:
     /*! \name Constructors */
     //@{
@@ -287,7 +307,7 @@ private:
  *  you don't have to use it directly, it's automatically instanciated by Propertized's methods
  */
 template<class T>
-class NNFW_API VectorPropertyAccess : public AbstractPropertyAccess {
+class NNFW_TEMPLATE VectorPropertyAccess : public AbstractPropertyAccess {
 public:
     /*! \name Constructors */
     //@{

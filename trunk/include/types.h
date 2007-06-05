@@ -32,11 +32,14 @@
 	#define _CRT_SECURE_NO_DEPRECATE
 	#ifdef NNFW_BUILDING_DLL
 		#define NNFW_API __declspec(dllexport)
+		#define NNFW_TEMPLATE __declspec(dllexport)
 	#else
 		#define NNFW_API __declspec(dllimport)
+		#define NNFW_TEMPLATE 
 	#endif
 #else
 	#define NNFW_API
+	#define NNFW_TEMPLATE 
 #endif
 
 #include <vector>

@@ -15,6 +15,14 @@ S <mave> comment goes here
     'C' : means that something has been changed (e.g. implementation of a Class or a signature method)
 ==== End of Legend ====
 
+    ==> 223 - 5/06/2007 <==
+
+B <mave> fixed error while loading old-format XML files
+C <mave> to Linker constructor by PropertySettings are now passed a pointer to BaseNeuralNet
++ <mave> added a generic data pointer (void*) to Variant and two template method for accessing it
+B <mave> bugfix error in exporting template classes in Windows; added NNFW_TEMPLATE macro for 
+		handling the exportation of template classes
+
     ==> 222 - 4/06/2007 <==
 
 B <mave> bugfix in clone method of GaussFunction

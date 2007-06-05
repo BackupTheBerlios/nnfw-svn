@@ -74,6 +74,7 @@ std::ostream& operator<<(std::ostream& stream, const Variant var) {
         stream << *p;
         break;
     case Variant::t_propertized: stream << *(var.getPropertized()); break;
+	case Variant::t_dataptr: stream << "Generic data pointer"; break;
     }
     return stream;
 }

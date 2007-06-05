@@ -18,7 +18,7 @@
  ********************************************************************************/
 
 #include "linker.h"
-
+#include "neuralnet.h"
 
 namespace nnfw {
 
@@ -33,19 +33,30 @@ Linker::Linker( Cluster* from, Cluster* to, const char* name )
 
 Linker::Linker( PropertySettings& prop )
     : Updatable( prop ) {
-    Variant& v = prop["from"];
+	Variant& v = prop["baseneuralnet"];
+	BaseNeuralNet* net = v.getDataPtr<BaseNeuralNet>();
+    
+	v = prop["from"];
     if ( v.isNull() ) {
         nFatal() << "You can't construct a Linker wihout specifying a Cluster From";
 		exit(1);
     } else {
-        fromc = (Cluster*)( v.getCluster() );
+		fromc = (Cluster*)( net->getByName( v.getString() ) );
+    	if ( !fromc ) {
+        	nFatal() << "the 'from' Cluster doesn't exist; impossible create linker " << getName();
+        	exit(1);
+		}
     }
     v = prop["to"];
     if ( v.isNull() ) {
         nFatal() << "You can't construct a Linker wihout specifying a Cluster To" ;
 		exit(1);
     } else {
-        toc = (Cluster*)( v.getCluster() );
+		toc = (Cluster*)( net->getByName( v.getString() ) );
+    	if ( !toc ) {
+        	nFatal() << "the 'to' Cluster doesn't exist; impossible create linker " << getName();
+        	exit(1);
+		}
     }
     addProperty( "from", Variant::t_cluster, this, &Linker::fromP );
     addProperty( "to", Variant::t_cluster, this, &Linker::toP );
