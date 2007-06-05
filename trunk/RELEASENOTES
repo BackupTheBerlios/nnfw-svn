@@ -1,3 +1,32 @@
+======= 0.9.0 Release =======
+  * Summary of important changes
+	- added an experimental class nnfwString for future Unicode support
+	- new version of XML format; small changes for end-users but more improvements for
+		people that create new kind of Cluster/Linker for a tighty integration with NNFW
+	- added a generic data pointer (void*) to Variant and two template method for accessing it
+	- add the method Propertized::convertStringTo for converting the string-type
+		Variant readed from XML into the type required by class
+	- nnfwMessage replace by a new object-oriented messaging system: nWarning, nError, nFatal
+	- NNFW_DEBUG flags is also activated with CMake ReleaseWithDebugInfo build-type
+	- renamed RealVec::mul to RealVec::outprod, and bugfixed
+	- renamed Updatable::getName() to name()
+	- renamed Cluster::size() to numNeurons()
+	- Variant methods getRealVec and getRealMat now returns non-const pointers
+	- MatrixLinker is now Abstract; use DotLinker
+
+  * Bugfixs:
+	- now nnfw-config report correctly the MKL include directory
+	- added more exit-points in xml processing to avoid data corruption when
+		mandatory tags are not present
+	- no more segmentation fault when it's omitted the attribute 'i' in the xml 
+		file for vector properties
+	- no more segmentation fault when processed a non-existing property in xml files
+	- bugfix error in exporting template classes in Windows; added NNFW_TEMPLATE macro for 
+		handling the exportation of template classes
+	- fixed clone method of GaussFunction
+	- fixed outer-product calculation
+	- adjusted Doxygen documentation; now all methods are displayed corretcly
+
 ======= 0.7.0 Release =======
  * Summary of important changes
     - added Outer-product, thanks to Francesco
