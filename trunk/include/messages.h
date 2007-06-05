@@ -50,7 +50,7 @@ public:
 	//! Converter
 	nnfwString( int );
 	//! Converter
-	nnfwString( u_int );
+	nnfwString( unsigned int );
 	//! Converter
 	nnfwString( double );
 	//! Converter
