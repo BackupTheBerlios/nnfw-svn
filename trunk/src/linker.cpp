@@ -43,7 +43,7 @@ Linker::Linker( PropertySettings& prop )
     } else {
 		fromc = (Cluster*)( net->getByName( v.getString() ) );
     	if ( !fromc ) {
-        	nFatal() << "the 'from' Cluster doesn't exist; impossible create linker " << getName();
+        	nFatal() << "the 'from' Cluster doesn't exist; impossible create linker " << name();
         	exit(1);
 		}
     }
@@ -54,7 +54,7 @@ Linker::Linker( PropertySettings& prop )
     } else {
 		toc = (Cluster*)( net->getByName( v.getString() ) );
     	if ( !toc ) {
-        	nFatal() << "the 'to' Cluster doesn't exist; impossible create linker " << getName();
+        	nFatal() << "the 'to' Cluster doesn't exist; impossible create linker " << name();
         	exit(1);
 		}
     }

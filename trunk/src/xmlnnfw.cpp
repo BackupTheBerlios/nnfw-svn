@@ -845,7 +845,7 @@ bool saveXML( const char* filename, BaseNeuralNet* net ) {
         QDomElement elem = doc.createElement( "cluster" );
         elem.setAttribute( "numNeurons", cls[i]->numNeurons() );
         elem.setAttribute( "type", cls[i]->getTypename().getString() );
-        elem.setAttribute( "name", cls[i]->getName() );
+        elem.setAttribute( "name", cls[i]->name() );
         saveProperties( doc, elem, cls[i], QStringList() << "numNeurons" << "typename" << "name" );
         nn.appendChild( elem );
     }
@@ -853,10 +853,10 @@ bool saveXML( const char* filename, BaseNeuralNet* net ) {
     const LinkerVec& ls = net->linkers();
     for( unsigned int i=0; i<ls.size(); i++ ) {
         QDomElement elem = doc.createElement( "linker" );
-        elem.setAttribute( "to", ls[i]->to()->getName() );
-        elem.setAttribute( "from", ls[i]->from()->getName() );
+        elem.setAttribute( "to", ls[i]->to()->name() );
+        elem.setAttribute( "from", ls[i]->from()->name() );
         elem.setAttribute( "type", ls[i]->getTypename().getString() );
-        elem.setAttribute( "name", ls[i]->getName() );
+        elem.setAttribute( "name", ls[i]->name() );
         nn.appendChild( elem );
         saveProperties( doc, elem, ls[i], QStringList() << "to" << "from" << "typename" << "name" );
     }
@@ -865,7 +865,7 @@ bool saveXML( const char* filename, BaseNeuralNet* net ) {
 	QString str;
 	const ClusterVec& cl1 = net->inputClusters();
 	for( unsigned int i=0; i<cl1.size(); i++ ) {
-		str += QString("%1 ").arg(cl1[i]->getName());
+		str += QString("%1 ").arg(cl1[i]->name());
 	}
 	nn.appendChild( elem );
 	elem.appendChild( doc.createTextNode( str ) );
@@ -874,7 +874,7 @@ bool saveXML( const char* filename, BaseNeuralNet* net ) {
 	str = "";
 	const ClusterVec& cl2 = net->outputClusters();
 	for( unsigned int i=0; i<cl2.size(); i++ ) {
-		str += QString("%1 ").arg(cl2[i]->getName());
+		str += QString("%1 ").arg(cl2[i]->name());
 	}
 	nn.appendChild( elem );
 	elem.appendChild( doc.createTextNode( str ) );
@@ -883,7 +883,7 @@ bool saveXML( const char* filename, BaseNeuralNet* net ) {
 	str = "";
 	const UpdatableVec& uls = net->order();
 	for( unsigned int i=0; i<uls.size(); i++ ) {
-		str += QString("%1 ").arg(uls[i]->getName());
+		str += QString("%1 ").arg(uls[i]->name());
 	}
 	nn.appendChild( elem );
 	elem.appendChild( doc.createTextNode( str ) );

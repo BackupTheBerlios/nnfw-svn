@@ -15,6 +15,10 @@ S <mave> comment goes here
     'C' : means that something has been changed (e.g. implementation of a Class or a signature method)
 ==== End of Legend ====
 
+    ==> 224 - 5/06/2007 - 0.9.0 release <==
+
+C <mave> renamed Updatable::getName() to name() 
+
     ==> 223 - 5/06/2007 <==
 
 B <mave> fixed error while loading old-format XML files

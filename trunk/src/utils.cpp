@@ -58,9 +58,9 @@ BaseNeuralNet* feedForwardNet( U_IntVec layers, const char* clusterType, const c
         if ( prec != 0 ) {
             PropertySettings prop;
 			prop["baseneuralnet"] = Variant( net );
-            sprintf( buf, "%s", prec->getName() );
+            sprintf( buf, "%s", prec->name() );
             prop["from"] = buf;
-            sprintf( buf, "%s", curr->getName() );
+            sprintf( buf, "%s", curr->name() );
             prop["to"]   = curr;
             sprintf( buf, "%s%d", linkerType, mlCount );
             prop["name"] = buf;
@@ -113,7 +113,7 @@ LearningNetwork* backpropagationFor( BaseNeuralNet* net ) {
         while( qcl.size() != 0 ) {
             clusInfo info = qcl.top();
             qcl.pop();
-            sprintf( buf, "Gradient%s", (info.cl)->getName() );
+            sprintf( buf, "Gradient%s", (info.cl)->name() );
             GradientBiasedCluster* gcl = new GradientBiasedCluster( info.cl, 0, info.post, buf );
             learnNet->addTeachBlock( gcl );
             ord << gcl;
@@ -133,7 +133,7 @@ LearningNetwork* backpropagationFor( BaseNeuralNet* net ) {
         while( qml.size() != 0 ) {
             linkInfo info = qml.top();
             qml.pop();
-            sprintf( buf, "Gradient%s", (info.ml)->getName() );
+            sprintf( buf, "Gradient%s", (info.ml)->name() );
             GradientMatrixLinker* gml = new GradientMatrixLinker( info.ml, 0, info.post, buf );
             learnNet->addTeachBlock( gml );
             ord << gml;

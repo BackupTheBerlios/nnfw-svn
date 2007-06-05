@@ -24,7 +24,7 @@ namespace nnfw {
 
 Updatable::Updatable( const char* name )
     : Propertized() {
-    this->name = 0;
+    this->namev = 0;
     setName( name );
     addProperty( "name", Variant::t_string, this, &Updatable::getNameV, &Updatable::setName );
     // setTypename( "Updatable" ); --- it's no instanciable
@@ -32,23 +32,23 @@ Updatable::Updatable( const char* name )
 
 Updatable::Updatable( PropertySettings& prop )
     : Propertized() {
-    this->name = 0;
+    this->namev = 0;
     setName( prop["name"].getString() );
     addProperty( "name", Variant::t_string, this, &Updatable::getNameV, &Updatable::setName );
     // setTypename( "Updatable" ); --- it's no instanciable
 }
 
 Updatable::~Updatable() {
-    delete []name;
+    delete []namev;
 }
 
 void Updatable::setName( const char* newname ) {
-    if (name) {
-        delete []name;
+    if (namev) {
+        delete []namev;
     }
     u_int size = strlen(newname);
-    name = new char[size+1];
-    strcpy( name, newname );
+    namev = new char[size+1];
+    strcpy( namev, newname );
 }
 
 bool Updatable::setName( const Variant& nv ) {
@@ -56,12 +56,12 @@ bool Updatable::setName( const Variant& nv ) {
     return true;
 }
 
-const char* Updatable::getName() {
-    return name;
+const char* Updatable::name() {
+    return namev;
 }
 
 Variant Updatable::getNameV() {
-    return Variant( name );
+    return Variant( namev );
 }
 
 }

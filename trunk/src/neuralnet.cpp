@@ -294,12 +294,12 @@ void BaseNeuralNet::randomize( Real min, Real max ) {
 
 Updatable* BaseNeuralNet::getByName( const char* name ) {
     for ( ClusterVec::iterator it = clustersv.begin(); it != clustersv.end(); ++it ) {
-        if ( strcmp( (*it)->getName(), name ) == 0 ) {
+        if ( strcmp( (*it)->name(), name ) == 0 ) {
             return *it;
         }
     }
     for ( LinkerVec::iterator it2 = linkersv.begin(); it2 != linkersv.end(); ++it2 ) {
-        if ( strcmp( (*it2)->getName(), name ) == 0 ) {
+        if ( strcmp( (*it2)->name(), name ) == 0 ) {
             return *it2;
         }
     }

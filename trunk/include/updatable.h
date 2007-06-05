@@ -63,15 +63,15 @@ public:
     void setName( const char* newname );
     //! Set the name of Updatable (Varian version)
     bool setName( const Variant& nv );
-    //! Return the name associated
-    const char* getName();
+	//! Return its name
+	const char* name();
     //! Return the name (version that use Variant for property)
     Variant getNameV();
 
     //@}
 
 protected:
-    char* name;
+    char* namev;
 };
 
 }
