@@ -60,11 +60,11 @@ void FBrowser::setNeuralNet( FNNWrapper* nn ) {
 	net = nn;
 	const ClusterVec& cls = net->clusters();
 	for( unsigned int i=0; i<cls.size(); i++ ) {
-		QTreeWidgetItem* item = new QTreeWidgetItem( rootCluster, QStringList() << cls[i]->getName() << cls[i]->getTypename().getString() );
+		QTreeWidgetItem* item = new QTreeWidgetItem( rootCluster, QStringList() << cls[i]->name() << cls[i]->getTypename().getString() );
 	}
 	const LinkerVec& lks = nn->linkers();
 	for( unsigned int i=0; i<lks.size(); i++ ) {
-		QTreeWidgetItem* item = new QTreeWidgetItem( rootLinker, QStringList() << lks[i]->getName() << lks[i]->getTypename().getString() );
+		QTreeWidgetItem* item = new QTreeWidgetItem( rootLinker, QStringList() << lks[i]->name() << lks[i]->getTypename().getString() );
 	}
 }
 

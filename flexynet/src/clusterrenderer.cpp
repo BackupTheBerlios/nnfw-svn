@@ -45,7 +45,7 @@ ClusterRenderer::ClusterRenderer( NNRenderer* nnrenderer, Cluster* cl ) {
 	setFlag(ItemIsMovable);
 	setFlag(ItemIsSelectable);
 	setZValue(1);
-	setToolTip( cl->getName() );
+	setToolTip( cl->name() );
 	grabbed = false;
 }
 	

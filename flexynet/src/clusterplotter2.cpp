@@ -45,7 +45,7 @@ ClusterPlotter2::ClusterPlotter2( Cluster* cl ) {
 	setFlag(ItemIsSelectable, false);
 	setAcceptsHoverEvents( true );
 	setZValue(1);
-	//setToolTip( QString("Plotting of %1").arg(cl->getName()) );
+	//setToolTip( QString("Plotting of %1").arg(cl->name()) );
 
 	ins.resize( dim );
 	lowins.resize( dim );

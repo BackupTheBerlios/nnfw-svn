@@ -39,7 +39,7 @@ ClusterPlotter::ClusterPlotter( Cluster* cl ) {
 	setFlag(ItemIsMovable, false);
 	setFlag(ItemIsSelectable, false);
 	setZValue(1);
-	setToolTip( QString("Plotting of %1").arg(cl->getName()) );
+	setToolTip( QString("Plotting of %1").arg(cl->name()) );
 	ins.resize( cl->numNeurons() );
 	lowins.resize( cl->numNeurons() );
 	highins.resize( cl->numNeurons() );
