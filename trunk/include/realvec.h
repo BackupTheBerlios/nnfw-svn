@@ -243,6 +243,16 @@ public:
 		return s;
     };
 
+	/*! Normalize the vector, so the norm is equal to one
+	 */
+	void normalize() {
+		Real n = norm();
+		if ( n==0.0 ) return;
+        for( u_int i=0; i<vsize; i++ ) {
+            data[i] /= n;
+        }
+	};
+
 	/*! Not operation<br>
 	 *  It apply the operator '!' to all elements of RealVec
      */

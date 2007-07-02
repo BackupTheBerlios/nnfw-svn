@@ -57,6 +57,22 @@ Real Random::flatReal( Real min, Real max ) {
 #endif
 }
 
+RealVec& Random::flatRealVec( RealVec& vec, float min, float max ) {
+	for( u_int i=0; i<vec.size(); i++ ) {
+		vec[i] = flatReal( min, max );
+	}
+	return vec;
+}
+
+RealMat& Random::flatRealMat( RealMat& mat, float min, float max ) {
+	for( u_int row_nr=0; row_nr<mat.rows(); row_nr++ ) {
+		for( u_int col_nr=0; col_nr<mat.cols(); col_nr++ ) {
+			mat[row_nr][col_nr] = flatReal( min, max );
+		}
+	}
+	return mat;
+}
+
 bool Random::boolean( ) {
 #ifdef NNFW_USE_GSL
     return ( gsl_rng_get( rnd )%2 );

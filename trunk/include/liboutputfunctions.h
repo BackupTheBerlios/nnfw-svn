@@ -76,6 +76,55 @@ public:
     //@}
 };
 
+/*! \brief ScaleFunction
+ *
+ * ScaleFunction scales the inputs vector to the outputs
+ *
+ *   <table class="proptable">
+ *   <tr><td class="prophead" colspan="5">Properties</td></tr>
+ *   <tr><th>Name</th> <th>Type [isVector]</th> <th>Access mode</th> <th>Description</th> <th>Class</th></tr>
+ *   <tr><td>typename</td> <td>string</td> <td>read-only</td> <td> Class's type </td> <td>Propertized</td> </tr>
+ *   <tr><td>rate</td> <td>Real</td> <td>read/write</td> <td> rate of scaling </td> <td>this</td> </tr>
+ *   </table>
+ */
+class NNFW_API ScaleFunction : public OutputFunction {
+public:
+    /*! \name Constructors */
+    //@{
+
+    //! Construct
+    ScaleFunction( Real rate = 1.0 );
+
+    //! Construct
+    ScaleFunction( PropertySettings& prop );
+
+    //! Destructor
+    virtual ~ScaleFunction() { /* Nothing to do */ };
+
+    //@}
+    /*! \name Interface */
+    //@{
+
+    /*! Set the rate of Scaling function
+     */
+    bool setRate( const Variant& v );
+
+    /*! Return the rate of Scaling function
+     */
+    Variant getRate();
+
+    //! Implement the identity function
+    virtual void apply( RealVec& inputs, RealVec& outputs );
+
+    /*! Clone this object
+     */
+    virtual ScaleFunction* clone() const;
+
+    //@}
+private:
+	Real rate;
+};
+
 /*! \brief Sigmoid Function
  *
  * Details..
@@ -125,7 +174,7 @@ public:
     virtual SigmoidFunction* clone() const;
 
     //@}
-
+private:
     //! lambda is the slope of the curve
     Real lambda;
 };

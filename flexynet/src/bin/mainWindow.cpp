@@ -310,6 +310,8 @@ void MainWindow::randStep() {
 		}
 		nn->step();
 		steps++;
+		return;
 	}
+	timer.stop();
 	//--- fine codice temporaneo per prova di ClusterPlotter
 }

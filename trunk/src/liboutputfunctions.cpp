@@ -53,6 +53,38 @@ IdentityFunction* IdentityFunction::clone() const {
     return new IdentityFunction();
 }
 
+ScaleFunction::ScaleFunction( Real rate )
+    : OutputFunction() {
+	this->rate = rate;
+    addProperty( "rate", Variant::t_real, this, &ScaleFunction::getRate, &ScaleFunction::setRate );
+    setTypename( "ScaleFunction" );
+}
+
+ScaleFunction::ScaleFunction( PropertySettings& prop )
+    : OutputFunction() {
+	rate = 1.0;
+    addProperty( "rate", Variant::t_real, this, &ScaleFunction::getRate, &ScaleFunction::setRate );
+    setProperties( prop );
+    setTypename( "ScaleFunction" );
+}
+
+bool ScaleFunction::setRate( const Variant& v ) {
+    rate = v.getReal();
+    return true;
+}
+
+Variant ScaleFunction::getRate() {
+    return Variant( rate );
+}
+
+void ScaleFunction::apply( RealVec& inputs, RealVec& outputs ) {
+    outputs.assign_amulx( rate, inputs );
+}
+
+ScaleFunction* ScaleFunction::clone() const {
+    return new ScaleFunction( rate );
+}
+
 SigmoidFunction::SigmoidFunction( Real l ) : DerivableOutputFunction() {
     lambda = l;
     addProperty( "lambda", Variant::t_real, this, &SigmoidFunction::getLambda, &SigmoidFunction::setLambda );

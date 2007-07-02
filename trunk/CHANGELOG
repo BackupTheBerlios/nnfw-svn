@@ -15,6 +15,13 @@ S <mave> comment goes here
     'C' : means that something has been changed (e.g. implementation of a Class or a signature method)
 ==== End of Legend ====
 
+    ==> 228 - 2/07/2007 - 0.9.1 release <==
+
++ <mave> added ScaleFunction that scale the inputs vector of Cluster
++ <mave> added normalize method to RealVec for normalize it
++ <mave> added Random::flatRealVec to randomize a vector
++ <mave> added Random::flatRealMat to randomize a matrix
+
     ==> 224 - 5/06/2007 - 0.9.0 release <==
 
 C <mave> renamed Updatable::getName() to name() 

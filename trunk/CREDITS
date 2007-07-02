@@ -4,6 +4,8 @@ Current Maintainers:
     * Gianluca Massera <mave@mail.berlios.de>
 
 Thanks: ( randomly ordered ;-) )
+	* Fabio Ruini
+		implementation of RealMat::flatRealMat()
     * Federico Cecconi
         for consulting about project design
     * Marco Mirolli

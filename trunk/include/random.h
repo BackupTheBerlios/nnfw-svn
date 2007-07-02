@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2007 Gianluca Massera <emmegian@yahoo.it>                     *
+ *  Copyright (C) 2005-2007 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -51,6 +51,14 @@ public:
     /*! Return a real number in range [min,max)
      */
     static Real flatReal( Real min, Real max );
+	
+    /*! Return a RealVec with all the values randomized in the range [min,max)
+     */
+    static RealVec& flatRealVec( RealVec& vec, Real min, Real max );
+	
+    /*! Return a RealMat with all the values randomized in the range [min,max)
+     */
+    static RealMat& flatRealMat( RealMat& mat, Real min, Real max );
 
     /*! Return a random boolean value; True value appear with probability specified as paramater
      */

@@ -1,3 +1,10 @@
+======= 0.9.1 Release =======
+  * Summary of important changes
+	- added ScaleFunction that scale the inputs vector of Cluster
+	- added normalize method to RealVec
+	- added Random::flatRealVec to randomize a vector
+	- added Random::flatRealMat to randomize a matrix
+
 ======= 0.9.0 Release =======
   * Summary of important changes
 	- added an experimental class nnfwString for future Unicode support
