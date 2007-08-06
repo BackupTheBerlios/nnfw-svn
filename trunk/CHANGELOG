@@ -15,6 +15,10 @@ S <mave> comment goes here
     'C' : means that something has been changed (e.g. implementation of a Class or a signature method)
 ==== End of Legend ====
 
+    ==> 230 - 6/08/2007 <==
+
+B <mave> resolved linkage problem with nMessages under windows
+
     ==> 228 - 2/07/2007 - 0.9.1 release <==
 
 + <mave> added ScaleFunction that scale the inputs vector of Cluster

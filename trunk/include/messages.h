@@ -86,7 +86,7 @@ public:
 	//@}
 protected:
 	//--- Helper class for printing messages
-	class msgLine {
+	class NNFW_API msgLine {
 	public:
 		msgLine( nMessage* parent );
 		~msgLine();
