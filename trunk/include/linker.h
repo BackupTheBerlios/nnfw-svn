@@ -49,7 +49,7 @@ public:
     /*! \name Constructors */
     //@{
 
-    //! Construct
+    /*! Construct */
     Linker( Cluster* from, Cluster* to, const char* name = "unnamed" );
 
     /*! Construct by PropertySettings
@@ -113,9 +113,9 @@ public:
     //@}
 
 private:
-    //! incoming Cluster
+    /*! incoming Cluster */
     Cluster* fromc;
-    //! outgoing Cluster
+    /*! outgoing Cluster */
     Cluster* toc;
 };
 

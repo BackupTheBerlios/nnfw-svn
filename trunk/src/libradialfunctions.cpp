@@ -37,6 +37,7 @@ GaussFunction::GaussFunction( PropertySettings& prop )
     : DerivableOutputFunction() {
     centre = 0.0;
     variance = 1.0;
+	max = 1.0;
     addProperty( "centre", Variant::t_real, this, &GaussFunction::getCentre, &GaussFunction::setCentre );
     addProperty( "variance", Variant::t_real, this, &GaussFunction::getVariance, &GaussFunction::setVariance );
     addProperty( "max", Variant::t_real, this, &GaussFunction::getMax, &GaussFunction::setMax );

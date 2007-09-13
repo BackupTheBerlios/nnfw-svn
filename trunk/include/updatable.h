@@ -44,28 +44,28 @@ public:
     /*! \name Constructors */
     //@{
 
-    //! Constructor
+    /*! Constructor */
     Updatable( const char* name = "unnamed" );
 
-    //! Constructor with PropertySettings
+    /*! Constructor with PropertySettings */
     Updatable( PropertySettings& prop );
 
-    //! Destructor
+    /*! Destructor */
     virtual ~Updatable();
 
     //@}
     /*! \name Interface */
     //@{
 
-    //! Update the object
+    /*! Update the object */
     virtual void update() = 0;
-    //! Set the name of Updatable
+    /*! Set the name of Updatable */
     void setName( const char* newname );
-    //! Set the name of Updatable (Varian version)
+    /*! Set the name of Updatable (Varian version) */
     bool setName( const Variant& nv );
-	//! Return its name
+	/*! Return its name */
 	const char* name();
-    //! Return the name (version that use Variant for property)
+    /*! Return the name (version that use Variant for property) */
     Variant getNameV();
 
     //@}

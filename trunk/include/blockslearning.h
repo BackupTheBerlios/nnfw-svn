@@ -57,28 +57,28 @@ public:
     /*! Construct a BaseTeachBlock attached to specified BaseTeachBlocks
      */
     BaseTeachBlock( BaseTeachBlock* preBlock = 0, BaseTeachBlock* postBlock = 0, const char* name = "unnamed" );
-    //! Destructor
+    /*! Destructor */
     virtual ~BaseTeachBlock() {
         delete []name;
     };
-    //! One step of the learning method implemented by subclasses
+    /*! One step of the learning method implemented by subclasses */
     virtual void learn() = 0;
-    //! Return the Updatable
+    /*! Return the Updatable */
     virtual Updatable* getUpdatable() = 0;
-    //! Return the name
+    /*! Return the name */
     const char* getName() {
         return name;
     };
 protected:
-    //! Pre BaseTeachBlock Vector
+    /*! Pre BaseTeachBlock Vector */
     TeachBlockVec preVec;
-    //! Post BaseTeachBlock Vector
+    /*! Post BaseTeachBlock Vector */
     TeachBlockVec postVec;
-    //! Method for automatically creation of postVec
+    /*! Method for automatically creation of postVec */
     void addPostBlock( BaseTeachBlock* postBlock );
-    //! Method for automatically creation of preVec
+    /*! Method for automatically creation of preVec */
     void addPreBlock( BaseTeachBlock* preBlock );
-    //! Name associated
+    /*! Name associated */
     char* name;
 };
 
@@ -107,36 +107,36 @@ public:
     /*! Construct a SupervisedTeachBlock attached to specified BaseTeachBlock
      */
     SupervisedTeachBlock( BaseTeachBlock* preBlock = 0, BaseTeachBlock* postBlock = 0, const char* name = "unnamed" );
-    //! One step of the learning method implemented by subclasses
+    /*! One step of the learning method implemented by subclasses */
     virtual void learn() = 0;
-    //! Return the Updatable
+    /*! Return the Updatable */
     virtual Updatable* getUpdatable() = 0;
-    //! Set the desired output values for the current input values
+    /*! Set the desired output values for the current input values */
     void setTarget( const RealVec& target );
-    //! Return the target values specified
+    /*! Return the target values specified */
     RealVec& getTarget();
-    //! Add the error passed to the error already registered
+    /*! Add the error passed to the error already registered */
     void addError( const RealVec& error );
-    //! Return the last Errors values
+    /*! Return the last Errors values */
     RealVec& getError();
-    //! Set the modifiability value
+    /*! Set the modifiability value */
 	void setModifiable( bool value ) {
 		modifiability = value;	
 	};
-    //! Return true if the teachblock is modifiable
+    /*! Return true if the teachblock is modifiable */
 	bool isModifiable() {
 		return modifiability;
 	};
 protected:
-    //! the desired output values
+    /*! the desired output values */
     RealVec target;
-    //! The error respect the current output values
+    /*! The error respect the current output values */
     RealVec error;
-    //! Modalita' di funzionamento targetMode punto (i) della descrizione, errorMode punto (ii)
+    /*! Modalita' di funzionamento targetMode punto (i) della descrizione, errorMode punto (ii) */
     enum learnMode { targetMode = 1, errorMode = 2 };
-    //! modalita' attuale
+    /*! modalita' attuale */
     learnMode mode;
-	//! chi deve essere modificato
+	/*! chi deve essere modificato */
 	bool modifiability;
 };
 
@@ -150,33 +150,33 @@ protected:
  */
 class NNFW_API GradientBiasedCluster : public SupervisedTeachBlock {
 public:
-    //! Construct a Gradient block attached to BiasedCluster passed
+    /*! Construct a Gradient block attached to BiasedCluster passed */
     GradientBiasedCluster( BiasedCluster* cl, BaseTeachBlock* preBlock = 0, BaseTeachBlock* postBlock = 0, const char* name = "unnamed");
     /*! Apply one step of the Gradient descent rule<br>
      *  La regola del gradiente applicata ad un BiasedCluster consente di apprendere i valori di bias e di calcolare
      *  l'errore sull'input netto che viene passato al preBlock (se c'e' ne uno)
      */
     virtual void learn();
-    //! Return the BiasedCluster associated
+    /*! Return the BiasedCluster associated */
     virtual BiasedCluster* getUpdatable();
-    //! Set learning rate
+    /*! Set learning rate */
     void setRate( Real rate );
-    //! Return the learning rate
+    /*! Return the learning rate */
     Real getRate();
-    //! Set Momentum
+    /*! Set Momentum */
     void setMomentum( Real m );
-    //! Return Momentum
+    /*! Return Momentum */
     Real getMomentum();
-    //! Set all the oldDeltas to 0
+    /*! Set all the oldDeltas to 0 */
     void resetOldDeltas();
 protected:
-    //! BiasedCluster to learn
+    /*! BiasedCluster to learn */
     BiasedCluster* cl;
-    //! learn rate
+    /*! learn rate */
     Real rate;
-    //! Momentum
+    /*! Momentum */
     Real momento;
-    //! Vecchio delta (per il calcolo del momento)
+    /*! Vecchio delta (per il calcolo del momento) */
     RealVec oldDelta;
 };
 
@@ -190,33 +190,33 @@ protected:
  */
 class NNFW_API GradientMatrixLinker : public SupervisedTeachBlock {
 public:
-    //! Construct a Gradient block attached to MatrixLinker passed
+    /*! Construct a Gradient block attached to MatrixLinker passed */
     GradientMatrixLinker( MatrixLinker* ml, BaseTeachBlock* preBlock = 0, BaseTeachBlock* postBlock = 0, const char* name = "unnamed");
     /*! Apply one step of the Gradient descent rule<br>
      *  La regola del gradiente applicata ad un MatrixLinker consente di apprendere i valori dei pesi e di calcolare
      *  l'errore sugli output dei neuroni del Cluster in entrata; l'errore viene passato al preBlock (se c'e' ne uno)
      */
     virtual void learn();
-    //! Return the MatrixLinker associated
+    /*! Return the MatrixLinker associated */
     virtual MatrixLinker* getUpdatable();
-    //! Set learning rate
+    /*! Set learning rate */
     void setRate( Real rate );
-    //! Return the learning rate
+    /*! Return the learning rate */
     Real getRate();
-    //! Set Momentum
+    /*! Set Momentum */
     void setMomentum( Real m );
-    //! Return Momentum
+    /*! Return Momentum */
     Real getMomentum();
-    //! Set all the oldDeltas to 0
+    /*! Set all the oldDeltas to 0 */
     void resetOldDeltas();
 protected:
-    //! MatrixLinker to learn
+    /*! MatrixLinker to learn */
     MatrixLinker* ml;
-    //! learn rate
+    /*! learn rate */
     Real rate;
-    //! Momentum
+    /*! Momentum */
     Real momento;
-    //! Vecchio delta (per il calcolo del momento)
+    /*! Vecchio delta (per il calcolo del momento) */
     RealMat oldDelta;
 };
 

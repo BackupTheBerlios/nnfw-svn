@@ -125,9 +125,9 @@ public:
     //@}
 
 private:
-    //! Registers the dimensions of the matrix
+    /*! Registers the dimensions of the matrix */
     u_int nrows, ncols;
-    //! Weight Matrix
+    /*! Weight Matrix */
     RealMat w;
 };
 

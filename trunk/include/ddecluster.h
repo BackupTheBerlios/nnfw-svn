@@ -104,21 +104,21 @@ public:
 	//@}
 
 private:
-    //! Coefficient of equation
+    /*! Coefficient of equation */
     RealVec coeff;
-    //! Derivates of output
+    /*! Derivates of output */
     VectorData< RealVec > ds;
-    //! temporary data for calculation
+    /*! temporary data for calculation */
     RealVec tmpdata;
-    //! temporary data for calculation
+    /*! temporary data for calculation */
     RealVec tmpdata2;
 
-    //! Update the derivates of output
+    /*! Update the derivates of output */
     void updateDs();
-    //! Break the update calculates
+    /*! Break the update calculates */
     void breakUpdate();
 
-    //! property definitions
+    /*! property definitions */
     void propdefs();
 };
 

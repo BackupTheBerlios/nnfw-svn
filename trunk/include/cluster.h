@@ -85,11 +85,11 @@ class NNFW_API Cluster : public Updatable {
 public:
     /*! \name Constructors */
     //@{
-    //! Construct a Cluster
+    /*! Construct a Cluster */
     Cluster( u_int numNeurons, const char* name = "unnamed" );
-    //! Construct a Cluster with PropertySettings
+    /*! Construct a Cluster with PropertySettings */
     Cluster( PropertySettings& prop );
-    //! Destructor
+    /*! Destructor */
     virtual ~Cluster();
 
     //@}
@@ -180,12 +180,12 @@ public:
         return inputdata;
     };
 
-    //! For property 'inputs'
+    /*! For property 'inputs' */
     Variant inputsP() {
         return Variant( &inputdata );
     };
 
-    //! setting the property 'inputs'
+    /*! setting the property 'inputs' */
     bool setInputsP( const Variant& v ) {
         inputdata.assign( *(v.getRealVec()) );
         return true;
@@ -214,12 +214,12 @@ public:
         return outputdata;
     };
 
-    //! For property 'outputs'
+    /*! For property 'outputs' */
     Variant outputsP() {
         return Variant( &outputdata );
     };
 
-    //! setting the property 'outputs'
+    /*! setting the property 'outputs' */
     bool setOutputsP( const Variant& v ) {
         outputdata.assign( *(v.getRealVec()) );
         return true;
@@ -241,12 +241,12 @@ public:
         return updater;
     };
 
-    //! read property 'outfunction'
+    /*! read property 'outfunction' */
     Variant getFunctionP() {
         return Variant( updater );
     };
 
-    //! sets the property 'outfunction'
+    /*! sets the property 'outfunction' */
     bool setFunction( const Variant& outf ) {
         setFunction( *(outf.getOutputFunction()) );
         return true;
@@ -263,23 +263,23 @@ protected:
     };
 
 private:
-    //! Number of neurons
+    /*! Number of neurons */
     u_int numneurons;
-    //! Input of neurons
+    /*! Input of neurons */
     RealVec inputdata;
-    //! Output of neurons
+    /*! Output of neurons */
     RealVec outputdata;
-    //! OutputFunction Object
+    /*! OutputFunction Object */
     OutputFunction* updater;
 
-    //! True if the inputs needs a reset
+    /*! True if the inputs needs a reset */
     bool needRst;
     /*! In Accumulated mode the needRst is always false, and then linkers attached to this will never resetInputs
      *  --- Warns for developers --- accOff == true means NO-ACCUMULATION
      */
     bool accOff;
 
-    //! define properties
+    /*! define properties */
     void propdefs();
 };
 

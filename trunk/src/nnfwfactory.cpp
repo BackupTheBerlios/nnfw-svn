@@ -131,6 +131,7 @@ void Factory::initFactory() {
 	outfuntypes["LeakyIntegratorFunction"] = new Creator<LeakyIntegratorFunction>();
     outfuntypes["PoolFunction"] = new Creator<PoolFunction>();
 	outfuntypes["CompositeFunction"] = new Creator<CompositeFunction>();
+	outfuntypes["LinearComboFunction"] = new Creator<LinearComboFunction>();
     outfuntypes["GaussFunction"] = new Creator<GaussFunction>();
 
     isInit = true;

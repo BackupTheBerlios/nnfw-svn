@@ -19,7 +19,7 @@
 
 // --- You can't include it directly
 #ifndef TYPES_INCLUDES
-#error "You can't include realmat.h directly; Instead, You have to include types.h"
+#error "You can't include observ.h directly; Instead, You have to include types.h"
 // --- follow define avoid to get a lot of understandable error !
 #define OBSERV_H
 #endif
@@ -47,21 +47,21 @@ class NNFW_API NotifyEvent {
 public:
 	/*! \name Constructors */
 	//@{
-    //! Constructor
+    /*! Constructor */
     NotifyEvent( int type = 0 ) : etype(type) { /* Nothing to do */ };
 
 	//@}
 	/*! \name Interface */
 	//@{
 
-    //! Return the type of this Notification Event 
+    /*! Return the type of this Notification Event  */
     int type() const {
         return etype;
     };
 	//@}
 
 protected:
-    //! type of event
+    /*! type of event */
     int etype;
 };
 
@@ -140,7 +140,7 @@ public:
 	//@}
 
 private:
-    //! list of ObserverDelegate indexed by event
+    /*! list of ObserverDelegate indexed by event */
     std::list<Observer*> observers;
 };
 

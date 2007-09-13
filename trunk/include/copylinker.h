@@ -53,7 +53,7 @@ namespace nnfw {
  */
 class NNFW_API CopyLinker : public Linker {
 public:
-    //! Modality of Data Copying
+    /*! Modality of Data Copying */
     typedef enum { In2In = 0, In2Out = 1, Out2In = 2, Out2Out = 3 } CopyMode;
 
 	/*! \name Constructors */
@@ -108,15 +108,15 @@ public:
 	//@}
 
 private:
-    //! View of source RealVec of copying
+    /*! View of source RealVec of copying */
     RealVec dataFrom;
-    //! View of destination RealVec of copying
+    /*! View of destination RealVec of copying */
     RealVec dataTo;
-    //! True if RealVec views are been initialized
+    /*! True if RealVec views are been initialized */
     bool viewsIsInit;
-    //! Length of data to be copied
+    /*! Length of data to be copied */
     u_int dimData;
-    //! Modality of Copy
+    /*! Modality of Copy */
     CopyMode mode;
 };
 

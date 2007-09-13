@@ -38,53 +38,53 @@ class OutputFunction;
 class Propertized;
 class AbstractPropertyAccess;
 
-//! Vector of PropertyAccess
+/*! Vector of PropertyAccess */
 typedef VectorData<AbstractPropertyAccess*> PropertyAccessVec;
 
 /*! \brief Incapsulate values of different types/classes in a unified way (like union)
  */
 class NNFW_API Variant {
 public:
-    //! type of registrable data
+    /*! type of registrable data */
     typedef enum { t_null=0, t_real, t_int, t_uint, t_char, t_uchar, t_bool, t_string,
                 t_realvec, t_realmat, t_outfunction, t_cluster, t_linker, t_propertized,
 				t_dataptr } types;
 
     /*! \name Constructors */
     //@{
-    //! Constructor
+    /*! Constructor */
     Variant();
-    //! Copy-Constructor
+    /*! Copy-Constructor */
     Variant( const Variant& src );
-    //! Constructor
+    /*! Constructor */
     Variant( Real d );
-    //! Constructor
+    /*! Constructor */
     Variant( int d );
-    //! Constructor
+    /*! Constructor */
     Variant( u_int d );
-    //! Constructor
+    /*! Constructor */
     Variant( char d );
-    //! Constructor
+    /*! Constructor */
     Variant( unsigned char d );
-    //! Constructor
+    /*! Constructor */
     Variant( bool d );
-    //! Constructor
+    /*! Constructor */
     Variant( const char* d );
-    //! Constructor
+    /*! Constructor */
     Variant( char* d );
-    //! Constructor
+    /*! Constructor */
     Variant( RealVec* d );
-    //! Constructor
+    /*! Constructor */
     Variant( RealMat* d );
-    //! Constructor
+    /*! Constructor */
     Variant( OutputFunction* d );
-    //! Constructor
+    /*! Constructor */
     Variant( Cluster* d );
-    //! Constructor
+    /*! Constructor */
     Variant( Linker* d );
-    //! Constructor
+    /*! Constructor */
     Variant( Propertized* d );
-	//! Generic data pointer constructor
+	/*! Generic data pointer constructor */
 	template<typename T>
 	Variant( T* d ) {
 		dtype = t_dataptr;
@@ -93,7 +93,7 @@ public:
     //@}
     /*! \name Operators */
     //@{
-    //! Assign operator
+    /*! Assign operator */
     Variant& operator=( const Variant& src );
     //@}
     /*! \name Informations about data contained */
@@ -110,33 +110,33 @@ public:
     //@}
     /*! \name Retrieving data */
     //@{
-    //! return the Real value
+    /*! return the Real value */
     Real getReal() const;
-    //! return the Int value
+    /*! return the Int value */
     int getInt() const;
-    //! return the UInt value
+    /*! return the UInt value */
     u_int getUInt() const;
-    //! return the Char value
+    /*! return the Char value */
     char getChar() const;
-    //! return the UChar value
+    /*! return the UChar value */
     unsigned char getUChar() const;
-    //! return the Bool value
+    /*! return the Bool value */
     bool getBool() const;
-    //! return the const char* (constant string) value
+    /*! return the const char* (constant string) value */
     const char* getString() const;
-    //! return the RealVec value
+    /*! return the RealVec value */
     RealVec* getRealVec() const;
-    //! return the RealMat value
+    /*! return the RealMat value */
     RealMat* getRealMat() const;
-    //! return the OutputFunction value
+    /*! return the OutputFunction value */
     OutputFunction* getOutputFunction() const;
-    //! return the Cluster value
+    /*! return the Cluster value */
     Cluster* getCluster() const;
-    //! return the Linker value
+    /*! return the Linker value */
     Linker* getLinker() const;
-    //! return the Propertized value
+    /*! return the Propertized value */
     Propertized* getPropertized() const;
-	//! template to Return Generic data type
+	/*! template to Return Generic data type */
 	template<typename T>
 	T* getDataPtr() const {
 	    checkType( t_dataptr );
@@ -153,9 +153,9 @@ public:
     static const char* typeName( types t );
 
 private:
-    //! type registered
+    /*! type registered */
     types dtype;
-    //! Name of type
+    /*! Name of type */
     static const char* typen[ t_dataptr+1 ];
     Real    dreal;
     int     dint;
@@ -172,7 +172,7 @@ private:
     Propertized*     dprop;
 	void*            ddataptr;
 
-    //! Check type
+    /*! Check type */
     void checkType( types t ) const;
 };
 
@@ -184,59 +184,59 @@ class NNFW_API AbstractPropertyAccess : public Clonable {
 public:
     /*! \name Constructors & Destructors */
     //@{
-    //! Constructor
+    /*! Constructor */
     AbstractPropertyAccess( const char* name ) {
         u_int size = strlen(name);
         this->namep = new char[size+1];
         strcpy( this->namep, name );
     };
-    //! Destructor
+    /*! Destructor */
     virtual ~AbstractPropertyAccess() {
         delete []namep;
     };
     //@}
     /*! \name Interface */
     //@{
-    //! Set the value of property
+    /*! Set the value of property */
     virtual bool set( const Variant& data ) = 0;
-    //! Return the value of property
+    /*! Return the value of property */
     virtual Variant get() const = 0;
 
-    //! Set the i-th value of Vector property
+    /*! Set the i-th value of Vector property */
     virtual bool set( u_int i, const Variant& data ) = 0;
-    //! Return the i-th value of Vector property
+    /*! Return the i-th value of Vector property */
     virtual Variant get( u_int i ) const = 0;
 
-    //! Return the name of property
+    /*! Return the name of property */
     const char* name() const {
         return namep;
     };
-    //! Return true if the property is writable
+    /*! Return true if the property is writable */
     bool isWritable() const {
         return writable;
     };
-    //! Return true if the property is a Vector value
+    /*! Return true if the property is a Vector value */
     bool isVector() const {
         return vectorv;
     };
-    //! Return the type of property
+    /*! Return the type of property */
     Variant::types type() const {
         return typep;
     };
-    //! Return the object whom this AbstractPropertyAccess is refered to
+    /*! Return the object whom this AbstractPropertyAccess is refered to */
     virtual Propertized* object() = 0;
-    //! Clone this
+    /*! Clone this */
     virtual AbstractPropertyAccess* clone() const = 0;
     //@}
 
 protected:
-    //! Name of property
+    /*! Name of property */
     char* namep;
-    //! Type of property
+    /*! Type of property */
     Variant::types typep;
-    //! True if the property is writable
+    /*! True if the property is writable */
     bool writable;
-    //! True if the property is a Vector of values
+    /*! True if the property is a Vector of values */
     bool vectorv;
 };
 
@@ -249,7 +249,7 @@ class NNFW_TEMPLATE PropertyAccess : public AbstractPropertyAccess {
 public:
     /*! \name Constructors */
     //@{
-    //! Constructor
+    /*! Constructor */
     PropertyAccess( const char* name, Variant::types t, T* o, Variant (T::*g)(), bool (T::*s)( const Variant& ) = 0 )
         : AbstractPropertyAccess( name ) {
         typep = t;
@@ -267,7 +267,7 @@ public:
     //@}
     /*! \name Interface */
     //@{
-    //! return the value of property
+    /*! return the value of property */
     virtual Variant get() const {
         return (obj->*getPtm)();
     };
@@ -278,20 +278,20 @@ public:
     virtual bool set( const Variant& data ) {
         return (obj->*setPtm)( data );
     };
-    //! It always return false
+    /*! It always return false */
     virtual bool set( u_int, const Variant& ) {
         return false;
     };
-    //! It always return a Null Variant
+    /*! It always return a Null Variant */
     virtual Variant get( u_int ) const {
         return Variant();
     };
 
-    //! Return the object whom this PropertyAccess is refered to
+    /*! Return the object whom this PropertyAccess is refered to */
     virtual Propertized* object() {
         return obj;
     };
-    //! Clone this
+    /*! Clone this */
     virtual PropertyAccess* clone() const {
         return new PropertyAccess( name(), type(), obj, getPtm, setPtm );
     };
@@ -311,7 +311,7 @@ class NNFW_TEMPLATE VectorPropertyAccess : public AbstractPropertyAccess {
 public:
     /*! \name Constructors */
     //@{
-    //! Constructor
+    /*! Constructor */
     VectorPropertyAccess( const char* name, Variant::types t, T* o, Variant (T::*g)(u_int), bool (T::*s)(u_int, const Variant&) = 0 )
         : AbstractPropertyAccess( name ) {
         typep = t;
@@ -329,15 +329,15 @@ public:
     //@}
     /*! \name Interface */
     //@{
-    //! It always return false
+    /*! It always return false */
     virtual bool set( const Variant& ) {
         return false;
     };
-    //! It always return a Null Variant
+    /*! It always return a Null Variant */
     virtual Variant get() const {
         return Variant();
     };
-    //! return the value of property
+    /*! return the value of property */
     virtual Variant get( u_int i ) const {
         return (obj->*getPtm)(i);
     };
@@ -348,11 +348,11 @@ public:
     virtual bool set( u_int i, const Variant& data ) {
         return (obj->*setPtm)( i, data );
     };
-    //! Return the object whom this PropertyAccess is refered to
+    /*! Return the object whom this PropertyAccess is refered to */
     virtual Propertized* object() {
         return obj;
     };
-    //! Clone this
+    /*! Clone this */
     virtual VectorPropertyAccess* clone() const {
         return new VectorPropertyAccess( name(), type(), obj, getPtm, setPtm );
     };
@@ -386,9 +386,9 @@ class NNFW_API Propertized {
 public:
     /*! \name Constructors */
     //@{
-    //! Constructor
+    /*! Constructor */
     Propertized();
-    //! Destructor
+    /*! Destructor */
     ~Propertized();
 
     //@}
@@ -485,11 +485,11 @@ protected:
     void setTypename( const char* type );
 
 private:
-    //! mapping name -> PropertyAccess
+    /*! mapping name -> PropertyAccess */
     std::map< std::string, AbstractPropertyAccess* > props;
-    //! vector of all PropertyAccess in order of registering
+    /*! vector of all PropertyAccess in order of registering */
     PropertyAccessVec vecProps;
-    //! the name of the class
+    /*! the name of the class */
     char* vtypename;
 };
 

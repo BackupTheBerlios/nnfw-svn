@@ -40,19 +40,19 @@ public:
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
 public slots:
-	//! show/hide outputs plot
+	/*! show/hide outputs plot */
 	void showOutputs( bool );
-	//! show/hide inputs plot
+	/*! show/hide inputs plot */
 	void showInputs( bool );
-	//! reset the plot zeroing all data registered so far
+	/*! reset the plot zeroing all data registered so far */
 	void resetToZero();
-	//! update the plot
+	/*! update the plot */
 	void updatePlot();
-	//! resize the plots in such way that each plots fit the height specified
+	/*! resize the plots in such way that each plots fit the height specified */
 	//void fitToHeight( qreal hf );
 
 signals:
-	//! emitted when the height change
+	/*! emitted when the height change */
 	void heightChanged();
 
 protected:
@@ -62,40 +62,40 @@ protected:
 	void contextMenuEvent( QGraphicsSceneContextMenuEvent* event );
 
 private:
-	//! cluster to plot
+	/*! cluster to plot */
 	nnfw::Cluster* cl;
-	//! bounding rect
+	/*! bounding rect */
 	mutable QRectF brect;
-	//! input data plotted
+	/*! input data plotted */
 	QVector<QPolygonF> ins;
-	//! output data plotted
+	/*! output data plotted */
 	QVector<QPolygonF> outs;
-	//! lastPoint, or last valid index of QPolygonFs
+	/*! lastPoint, or last valid index of QPolygonFs */
 	int lastPoint;
-	//! low Y value of ins data plotted
+	/*! low Y value of ins data plotted */
 	QVector<qreal> lowins;
-	//! high Y value of ins data plotted
+	/*! high Y value of ins data plotted */
 	QVector<qreal> highins;
-	//! low Y value of outs data plotted
+	/*! low Y value of outs data plotted */
 	QVector<qreal> lowouts;
-	//! high Y value of outs data plotted
+	/*! high Y value of outs data plotted */
 	QVector<qreal> highouts;
 
-	//! scale factor of data plotted
+	/*! scale factor of data plotted */
 	QVector<qreal> myins;
-	//! scale factor of data plotted
+	/*! scale factor of data plotted */
 	QVector<qreal> myouts;
 
-	//! Action for hide/show outputs
+	/*! Action for hide/show outputs */
 	QAction* showOutsA;
-	//! Action for hide/show inputs
+	/*! Action for hide/show inputs */
 	QAction* showInsA;
-	//! Popup menu
+	/*! Popup menu */
 	QMenu* menu;
 
 	bool showouts;
 	bool showins;
-	//! true when data is changed (useful for speedup boundingRect calculations)
+	/*! true when data is changed (useful for speedup boundingRect calculations) */
 	bool changed;
 };
 

@@ -49,56 +49,44 @@ public:
     /*! \name Constructors */
     //@{
 
-    //! Construct
+    /*! Construct */
     GaussFunction( Real centre = 0.0, Real variance = 1.0, Real maxvaule = 1.0 );
 
-    //! Construct
+    /*! Construct */
     GaussFunction( PropertySettings& prop );
 
-    //! Destructor
+    /*! Destructor */
     virtual ~GaussFunction() { /* Nothing to do */ };
 
     //@}
     /*! \name Interface */
     //@{
 
-    /*! Set the centre
-     */
+    /*! Set the centre */
     bool setCentre( const Variant& v );
-
-    /*! Return the centre
-     */
+    /*! Return the centre */
     Variant getCentre();
 
-    /*! Set the Variance
-     */
+    /*! Set the Variance */
     bool setVariance( const Variant& v );
-
-    /*! Return the variance
-     */
+    /*! Return the variance */
     Variant getVariance();
 
-    /*! Set the Max value
-     */
+    /*! Set the Max value */
     bool setMax( const Variant& v );
-
-    /*! Return the Max
-     */
+    /*! Return the Max */
     Variant getMax();
 
-    //! Implement the identity function
+    /*! Implement the Gaussian function */
     virtual void apply( RealVec& inputs, RealVec& outputs );
-
-    //! ???
+    /*! derivate of Gauss function */
     virtual void derivate( const RealVec& x, const RealVec& y, RealVec& d ) const;
-
-    /*! Clone this object
-     */
+    /*! Clone this object */
     virtual GaussFunction* clone() const;
 
     //@}
-private:
 
+private:
     // centre
     Real centre;
     // variance

@@ -40,20 +40,20 @@ public:
 	/*! \name Constructors */
 	//@{
 
-    //! Constructor
+    /*! Constructor */
     LearningAlgorithm( BaseNeuralNet* net );
-    //! Destructor
+    /*! Destructor */
     virtual ~LearningAlgorithm();
 
 	//@}
 	/*! \name Interface */
 	//@{
 
-	//! Return the BaseNeuralNet setted
+	/*! Return the BaseNeuralNet setted */
 	BaseNeuralNet* net() {
 		return netp;
 	};
-    //! Modify the object
+    /*! Modify the object */
     virtual void learn() = 0;
 
 	/*! Configure a VectorModifier for learning the Cluster's property specified
@@ -96,9 +96,9 @@ public:
 
 private:
 	BaseNeuralNet* netp;
-	//! map from Cluster to Modifier
+	/*! map from Cluster to Modifier */
 	std::map<Cluster*, Modifier*> cmods;
-	//! map from Linker to Modifier
+	/*! map from Linker to Modifier */
 	std::map<Linker*, Modifier*> lmods;
 };
 

@@ -96,12 +96,12 @@ public:
         return biasesdata;
     };
 
-    //! read property 'biases'
+    /*! read property 'biases' */
     Variant getBiases() {
         return Variant( &biasesdata );
     };
 
-    //! set property 'biases'
+    /*! set property 'biases' */
     bool setBiases( const Variant& v ) {
         setBiases( *( v.getRealVec() ) );
         return true;
@@ -117,7 +117,7 @@ private:
     RealVec biasesdata;
     RealVec tempdata;
 
-    //! define properties
+    /*! define properties */
     void propdefs();
 };
 

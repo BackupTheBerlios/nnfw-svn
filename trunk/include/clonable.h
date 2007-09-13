@@ -35,13 +35,13 @@ class NNFW_API Clonable {
 public:
     /*! \name Virtual Destrucor */
     //@{
-    //! Destructor
+    /*! Destructor */
     virtual ~Clonable() { /* Nothing to do */ };
     //@}
 
     /*! \name Interface */
     //@{
-    //! Clone method returns a new allocated clone of this object
+    /*! Clone method returns a new allocated clone of this object */
     virtual Clonable* clone() const = 0;
     //@}
 };

@@ -35,14 +35,14 @@ class FLEX_API NNRenderer : public QGraphicsView {
 public:
 	NNRenderer( QWidget* parent = 0 );
 
-	//! set the neuralnet to display
+	/*! set the neuralnet to display */
 	void setNeuralNet( FNNWrapper* nn );
-	//! return the neuralnet displayed
+	/*! return the neuralnet displayed */
 	FNNWrapper* getNeuralNet() {
 		return nn;
 	};
 public slots:
-	//! calculate the position of Clusters in order to see inputs to the bottom and output in top
+	/*! calculate the position of Clusters in order to see inputs to the bottom and output in top */
 	void defaultPositioning();
 
 protected:
@@ -53,7 +53,7 @@ protected:
 	void scaleView(qreal scaleFactor);
 	
 private:
-	//! when there is no neuralnet to display the zoom-in/out is disabled
+	/*! when there is no neuralnet to display the zoom-in/out is disabled */
 	bool scaleDisabled;
 	FNNWrapper* nn;
 	//--- mappings

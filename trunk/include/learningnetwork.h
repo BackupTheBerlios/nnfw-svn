@@ -65,10 +65,10 @@ public:
      */
     void setOrder( BaseTeachBlock* blocks[], u_int dim );
 
-    //! Set the order
+    /*! Set the order */
     void setOrder( TeachBlockVec& );
 
-    //! Return the BaseTeachBlock with name specified
+    /*! Return the BaseTeachBlock with name specified */
     BaseTeachBlock* getByName( const char* name );
 
     /*! Disable the calling of learn() method of BaseTeachBlock passed
@@ -100,10 +100,10 @@ public:
 	//@}
 
 protected:
-    //! TeachBlocks
+    /*! TeachBlocks */
     TeachBlockVec blocksv;
 
-    //! Array of Updateables ordered as specified
+    /*! Array of Updateables ordered as specified */
     TeachBlockVec bls;
     BoolVec mask;
     unsigned int dimBls;

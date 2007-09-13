@@ -29,12 +29,12 @@
 class FLEX_API FNNWrapper : public QObject {
 	Q_OBJECT
 public:
-	//! create a Wrapper for the net passed
+	/*! create a Wrapper for the net passed */
 	FNNWrapper( nnfw::BaseNeuralNet* net ) {
 		this->net = net;
 	};
 
-	//! Save to XML file passed
+	/*! Save to XML file passed */
 	bool saveTo( QString filename ) {
 		return nnfw::saveXML( filename.toAscii().data(), net );
 	};

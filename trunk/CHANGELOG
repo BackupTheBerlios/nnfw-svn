@@ -15,6 +15,13 @@ S <mave> comment goes here
     'C' : means that something has been changed (e.g. implementation of a Class or a signature method)
 ==== End of Legend ====
 
+    ==> 231 - 13/09/2007 - 0.9.3 release  <==
+
++ <mave> added norm and normalize for RealMat
+B <mave> fixed a bug in GaussFunction constructor (Propertized version)
++ <mave> added LinearComboFunction
+B <mave> fixed visibility bug in doxygen comments
+
     ==> 230 - 6/08/2007 - 0.9.2 release  <==
 
 B <mave> resolved linkage problem with nMessages under windows

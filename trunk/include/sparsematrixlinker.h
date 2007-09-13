@@ -111,7 +111,7 @@ public:
     //@}
 
 private:
-    //! Mask Matrix
+    /*! Mask Matrix */
     MatrixData<bool> mask;
 };
 

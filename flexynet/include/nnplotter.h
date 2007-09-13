@@ -34,18 +34,18 @@ class FLEX_API NNPlotter : public QGraphicsView {
 public:
 	NNPlotter( QWidget* parent = 0 );
 
-	//! set the neuralnet to display
+	/*! set the neuralnet to display */
 	void setNeuralNet( FNNWrapper* nn );
-	//! return the neuralnet displayed
+	/*! return the neuralnet displayed */
 	FNNWrapper* getNeuralNet() {
 		return nn;
 	};
 public slots:
-	//! update the plots
+	/*! update the plots */
 	void updatePlots();
-	//! update positions
+	/*! update positions */
 	void updatePositions();
-	//! Reset all plot to zero
+	/*! Reset all plot to zero */
 	void resetToZero();
 
 protected:
@@ -56,10 +56,10 @@ protected:
 	void scaleView(qreal scaleFactor);
 	
 private:
-	//! when there is no neuralnet to display the zoom-in/out is disabled
+	/*! when there is no neuralnet to display the zoom-in/out is disabled */
 	bool scaleDisabled;
 	FNNWrapper* nn;
-	//! ClusterPlotter inserted
+	/*! ClusterPlotter inserted */
 	QVector<ClusterPlotter2*> pls;
 };
 

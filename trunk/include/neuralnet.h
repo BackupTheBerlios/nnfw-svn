@@ -183,22 +183,22 @@ public:
 	//@}
 
 protected:
-    //! Clusters
+    /*! Clusters */
     ClusterVec clustersv;
-    //! Input Clusters
+    /*! Input Clusters */
     ClusterVec inclusters;
-    //! Output Clusters
+    /*! Output Clusters */
     ClusterVec outclusters;
-    //! Linkers
+    /*! Linkers */
     LinkerVec  linkersv;
 
     typedef std::map<Cluster*, LinkerVec> LinkVecMap;
-    //! mappa dei linkers entranti (cluster -> vettore linkers entranti)
+    /*! mappa dei linkers entranti (cluster -> vettore linkers entranti) */
     LinkVecMap inLinks;
-    //! map of outgoing linkers (cluster -> vettore linkers uscenti)
+    /*! map of outgoing linkers (cluster -> vettore linkers uscenti) */
     LinkVecMap outLinks;
 
-    //! Array of Updateables ordered as specified
+    /*! Array of Updateables ordered as specified */
     UpdatableVec ups;
     unsigned int dimUps;
 };

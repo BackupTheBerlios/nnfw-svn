@@ -50,23 +50,23 @@ public:
     /*! \name Constructors */
     //@{
 
-    //! Construct
+    /*! Construct */
     IdentityFunction();
 
-    //! Construct
+    /*! Construct */
     IdentityFunction( PropertySettings& prop );
 
-    //! Destructor
+    /*! Destructor */
     virtual ~IdentityFunction() { /* Nothing to do */ };
 
     //@}
     /*! \name Interface */
     //@{
 
-    //! Implement the identity function
+    /*! Implement the identity function */
     virtual void apply( RealVec& inputs, RealVec& outputs );
 
-    //! return always 1 (an explain of why will be coming soon)
+    /*! return always 1 (an explain of why will be coming soon) */
     virtual void derivate( const RealVec& x, const RealVec& y, RealVec& d ) const;
 
     /*! Clone this object
@@ -92,13 +92,13 @@ public:
     /*! \name Constructors */
     //@{
 
-    //! Construct
+    /*! Construct */
     ScaleFunction( Real rate = 1.0 );
 
-    //! Construct
+    /*! Construct */
     ScaleFunction( PropertySettings& prop );
 
-    //! Destructor
+    /*! Destructor */
     virtual ~ScaleFunction() { /* Nothing to do */ };
 
     //@}
@@ -113,7 +113,7 @@ public:
      */
     Variant getRate();
 
-    //! Implement the identity function
+    /*! Implement the identity function */
     virtual void apply( RealVec& inputs, RealVec& outputs );
 
     /*! Clone this object
@@ -141,13 +141,13 @@ public:
     /*! \name Constructors */
     //@{
 
-    //! Construct a sigmoid updater with parameter l
+    /*! Construct a sigmoid updater with parameter l */
     SigmoidFunction( Real l = 1.0 );
 
-    //! Construct
+    /*! Construct */
     SigmoidFunction( PropertySettings& prop );
 
-    //! Destructor
+    /*! Destructor */
     virtual ~SigmoidFunction() { /* Nothing to do */ };
 
     //@}
@@ -166,7 +166,7 @@ public:
      */
     virtual void apply( RealVec& inputs, RealVec& outputs );
 
-    //! return the approximation commonly used in backpropagation learning: x(1-x)
+    /*! return the approximation commonly used in backpropagation learning: x(1-x) */
     virtual void derivate( const RealVec& x, const RealVec& y, RealVec& d ) const;
 
     /*! Clone this object
@@ -175,7 +175,7 @@ public:
 
     //@}
 private:
-    //! lambda is the slope of the curve
+    /*! lambda is the slope of the curve */
     Real lambda;
 };
 
@@ -195,13 +195,13 @@ public:
     /*! \name Constructors */
     //@{
 
-    //! Construct a sigmoid updater with parameter l
+    /*! Construct a sigmoid updater with parameter l */
     FakeSigmoidFunction( Real l = 1.0 );
 
-    //! Construct
+    /*! Construct */
     FakeSigmoidFunction( PropertySettings& prop );
 
-    //! Destructor
+    /*! Destructor */
     virtual ~FakeSigmoidFunction() { /* Nothing to do */ };
 
     //@}
@@ -220,7 +220,7 @@ public:
      */
     virtual void apply( RealVec& inputs, RealVec& outputs );
 
-    //! return the approximation commonly used in backpropagation learning: x(1-x)
+    /*! return the approximation commonly used in backpropagation learning: x(1-x) */
     virtual void derivate( const RealVec& x, const RealVec& y, RealVec& d ) const;
 
     /*! Clone this object
@@ -229,7 +229,7 @@ public:
 
     //@}
 
-    //! lambda is the slope of the curve
+    /*! lambda is the slope of the curve */
     Real lambda;
 };
 
@@ -254,13 +254,13 @@ public:
     /*! \name Constructors */
     //@{
 
-    //! Construct a scaled sigmoid updater with parameter l
+    /*! Construct a scaled sigmoid updater with parameter l */
     ScaledSigmoidFunction( Real l = 1.0, Real min = -1.0, Real max = +1.0 );
 
-    //! Construct
+    /*! Construct */
     ScaledSigmoidFunction( PropertySettings& prop );
 
-    //! Destructor
+    /*! Destructor */
     virtual ~ScaledSigmoidFunction() { /* Nothing to do */ };
 
     //@}
@@ -295,7 +295,7 @@ public:
      */
     virtual void apply( RealVec& inputs, RealVec& outputs );
 
-    //! return the approximation commonly used in backpropagation learning: x(1-x)
+    /*! return the approximation commonly used in backpropagation learning: x(1-x) */
     virtual void derivate( const RealVec& x, const RealVec& y, RealVec& d ) const;
 
     /*! Clone this object
@@ -304,11 +304,11 @@ public:
 
     //@}
 
-    //! lambda is the slope of the curve
+    /*! lambda is the slope of the curve */
     Real lambda;
-    //! min is the y value when x -> -infinite
+    /*! min is the y value when x -> -infinite */
     Real min;
-    //! max is the y value when x -> +infinite
+    /*! max is the y value when x -> +infinite */
     Real max;
 };
 
@@ -339,13 +339,13 @@ public:
     /*! \name Constructors */
     //@{
 
-    //! Construct a linear updater
+    /*! Construct a linear updater */
     LinearFunction( Real minX, Real maxX, Real minY = -1, Real maxY = +1 );
 
-    //! Construct
+    /*! Construct */
     LinearFunction( PropertySettings& prop );
 
-    //! Destructor
+    /*! Destructor */
     virtual ~LinearFunction() { /* Nothing to do */ };
 
     //@}
@@ -388,7 +388,7 @@ public:
      */
     virtual void apply( RealVec& inputs, RealVec& outputs );
 
-    //! return the m coefficient if x is in [minX, maxX] and x(1-x) otherwise
+    /*! return the m coefficient if x is in [minX, maxX] and x(1-x) otherwise */
     virtual void derivate( const RealVec& x, const RealVec& y, RealVec& d ) const;
 
     /*! Clone this object
@@ -397,13 +397,13 @@ public:
 
     //@}
 
-    //! minX
+    /*! minX */
     Real minX;
-    //! maxX
+    /*! maxX */
     Real maxX;
-    //! minY
+    /*! minY */
     Real minY;
-    //! maxY
+    /*! maxY */
     Real maxY;
 };
 
@@ -425,13 +425,13 @@ public:
     /*! \name Constructors */
     //@{
 
-    //! Construct a step updater
+    /*! Construct a step updater */
     StepFunction( Real min = 0.0f, Real max = 1.0f, Real threshold = 0.0f );
 
-    //! Construct
+    /*! Construct */
     StepFunction( PropertySettings& prop );
 
-    //! Destructor
+    /*! Destructor */
     virtual ~StepFunction() { /* Nothing to do */ };
 
     //@}
@@ -466,7 +466,7 @@ public:
      */
     virtual void apply( RealVec& inputs, RealVec& outputs );
 
-    //! Using the derivate of the sigmoid function!!! 
+    /*! Using the derivate of the sigmoid function!!!  */
     virtual void derivate( const RealVec& x, const RealVec& y, RealVec& d ) const;
 
     /*! Clone this object
@@ -475,11 +475,11 @@ public:
 
     //@}
 
-    //! Minimum value 
+    /*! Minimum value  */
     Real min;
-    //! Maximum value
+    /*! Maximum value */
     Real max;
-    //! Threshold
+    /*! Threshold */
     Real threshold;
 };
 
@@ -499,41 +499,36 @@ public:
     /*! \name Constructors */
     //@{
 
-    //! Construct a LeakyIntegrator with deltas specified
+    /*! Construct a LeakyIntegrator with deltas specified */
     LeakyIntegratorFunction( const RealVec& d );
 
-    //! Construct from PropertySettings
+    /*! Construct from PropertySettings */
     LeakyIntegratorFunction( PropertySettings& prop );
 
-    //! Destructor
+    /*! Destructor */
     virtual ~LeakyIntegratorFunction() { /* Nothing to do */ };
 
     //@}
     /*! \name Interface */
     //@{
 
-    /*! Return the i-th Delta setted
-     */
+    /*! Return the i-th Delta setted */
     RealVec& getDelta() {
 		return delta;
 	};
 
-    /*! Set the i-th Delta
-     */
+    /*! Set the i-th Delta */
     void setDelta( const RealVec& v ) {
 		delta.assign( v );
 	};
 
-    /*! Return the i-th Delta setted (Variant version)
-     */
+    /*! Return the i-th Delta setted (Variant version) */
     Variant getDeltaV();
 
-    /*! Set the i-th element (Variant version)
-     */
+    /*! Set the i-th element (Variant version) */
     bool setDeltaV( const Variant& v );
 
-    /*! Zeroing the status
-     */
+    /*! Zeroing the status */
 	void zeroingStatus();
 
     /*! Implement the updating method<br>
@@ -541,19 +536,17 @@ public:
      */
     virtual void apply( RealVec& inputs, RealVec& outputs );
 
-    /*! Clone this object
-     */
+    /*! Clone this object */
     virtual LeakyIntegratorFunction* clone() const;
 
-    /*! resize itself to fit the size of Cluster
-     */
+    /*! resize itself to fit the size of Cluster */
     virtual void setCluster( Cluster* );
 
     //@}
 
-    //! delta is the leak rate of the function
+    /*! delta is the leak rate of the function */
     RealVec delta;
-	//! previous outputs
+	/*! previous outputs */
 	RealVec outprev;
 };
 
@@ -580,7 +573,7 @@ public:
      */
     PoolFunction( const OutputFunction& prototype, u_int dim );
 
-    //! Construct
+    /*! Construct */
     PoolFunction( PropertySettings& prop );
 
     /*! Construct a PoolFunction with dimension dim, but with <b>unintialized</b> OutputFunction
@@ -635,7 +628,7 @@ public:
     //@}
 
 private:
-    //! Vector of OutputFunction
+    /*! Vector of OutputFunction */
     VectorData<OutputFunction*> ups;
 };
 
@@ -658,46 +651,41 @@ public:
     /*! \name Constructors */
     //@{
 
-    //! Construct a Composite
+    /*! Construct a Composite */
     CompositeFunction( const OutputFunction& f, const OutputFunction& g );
 
-    //! Construct from PropertySettings
+    /*! Construct from PropertySettings */
     CompositeFunction( PropertySettings& prop );
 
-    //! Destructor
+    /*! Destructor */
     virtual ~CompositeFunction();
 
     //@}
     /*! \name Interface */
     //@{
 
-    /*! Set the first function of CompositeFunction
-     */
+    /*! Set the first function of CompositeFunction */
     bool setFirstFunction( const Variant& v );
 
-    /*! Return the first function of CompositeFunction
-     */
+    /*! Return the first function of CompositeFunction */
     Variant getFirstFunction();
 
-    /*! Set the second function of CompositeFunction
-     */
+    /*! Set the second function of CompositeFunction */
     bool setSecondFunction( const Variant& v );
 
-    /*! Return the second function of CompositeFunction
-     */
+    /*! Return the second function of CompositeFunction */
     Variant getSecondFunction();
 
     /*! Implement the updating method <br>
-     * it computes: y(t) <- second( first( input, outputs ) )
+     * it computes: y(t) <- second( first( input, mid ), outputs ) <br>
+	 * where mid is a private vector that traces the outputs of first function
      */
     virtual void apply( RealVec& inputs, RealVec& outputs );
 
-    /*! Clone this object
-     */
+    /*! Clone this object */
     virtual CompositeFunction* clone() const;
 
-    /*! recursive call setCluster on first and second function setted
-     */
+    /*! recursive call setCluster on first and second function setted */
     virtual void setCluster( Cluster* );
 
     //@}
@@ -711,6 +699,78 @@ public:
 	Cluster* cl;
 };
 
+/*! \brief Linear Combination of Two Function !! 
+ *
+ * Details..
+ *
+ *   <table class="proptable">
+ *   <tr><td class="prophead" colspan="5">Properties</td></tr>
+ *   <tr><th>Name</th> <th>Type [isVector]</th> <th>Access mode</th> <th>Description</th> <th>Class</th></tr>
+ *   <tr><td>typename</td> <td>string</td> <td>read-only</td> <td> Class's type </td> <td>Propertized</td> </tr>
+ *   <tr><td>first</td> <td>OutputFunction</td> <td>read/write</td> <td> first function </td> <td>this</td> </tr>
+ *   <tr><td>second</td> <td>OutputFunction</td> <td>read/write</td> <td> second function </td> <td>this</td> </tr>
+ *   <tr><td>w1</td> <td>Real</td> <td>read/write</td> <td> first weight </td> <td>this</td> </tr>
+ *   <tr><td>w2</td> <td>Real</td> <td>read/write</td> <td> second weight </td> <td>this</td> </tr>
+ *   </table>
+ */
+class NNFW_API LinearComboFunction : public OutputFunction {
+public:
+    /*! \name Constructors */
+    //@{
+
+    /*! Construct a Linear Combination of two functions */
+    LinearComboFunction( Real w1, const OutputFunction& f, Real w2, const OutputFunction& g );
+
+    /*! Construct from PropertySettings */
+    LinearComboFunction( PropertySettings& prop );
+
+    /*! Destructor */
+    virtual ~LinearComboFunction();
+
+    //@}
+    /*! \name Interface */
+    //@{
+
+    /*! Set the first function of LinearComboFunction */
+    bool setFirstFunction( const Variant& v );
+    /*! Return the first function of LinearComboFunction */
+    Variant getFirstFunction();
+    /*! Set the first weight of LinearComboFunction */
+    bool setFirstWeight( const Variant& v );
+    /*! Return the first weight of LinearComboFunction */
+    Variant getFirstWeight();
+
+    /*! Set the second function of CompositeFunction */
+    bool setSecondFunction( const Variant& v );
+    /*! Return the second function of CompositeFunction */
+    Variant getSecondFunction();
+    /*! Set the second weight of LinearComboFunction */
+    bool setSecondWeight( const Variant& v );
+    /*! Return the second weight of LinearComboFunction */
+    Variant getSecondWeight();
+
+    /*! Implement the updating method <br>
+     * it computes: y(t) <- w1*first(input,output) + w2*second(input,outputs)
+     */
+    virtual void apply( RealVec& inputs, RealVec& outputs );
+
+    /*! Clone this object */
+    virtual LinearComboFunction* clone() const;
+    /*! recursive call setCluster on first and second function setted */
+    virtual void setCluster( Cluster* );
+
+    //@}
+
+	//--- functions
+	OutputFunction* first;
+	OutputFunction* second;
+	//--- temporary result
+	RealVec mid;
+	//--- weights
+	Real w1, w2;
+	//--- Cluster
+	Cluster* cl;
+};
 
 }
 

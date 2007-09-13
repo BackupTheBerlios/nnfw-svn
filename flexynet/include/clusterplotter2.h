@@ -41,17 +41,17 @@ public:
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
 public slots:
-	//! show/hide outputs plot
+	/*! show/hide outputs plot */
 	void showOutputs( bool );
-	//! show/hide inputs plot
+	/*! show/hide inputs plot */
 	void showInputs( bool );
-	//! reset the plot zeroing all data registered so far
+	/*! reset the plot zeroing all data registered so far */
 	void resetToZero();
-	//! update the plot
+	/*! update the plot */
 	void updatePlot();
 
 signals:
-	//! emitted when the height change
+	/*! emitted when the height change */
 	void heightChanged();
 
 protected:
@@ -63,36 +63,36 @@ protected:
 	void hoverMoveEvent( QGraphicsSceneHoverEvent * event );
 
 private:
-	//! Recalculate the BoundingRect
+	/*! Recalculate the BoundingRect */
 	void recalcBRect();
 
 	typedef QVarLengthArray< QVarLengthArray<qreal,1024> > DataVec;
-	//! cluster to plot
+	/*! cluster to plot */
 	nnfw::Cluster* cl;
-	//! dimension of Cluster and DataVec
+	/*! dimension of Cluster and DataVec */
 	int dim;
-	//! bounding rect
+	/*! bounding rect */
 	QRectF brect;
-	//! input data plotted
+	/*! input data plotted */
 	DataVec ins;
-	//! output data plotted
+	/*! output data plotted */
 	DataVec outs;
-	//! low Y value of ins data plotted
+	/*! low Y value of ins data plotted */
 	QVarLengthArray<qreal> lowins;
-	//! high Y value of ins data plotted
+	/*! high Y value of ins data plotted */
 	QVarLengthArray<qreal> highins;
-	//! low Y value of outs data plotted
+	/*! low Y value of outs data plotted */
 	QVarLengthArray<qreal> lowouts;
-	//! high Y value of outs data plotted
+	/*! high Y value of outs data plotted */
 	QVarLengthArray<qreal> highouts;
-	//! lastPoint; the dimension of DataVecs
+	/*! lastPoint; the dimension of DataVecs */
 	int lastPoint;
 
-	//! Action for hide/show outputs
+	/*! Action for hide/show outputs */
 	QAction* showOutsA;
-	//! Action for hide/show inputs
+	/*! Action for hide/show inputs */
 	QAction* showInsA;
-	//! Popup menu
+	/*! Popup menu */
 	QMenu* menu;
 
 	bool showouts;

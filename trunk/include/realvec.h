@@ -19,7 +19,7 @@
 
 // --- You can't include it directly
 #ifndef TYPES_INCLUDES
-#error "You can't include realmat.h directly; Instead, You have to include types.h"
+#error "You can't include realvec.h directly; Instead, You have to include types.h"
 // --- follow define avoid to get a lot of understandable error !
 #define REALVEC_H
 #endif
@@ -93,7 +93,7 @@ public:
     /*! \name Unary Operators */
     //@{
 
-    //! Operator -
+    /*! Operator - */
     RealVec& operator-() {
         for( u_int i=0; i<vsize; i++ ) {
             data[i] = -data[i];
@@ -105,7 +105,7 @@ public:
     /*! \name Binary Operators */
     //@{
 
-    //! Operator += with RealVec
+    /*! Operator += with RealVec */
     RealVec& operator+=(const RealVec& r ) {
 #ifdef NNFW_DEBUG
         if( vsize != r.vsize ) {
@@ -118,14 +118,14 @@ public:
         }
         return (*this);
     };
-    //! Operator += with Real
+    /*! Operator += with Real */
     RealVec& operator+=(const Real& r ) {
         for( u_int i=0; i<vsize; i++ ) {
             data[i] += r;
         }
         return (*this);
     };
-    //! Operator -= with RealVec
+    /*! Operator -= with RealVec */
     RealVec& operator-=(const RealVec& r ) {
 #ifdef NNFW_DEBUG
         if( vsize != r.vsize ) {
@@ -138,14 +138,14 @@ public:
         }
         return (*this);
     };
-    //! Operator -= with Real
+    /*! Operator -= with Real */
     RealVec& operator-=(const Real& r ) {
         for( u_int i=0; i<vsize; i++ ) {
             data[i] -= r;
         }
         return (*this);
     };
-    //! Operator *= with RealVec
+    /*! Operator *= with RealVec */
     RealVec& operator*=(const RealVec& r ) {
 #ifdef NNFW_DEBUG
         if( vsize != r.vsize ) {
@@ -158,14 +158,14 @@ public:
         }
         return (*this);
     };
-    //! Operator *= with Real
+    /*! Operator *= with Real */
     RealVec& operator*=(const Real& r ) {
         for( u_int i=0; i<vsize; i++ ) {
             data[i] *= r;
         }
         return (*this);
     };
-    //! Operator /= with RealVec
+    /*! Operator /= with RealVec */
     RealVec& operator/=(const RealVec& r ) {
 #ifdef NNFW_DEBUG
         if( vsize != r.vsize ) {
@@ -178,7 +178,7 @@ public:
         }
         return (*this);
     };
-    //! Operator /= with Real
+    /*! Operator /= with Real */
     RealVec& operator/=(const Real& r ) {
         for( u_int i=0; i<vsize; i++ ) {
             data[i] /= r;
@@ -186,7 +186,7 @@ public:
         return (*this);
     };
 
-    //! Dot product
+    /*! Dot product */
     Real dot( const RealVec& r ) {
 #ifdef NNFW_DEBUG
         if( vsize != r.vsize ) {

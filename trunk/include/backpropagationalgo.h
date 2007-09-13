@@ -36,20 +36,20 @@ public:
 	/*! \name Constructors */
 	//@{
 
-    //! Constructor
+    /*! Constructor */
     BackPropagationAlgo( BaseNeuralNet* );
-    //! Destructor
+    /*! Destructor */
     virtual ~BackPropagationAlgo();
 
 	//@}
 	/*! \name Interface */
 	//@{
 
-	//! Set the global learning rate
+	/*! Set the global learning rate */
 	void setLearnRate( Real lr ) {
 		lrate = lr;
 	};
-	//! return the learning rate setted
+	/*! return the learning rate setted */
 	Real learningRate() {
 		return lrate;
 	};
@@ -60,12 +60,12 @@ public:
 	 *  when the BaseNeuralNet associated has been changed.
 	 */
 	void init();
-    //! Modify the object using the BackPropagation Algorithm
+    /*! Modify the object using the BackPropagation Algorithm */
     virtual void learn();
 
 	//@}
 private:
-	//! learning rate
+	/*! learning rate */
 	Real lrate;
 };
 

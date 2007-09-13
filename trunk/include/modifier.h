@@ -37,19 +37,19 @@ public:
 	/*! \name Constructors */
 	//@{
 	
-    //! Constructor
+    /*! Constructor */
     Modifier() { /* Nothing to do */ };
-    //! Destructor
+    /*! Destructor */
     virtual ~Modifier() { /* Nothing to do */ };
 
 	//@}
 	/*! \name Interface */
 	//@{
 
-    //! Modify the object
+    /*! Modify the object */
     virtual void modify() = 0;
 
-	//! Clone
+	/*! Clone */
 	virtual Modifier* clone() const = 0;
 
 	//@}
@@ -64,25 +64,25 @@ public:
 	/*! \name Constructors */
 	//@{
 
-    //! Constructor
+    /*! Constructor */
 	MatrixModifier( RealMat& matrix ) : m( matrix ) { /* Nothing to do */ };
 
-    //! Destructor
+    /*! Destructor */
     virtual ~MatrixModifier() { /* Nothing to do */ };
 
 	//@}
 	/*! \name Interface */
 	//@{
 
-    //! Modify the object
+    /*! Modify the object */
     virtual void modify() = 0;
     
-	//! Get the matrix
+	/*! Get the matrix */
 	RealMat& matrix() const {
 		return m;
 	};
     
-	//! Set the matrix
+	/*! Set the matrix */
 	void setMatrix( RealMat& matrix ) {
 		m = matrix;	
 	};
@@ -90,7 +90,7 @@ public:
 	//@}
 	
 protected:
-    //! The matrix to be modified
+    /*! The matrix to be modified */
     RealMat& m;
 };
 
@@ -103,25 +103,25 @@ public:
 	/*! \name Constructors */
 	//@{
 
-    //! Constructor
+    /*! Constructor */
 	VectorModifier( RealVec& vector ) : v( vector ) { /* Nothing to do */ };
     
-	//! Destructor
+	/*! Destructor */
     virtual ~VectorModifier() { /* Nothing to do */ };
     
 	//@}
 	/*! \name Interface */
 	//@{
 
-	//! Modify the object
+	/*! Modify the object */
     virtual void modify() = 0;
     
-	//! Get the vector
+	/*! Get the vector */
 	RealVec& vector() const {
 		return v;
 	};
     
-	//! Set the vector
+	/*! Set the vector */
 	void setVector( RealVec& vector ) {
 		v = vector;	
 	};
@@ -129,7 +129,7 @@ public:
 	//@}
 	
 protected:
-    //! The vector to be modified
+    /*! The vector to be modified */
     RealVec& v;
 };
 

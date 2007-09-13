@@ -33,7 +33,7 @@ class FLEX_API FBrowser : public QWidget {
 public:
 	FBrowser( QWidget* parent = 0 );
 public slots:
-	//! set the neural net to browse
+	/*! set the neural net to browse */
 	void setNeuralNet( FNNWrapper* nn );
 
 private:

@@ -700,4 +700,102 @@ void CompositeFunction::setCluster( Cluster* c ) {
 	second->setCluster( c );
 }
 
+LinearComboFunction::LinearComboFunction( Real w1, const OutputFunction& f, Real w2, const OutputFunction& g )
+    : OutputFunction(), mid() {
+	first = f.clone();
+	second = g.clone();
+	this->w1 = w1;
+	this->w2 = w2;
+
+    addProperty( "first", Variant::t_outfunction, this, &LinearComboFunction::getFirstFunction, &LinearComboFunction::setFirstFunction );
+    addProperty( "second", Variant::t_outfunction, this, &LinearComboFunction::getSecondFunction, &LinearComboFunction::setSecondFunction );
+    addProperty( "w1", Variant::t_real, this, &LinearComboFunction::getFirstWeight, &LinearComboFunction::setFirstWeight );
+    addProperty( "w2", Variant::t_real, this, &LinearComboFunction::getSecondWeight, &LinearComboFunction::setSecondWeight );
+    setTypename( "LinearComboFunction" );
+}
+
+LinearComboFunction::LinearComboFunction( PropertySettings& prop )
+    : OutputFunction(), mid() {
+	first = new IdentityFunction();
+	second = new IdentityFunction();
+	w1 = w2 = 1.0;
+    addProperty( "first", Variant::t_outfunction, this, &LinearComboFunction::getFirstFunction, &LinearComboFunction::setFirstFunction );
+    addProperty( "second", Variant::t_outfunction, this, &LinearComboFunction::getSecondFunction, &LinearComboFunction::setSecondFunction );
+    addProperty( "w1", Variant::t_real, this, &LinearComboFunction::getFirstWeight, &LinearComboFunction::setFirstWeight );
+    addProperty( "w2", Variant::t_real, this, &LinearComboFunction::getSecondWeight, &LinearComboFunction::setSecondWeight );
+    setProperties( prop );
+    setTypename( "LinearComboFunction" );
+}
+
+LinearComboFunction::~LinearComboFunction() {
+	delete first;
+	delete second;
+}
+
+void LinearComboFunction::apply( RealVec& inputs, RealVec& outputs ) {
+#ifdef NNFW_DEBUG
+    if ( inputs.size() != outputs.size() ) {
+        nError() << "The output dimension doesn't match the input dimension" ;
+        return;
+    }
+#endif
+	mid.assign( outputs );
+	first->apply( inputs, mid );
+	mid.scale( w1 );
+	second->apply( inputs, outputs );
+	outputs.scale( w2 );
+	outputs += mid;
+}
+
+bool LinearComboFunction::setFirstFunction( const Variant& v ) {
+	delete first;
+    first = v.getOutputFunction()->clone();
+	first->setCluster( cl );
+    return true;
+}
+
+Variant LinearComboFunction::getFirstFunction() {
+    return Variant( first );
+}
+
+bool LinearComboFunction::setFirstWeight( const Variant& v ) {
+	w1 = v.getReal();
+    return true;
+}
+
+Variant LinearComboFunction::getFirstWeight() {
+    return Variant( w1 );
+}
+
+bool LinearComboFunction::setSecondFunction( const Variant& v ) {
+	delete second;
+    second = v.getOutputFunction()->clone();
+	second->setCluster( cl );
+    return true;
+}
+
+Variant LinearComboFunction::getSecondFunction() {
+    return Variant( second );
+}
+
+bool LinearComboFunction::setSecondWeight( const Variant& v ) {
+	w2 = v.getReal();
+    return true;
+}
+
+Variant LinearComboFunction::getSecondWeight() {
+    return Variant( w2 );
+}
+
+LinearComboFunction* LinearComboFunction::clone() const {
+	return new LinearComboFunction( w1, *first, w2, *second );
+}
+
+void LinearComboFunction::setCluster( Cluster* c ) {
+	this->cl = c;
+	mid.resize( c->numNeurons() );
+	first->setCluster( c );
+	second->setCluster( c );
+}
+
 }

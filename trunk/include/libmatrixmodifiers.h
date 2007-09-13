@@ -49,55 +49,55 @@ public:
 	/*! \name Constructors */
 	//@{
 
-    //! Constructor
+    /*! Constructor */
     BasicMatrixModifier( RealMat& matrix, RealVec& input, RealVec& output, Real lRate = 0.1 ) 
 		: MatrixModifier( matrix ), inp( input ), out( output ), lr( lRate ) { 
 			/* Here we need to check that input and output vector dimensions correspond to those of the matrix! */ 
 		};
 
-    //! Destructor
+    /*! Destructor */
     ~BasicMatrixModifier() { /* Nothing to do */ };
 
 	//@}
 	/*! \name Interface */
 	//@{
 
-    //! Modify the object according to the simple Hebb rule
+    /*! Modify the object according to the simple Hebb rule */
     virtual void modify();
 
-    //! Get the input vector
+    /*! Get the input vector */
 	RealVec& inputVector() const {
 		return inp;
 	};
 
-    //! Set the input vector
+    /*! Set the input vector */
 	void setInputVector( RealVec& vector ) {
 		//dimensions check needed
 		inp = vector;	
 	};
 
-    //! Get the output vector
+    /*! Get the output vector */
 	RealVec& outputVector() const {
 		return out;
 	};
 
-    //! Set the output vector
+    /*! Set the output vector */
 	void setOutputVector( RealVec& vector ) {
 		//dimensions check needed
 		out = vector;	
 	};
 
-    //! Get the learning rate vector
+    /*! Get the learning rate vector */
 	Real learningRate() const {
 		return lr;
 	};
 
-    //! Set the learning rate vector
+    /*! Set the learning rate vector */
 	void setLearningRate( Real lRate ) {
 		lr = lRate;	
 	};
 
-	//! Clone this object
+	/*! Clone this object */
 	BasicMatrixModifier* clone() const {
 		return new BasicMatrixModifier( matrix(), inp, out, lr );
 	};
@@ -105,11 +105,11 @@ public:
 	//@}
 	
 protected:
-    //! The vector of input
+    /*! The vector of input */
 	RealVec& inp;
-    //! The vector of output
+    /*! The vector of output */
 	RealVec& out;
-    //! The learning rate
+    /*! The learning rate */
 	Real lr;
 };
 
@@ -122,25 +122,25 @@ protected:
  */
 	class  SparseMatrixModifier : public BasicMatrixModifier {
 public:
-    //! Constructor
+    /*! Constructor */
     SparseMatrixModifier( RealMat& matrix, RealVec& input, RealVec& output, MatrixData<bool>& otherMask, Real lRate = 0.1 ) 
 		: BasicMatrixModifier( matrix, input, output, lRate ), mask( otherMask ) { 
 			/* Here we need to check that input and output vector dimensions correspond to those of the matrix! */ 
 		};
 
-    //! Destructor
+    /*! Destructor */
     ~SparseMatrixModifier() { /* Nothing to do */ };
 
-    //! Modify only the existing connections according to the simple Hebb rule
+    /*! Modify only the existing connections according to the simple Hebb rule */
     virtual void modify();
 
-	//! Clone this object
+	/*! Clone this object */
 	SparseMatrixModifier* clone() const {
 		return new SparseMatrixModifier( matrix(), inputVector(), outputVector(), mask, learningRate() );
 	};
 
 private:
-	//! The mask for existing connections
+	/*! The mask for existing connections */
 	MatrixData<bool>& mask;
 };
 
@@ -153,51 +153,51 @@ private:
  */
 class NNFW_API SparseCovarianceMatrixModifier : public BasicMatrixModifier {
 public:
-    //! Constructor
+    /*! Constructor */
     SparseCovarianceMatrixModifier( RealMat& matrix, RealVec& input, RealVec& output, MatrixData<bool>& otherMask, RealVec& meanInp, RealVec &meanOut, Real lRate = 0.1 ) 
 		: BasicMatrixModifier( matrix, input, output, lRate ), mask( otherMask ), mInp( meanInp ), mOut( meanOut ) { 
 			/* Here we need to check that input and output vector dimensions correspond to those of the matrix! */ 
 		};
 
-    //! Destructor
+    /*! Destructor */
     ~SparseCovarianceMatrixModifier() { /* Nothing to do */ };
 
-	//! Get the meanInput vector
+	/*! Get the meanInput vector */
 	RealVec& meanInputVector() const {
 		return mInp;
 	};
 
-    //! Set the meanInput vector
+    /*! Set the meanInput vector */
 	void setMeanInputVector( RealVec& vector ) {
 		//dimensions check needed
 		mInp = vector;	
 	};
 
-    //! Get the meanOutput vector
+    /*! Get the meanOutput vector */
 	RealVec& meanOutputVector() const {
 		return mOut;
 	};
 
-    //! Set the meanOutput vector
+    /*! Set the meanOutput vector */
 	void setMeanOutputVector( RealVec& vector ) {
 		//dimensions check needed
 		mOut = vector;	
 	};
 
-    //! Modify only the existing connections according to the simple Hebb rule
+    /*! Modify only the existing connections according to the simple Hebb rule */
     virtual void modify();
 
-	//! Clone this object
+	/*! Clone this object */
 	SparseCovarianceMatrixModifier* clone() const {
 		return new SparseCovarianceMatrixModifier( matrix(), inputVector(), outputVector(), mask, mInp, mOut, learningRate() );
 	};
 
 private:
-	//! The mask for existing connections
+	/*! The mask for existing connections */
 	MatrixData<bool>& mask;
-	//! The mean input activation vector
+	/*! The mean input activation vector */
 	RealVec& mInp;
-	//! The mean output activation vector
+	/*! The mean output activation vector */
 	RealVec& mOut;
 };
 

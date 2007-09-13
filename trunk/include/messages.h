@@ -41,32 +41,32 @@ class NNFW_API nnfwString {
 public:
 	/*! \name Constructors */
 	//@{
-	//! Construct an empty nnfwString
+	/*! Construct an empty nnfwString */
 	nnfwString();
-	//! destructor
+	/*! destructor */
 	~nnfwString();
-	//! Copy-Constructor
+	/*! Copy-Constructor */
 	nnfwString( const nnfwString& );
-	//! Converter
+	/*! Converter */
 	nnfwString( int );
-	//! Converter
+	/*! Converter */
 	nnfwString( unsigned int );
-	//! Converter
+	/*! Converter */
 	nnfwString( double );
-	//! Converter
+	/*! Converter */
 	nnfwString( float );
-	//! Converter
+	/*! Converter */
 	nnfwString( char );
-	//! Converter (it suppose an ASCII encoding)
+	/*! Converter (it suppose an ASCII encoding) */
 	nnfwString( const char* );
 	//@}
 	/*! \name Interface */
 	//@{
-	//! append a nnfwString to this
+	/*! append a nnfwString to this */
 	nnfwString& append( const nnfwString& p );
-	//! assignment operator
+	/*! assignment operator */
 	nnfwString& operator=( const nnfwString& left );
-	//! return the UTF8 representation
+	/*! return the UTF8 representation */
 	const char* toUtf8() const;
 	//@}
 private:
@@ -79,9 +79,9 @@ class NNFW_API nMessage {
 public:
 	/*! \name Constructors */
 	//@{
-	//! Constructor
+	/*! Constructor */
 	nMessage();
-	//! Destructor
+	/*! Destructor */
 	~nMessage() { /* nothing to do */ };
 	//@}
 protected:

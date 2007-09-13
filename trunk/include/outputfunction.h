@@ -40,10 +40,10 @@ class NNFW_API OutputFunction : public Clonable, public Propertized {
 public:
     /*! \name Constructors */
     //@{
-    //! Constructor
+    /*! Constructor */
     OutputFunction();
 
-    //! Destructor
+    /*! Destructor */
     virtual ~OutputFunction();
 
     //@}
@@ -78,9 +78,9 @@ public:
     //@}
 
 private:
-    //! temporary RealVec for speed-up apply with a single value
+    /*! temporary RealVec for speed-up apply with a single value */
     RealVec tmp1;
-    //! temporary RealVec for speed-up apply with a single value
+    /*! temporary RealVec for speed-up apply with a single value */
     RealVec tmp2;
 };
 

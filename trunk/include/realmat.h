@@ -61,13 +61,13 @@ public:
     /*! \name Unary Operators */
     //@{
 
-    //! Operator -
+    /*! Operator - */
     RealMat& operator-() {
         -rawdata();
         return (*this);
     };
 
-    //! Transpose this RealMat
+    /*! Transpose this RealMat */
     RealMat& transpose() {
         Real tmp;
         RealMat& self = *this;
@@ -86,7 +86,7 @@ public:
 	/*! \name Binary Operators */
     //@{
 
-    //! Operator += with RealMat
+    /*! Operator += with RealMat */
     RealMat& operator+=(const RealMat& r ) {
 #ifdef NNFW_DEBUG
         if( rows() != r.rows() || cols() != r.cols() ) {
@@ -98,13 +98,13 @@ public:
         return (*this);
     };
     
-	//! Operator += with Real
+	/*! Operator += with Real */
     RealMat& operator+=(const Real& r ) {
         rawdata() += r;
         return (*this);
     };
     
-	//! Operator -= with RealMat
+	/*! Operator -= with RealMat */
     RealMat& operator-=(const RealMat& r ) {
 #ifdef NNFW_DEBUG
         if( rows() != r.rows() || cols() != r.cols() ) {
@@ -116,13 +116,13 @@ public:
         return (*this);
     };
     
-	//! Operator -= with Real
+	/*! Operator -= with Real */
     RealMat& operator-=(const Real& r ) {
         rawdata() -= r;
         return (*this);
     };
     
-	//! Operator *= with RealMat
+	/*! Operator *= with RealMat */
     RealMat& operator*=(const RealMat& r ) {
 #ifdef NNFW_DEBUG
         if( rows() != r.rows() || cols() != r.cols() ) {
@@ -134,13 +134,13 @@ public:
         return (*this);
     };
     
-	//! Operator *= with Real
+	/*! Operator *= with Real */
     RealMat& operator*=(const Real& r ) {
         rawdata() *= r;
         return (*this);
     };
     
-	//! Operator /= with RealMat
+	/*! Operator /= with RealMat */
     RealMat& operator/=(const RealMat& r ) {
 #ifdef NNFW_DEBUG
         if( rows() != r.rows() || cols() != r.cols() ) {
@@ -152,7 +152,7 @@ public:
         return (*this);
     };
     
-	//! Operator /= with Real
+	/*! Operator /= with Real */
     RealMat& operator/=(const Real& r ) {
         rawdata() /= r;
         return (*this);
@@ -196,12 +196,10 @@ public:
     /*! \name Math Functions */
     //@{
 
-    /*! Exponential
-     */
+    /*! Exponential */
     RealMat& exp();
 
-    /*! Scaling (scalar-vector multiply)
-     */
+    /*! Scaling (scalar-vector multiply) */
     RealMat& scale( const Real v ) {
         for( u_int i=0; i<size(); i++ ) {
             rawdata()[i] *= v;
@@ -209,9 +207,17 @@ public:
         return (*this);
     };
 
-    /*! Element Inversion
-     */
+    /*! Element Inversion */
     RealMat& inv();
+
+	/*! "Entrywise" Norm of order 2 or Frobenius norm */
+	Real norm() {
+		return rawdata().norm();
+	};
+	/*! normalize the matrix, so the "entrywise" norm is one */
+	void normalize() {
+		rawdata().normalize();
+	};
 
     //@}
 

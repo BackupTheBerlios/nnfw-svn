@@ -19,7 +19,7 @@
 
 // --- You can't include it directly
 #ifndef TYPES_INCLUDES
-#error "You can't include realmat.h directly; Instead, You have to include types.h"
+#error "You can't include primtypes.h directly; Instead, You have to include types.h"
 // --- follow define avoid to get a lot of understandable error !
 #define PRIMTYPES_H
 #endif
@@ -34,10 +34,10 @@
 
 namespace nnfw {
 
-//! Unsigned integer
+/*! Unsigned integer */
 typedef  unsigned int u_int;
 
-//! Abstraction on the type of real numbers
+/*! Abstraction on the type of real numbers */
 #ifndef NNFW_DOUBLE_PRECISION
 typedef float Real;
 #else

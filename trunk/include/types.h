@@ -67,32 +67,32 @@ namespace nnfw {
 
 namespace nnfw {
 
-//! Array of Boolean
+/*! Array of Boolean */
 typedef VectorData<bool> BoolVec;
 
-//! Array of Unsigned Integer
+/*! Array of Unsigned Integer */
 typedef VectorData<u_int> U_IntVec;
 
 class Updatable;
-//! Array of Updatable
+/*! Array of Updatable */
 typedef VectorData<Updatable*> UpdatableVec;
 
 class Cluster;
-//! Array of Clusters
+/*! Array of Clusters */
 typedef VectorData<Cluster*> ClusterVec;
 
 class Linker;
-//! Array of Linkers
+/*! Array of Linkers */
 typedef VectorData<Linker*> LinkerVec;
 
-//! Empty LinkerVec constant
+/*! Empty LinkerVec constant */
 extern const LinkerVec emptyLinkerVec;
 
-//! Empty ClusterVec constant
+/*! Empty ClusterVec constant */
 extern const ClusterVec emptyClusterVec;
 
 class BaseTeachBlock;
-//! Array of Updatable
+/*! Array of Updatable */
 typedef VectorData<BaseTeachBlock*> TeachBlockVec;
 
 }

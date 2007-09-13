@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2007 Gianluca Massera <emmegian@yahoo.it>                     *
+ *  Copyright (C) 2005-2007 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -19,7 +19,7 @@
 
 // --- You can't include it directly
 #ifndef TYPES_INCLUDES
-#error "You can't include realmat.h directly; Instead, You have to include types.h"
+#error "You can't include vectordata.h directly; Instead, You have to include types.h"
 // --- follow define avoid to get a lot of understandable error !
 #define VECTORDATA_H
 #endif
@@ -49,7 +49,7 @@ namespace nnfw {
 template<class T>
 class NNFW_TEMPLATE VectorData : private Observer, public Observable {
 public:
-    //! Type of Notification
+    /*! Type of Notification */
     typedef enum { datachanged = 1, datadestroying = 2 } t_notify;
 
     /*! \name Constructors */
@@ -218,22 +218,19 @@ public:
     /*! \name Operations on VectorData */
     //@{
 
-    /*! Set all values to default value of T, in other words to T()
-     */
+    /*! Set all values to default value of T, in other words to T() */
     void zeroing() {
         memoryZeroing( data, vsize );
     };
 
-    /*! Set all values to value
-     */
+    /*! Set all values to value */
     void setAll( const T& value ) {
         for( u_int i=0; i<vsize; i++ ) {
             data[i] = value;
         }
     };
 
-    /*! Assign to first num element the value passed
-     */
+    /*! Assign to first num element the value passed */
     VectorData<T>& assign( u_int num, const T& value ) {
 #ifdef NNFW_DEBUG
         if ( num > vsize ) {
@@ -247,8 +244,7 @@ public:
         return (*this);
     };
 
-    /*! Assignment method. The sizes of VectorData must be the same.
-     */
+    /*! Assignment method. The sizes of VectorData must be the same */
     VectorData<T>& assign( const VectorData<T>& src ) {
 #ifdef NNFW_DEBUG
         if ( vsize != src.vsize ) {
@@ -354,8 +350,7 @@ public:
         return data[index];
     };
 
-    /*! Resize the VectorData
-     */
+    /*! Resize the VectorData */
     void resize( u_int newsize ) {
         if ( view ) {
             nError() << "It's not possible resize RealVec views" ;
@@ -381,15 +376,13 @@ public:
         notifyAll( NotifyEvent( datachanged ) );
     };
 
-    /*! Append an element; the dimesion increase by one
-     */
+    /*! Append an element; the dimesion increase by one */
     void append( const T& value ) {
         resize( vsize+1 );
         data[vsize-1] = value;
     };
 
-    /*! Append Operator; the dimesion increase by one
-     */
+    /*! Append Operator; the dimesion increase by one */
     VectorData<T>& operator<<( const T& value ) {
         append( value );
         return (*this);
@@ -457,64 +450,56 @@ public:
     class vectordataIterator;
     friend class vectordataIterator;
 
-    //! Value type
+    /*! Value type */
     typedef T value_type;
-    //! Reference type
+    /*! Reference type */
     typedef T& reference;
-    //! Const Reference type
+    /*! Const Reference type */
     typedef const T& const_reference;
-    //! Iterator
+    /*! Iterator */
     typedef vectordataIterator iterator;
-    //! Const Iterator
+    /*! Const Iterator */
     typedef const vectordataIterator const_iterator;
-    //! Size type
+    /*! Size type */
     typedef size_t size_type;
-    //! Difference pointer type
+    /*! Difference pointer type */
     typedef ptrdiff_t difference_type;
 
-    /*! Max size allowed
-     */
+    /*! Max size allowed */
     size_type max_size() {
         return 300000; // <- FIXME it must return the maximum space of memory allocable
     };
 
-    /*! Is Empty
-     */
+    /*! Is Empty */
     bool empty() {
         return (vsize==0);
     };
 
-    /*! Append an element
-     */
+    /*! Append an element */
     void push_back( const T& value ) {
         resize( vsize+1 );
         data[vsize-1] = value;
     };
 
-    /*! Iterator at initial position
-     */
+    /*! Iterator at initial position */
     iterator begin() {
         return vectordataIterator( *this );
     };
-    /*! Iterator at initial position
-     */
+    /*! Iterator at initial position */
     const_iterator begin() const {
         return vectordataIterator( ((VectorData&)*this) );
     };
 
-    /*! Iterator at past-end position
-     */
+    /*! Iterator at past-end position */
     iterator end() {
         return vectordataIterator( *this, vsize );
     };
-    /*! Iterator at past-end position
-     */
+    /*! Iterator at past-end position */
     const_iterator end() const {
         return vectordataIterator( ((VectorData&)*this), vsize );
     };
 
-    /*! Erase method
-     */
+    /*! Erase method */
     iterator erase( iterator pos ) {
         if ( view ) {
             nError() << "you can't erase element from a VectorData view" ;
@@ -529,8 +514,7 @@ public:
         return (pos);
     };
 
-    /*! Erase All elements
-     */
+    /*! Erase All elements */
     void clear() {
         if ( view ) {
             nError() << "you can't clear a VectorData view" ;
@@ -540,93 +524,91 @@ public:
         }
     };
 
-    /*! Inner-class implements iterator over VectorData
-     */
+    /*! Inner-class implements iterator over VectorData */
     class vectordataIterator : public std::iterator<std::bidirectional_iterator_tag,T,ptrdiff_t> {
     public:
-        //! create the iterator
+        /*! create the iterator */
         vectordataIterator( VectorData& data, u_int startId = 0 ) : vecdata(data), id(startId) { /*nothing to do*/ };
-        //! Copy-Constructor
+        /*! Copy-Constructor */
         vectordataIterator( const vectordataIterator& src ) : vecdata(src.vecdata), id(src.id) { /* nothing to do */  };
-        //! Assignement operator
+        /*! Assignement operator */
         vectordataIterator& operator=( const vectordataIterator& src ) {
             vecdata = src.vecdata;
             id = src.id;
             return (*this);
         };
-        //! equal operator
+        /*! equal operator */
         bool operator==( const vectordataIterator& x ) const {
             return ( &vecdata == &(x.vecdata) && id == x.id );
         };
-        //! not-equal operator
+        /*! not-equal operator */
         bool operator!=( const vectordataIterator& x ) const {
             return ( &vecdata != &(x.vecdata) || id != x.id );
         };
-        //! Accessing element (const version)
+        /*! Accessing element (const version) */
         const T& operator*() const {
             return vecdata[id];
         };
-        //! Accessing element (non-const version)
+        /*! Accessing element (non-const version) */
         T& operator*() {
             return vecdata[id];
         };
-        //! Forward movement
+        /*! Forward movement */
         vectordataIterator& operator++() {
             id = (id < vecdata.size()) ? id+1 : vecdata.size();
             return (*this);
         };
-        //! Forward movement
+        /*! Forward movement */
         const vectordataIterator& operator++() const {
             id = (id < vecdata.size()) ? id+1 : vecdata.size();
             return (*this);
         };
-        //! Backward movement
+        /*! Backward movement */
         vectordataIterator& operator--() {
             id = ( id > 0 ) ? id-1 : 0;
             return (*this);
         };
-        //! Backward movement
+        /*! Backward movement */
         const vectordataIterator& operator--() const {
             id = ( id > 0 ) ? id-1 : 0;
             return (*this);
         };
-        //! Return the id (used by VectorData for accessing)
+        /*! Return the id (used by VectorData for accessing) */
         u_int getIndex() {
             return id;
         };
     private:
-        //! Vector over iterates
+        /*! Vector over iterates */
         VectorData& vecdata;
-        //! current index
+        /*! current index */
         u_int id;
     };
     //@}
 
 protected:
 
-    /*! Raw Data
-     */
+    /*! Raw Data */
     T* rawdata() const {
         return data;
     };
 
-    //! The actual size of VectorData
+    /*! The actual size of VectorData */
     u_int vsize;
-    //! The allocated space
+    /*! The allocated space */
     u_int allocated;
-    //! Data
+    /*! Data */
     T* data;
 
-    //! Is View
+    /*! Is View */
     bool view;
-    //! start index
+    /*! start index */
     u_int idstart;
-    //! end index
+    /*! end index */
     u_int idend;
-    //! Observed VectorData
+    /*! Observed VectorData */
     VectorData* observed;
 
-    //! Notify to viewers that 'data' is changed
+    /*! Notify to viewers that 'data' is changed */
     virtual void notify( const NotifyEvent& event ) {
         switch( event.type() ) {
         case datachanged:

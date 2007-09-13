@@ -42,9 +42,9 @@ public:
     /*! \name Constructors */
     //@{
 
-    //! Constructor
+    /*! Constructor */
     DerivableOutputFunction() : OutputFunction() { /* Nothing to do */ };
-    //! Destructor
+    /*! Destructor */
     virtual ~DerivableOutputFunction() { /* Nothing to do */ };
 
     //@}

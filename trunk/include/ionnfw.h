@@ -40,9 +40,9 @@ namespace nnfw {
 //@{
 
 class BaseNeuralNet;
-//! Load the net from an XML file, and return a BaseNeuralNet
+/*! Load the net from an XML file, and return a BaseNeuralNet */
 NNFW_API BaseNeuralNet* loadXML( const char* filename );
-//! Save the BaseNeuralNet passed into an XML file; return true on success
+/*! Save the BaseNeuralNet passed into an XML file; return true on success */
 NNFW_API bool saveXML( const char* filename, BaseNeuralNet* );
 
 //@}
@@ -50,19 +50,19 @@ NNFW_API bool saveXML( const char* filename, BaseNeuralNet* );
 /*! \name Ouput Stream Operator */
 //@{
 
-//! Operator << with RealVec
+/*! Operator << with RealVec */
 NNFW_API std::ostream& operator<<(std::ostream& stream, const RealVec& v);
 
-//! Operator << with RealMat
+/*! Operator << with RealMat */
 NNFW_API std::ostream& operator<<(std::ostream& stream, const RealMat& m);
 
-//! Operator << with Variant::types
+/*! Operator << with Variant::types */
 NNFW_API std::ostream& operator<<(std::ostream& stream, const Variant::types t);
 
-//! Operator << with Variant
+/*! Operator << with Variant */
 NNFW_API std::ostream& operator<<(std::ostream& stream, const Variant var);
 
-//! Operator << with Propertized
+/*! Operator << with Propertized */
 NNFW_API std::ostream& operator<<(std::ostream& stream, const Propertized& p);
 
 //@}

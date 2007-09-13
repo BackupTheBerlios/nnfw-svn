@@ -19,7 +19,7 @@
 
 // --- You can't include it directly
 #ifndef TYPES_INCLUDES
-#error "You can't include realmat.h directly; Instead, You have to include types.h"
+#error "You can't include matrixdata.h directly; Instead, You have to include types.h"
 // --- follow define avoid to get a lot of understandable error !
 #define MATRIXDATA_H
 #endif
@@ -108,15 +108,15 @@ public:
     /*! \name Informations about MatrixData */
     //@{
 
-    //! Returns the numbers of Row
+    /*! Returns the numbers of Row */
     u_int rows() const {
         return nrows;
     };
-    //! Returns the numbers of Columns
+    /*! Returns the numbers of Columns */
     u_int cols() const {
         return ncols;
     };
-    //! Returns the total numbers of elements (Rows*Columns)
+    /*! Returns the total numbers of elements (Rows*Columns) */
     u_int size() const {
         return tsize;
     };
@@ -148,7 +148,7 @@ public:
         return !( *this == b );
     };
 
-    //! Resize the matrix
+    /*! Resize the matrix */
     void resize( u_int rows, u_int cols ) {
         if ( view ) {
             nError() << "you can't resize a MatrixData view - use setView instead" ;
@@ -177,7 +177,7 @@ public:
     /*! \name Accessing Operators */
     //@{
 
-    //! Return a reference to element at position (row, col)
+    /*! Return a reference to element at position (row, col) */
     T& at( u_int row, u_int col ) {
 #ifdef NNFW_DEBUG
         if ( row >= nrows ) {
@@ -192,7 +192,7 @@ public:
         return rowView[row][col];
     };
 
-    //! Return a Const reference to element at position (row, col)
+    /*! Return a Const reference to element at position (row, col) */
     const T& at( u_int row, u_int col ) const {
 #ifdef NNFW_DEBUG
         if ( row >= nrows ) {
@@ -260,19 +260,19 @@ public:
     class matrixdataIterator;
     friend class matrixdataIterator;
 
-    //! Value type
+    /*! Value type */
     typedef T value_type;
-    //! Reference type
+    /*! Reference type */
     typedef T& reference;
-    //! Const Reference type
+    /*! Const Reference type */
     typedef const T& const_reference;
-    //! Iterator
+    /*! Iterator */
     typedef matrixdataIterator iterator;
-    //! Const Iterator
+    /*! Const Iterator */
     typedef const matrixdataIterator const_iterator;
-    //! Size type
+    /*! Size type */
     typedef size_t size_type;
-    //! Difference pointer type
+    /*! Difference pointer type */
     typedef ptrdiff_t difference_type;
 
     /*! Max size allowed
@@ -323,63 +323,63 @@ public:
      */
     class matrixdataIterator : public std::iterator<std::bidirectional_iterator_tag,T,ptrdiff_t> {
     public:
-        //! create the iterator
+        /*! create the iterator */
         matrixdataIterator( MatrixData& data, u_int startId = 0 ) : vecdata(data.data), id(startId), tsize(data.tsize) { /*nothing to do*/ };
-        //! Copy-Constructor
+        /*! Copy-Constructor */
         matrixdataIterator( const matrixdataIterator& src ) : vecdata(src.vecdata), id(src.id), tsize(src.tsize) { /* nothing to do */  };
-        //! Assignement operator
+        /*! Assignement operator */
         matrixdataIterator& operator=( const matrixdataIterator& src ) {
             vecdata = src.vecdata;
             id = src.id;
             tsize = src.tsize;
             return (*this);
         };
-        //! equal operator
+        /*! equal operator */
         bool operator==( const matrixdataIterator& x ) const {
             return ( &vecdata == &(x.vecdata) && id == x.id );
         };
-        //! not-equal operator
+        /*! not-equal operator */
         bool operator!=( const matrixdataIterator& x ) const {
             return ( &vecdata != &(x.vecdata) || id != x.id );
         };
-        //! Accessing element (const version)
+        /*! Accessing element (const version) */
         const T& operator*() const {
             return vecdata[id];
         };
-        //! Accessing element (non-const version)
+        /*! Accessing element (non-const version) */
         T& operator*() {
             return vecdata[id];
         };
-        //! Forward movement
+        /*! Forward movement */
         matrixdataIterator& operator++() {
             id = (id < tsize) ? id+1 : tsize;
             return (*this);
         };
-        //! Forward movement
+        /*! Forward movement */
         const matrixdataIterator& operator++() const {
             id = (id < tsize) ? id+1 : tsize;
             return (*this);
         };
-        //! Backward movement
+        /*! Backward movement */
         matrixdataIterator& operator--() {
             id = ( id > 0 ) ? id-1 : 0;
             return (*this);
         };
-        //! Backward movement
+        /*! Backward movement */
         const matrixdataIterator& operator--() const {
             id = ( id > 0 ) ? id-1 : 0;
             return (*this);
         };
-        //! Return the id (used by VectorData for accessing)
+        /*! Return the id (used by VectorData for accessing) */
         u_int getIndex() {
             return id;
         };
     private:
-        //! Vector over iterates
+        /*! Vector over iterates */
         Vec& vecdata;
-        //! current index
+        /*! current index */
         u_int id;
-        //! Dimension of data - same as MatrixData::size()
+        /*! Dimension of data - same as MatrixData::size() */
         u_int tsize;
     };
     //@}
@@ -394,21 +394,21 @@ protected:
     };
 
 private:
-    //! Numbers of Rows
+    /*! Numbers of Rows */
     u_int nrows;
-    //! Numbers of Columns
+    /*! Numbers of Columns */
     u_int ncols;
-    //! Size
+    /*! Size */
     u_int tsize;
-    //! VectorData of data
+    /*! VectorData of data */
     Vec data;
-    //! Vector of VectorData views of data
+    /*! Vector of VectorData views of data */
     VectorData< Vec > rowView;
 
-    //! if is a MatrixData view
+    /*! if is a MatrixData view */
     bool view;
 
-    //! Notify to viewers that 'data' is changed
+    /*! Notify to viewers that 'data' is changed */
     virtual void notify( const NotifyEvent& event ) {
         switch( event.type() ) {
         case Vec::datachanged:
@@ -448,7 +448,7 @@ private:
         //notifyAll( matdatachanged );
     };
 
-	//! The Copy-Construction and Assignement is to allowed
+	/*! The Copy-Construction and Assignement is to allowed */
     MatrixData( const MatrixData& src )
         : Observer(), Observable(), data(0), rowView(0) {
 	};
