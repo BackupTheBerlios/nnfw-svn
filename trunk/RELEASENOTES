@@ -1,3 +1,13 @@
+======= 0.9.2 + 0.9.3 Release =======
+  * Summary of important changes
+	- added norm and normalize for RealMat
+	- added LinearComboFunction
+
+  * Bugfixs:
+	- fixed a bug in GaussFunction constructor (Propertized version)
+	- fixed visibility bug in doxygen comments
+	- resolved linkage problem with nMessages under windows
+
 ======= 0.9.1 Release =======
   * Summary of important changes
 	- added ScaleFunction that scale the inputs vector of Cluster
