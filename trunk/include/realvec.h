@@ -211,10 +211,11 @@ public:
 
     /*! Scaling (scalar-vector multiply)
      */
-    void scale( const Real v ) {
+    RealVec& scale( const Real v ) {
         for( u_int i=0; i<vsize; i++ ) {
             data[i] *= v;
         }
+		return (*this);
     };
 
     /*! Element Inversion
@@ -227,10 +228,11 @@ public:
 
     /*! Calculate the square of each element
      */
-	void square() {
+	RealVec& square() {
         for( u_int i=0; i<vsize; i++ ) {
             data[i] *= data[i];
         }
+		return (*this);
     };
 	
     /*! Return the sum of the vector's elements
@@ -245,21 +247,23 @@ public:
 
 	/*! Normalize the vector, so the norm is equal to one
 	 */
-	void normalize() {
+	RealVec& normalize() {
 		Real n = norm();
 		if ( n==0.0 ) return;
         for( u_int i=0; i<vsize; i++ ) {
             data[i] /= n;
         }
+		return (*this);
 	};
 
 	/*! Not operation<br>
 	 *  It apply the operator '!' to all elements of RealVec
      */
-    void neg() {
+    RealVec& neg() {
         for( u_int i=0; i<vsize; i++ ) {
 			data[i] = !data[i];
         }
+		return (*this);
     };
 
     /*! Equation: x-y
@@ -310,10 +314,11 @@ public:
 
 	/*! For each element i, data[i] = 0 if data[i] <= threshold; data[i] = 1 otherwise
 	 */
-	void step( Real threshold ) {
+	RealVec& step( Real threshold ) {
 		for ( u_int i = 0; i<vsize; i++ ) {
 		    ( data[i] > threshold ) ? data[i] = 1.0f : data[i] = 0.0f;
 		}
+		return (*this);
 	}
 
     /*! Create all the binary vectors of a given dimension

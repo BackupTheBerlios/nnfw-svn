@@ -30,6 +30,10 @@
 class ClusterRenderer;
 class LinkerRenderer;
 
+/*! \brief Rendered of the NeuralNetworkModel
+ *
+ *  Details here
+ */
 class FLEX_API NNRenderer : public QGraphicsView {
 	Q_OBJECT
 public:
