@@ -249,7 +249,7 @@ public:
 	 */
 	RealVec& normalize() {
 		Real n = norm();
-		if ( n==0.0 ) return;
+		if ( n==0.0 ) return (*this);
         for( u_int i=0; i<vsize; i++ ) {
             data[i] /= n;
         }
