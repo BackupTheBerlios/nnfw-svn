@@ -48,4 +48,10 @@ void DotLinker::update() {
     return;
 }
 
+DotLinker* DotLinker::clone() const {
+	DotLinker* newclone = new DotLinker( this->from(), this->to(), name() );
+	newclone->setMatrix( this->matrix() );
+	return newclone;
+}
+
 }

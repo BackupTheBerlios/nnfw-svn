@@ -63,5 +63,10 @@ Linker::Linker( PropertySettings& prop )
     // setTypename( "Linker" ); --- it's no instanciable
 }
 
+Linker* Linker::clone() const {
+	nError() << "The clone() method has to implemented by subclasses";
+	return 0;
+}
+
 }
 

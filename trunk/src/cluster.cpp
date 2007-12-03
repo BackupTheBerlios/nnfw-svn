@@ -154,6 +154,11 @@ Real Cluster::getOutput( u_int neuron ) const {
     return outputdata[neuron];
 }
 
+Cluster* Cluster::clone() const {
+	nError() << "The clone() method has to implemented by subclasses";
+	return 0;
+}
+
 void Cluster::propdefs() {
     addProperty( "numNeurons", Variant::t_uint, this, &Cluster::numNeuronsP );
     addProperty( "accumulate", Variant::t_bool, this, &Cluster::accumP, &Cluster::setAccumP );

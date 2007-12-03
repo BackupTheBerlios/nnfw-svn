@@ -110,6 +110,9 @@ public:
      */
     virtual void randomize( Real min, Real max ) = 0;
 
+	/*! Clone this Linker */
+	virtual Linker* clone() const;
+
     //@}
 
 private:

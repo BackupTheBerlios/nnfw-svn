@@ -65,6 +65,9 @@ public:
      */
     void update();
 
+	/*! Clone this NormLinker */
+	virtual NormLinker* clone() const;
+
     //@}
 
 protected:

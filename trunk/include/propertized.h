@@ -363,8 +363,28 @@ private:
     Variant (T::*getPtm)( u_int i );
 };
 
-/*! \brief PropertySettings
+/*! \brief Simple Structure for describing a property in PropertySettings
+ *
+ *  ------- Experimental
  */
+class NNFW_API PropertyData {
+public:
+	/*! Constructor */
+	PropertyData( const Variant& v ) {
+		data = v; isVector = false; index = -1;
+	};
+	/*! Constructor */
+	PropertyData( const Variant& v, int id ) {
+		data = v; isVector = true; index = id;
+	};
+	/*! the actual data of property */
+	Variant data;
+	/*! true if the property is vectorial */
+	bool isVector;
+	/*! the index when the property is vectorial */
+	int index;
+};
+/*! PropertySettings */
 typedef std::map< std::string, Variant > PropertySettings;
 
 /*! \brief Implements the capability to access internal data via properties
@@ -382,7 +402,7 @@ typedef std::map< std::string, Variant > PropertySettings;
  *   <tr><td>typename</td> <td>string</td> <td>read-only</td> <td> Class's type </td> <td>this</td> </tr>
  *   </table>
  */
-class NNFW_API Propertized {
+class NNFW_API Propertized : public Clonable {
 public:
     /*! \name Constructors */
     //@{
@@ -475,6 +495,9 @@ public:
 	 *  \warning is not possible convert to pointer-type.
 	 */
 	Variant convertStringTo( const Variant& str, Variant::types t );
+
+	/*! Clone this Propertized */
+	virtual Propertized* clone() const;
 
     //@}
 

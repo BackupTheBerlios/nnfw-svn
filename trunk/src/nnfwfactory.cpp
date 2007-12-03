@@ -74,6 +74,7 @@ bool Factory::registerCluster( const AbstractCreator& c, const char* type ) {
     std::string key(type);
     if ( clustertypes.count( key ) == 0 ) {
         clustertypes[key] = c.clone();
+		proptypes[key] = clustertypes[key];
         return true;
     }
     return false;
@@ -84,6 +85,7 @@ bool Factory::registerLinker( const AbstractCreator& c, const char* type ) {
     std::string key(type);
     if ( linkertypes.count( key ) == 0 ) {
         linkertypes[key] = c.clone();
+		proptypes[key] = linkertypes[key];
         return true;
     }
     return false;
@@ -94,6 +96,7 @@ bool Factory::registerOutputFunction( const AbstractCreator& c, const char* type
     std::string key(type);
     if ( outfuntypes.count( key ) == 0 ) {
         outfuntypes[key] = c.clone();
+		proptypes[key] = outfuntypes[key];
         return true;
     }
     return false;
@@ -110,29 +113,51 @@ bool Factory::registerPropertized( const AbstractCreator& c, const char* type ) 
 }
 
 void Factory::initFactory() {
-    clustertypes["SimpleCluster"] = new Creator<SimpleCluster>();
-    clustertypes["BiasedCluster"] = new Creator<BiasedCluster>();
-    clustertypes["DDECluster"] = new Creator<DDECluster>();
-    clustertypes["FakeCluster"] = new Creator<FakeCluster>();
-
-    linkertypes["SparseMatrixLinker"] = new Creator<SparseMatrixLinker>();
-    linkertypes["CopyLinker"] = new Creator<CopyLinker>();
-    linkertypes["DotLinker"] = new Creator<DotLinker>();
-    linkertypes["NormLinker"] = new Creator<NormLinker>();
+	clustertypes["SimpleCluster"] = new Creator<SimpleCluster>();
+	clustertypes["BiasedCluster"] = new Creator<BiasedCluster>();
+	clustertypes["DDECluster"] = new Creator<DDECluster>();
+	clustertypes["FakeCluster"] = new Creator<FakeCluster>();
+	
+	linkertypes["SparseMatrixLinker"] = new Creator<SparseMatrixLinker>();
+	linkertypes["CopyLinker"] = new Creator<CopyLinker>();
+	linkertypes["DotLinker"] = new Creator<DotLinker>();
+	linkertypes["NormLinker"] = new Creator<NormLinker>();
 	//--- for backward compatibility
-    linkertypes["MatrixLinker"] = new Creator<DotLinker>();
-
-    outfuntypes["FakeSigmoidFunction"] = new Creator<FakeSigmoidFunction>();
-    outfuntypes["IdentityFunction"] = new Creator<IdentityFunction>();
-    outfuntypes["LinearFunction"] = new Creator<LinearFunction>();
-    outfuntypes["ScaledSigmoidFunction"] = new Creator<ScaledSigmoidFunction>();
-    outfuntypes["SigmoidFunction"] = new Creator<SigmoidFunction>();
-    outfuntypes["StepFunction"] = new Creator<StepFunction>();
+	linkertypes["MatrixLinker"] = new Creator<DotLinker>();
+	
+	outfuntypes["FakeSigmoidFunction"] = new Creator<FakeSigmoidFunction>();
+	outfuntypes["IdentityFunction"] = new Creator<IdentityFunction>();
+	outfuntypes["LinearFunction"] = new Creator<LinearFunction>();
+	outfuntypes["ScaledSigmoidFunction"] = new Creator<ScaledSigmoidFunction>();
+	outfuntypes["SigmoidFunction"] = new Creator<SigmoidFunction>();
+	outfuntypes["StepFunction"] = new Creator<StepFunction>();
 	outfuntypes["LeakyIntegratorFunction"] = new Creator<LeakyIntegratorFunction>();
-    outfuntypes["PoolFunction"] = new Creator<PoolFunction>();
+	outfuntypes["PoolFunction"] = new Creator<PoolFunction>();
 	outfuntypes["CompositeFunction"] = new Creator<CompositeFunction>();
 	outfuntypes["LinearComboFunction"] = new Creator<LinearComboFunction>();
-    outfuntypes["GaussFunction"] = new Creator<GaussFunction>();
+	outfuntypes["GaussFunction"] = new Creator<GaussFunction>();
+
+	// Replicate all data above in generic Propertized
+	proptypes["SimpleCluster"] = clustertypes["SimpleCluster"];
+	proptypes["BiasedCluster"] = clustertypes["BiasedCluster"];
+	proptypes["DDECluster"] = clustertypes["DDECluster"];
+	proptypes["FakeCluster"] = clustertypes["FakeCluster"];
+	proptypes["SparseMatrixLinker"] = linkertypes["SparseMatrixLinker"];
+	proptypes["CopyLinker"] = linkertypes["CopyLinker"];
+	proptypes["DotLinker"] = linkertypes["DotLinker"];
+	proptypes["NormLinker"] = linkertypes["NormLinker"];
+	proptypes["MatrixLinker"] = linkertypes["MatrixLinker"];
+	proptypes["FakeSigmoidFunction"] = outfuntypes["FakeSigmoidFunction"];
+	proptypes["IdentityFunction"] = outfuntypes["IdentityFunction"];
+	proptypes["LinearFunction"] = outfuntypes["LinearFunction"];
+	proptypes["ScaledSigmoidFunction"] = outfuntypes["ScaledSigmoidFunction"];
+	proptypes["SigmoidFunction"] = outfuntypes["SigmoidFunction"];
+	proptypes["StepFunction"] = outfuntypes["StepFunction"];
+	proptypes["LeakyIntegratorFunction"] = outfuntypes["LeakyIntegratorFunction"];
+	proptypes["PoolFunction"] = outfuntypes["PoolFunction"];
+	proptypes["CompositeFunction"] = outfuntypes["CompositeFunction"];
+	proptypes["LinearComboFunction"] = outfuntypes["LinearComboFunction"];
+	proptypes["GaussFunction"] = outfuntypes["GaussFunction"];
 
     isInit = true;
 }

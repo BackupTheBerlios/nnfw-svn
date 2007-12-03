@@ -101,6 +101,9 @@ public:
      */
     void randomize( Real, Real ) { /* Nothing To Do */ };
 
+	/*! Clone this DDECluster */
+	virtual DDECluster* clone() const;
+
 	//@}
 
 private:

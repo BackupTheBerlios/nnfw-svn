@@ -73,6 +73,9 @@ public:
      */
     void randomize( Real, Real ) { /* Nothing To Do */ };
 
+	/*! Clone this SimpleCluster */
+	virtual SimpleCluster* clone() const;
+
     //@}
 };
 

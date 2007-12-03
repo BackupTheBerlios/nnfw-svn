@@ -108,6 +108,9 @@ public:
 		return mask;
 	};
 
+	/*! Clone this SparseMatrixLinker */
+	virtual SparseMatrixLinker* clone() const;
+
     //@}
 
 private:

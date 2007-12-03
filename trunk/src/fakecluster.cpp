@@ -53,4 +53,13 @@ void FakeCluster::randomize( Real , Real ) {
     return;
 }
 
+FakeCluster* FakeCluster::clone() const {
+	FakeCluster* newclone = new FakeCluster( numNeurons(), name() );
+	newclone->setAccumulate( this->isAccumulate() );
+	newclone->inputs().assign( this->inputs() );
+	newclone->outputs().assign( this->outputs() );
+	newclone->setFunction( *(this->getFunction()) );
+	return newclone;
+}
+
 }

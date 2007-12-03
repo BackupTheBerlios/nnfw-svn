@@ -61,9 +61,11 @@ public:
     /*! \name Interface */
     //@{
 
-    /*! Performs the dot-product calculation
-     */
+    /*! Performs the dot-product calculation */
     void update();
+
+	/*! Clone this DotLinker */
+	virtual DotLinker* clone() const;
 
     //@}
 };

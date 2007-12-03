@@ -147,5 +147,14 @@ void DDECluster::updateDs() {
     }
 }
 
+DDECluster* DDECluster::clone() const {
+	DDECluster* newclone = new DDECluster( coeff, numNeurons(), name() );
+	newclone->setAccumulate( this->isAccumulate() );
+	newclone->inputs().assign( this->inputs() );
+	newclone->outputs().assign( this->outputs() );
+	newclone->setFunction( *(this->getFunction()) );
+	return newclone;
+}
+
 }
 

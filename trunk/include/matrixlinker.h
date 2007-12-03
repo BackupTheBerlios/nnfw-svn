@@ -108,6 +108,11 @@ public:
 		return w;
 	};
 
+	/*! const version of matrix() method */
+	const RealMat& matrix() const {
+		return w;
+	};
+
     /*!  Return the weight matrix (Variant ver)
      */
     Variant matrixP() {

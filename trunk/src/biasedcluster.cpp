@@ -89,6 +89,16 @@ void BiasedCluster::randomize( Real min, Real max ) {
     }
 }
 
+BiasedCluster* BiasedCluster::clone() const {
+	BiasedCluster* newclone = new BiasedCluster( numNeurons(), name() );
+	newclone->setAccumulate( this->isAccumulate() );
+	newclone->inputs().assign( this->inputs() );
+	newclone->outputs().assign( this->outputs() );
+	newclone->setBiases( this->biasesdata );
+	newclone->setFunction( *(this->getFunction()) );
+	return newclone;
+}
+
 void BiasedCluster::propdefs() {
     addProperty( "biases", Variant::t_realvec, this, &BiasedCluster::getBiases, &BiasedCluster::setBiases );
 }

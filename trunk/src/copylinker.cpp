@@ -91,7 +91,7 @@ bool CopyLinker::setMode( const Variant& v ) {
     return true;
 }
 
-CopyLinker::CopyMode CopyLinker::getMode() {
+CopyLinker::CopyMode CopyLinker::getMode() const {
     return mode;
 }
 
@@ -111,6 +111,11 @@ void CopyLinker::update() {
 
 u_int CopyLinker::size() const {
     return dimData;
+}
+
+CopyLinker* CopyLinker::clone() const {
+	CopyLinker* newclone = new CopyLinker( this->from(), this->to(), this->getMode(), name() );
+	return newclone;
 }
 
 }

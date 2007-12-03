@@ -81,7 +81,7 @@ public:
 
     /*! Return the Modality of Data Copying
      */
-    CopyMode getMode();
+    CopyMode getMode() const;
 
     /*! Change the Modality of Data Copying (Variant version)
      */
@@ -104,6 +104,9 @@ public:
     void randomize( Real , Real ) {
         // --- Do Nothing
     };
+
+	/*! Clone this CopyLinker */
+	virtual CopyLinker* clone() const;
 
 	//@}
 

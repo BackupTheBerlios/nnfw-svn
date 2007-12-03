@@ -174,6 +174,13 @@ void SparseMatrixLinker::disconnectRandom( Real prob ) {
     }
 }
 
+SparseMatrixLinker* SparseMatrixLinker::clone() const {
+	SparseMatrixLinker* newclone = new SparseMatrixLinker( this->from(), this->to(), name() );
+	newclone->setMatrix( this->matrix() );
+	newclone->mask.assign( this->mask );
+	return newclone;
+}
+
 
 }
 

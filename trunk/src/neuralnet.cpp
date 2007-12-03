@@ -337,4 +337,9 @@ bool BaseNeuralNet::find( const Updatable* u ) const {
     return false;
 }
 
+BaseNeuralNet* BaseNeuralNet::clone() const {
+	nWarning() << "Not Yet Implemented";
+	return new BaseNeuralNet();
+}
+
 }

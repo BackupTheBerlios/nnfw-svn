@@ -56,7 +56,7 @@ bool Updatable::setName( const Variant& nv ) {
     return true;
 }
 
-const char* Updatable::name() {
+const char* Updatable::name() const {
     return namev;
 }
 

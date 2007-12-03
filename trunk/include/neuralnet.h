@@ -180,6 +180,9 @@ public:
      */
     bool find( const Updatable* ) const;
 
+	/*! Clone this BaseNeuralNet */
+	BaseNeuralNet* clone() const;
+
 	//@}
 
 protected:

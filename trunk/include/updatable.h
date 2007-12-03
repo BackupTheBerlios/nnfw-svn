@@ -64,7 +64,7 @@ public:
     /*! Set the name of Updatable (Varian version) */
     bool setName( const Variant& nv );
 	/*! Return its name */
-	const char* name();
+	const char* name() const;
     /*! Return the name (version that use Variant for property) */
     Variant getNameV();
 

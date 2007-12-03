@@ -111,6 +111,9 @@ public:
      */
     void randomize( Real min, Real max );
 
+	/*! Clone this BiasedCluster */
+	virtual BiasedCluster* clone() const;
+
     //@}
 
 private:

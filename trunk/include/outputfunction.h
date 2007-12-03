@@ -36,7 +36,7 @@ namespace nnfw {
  *
  *  Details...
  */
-class NNFW_API OutputFunction : public Clonable, public Propertized {
+class NNFW_API OutputFunction : public Propertized {
 public:
     /*! \name Constructors */
     //@{
@@ -71,8 +71,7 @@ public:
      */
     virtual void setCluster( Cluster* ) { /* nothing to do */ };
 
-    /*! Clone this object
-     */
+    /*! Clone this object */
     virtual OutputFunction* clone() const;
 
     //@}

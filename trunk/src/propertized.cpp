@@ -326,4 +326,15 @@ Variant Propertized::convertStringTo( const Variant& str, Variant::types t ) {
 	return Variant();
 }
 
+Propertized* Propertized::clone() const {
+	nWarning() << "Not Yet Implemented";
+	return new Propertized();
+/*	PropertySettings thisprops;
+	for( int i=0; i<vecProps.size(); i++ ) {
+		thisprops[ ] = vecProps
+	}
+	Propertized* newclone = Factory::createPropertized(*/
+}
+
+
 }

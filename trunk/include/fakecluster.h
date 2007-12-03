@@ -86,6 +86,9 @@ public:
      */
     void randomize( Real min, Real max );
 
+	/*! Clone this FakeCluster */
+	virtual FakeCluster* clone() const;
+
     //@}
 
 };

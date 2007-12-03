@@ -111,6 +111,7 @@ class NNFW_API nWarning : public nMessage {
 public:
 	/*! \name Interface */
 	//@{
+	/*! Operator for construting a message */
     nMessage::msgLine operator<<( const nnfwString& part ) {
 		nMessage::msgLine line(this);
 		line.set( nnfwString("== WARNING: ").append(part) );
@@ -125,6 +126,7 @@ class NNFW_API nError : public nMessage {
 public:
 	/*! \name Interface */
 	//@{
+	/*! Operator for construting a message */
     nMessage::msgLine operator<<( const nnfwString& part ) {
 		nMessage::msgLine line(this);
 		line.set( nnfwString("== ERROR: ").append(part) );
@@ -139,6 +141,7 @@ class NNFW_API nFatal : public nMessage {
 public:
 	/*! \name Interface */
 	//@{
+	/*! Operator for construting a message */
     nMessage::msgLine operator<<( const nnfwString& part ) {
 		nMessage::msgLine line(this);
 		line.set( nnfwString("== FATAL: ").append(part) );

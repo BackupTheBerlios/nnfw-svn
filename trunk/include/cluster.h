@@ -118,7 +118,7 @@ public:
 
     /*! return true if the Cluster will accumulates inputs
      */
-    bool isAccumulate() {
+    bool isAccumulate() const {
         return !accOff;
     };
 
@@ -180,6 +180,11 @@ public:
         return inputdata;
     };
 
+	/*! const version of inputs() */
+    const RealVec& inputs() const {
+        return inputdata;
+    };
+
     /*! For property 'inputs' */
     Variant inputsP() {
         return Variant( &inputdata );
@@ -211,8 +216,13 @@ public:
      *  Return the array of outputs, not a copy of outputs; Then you can change outputs by the pointer returned !!!
      */
     RealVec& outputs() {
-        return outputdata;
+		return outputdata;
     };
+
+	/*! const version of outputs() */
+	const RealVec& outputs() const {
+		return outputdata;
+	};
 
     /*! For property 'outputs' */
     Variant outputsP() {
@@ -237,7 +247,7 @@ public:
 
     /*! Get the Output function
      */
-    OutputFunction* const getFunction() {
+    OutputFunction* const getFunction() const {
         return updater;
     };
 
@@ -251,6 +261,9 @@ public:
         setFunction( *(outf.getOutputFunction()) );
         return true;
     };
+
+	/*! Clone this Cluster */
+	virtual Cluster* clone() const;
 
     //@}
 
