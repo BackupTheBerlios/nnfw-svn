@@ -14,6 +14,9 @@ S <mave> comment goes here
     'B' : means a BugFix
     'C' : means that something has been changed (e.g. implementation of a Class or a signature method)
 ==== End of Legend ====
+    ==> 240 - 10/12/2007 <==
+
+C <mave> changed CMakeLists.txt for better support on Mac OSX
 
     ==> 238 - 3/12/2007 <==
 

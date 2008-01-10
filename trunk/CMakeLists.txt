@@ -38,6 +38,8 @@ ELSE ( NNFW_CONFIG MATCHES shared )
     INSTALL( TARGETS nnfw ARCHIVE DESTINATION ${LIB_DIR} )
 ENDIF ( NNFW_CONFIG MATCHES shared )
 
+TARGET_LINK_LIBRARIES( nnfw ${QT_LIBRARIES} )
+
 IF (WIN32)
 	INSTALL( FILES "${NNFW_SOURCE_DIR}/GPL.txt" DESTINATION . )
 	INSTALL( FILES "${NNFW_SOURCE_DIR}/CHANGELOG" DESTINATION . )
@@ -89,11 +91,6 @@ IF (UNIX)
         GET_TARGET_PROPERTY( TMP nnfw COMPILE_FLAGS )
         SET_TARGET_PROPERTIES( nnfw PROPERTIES COMPILE_FLAGS "${TMP} -I${MKL_PATH} -DNNFW_USE_MKL" )
     ENDIF ( NNFW_CONFIG MATCHES mkl )
-	### Setting For Mac-OSX machines
-	IF ( APPLE )
-		MESSAGE( "-- Setting compiler for MAC OS X" )
-		SET_TARGET_PROPERTIES( nnfw PROPERTIES LINK_FLAGS "-framework QtCore -framework QtXml -F/usr/local/qt4/lib" )
-	ENDIF (APPLE)
 ENDIF (UNIX)
 
 ### create the nnfw-config script
@@ -141,7 +138,3 @@ IF( WIN32 AND NOT UNIX )
 	TARGET_LINK_LIBRARIES( nnfw "QtCore4" )
 ENDIF( WIN32 AND NOT UNIX )
 
-### Setting Compiler minGW for Windows machines
-IF (MINGW)
-    SET_TARGET_PROPERTIES( nnfw PROPERTIES LINK_FLAGS "-LC:\\Qt\\4.2.3\\lib -Wl,--export-all-symbols -Wl,--add-stdcall-alias" )
-ENDIF (MINGW)
