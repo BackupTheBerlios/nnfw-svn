@@ -25,6 +25,7 @@
 
 #include "types.h"
 #include "learningalgorithm.h"
+#include <map>
 
 namespace nnfw {
 
@@ -36,37 +37,55 @@ public:
 	/*! \name Constructors */
 	//@{
 
-    /*! Constructor */
-    BackPropagationAlgo( BaseNeuralNet* );
-    /*! Destructor */
-    virtual ~BackPropagationAlgo();
+	/*! Constructor
+	 *
+	 *  \param neural_network the BaseNeuralNet neural network to train
+	 *  \param update_order the UpdatableVec for the backpropagation sequence
+	 *  \param learn_rate the Real learning rate factor
+	 */
+	BackPropagationAlgo( BaseNeuralNet *n_n, UpdatableVec update_order, Real l_r = 0.1f );
+
+	//! Destructor
+	~BackPropagationAlgo( );
 
 	//@}
 	/*! \name Interface */
 	//@{
 
-	/*! Set the global learning rate */
-	void setLearnRate( Real lr ) {
-		lrate = lr;
-	};
-	/*! return the learning rate setted */
-	Real learningRate() {
-		return lrate;
-	};
-	/*! Initialize BackPropagation algorithm; in details, it prepare internal structure in order to
-	 *  apply the backpropagation of error through the modifier configured by setVector/setMatrix methods
-	 *  of LearningAlgorithm class, and it resets all previous states.<br>
-	 *  This method must be called everytime you change the modifier associated with Clusters and Linkers and
-	 *  when the BaseNeuralNet associated has been changed.
+	/*! Set the teaching input for Cluster passed
+	 *  \param teach_input the RealVec teaching input
 	 */
-	void init();
-    /*! Modify the object using the BackPropagation Algorithm */
-    virtual void learn();
+	void setTeachingInput( Cluster* output, const RealVec& ti );
 
+	/*! Starts a single training step. */
+	void learn( );
+
+	/*! Return the error calculated */
+	const RealVec& getError( Cluster* );
 	//@}
+
 private:
-	/*! learning rate */
-	Real lrate;
+	//! The Real learning rate factor
+	Real learn_rate;
+	//! The update order
+	UpdatableVec update_order;
+
+	//! The struct of Clusters and Deltas
+	class cluster_deltas {
+	public:
+		Cluster* cluster;
+		bool isOutput;
+		RealVec deltas_outputs;
+		RealVec deltas_inputs;
+		LinkerVec incoming_linkers_vec;
+	};
+	//! map to help looking for cluster_deltas info
+	std::map<Cluster*, int> mapIndex;
+	//! The VectorData of struct of Clusters and Deltas
+	VectorData<cluster_deltas> cluster_deltas_vec;
+	// --- propagate delta through the net
+	void propagDeltas();
+
 };
 
 }

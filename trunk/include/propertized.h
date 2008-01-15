@@ -464,10 +464,20 @@ public:
      */
     void setProperties( PropertySettings& prop );
 
-    /*! Return all PropertyAccess in order of registering
-     */
+    /*! Return all PropertyAccess in order of registering */
     PropertyAccessVec& properties() const {
         return (PropertyAccessVec&)vecProps;
+    };
+
+    /*! Set the PropertySettings reflecting the status of this Propertized */
+    void propertySettings( PropertySettings& prop ) const {
+		for( int i=0; i<(int)vecProps.size(); i++ ) {
+			if ( vecProps[i]->isVector() ) {
+				nWarning() << "propertySettings doesn't handle Vector-Property yet";
+				continue;
+			}
+			prop[ vecProps[i]->name() ] = vecProps[i]->get();
+		}
     };
 
     /*! Search for property and return it; if the property doesn't exists a NULL pointer will be returned

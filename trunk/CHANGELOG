@@ -14,6 +14,21 @@ S <mave> comment goes here
     'B' : means a BugFix
     'C' : means that something has been changed (e.g. implementation of a Class or a signature method)
 ==== End of Legend ====
+
+    ==> 241 - 15/01/2008 <==
+
+B <mave> resolved problem on nnfw-confin on Mac OSX
++ <mave> implemented BaseNeuralNet::clone()
+C <mave> now the setOrder accept 'const UpdatableVec&'
++ <mave> added propertySettings method for retrieving the current status of Propertized objects
+- <mave> deleted uility for creating backpropagation algorithm
+- <mave> deleted modifier and subclasses;
+		it seem enough the deltarule methods added to RealVec & RealMat
+- <mave> deleted all classes of previous implementation of learning algorithms
+B <mave> resolved a bug in feedForwardNet utility
++ <mave> added assign_reverse method to VectorData that assign the element in revers order
++ <mave> completed the first version of BackPropagationAlgo
+
     ==> 240 - 10/12/2007 <==
 
 C <mave> changed CMakeLists.txt for better support on Mac OSX

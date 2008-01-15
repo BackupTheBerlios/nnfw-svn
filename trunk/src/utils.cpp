@@ -22,8 +22,6 @@
 #include "neuralnet.h"
 #include "simplecluster.h"
 #include "matrixlinker.h"
-#include "blockslearning.h"
-#include "learningnetwork.h"
 #include "nnfwfactory.h"
 #include "propertized.h"
 #include <stack>
@@ -61,7 +59,7 @@ BaseNeuralNet* feedForwardNet( U_IntVec layers, const char* clusterType, const c
             sprintf( buf, "%s", prec->name() );
             prop["from"] = buf;
             sprintf( buf, "%s", curr->name() );
-            prop["to"]   = curr;
+            prop["to"]   = buf;
             sprintf( buf, "%s%d", linkerType, mlCount );
             prop["name"] = buf;
             ml = Factory::createLinker( linkerType, prop );
@@ -76,97 +74,6 @@ BaseNeuralNet* feedForwardNet( U_IntVec layers, const char* clusterType, const c
     }
     net->setOrder( ord );
     return net;
-}
-
-typedef struct {
-    MatrixLinker* ml;
-    GradientBiasedCluster* post;
-} linkInfo;
-typedef struct {
-    BiasedCluster* cl;
-    GradientMatrixLinker* post;
-} clusInfo;
-
-LearningNetwork* backpropagationFor( BaseNeuralNet* net ) {
-    LearningNetwork* learnNet = new LearningNetwork();
-    TeachBlockVec ord;
-
-    std::stack<linkInfo> qml;
-    std::stack<clusInfo> qcl;
-
-    // Inizializzo qcl con i BiasedCluster dello strato di output
-    const ClusterVec cv = net->outputClusters();
-    u_int dim = cv.size();
-    for( u_int i=0; i<dim; i++ ) {
-        BiasedCluster* cl = dynamic_cast<BiasedCluster*>( cv[i] );
-        if ( !cl ) continue;
-        clusInfo info;
-        info.cl = cl;
-        info.post = 0;
-        qcl.push( info );
-    }
-
-    char buf[150];
-    while( qcl.size() != 0 || qml.size() != 0 ) {
-        // Inserisco nella learnNet tutti i BiasedCluster dello strato corrente e
-        // costruisco la coda dei MatrixLinker entranti su questi BiasedCluster
-        while( qcl.size() != 0 ) {
-            clusInfo info = qcl.top();
-            qcl.pop();
-            sprintf( buf, "Gradient%s", (info.cl)->name() );
-            GradientBiasedCluster* gcl = new GradientBiasedCluster( info.cl, 0, info.post, buf );
-            learnNet->addTeachBlock( gcl );
-            ord << gcl;
-            const LinkerVec lv = net->linkers( info.cl, false );
-            dim = lv.size();
-            for( u_int i=0; i<dim; i++ ) {
-                MatrixLinker* ml = dynamic_cast<MatrixLinker*>( lv[i] );
-                if ( !ml ) continue;
-                linkInfo infoM;
-                infoM.ml = ml;
-                infoM.post = gcl;
-                qml.push( infoM );
-            }
-        }
-        // Inserisco nella learnNet tutti i MatrixLinker dello strato corrente e
-        // costruisco la coda dei BiasedCluster di partenza dei MatrixLinker della coda
-        while( qml.size() != 0 ) {
-            linkInfo info = qml.top();
-            qml.pop();
-            sprintf( buf, "Gradient%s", (info.ml)->name() );
-            GradientMatrixLinker* gml = new GradientMatrixLinker( info.ml, 0, info.post, buf );
-            learnNet->addTeachBlock( gml );
-            ord << gml;
-            BiasedCluster* preC = dynamic_cast<BiasedCluster*>( (info.ml)->getFrom() );
-            if ( preC != 0 ) {
-                clusInfo infoC;
-                infoC.cl = preC;
-                infoC.post = gml;
-                qcl.push( infoC );
-            }
-        }
-    }
-
-    learnNet->setOrder( ord );
-    return learnNet;
-}
-
-void setParamsOfGradientBlocks( LearningNetwork* learnNet, Real rate, Real momento ) {
-    const TeachBlockVec bls = learnNet->teachBlocks();
-    for( u_int i=0; i<bls.size(); i++ ) {
-        GradientBiasedCluster* gcl = dynamic_cast<GradientBiasedCluster*>(bls[i]);
-        if ( gcl != 0 ) {
-            gcl->setRate( rate );
-            gcl->setMomentum( momento );
-            continue;
-        }
-        GradientMatrixLinker* gml = dynamic_cast<GradientMatrixLinker*>(bls[i]);
-        if ( gml != 0 ) {
-            gml->setRate( rate );
-            gml->setMomentum( momento );
-            continue;
-        }
-    }
 }
 
 }

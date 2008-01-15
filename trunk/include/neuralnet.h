@@ -29,6 +29,7 @@
  */
 
 #include "types.h"
+#include "clonable.h"
 #include "cluster.h"
 #include "linker.h"
 #include <map>
@@ -42,7 +43,7 @@ namespace nnfw {
  * The relationship among Clusters and Linkers must be specified by cluster and linker constructors; 
  *
  */
-class NNFW_API BaseNeuralNet {
+class NNFW_API BaseNeuralNet : public Clonable {
 public:
 	/*! \name Constructors */
 	//@{
@@ -138,7 +139,7 @@ public:
 
     /*! Set the order
 	 */
-    void setOrder( UpdatableVec& );
+    void setOrder( const UpdatableVec& );
 
     /*! Return the order
 	 */

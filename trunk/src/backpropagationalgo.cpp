@@ -17,22 +17,148 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA  *
  ********************************************************************************/
 
+#include "neuralnet.h"
+#include "matrixlinker.h"
+#include "biasedcluster.h"
+#include "derivableoutputfunction.h"
 #include "backpropagationalgo.h"
-#include <stack>
+
+using namespace std;
 
 namespace nnfw {
 
-BackPropagationAlgo::BackPropagationAlgo( BaseNeuralNet* net )
-	: LearningAlgorithm(net) {
+BackPropagationAlgo::BackPropagationAlgo( BaseNeuralNet *n_n, UpdatableVec up_order, Real l_r )
+	: LearningAlgorithm(n_n), learn_rate(l_r), update_order(up_order) {
+
+	Cluster *cluster_temp;
+	// pushing the info for output cluster
+	const ClusterVec& outs = n_n->outputClusters();
+	for( int i=0; i<(int)outs.size(); i++ ) {
+		cluster_deltas temp;
+		temp.cluster = outs[i];
+		temp.isOutput = true;
+		temp.deltas_outputs.resize( outs[i]->numNeurons() );
+		temp.deltas_inputs.resize( outs[i]->numNeurons() );
+		cluster_deltas_vec.push_back( temp );
+		mapIndex[ outs[i] ] = cluster_deltas_vec.size()-1;
+	}
+	// --- generate information for backpropagation of deltas
+	for( int i=0; i<(int)update_order.size(); i++ ) {
+		cluster_temp = dynamic_cast<Cluster*>(update_order[i]);
+		if ( cluster_temp ) {
+			if( mapIndex.count( cluster_temp ) == 0 ) {
+				cluster_deltas temp;
+				temp.cluster = cluster_temp;
+				temp.isOutput = false;
+				temp.deltas_outputs.resize( cluster_temp->numNeurons() );
+				temp.deltas_inputs.resize( cluster_temp->numNeurons() );
+				cluster_deltas_vec.push_back( temp );
+				mapIndex[cluster_temp] = cluster_deltas_vec.size()-1;
+			}
+		} else {
+			MatrixLinker* linker_temp = dynamic_cast<MatrixLinker*>(update_order[i]);
+			if ( linker_temp ) {	//Dot linker subclass of Matrixlinker
+				if ( mapIndex.count( linker_temp->to() ) == 0 ) {
+					cluster_deltas temp;
+					temp.cluster = linker_temp->to();
+					temp.isOutput = false;
+					temp.deltas_outputs.resize( temp.cluster->numNeurons() );
+					temp.deltas_inputs.resize( temp.cluster->numNeurons() );
+					temp.incoming_linkers_vec.push_back( linker_temp );
+					cluster_deltas_vec.push_back( temp );
+					mapIndex[temp.cluster] = cluster_deltas_vec.size()-1;
+				}
+				else {
+					int tmp = mapIndex[linker_temp->to()];
+					cluster_deltas_vec[ tmp ].incoming_linkers_vec.push_back( linker_temp );
+				}
+			}
+		}
+	}
 }
 
-BackPropagationAlgo::~BackPropagationAlgo() {
+BackPropagationAlgo::~BackPropagationAlgo( ) {
+	/* nothing to do ?!?! */
 }
 
-void BackPropagationAlgo::init() {
+void BackPropagationAlgo::setTeachingInput( Cluster* output, const RealVec& ti ) {
+	if ( mapIndex.count( output ) == 0 ) { 
+		return;
+	}
+	int index = mapIndex[ output ];
+	cluster_deltas_vec[index].deltas_outputs.assign_xminusy( output->outputs(), ti );
+	return;
 }
 
-void BackPropagationAlgo::learn() {
+const RealVec& BackPropagationAlgo::getError( Cluster* cl ) {
+	if ( mapIndex.count( cl ) == 0 ) {
+		nWarning() << "Cluster not present in BackPropagationAlgo";
+		return RealVec();
+	}
+		
+	int index = mapIndex[ cl ];
+	return cluster_deltas_vec[index].deltas_outputs;
+}
+
+void BackPropagationAlgo::propagDeltas() {
+	RealVec diff_vec;
+	for( int i=0; i<(int)cluster_deltas_vec.size(); i++ ) {
+		cluster_deltas_vec[i].incoming_linkers_vec;
+		// --- propagate DeltaOutput to DeltaInputs
+		diff_vec.resize( cluster_deltas_vec[i].deltas_inputs.size() );
+		const DerivableOutputFunction* diff_output_function = dynamic_cast<const DerivableOutputFunction*>( cluster_deltas_vec[i].cluster->getFunction( ) );
+		if ( diff_output_function == 0 ) {
+#ifdef NNFW_DEBUG
+			nWarning() << "No derivative for the activation function is defined!" ;
+#endif
+			cluster_deltas_vec[i].deltas_inputs.assign( cluster_deltas_vec[i].deltas_outputs );
+		} else {
+			Cluster* cl = cluster_deltas_vec[i].cluster;
+			diff_output_function->derivate( cl->inputs(), cl->outputs(), diff_vec );
+			cluster_deltas_vec[i].deltas_inputs.zeroing();
+			cluster_deltas_vec[i].deltas_inputs.deltarule( 1.0, cluster_deltas_vec[i].deltas_outputs, diff_vec );
+		}
+		// --- propagate DeltaInputs to DeltaOutput through MatrixLinker
+		for( u_int k=0; k<cluster_deltas_vec[i].incoming_linkers_vec.size( ); ++k ) {
+			MatrixLinker* link = dynamic_cast<MatrixLinker*>(cluster_deltas_vec[i].incoming_linkers_vec[k]);
+			if ( mapIndex.count(link->from()) == 0 ) {
+				// --- the from() cluster is not in Learning
+				continue;
+			}
+			int from_index = mapIndex[ link->from() ];
+			RealMat::mul( cluster_deltas_vec[from_index].deltas_outputs, link->matrix(), cluster_deltas_vec[i].deltas_inputs );
+		}
+	}
+	return;
+}
+
+void BackPropagationAlgo::learn( ) {    	
+	// --- zeroing previous step delta information
+	for ( u_int i=0; i<cluster_deltas_vec.size(); ++i ) {
+		if ( cluster_deltas_vec[i].isOutput ) continue;
+		cluster_deltas_vec[i].deltas_outputs.zeroing();
+	}
+
+	// --- propagating the error through the net
+	propagDeltas();
+
+	// --- make the learn !!
+	for ( u_int i=0; i<cluster_deltas_vec.size(); ++i ) {
+		BiasedCluster* tmp = dynamic_cast<BiasedCluster*>(cluster_deltas_vec[i].cluster);
+		if ( tmp ) {
+			RealVec minus_ones( cluster_deltas_vec[i].cluster->outputs().size( ), -1.0f );
+			tmp->biases().deltarule( -learn_rate, minus_ones, cluster_deltas_vec[i].deltas_inputs );
+		}
+
+		for ( u_int j=0;  j<cluster_deltas_vec[i].incoming_linkers_vec.size(); ++j ) {
+			(dynamic_cast<MatrixLinker*>(cluster_deltas_vec[i].incoming_linkers_vec[j]))->matrix().deltarule(
+				-learn_rate,
+				cluster_deltas_vec[i].incoming_linkers_vec[j]->from()->outputs(),
+				cluster_deltas_vec[i].deltas_inputs
+			);
+		}
+	}
+	return;
 }
 
 }

@@ -18,6 +18,7 @@
  ********************************************************************************/
 
 #include "neuralnet.h"
+#include "nnfwfactory.h"
 #include <algorithm>
 #include <functional>
 #include <cstring>
@@ -271,7 +272,7 @@ void BaseNeuralNet::setOrder( Updatable* u[], u_int dim ) {
     return;
 }
 
-void BaseNeuralNet::setOrder( UpdatableVec& u ) {
+void BaseNeuralNet::setOrder( const UpdatableVec& u ) {
     ups.clear();
     u_int dim = u.size();
     for( u_int i = 0; i<dim; i++ ) {
@@ -338,8 +339,40 @@ bool BaseNeuralNet::find( const Updatable* u ) const {
 }
 
 BaseNeuralNet* BaseNeuralNet::clone() const {
-	nWarning() << "Not Yet Implemented";
-	return new BaseNeuralNet();
+	BaseNeuralNet* clone = new BaseNeuralNet();
+	for( int i=0; i<(int)inputClusters().size(); i++ ) {
+		clone->addInputCluster( inputClusters()[i]->clone() );
+	}
+	for( int i=0; i<(int)outputClusters().size(); i++ ) {
+		clone->addOutputCluster( outputClusters()[i]->clone() );
+	}
+	// --- not efficient way to add 'hidden clusters'
+	for( int i=0; i<(int)clusters().size(); i++ ) {
+		if ( clone->getByName( clusters()[i]->name() ) == 0 ) {
+			clone->addCluster( clusters()[i]->clone() );
+		}
+	}
+	// --- putting linkers
+	for( int i=0; i<(int)linkers().size(); i++ ) {
+		Linker* lk = linkers()[i];
+		PropertySettings prop;
+		lk->propertySettings( prop );
+		// --- change the neural network of belong
+		prop["baseneuralnet"] = Variant( clone );
+		// --- set from and to using the string version
+		prop["from"] = lk->from()->name();
+		prop["to"] = lk->to()->name();
+		// --- create a new clone according to PropertySettings retrieved
+		Linker* nl = Factory::createLinker( lk->getTypename().getString(), prop );
+		clone->addLinker( nl );
+	}
+	// --- copy the order -- not-efficient
+	UpdatableVec ord;
+	for( int i=0; i<order().size(); i++ ) {
+		ord << clone->getByName( order()[i]->name() );
+	}
+	clone->setOrder( ord );
+	return clone;
 }
 
 }

@@ -24,7 +24,6 @@
  */
 
 #include "types.h"
-#include "modifier.h"
 #include <map>
 
 namespace nnfw {
@@ -56,50 +55,10 @@ public:
     /*! Modify the object */
     virtual void learn() = 0;
 
-	/*! Configure a VectorModifier for learning the Cluster's property specified
-     *  \warning the previous modifier setted will be destroyed
-	 *
-	 *  \param c Cluster to learn
-	 *  \param propname the property of Cluster to be learned (it must be a RealVec)
-	 *  \param vm the VectorModifier that modify the propname of Cluster specified
-	 */
-	void setVectorModifier( Cluster* c, const char* propname, const VectorModifier& vm );
-
-	/*! Configure a MatrixModifier for learning the Cluster's property specified
-     *  \warning the previous modifier setted will be destroyed
-	 *
-	 *  \param c Cluster to learn
-	 *  \param propname the property of Cluster to be learned (it must be a RealMat)
-	 *  \param mm the MatrixModifier that modify the propname of Cluster specified
-	 */
-	void setMatrixModifier( Cluster* c, const char* propname, const MatrixModifier& mm );
-
-	/*! Configure a VectorModifier for learning the Linker's property specified
-     *  \warning the previous modifier setted will be destroyed
-	 *
-	 *  \param c Linker to learn
-	 *  \param propname the property of Linker to be learned (it must be a RealVec)
-	 *  \param vm the VectorModifier that modify the propname of Linker specified
-	 */
-	void setVectorModifier( Linker* c, const char* propname, const VectorModifier& vm );
-
-	/*! Configure a MatrixModifier for learning the Linker's property specified
-     *  \warning the previous modifier setted will be destroyed
-	 *
-	 *  \param c Linker to learn
-	 *  \param propname the property of Linker to be learned (it must be a RealMat)
-	 *  \param mm the MatrixModifier that modify the propname of Linker specified
-	 */
-	void setMatrixModifier( Linker* c, const char* propname, const MatrixModifier& mm );
-
 	//@}
 
 private:
 	BaseNeuralNet* netp;
-	/*! map from Cluster to Modifier */
-	std::map<Cluster*, Modifier*> cmods;
-	/*! map from Linker to Modifier */
-	std::map<Linker*, Modifier*> lmods;
 };
 
 }

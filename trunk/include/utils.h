@@ -45,19 +45,6 @@ class LearningNetwork;
  */
 NNFW_API BaseNeuralNet* feedForwardNet( U_IntVec layers, const char* clusterType = "BiasedCluster", const char* linkerType = "MatrixLinker" );
 
-/*! Function to quickly construct a Backpropagation Learning Network
- *  \deprecated don't use; a new learning framework will coming soon
- */
-NNFW_API LearningNetwork* backpropagationFor( BaseNeuralNet* net );
-
-/*! A quick way to sets all the parameters of Gradient types blocks in LearningNetwork passed
- * \param learnNet the LearningNewtork contains the Gradient blocks to configure
- * \param rate the learning rate
- * \param momento the momentum parameter (default is zero)
- * \deprecated because it's based on the old learning design
- */
-NNFW_API void setParamsOfGradientBlocks( LearningNetwork* learnNet, Real rate, Real momento = 0.0 );
-
 }
 
 #endif

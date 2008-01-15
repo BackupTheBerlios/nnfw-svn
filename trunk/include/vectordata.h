@@ -270,6 +270,20 @@ public:
         return (*this);
     };
 
+    /*! Reverse Assignment method. The sizes of VectorData must be the same */
+    VectorData<T>& assign_reverse( const VectorData<T>& src ) {
+#ifdef NNFW_DEBUG
+        if ( vsize != src.vsize ) {
+            nError() << "Wrong number of elements between VectorData to assign method" ;
+            return (*this);
+        }
+#endif
+		for( u_int i=0, j=vsize-1; i<vsize; i++, j-- ) {
+			data[i] = src.data[j];
+		}
+        return (*this);
+    };
+
 	/*! Element-by-element comparison between the two VectorData. 
 	 *  It returns a boolean array of the same size, with elements set to true (1) where the values are the same,
 	 *  and elements set to false (0) where they are not.
