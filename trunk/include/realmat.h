@@ -191,6 +191,18 @@ public:
     /*! \name Matrix-Matrix Operators */
     //@{
 
+	/*! Put to zero all elements at positions where mask elements are false */
+	RealMat& cover( const MatrixData<bool>& mask ) {
+		RealMat& self = *this;
+		for( u_int r=0; r<rows(); r++ ) {
+			for( u_int c=0; c<cols(); c++ ) {
+				if ( !mask[r][c] ) {
+					self[r][c] = 0.0;
+				}
+			}
+		}
+		return (*this);
+	};
 
     //@}
     /*! \name Math Functions */

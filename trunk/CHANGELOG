@@ -15,9 +15,16 @@ S <mave> comment goes here
     'C' : means that something has been changed (e.g. implementation of a Class or a signature method)
 ==== End of Legend ====
 
+    ==> 242 - 16/01/2008 - 1.0.0 release <==
+
+C <mave> BackPropagationAlgo uses AbstractModifier retrievied by Factory
++ <mave> added method in Factory for getting/registering AbstractModifier subclasses
++ <mave> added AbstractModifier hierarchy
++ <mave> added 'cover' method to RealMat
+
     ==> 241 - 15/01/2008 <==
 
-B <mave> resolved problem on nnfw-confin on Mac OSX
+B <mave> resolved problem on nnfw-config on Mac OSX
 + <mave> implemented BaseNeuralNet::clone()
 C <mave> now the setOrder accept 'const UpdatableVec&'
 + <mave> added propertySettings method for retrieving the current status of Propertized objects

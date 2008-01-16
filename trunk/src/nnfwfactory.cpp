@@ -33,6 +33,109 @@
 
 namespace nnfw {
 
+/*! \brief Dummy Modifier ... or in other words that don't modify anything
+ *
+ *  \par Motivation
+ *  Updatable object as SimpleCluster needs a Modifier in order to have a complet map factory
+ *  and avoid checks
+ */
+class DummyModifier : public AbstractModifier {
+public:
+    /*! \name Interface */
+    //@{
+
+    /*! apply the rule changing the Updatable object */
+    virtual void rule( Real, const RealVec&, const RealVec& ) const { /* nothing to do */ };
+
+    /*! Virtual Copy-Constructor */
+    virtual DummyModifier* clone() const {
+		return new DummyModifier();
+	};
+    //@}
+};
+
+/*! \brief BiasedClusterModifier
+ */
+class BiasedClusterModifier : public AbstractModifier {
+public:
+    /*! \name Interface */
+    //@{
+
+	/*! set the learnable object */
+	virtual void setUpdatable( Updatable* tolearn ) {
+		learnable = tolearn;
+		cl = (BiasedCluster*)tolearn;
+	};
+
+    /*! apply the rule changing the Updatable object */
+    virtual void rule( Real learn_rate, const RealVec& x, const RealVec& y ) const {
+		cl->biases().deltarule( learn_rate, x, y );
+	};
+
+    /*! Virtual Copy-Constructor */
+    virtual BiasedClusterModifier* clone() const {
+		return new BiasedClusterModifier();
+	};
+    //@}
+private:
+	BiasedCluster* cl;
+};
+
+/*! \brief MatrixLinkerModifier
+ */
+class MatrixLinkerModifier : public AbstractModifier {
+public:
+    /*! \name Interface */
+    //@{
+
+	/*! set the learnable object */
+	virtual void setUpdatable( Updatable* tolearn ) {
+		learnable = tolearn;
+		ml = (MatrixLinker*)tolearn;
+	};
+
+    /*! apply the rule changing the Updatable object */
+    virtual void rule( Real learn_rate, const RealVec& x, const RealVec& y ) const {
+		ml->matrix().deltarule( learn_rate, x, y );
+	};
+
+    /*! Virtual Copy-Constructor */
+    virtual MatrixLinkerModifier* clone() const {
+		return new MatrixLinkerModifier();
+	};
+    //@}
+private:
+	MatrixLinker* ml;
+};
+
+/*! \brief SparseMatrixLinkerModifier
+ */
+class SparseMatrixLinkerModifier : public AbstractModifier {
+public:
+    /*! \name Interface */
+    //@{
+
+	/*! set the learnable object */
+	virtual void setUpdatable( Updatable* tolearn ) {
+		learnable = tolearn;
+		sml = (SparseMatrixLinker*)tolearn;
+	};
+
+    /*! apply the rule changing the Updatable object */
+    virtual void rule( Real learn_rate, const RealVec& x, const RealVec& y ) const {
+		sml->matrix().deltarule( learn_rate, x, y );
+		sml->matrix().cover( sml->getMask() );
+	};
+
+    /*! Virtual Copy-Constructor */
+    virtual SparseMatrixLinkerModifier* clone() const {
+		return new SparseMatrixLinkerModifier();
+	};
+    //@}
+private:
+	SparseMatrixLinker* sml;
+};
+
 Cluster* Factory::createCluster( const char* type, PropertySettings& p ) {
     if ( !isInit ) { initFactory(); };
     std::string key(type);
@@ -112,6 +215,27 @@ bool Factory::registerPropertized( const AbstractCreator& c, const char* type ) 
     return false;
 }
 
+AbstractModifier* Factory::createModifierFor( Updatable* objectToLearn ) {
+	if ( !isInit ) { initFactory(); };
+	std::string key( objectToLearn->getTypename().getString() );
+	if ( modtypes.count( key ) ) {
+		AbstractModifier* ret = modtypes[key]->clone();
+		ret->setUpdatable( objectToLearn );
+		return ret;
+	}
+	return 0;
+}
+
+bool Factory::registerModifier( const AbstractModifier& m, const char* type ) {
+	if ( !isInit ) { initFactory(); };
+	std::string key(type);
+	if ( modtypes.count( key ) == 0 ) {
+		modtypes[key] = m.clone();
+		return true;
+	}
+	return false;
+}
+
 void Factory::initFactory() {
 	clustertypes["SimpleCluster"] = new Creator<SimpleCluster>();
 	clustertypes["BiasedCluster"] = new Creator<BiasedCluster>();
@@ -159,6 +283,17 @@ void Factory::initFactory() {
 	proptypes["LinearComboFunction"] = outfuntypes["LinearComboFunction"];
 	proptypes["GaussFunction"] = outfuntypes["GaussFunction"];
 
+	// --- Standard Modifiers
+	modtypes["SimpleCluster"] = new DummyModifier();
+	modtypes["BiasedCluster"] = new BiasedClusterModifier();
+	modtypes["DDECluster"] = new DummyModifier();
+	modtypes["FakeCluster"] = new DummyModifier();
+	modtypes["SparseMatrixLinker"] = new SparseMatrixLinkerModifier();
+	modtypes["CopyLinker"] = new DummyModifier();
+	modtypes["DotLinker"] = new MatrixLinkerModifier();
+	modtypes["NormLinker"] = new MatrixLinkerModifier();
+	modtypes["MatrixLinker"] = new MatrixLinkerModifier();
+
     isInit = true;
 }
 
@@ -167,6 +302,7 @@ std::map<std::string, AbstractCreator*> Factory::clustertypes;
 std::map<std::string, AbstractCreator*> Factory::linkertypes;
 std::map<std::string, AbstractCreator*> Factory::outfuntypes;
 std::map<std::string, AbstractCreator*> Factory::proptypes;
+std::map<std::string, AbstractModifier*> Factory::modtypes;
 
 }
 

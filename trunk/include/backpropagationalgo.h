@@ -29,6 +29,8 @@
 
 namespace nnfw {
 
+class AbstractModifier;
+
 /*! \brief Back-Propagation Algorithm implementation
  *
  */
@@ -74,10 +76,12 @@ private:
 	class cluster_deltas {
 	public:
 		Cluster* cluster;
+		AbstractModifier* modcluster;
 		bool isOutput;
 		RealVec deltas_outputs;
 		RealVec deltas_inputs;
 		LinkerVec incoming_linkers_vec;
+		VectorData<AbstractModifier*> incoming_modlinkers;
 	};
 	//! map to help looking for cluster_deltas info
 	std::map<Cluster*, int> mapIndex;

@@ -22,6 +22,7 @@
 #include "biasedcluster.h"
 #include "derivableoutputfunction.h"
 #include "backpropagationalgo.h"
+#include "nnfwfactory.h"
 
 using namespace std;
 
@@ -36,6 +37,7 @@ BackPropagationAlgo::BackPropagationAlgo( BaseNeuralNet *n_n, UpdatableVec up_or
 	for( int i=0; i<(int)outs.size(); i++ ) {
 		cluster_deltas temp;
 		temp.cluster = outs[i];
+		temp.modcluster = Factory::createModifierFor( temp.cluster );
 		temp.isOutput = true;
 		temp.deltas_outputs.resize( outs[i]->numNeurons() );
 		temp.deltas_inputs.resize( outs[i]->numNeurons() );
@@ -49,6 +51,7 @@ BackPropagationAlgo::BackPropagationAlgo( BaseNeuralNet *n_n, UpdatableVec up_or
 			if( mapIndex.count( cluster_temp ) == 0 ) {
 				cluster_deltas temp;
 				temp.cluster = cluster_temp;
+				temp.modcluster = Factory::createModifierFor( temp.cluster );
 				temp.isOutput = false;
 				temp.deltas_outputs.resize( cluster_temp->numNeurons() );
 				temp.deltas_inputs.resize( cluster_temp->numNeurons() );
@@ -61,16 +64,19 @@ BackPropagationAlgo::BackPropagationAlgo( BaseNeuralNet *n_n, UpdatableVec up_or
 				if ( mapIndex.count( linker_temp->to() ) == 0 ) {
 					cluster_deltas temp;
 					temp.cluster = linker_temp->to();
+					temp.modcluster = Factory::createModifierFor( temp.cluster );
 					temp.isOutput = false;
 					temp.deltas_outputs.resize( temp.cluster->numNeurons() );
 					temp.deltas_inputs.resize( temp.cluster->numNeurons() );
 					temp.incoming_linkers_vec.push_back( linker_temp );
+					temp.incoming_modlinkers.push_back( Factory::createModifierFor( linker_temp ) );
 					cluster_deltas_vec.push_back( temp );
 					mapIndex[temp.cluster] = cluster_deltas_vec.size()-1;
 				}
 				else {
 					int tmp = mapIndex[linker_temp->to()];
 					cluster_deltas_vec[ tmp ].incoming_linkers_vec.push_back( linker_temp );
+					cluster_deltas_vec[ tmp ].incoming_modlinkers.push_back( Factory::createModifierFor( linker_temp ) );
 				}
 			}
 		}
@@ -144,14 +150,11 @@ void BackPropagationAlgo::learn( ) {
 
 	// --- make the learn !!
 	for ( u_int i=0; i<cluster_deltas_vec.size(); ++i ) {
-		BiasedCluster* tmp = dynamic_cast<BiasedCluster*>(cluster_deltas_vec[i].cluster);
-		if ( tmp ) {
-			RealVec minus_ones( cluster_deltas_vec[i].cluster->outputs().size( ), -1.0f );
-			tmp->biases().deltarule( -learn_rate, minus_ones, cluster_deltas_vec[i].deltas_inputs );
-		}
+		RealVec minus_ones( cluster_deltas_vec[i].cluster->outputs().size( ), -1.0f );
+		cluster_deltas_vec[i].modcluster->rule( -learn_rate, minus_ones, cluster_deltas_vec[i].deltas_inputs );
 
 		for ( u_int j=0;  j<cluster_deltas_vec[i].incoming_linkers_vec.size(); ++j ) {
-			(dynamic_cast<MatrixLinker*>(cluster_deltas_vec[i].incoming_linkers_vec[j]))->matrix().deltarule(
+			cluster_deltas_vec[i].incoming_modlinkers[j]->rule(
 				-learn_rate,
 				cluster_deltas_vec[i].incoming_linkers_vec[j]->from()->outputs(),
 				cluster_deltas_vec[i].deltas_inputs

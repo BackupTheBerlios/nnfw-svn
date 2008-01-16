@@ -74,6 +74,29 @@ class NNFW_TEMPLATE Creator : public AbstractCreator {
     //@}
 };
 
+/*! \brief Abstract Modifier for Updatable objects
+ */
+class NNFW_API AbstractModifier : public Clonable {
+public:
+    /*! \name Interface */
+    //@{
+
+	/*! set the learnable object */
+	virtual void setUpdatable( Updatable* tolearn ) {
+		learnable = tolearn;
+	};
+
+    /*! apply the rule changing the Updatable object */
+    virtual void rule( Real r, const RealVec& x, const RealVec& y ) const = 0;
+
+    /*! Virtual Copy-Constructor */
+    virtual AbstractModifier* clone() const = 0;
+    //@}
+protected:
+	// --- learnable object
+	Updatable* learnable;
+};
+
 /*! \brief Factory Class
  *
  *  \par Motivation
@@ -131,6 +154,14 @@ public:
      */
     static bool registerPropertized( const AbstractCreator& c, const char* type );
 
+	/*! Return a Modifier for Updatable object passed */
+	static AbstractModifier* createModifierFor( Updatable* objectToLearn );
+
+	/*! Register a new Modifier for type passed */
+	static bool registerModifier( const AbstractModifier& m, const char* type );
+
+	//@}
+
 private:
     /*! The constructor is private, because there is no reason to instantiate this class
      */
@@ -138,29 +169,23 @@ private:
         // You can't instantiate this class
     };
 
-    /*! Initialization of static data
-     */
+    /*! Initialization of static data */
     static void initFactory();
 
-    /*! is Init ??
-     */
+    /*! is Init ?? */
     static bool isInit;
 
-    /*! Map of registered Cluster types
-     */
+    /*! Map of registered Cluster types */
     static std::map<std::string, AbstractCreator*> clustertypes;
-
-    /*! Map of registered Linker types
-     */
+    /*! Map of registered Linker types */
     static std::map<std::string, AbstractCreator*> linkertypes;
-
-    /*! Map of registered OutputFunction types
-     */
+    /*! Map of registered OutputFunction types */
     static std::map<std::string, AbstractCreator*> outfuntypes;
-
-    /*! Map of registered Propertized types
-     */
+    /*! Map of registered Propertized types */
     static std::map<std::string, AbstractCreator*> proptypes;
+
+	/*! Map of registered Modifiers */
+	static std::map<std::string, AbstractModifier*> modtypes;
 };
 
 }
