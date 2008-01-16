@@ -1,9 +1,13 @@
-Copyright 2005-2006 Gianluca Massera <gmassera@istc.cnr.it>
+Copyright 2005-2008 Gianluca Massera <gmassera@istc.cnr.it>
 
 Current Maintainers:
     * Gianluca Massera <mave@mail.berlios.de>
 
 Thanks: ( randomly ordered ;-) )
+	* Vadim Tikhanoff
+		debugging and testing backpropagation algorithm
+	* Stefano Zappacosta
+		first version of backpropagation algorithm
 	* Fabio Ruini
 		implementation of RealMat::flatRealMat()
     * Federico Cecconi
