@@ -46,7 +46,7 @@ The NNFW project is a set of C++ classes for creating an huge variety of neural 
 \section introduction_3 What is NNFW not ?
 It's not an application for education purpose. The utilization of this library requires a basic knowledge about neural network and its dynamics. For accessing to all functionalities of NNFW, is required a basic knowledge of C++ and Object-Oriented programming.
 
-Its developed by researched for research-purpose.
+Its developed by researchers for research-purpose.
 \ref introduction_toc "[Up]"
 
 \section introduction_4 Download & Installation
@@ -55,7 +55,6 @@ Its developed by researched for research-purpose.
 \par CMake
 In order to compile the library, the CMake tool is required. Download and Install the latest version available from <a href="http://www.cmake.org">CMake official website</a>.<br>
 The Linux users are adviced to install the distribution specific package of CMake even if it is not up-to-date.<br>
-The Darwin Universal (Tiger only installer) is recommended for MAC OS X users.
 
 \par Doxygen
 In order to generate the API documentation, the Doxygen tool is required. Download and Install the version 1.5.x from <a href="http://www.doxygen.org">Doxygen website</a>.
@@ -70,7 +69,7 @@ to install QT library.
 \par GSL
 For a more reliable (and truly) randomness of Random class you can download and install the GSL (GNU Scientific Library)
 version 1.6 (or above). The Linux version is available at the <a href="http://www.gnu.org/software/gsl/">official website</a>. While, the Win32 version is available at the <a href="http://gnuwin32.sourceforge.net/packages/gsl.htm">GnuWin32 project</a>.
-For MAC OS X users there are two project that provides an easy way to install opensource projects (like GSL):
+MAC OS X users can download the sources from officile website and compile them from terminal. Alternative, there are two project that provides an easy way to install opensource projects (like GSL):
 <a href="http://darwinports.opendarwin.org/">DarwinPorts</a> and <a href="http://fink.sourceforge.net/">Fink</a>.
 
 \par Intel MKL
@@ -82,11 +81,9 @@ Choose them that better fits with your needs:
 
 <ul>
     <li> <b>Sources tarball</b>: contains all files for compiling the library and the API documentation </li>
-    <li> <b>Static libraries for linux</b>: contains only the headers and eight pre-compiled static libraries created starting from different configurations (release and debug, mkl and not mkl, single and double precision) </li>
     <li> <b>API documentation</b>: contains the HTML version of API documentation browsable off-line </li>
+    <li> <b>Installer for Win32 machines</b>: contains only the headers and pre-compiled dynamic libraries created starting from different configurations (release and debug, single and double precision). It include also Qt .dll dependencies. Note: the .dll is compatible only with VisualStudio. </li>
 </ul>
-
-Only the first requires CMake and Doxygen, while the second and third ones doesn't requires them.
 
 \subsection introduction_44 Configuring the NNFW
 In order to configure the different aspect of NNFW, you have to sets the NNFW_CONFIG variable from CMake configuration interface.

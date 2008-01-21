@@ -27,7 +27,7 @@ The image above reports all the fondamental class of the library in order to cre
 </ol>
 
 The key-point of this library is that neural networks are not seen as composed by single-alone neurons connected among each others. In fact, there isn't a class that represent a single neurons, but only a class (Cluster) that represent a group of neurons. (of course, you can create a group composed only by one neuron)
-Hence, a neural network is group-of-neurons (Clusters) connected in same way (Linkers).
+Hence, a neural network can be seen as "group-of-neurons (Clusters) connected in same way (Linkers)".
 
 \ref introduction_toc "[Up]"
 

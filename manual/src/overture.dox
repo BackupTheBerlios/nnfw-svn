@@ -9,40 +9,133 @@
 <div id="tocContent_nohead">
 <ul class="level_one">
     <li>\ref overture_1 </li>
+    <li>\ref overture_2 </li>
+    <li>\ref overture_3 </li>
 </ul>
 </div>
 
-\section overture_1 Uno sguardo dall'alto
+\section overture_1 The XOR problem
 
-La NNFW &egrave; composta da un insieme di classi con compiti differenti che possono essere raggrupate nel seguente modo:
-<ul>
-    <li><b>Math</b>: classi di supporto per i calcolo matematici, vettori, matrici e calcoli vettoriali e matriciali;</li>
-    <li><b>Core</b>: classi che implementano i <em>building blocks</em> fondamentali per la costruzione di reti neurali;</li>
-    <li><b>Gestione Reti Neurali</b>: classi che permettono di 'vedere' la rete neurale come un insieme, un tutto;</li>
-    <li><b>Apprendimento</b>: classi dedicate per l'implementazione di algoritmi di apprendimento.</li>
-</ul>
+It's a classic in neural network field.
 
-\subsection overture_11 Core: Clusters & Linkers
+\section overture_2 The Implementation with NNFW
 
-Sono due le classi fondamentali per la costruzioni delle reti neurali con la NNFW: <em>Cluster</em> e <em>Linker</em>.
-
-Il <em>Cluster</em> &egrave; un gruppo di neuroni, un layer. Non esiste una classe <em>Neurone</em>, bens&igrave; il <em>Cluster</em> &egrave; un vettore di neuroni. Le propriet&agrave; di ogni neurone, quali input, funzione d'attivazione e altre, vengono configurate attraverso i metodi della classe <em>Cluster</em>.
+\section overture_21 Create the Net
 
 \code
-#include "types.h"
-#include "simplecluster.h"
+#include "nnfw.h"
+#include "biasedcluster.h"
+#include "dotlinker.h"
+#include "liboutputfunctions.h"
+#include "backpropagationalgo.h"
+#include "random.h"
+using namespace nnfw;
 
-SimpleCluster cluster(10, "A_Simple_Cluster"); // Crea un Cluster contenente 10 neuroni
-RealVec& ins = cluster.inputs(); // accesso agli ingressi dei neuroni
-ins[0] = +1.0;
-ins[1] = +2.7;
-ins[2] = -0.8;
- // ... ... 
-ins[9] = +1.2;
-cluster.setFunction( SigmoidFunction( 1.0 ) ); // configura la funzione d'attivazione dei 10 neuroni
-cluster.update(); // calcola il valore degli output sulla base degli input e della funzione d'attivazione
-cout << cluster.outputs(); // stampa il valore degli output dei neuroni
+//-------- Neural Network Structures
+BiasedCluster *in, *hid, *out;
+DotLinker *l1, *l2;
+BaseNeuralNet* net;
+
+int main( int , char*  ) {
+    Random::setSeed( time(0) );
+
+    net = new BaseNeuralNet();
+
+    // --- Create the Layers of network    
+    in = new BiasedCluster( 2 );
+    in->setFunction( SigmoidFunction( 1.0f ) );
+    hid = new BiasedCluster( 4 );
+    hid->setFunction( SigmoidFunction( 1.0f ) );
+    out = new BiasedCluster( 1 );
+    out->setFunction( SigmoidFunction( 1.0f ) );
+
+    // --- Create the Matrix connection among layers
+    l1 = new DotLinker( in, hid );
+    l2 = new DotLinker( hid, out );
+
+    // --- Add all in the BaseNeuralNet class
+    net->addCluster( in, true );
+    net->addCluster( hid );
+    net->addCluster( out, false, true );
+    net->addLinker( l1 );
+    net->addLinker( l2 );
+    // --- Specify the order on which layers and matrix weight will be updated
+    UpdatableVec ord;
+    net->setOrder( ord << in << l1 << hid << l2 << out );
+
+    // --- Randomize the parameters of network (biases of neuron's layers and weight of matrix linkers)
+    net->randomize( -1.0, 1.0 );
 \endcode
+
+\section overture_22 Create the BackPropagation Algorithm
+
+\code
+    UpdatableVec bp_ord;
+	bp_ord << out << l2 << hid << l1 << in;
+	BackPropagationAlgo* bp = new BackPropagationAlgo( net, bp_ord, 0.2 );
+\endcode
+
+\section overture_23 Define the problem... and learn it
+
+\code
+    // --- The learning Set - each row is a pattern
+	RealMat xorT( 4, 3 );
+	xorT[0][0] = 0.0; xorT[0][1] = 0.0; xorT[0][2] = 0.0;
+	xorT[1][0] = 0.0; xorT[1][1] = 1.0; xorT[1][2] = 1.0;
+	xorT[2][0] = 1.0; xorT[2][1] = 0.0; xorT[2][2] = 1.0;
+	xorT[3][0] = 1.0; xorT[3][1] = 1.0; xorT[3][2] = 0.0;
+    Real errorNet;
+    RealVec tmp( 1 );
+    int i;
+    // --- Main loop for learning the network
+    for( i = 0; i<50000; i++ ) {
+        errorNet = 0.0;
+        for( int j = 0; j<4; j++ ) {
+            // --- set the input of current example
+            in->setInput( 0, xorT[j][0] );
+            in->setInput( 1, xorT[j][1] );
+            // --- compute the output
+            net->step();
+            // --- set the Teachin input
+			tmp[0] = xorT[j][2];
+			bp->setTeachingInput( out, tmp );
+			bp->learn();
+        }
+        // ---- Compare outputs with desired patterns
+        for( int j = 0; j<4; j++ ) {
+            in->setInput( 0, xorT[j][0] );
+            in->setInput( 1, xorT[j][1] );
+            net->step();
+            errorNet += fabs( xorT[j][2] - out->getOutput( 0 ) );
+        }
+        if ( i%1000 == 0 ) {
+            cout << "Error: " << errorNet << endl;
+        }
+        if ( errorNet < 0.01 ) {
+            break;
+        }
+    }
+    cout << "Iterations: " << i << endl;
+    // Compare outputs with desired patterns
+    for( int j = 0; j<4; j++ ) {
+        in->setInput( 0, xorT[j][0] );
+        in->setInput( 1, xorT[j][1] );
+        net->step();
+        cout << "Target: " << xorT[j][2] << "\tRete: " << (out->getOutput( 0 )>0.5 ? 1.0 : 0.0) << "\t" << out->getOutput(0) << endl;
+    }
+
+    return 0;
+}
+\endcode
+
+\section overture_3 Defining the Neural Network using XML file
+
+\section overture_31 Create the file
+
+\section overture_32 The Code for using the file
+
+\section overture_33 Run the application with different architecture
+
 
 */
 
