@@ -307,9 +307,11 @@ A:hover { text-decoration: none; background-color: #f2f2ff }
 DL.el { margin-left: -1cm }
 .fragment {
        font-family: monospace, fixed;
-       font-size: 95%;
+       font-size: 100%;
 }
 PRE.fragment {
+    font-family: monospace, fixed;
+    font-size: 100%;
     border: 1px solid #CCCCCC;
     background-color: #f5f5f5;
     margin-top: 4px;
@@ -363,27 +365,41 @@ P.formulaDsp { text-align: center; }
 IMG.formulaDsp { }
 IMG.formulaInl { vertical-align: middle; }
 SPAN.keyword {
+	font-family: monospace, fixed;
+	font-size: 100%;
     font-weight: bold;
     color: #000000;
 }
 SPAN.keywordtype   {
+	font-family: monospace, fixed;
+	font-size: 100%;
     color: #800000;
 }
 SPAN.keywordflow {
+	font-family: monospace, fixed;
+	font-size: 100%;
     font-weight: bold;
     color: #000000;
 }
 SPAN.comment {
+	font-family: monospace, fixed;
+	font-size: 100%;
     font-style: italic;
     color: #0000FF;
 }
 SPAN.preprocessor  {
+	font-family: monospace, fixed;
+	font-size: 100%;
     color: #008000;
 }
 SPAN.stringliteral {
+	font-family: monospace, fixed;
+	font-size: 100%;
     color: #DD0000;
 }
 SPAN.charliteral {
+	font-family: monospace, fixed;
+	font-size: 100%;
     color: #FF00FF;
 }
 .mdescLeft {
