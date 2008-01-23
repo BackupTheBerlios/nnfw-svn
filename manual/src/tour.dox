@@ -15,29 +15,6 @@
 </ul>
 </div>
 
-
- 
-
-
-The BaseNeuralNet class
-
-
-
-Inside a Cluster
-
-
-
-
-Inside a Linker
-
-GIANLUCA: THE FIGURE IS WRONG. YOU SAY RIGHT TO LEFT, BUT INSTEAD IS LEFT TO RIGHT (check out the arrows). The image does not give any information to be honest … 
-
-Linker behaviour when updated
-The class Linker is more abstract than Cluster. It only specifies the source Cluster ('from') and the target ('to') Cluster. The Linker object takes as input the output of the 'from' Cluster, and outputs the result of its calculation to the 'to' Cluster. The Linker object embodies the 'rule' that transforms the Outputs of the 'from' (source) Cluster, into the inputs of 'to' (target) Cluster. They symbolize the neurons axons. For instance, in a feed-forward network, Linkers are just RealMat (matrix of real) objects, which calculate the weighted-sum of the source Cluster outputs, and place the results into the target Cluster neurons inputs.
-
-
-
-
 \section tour_1 A Look from the Sky
 \image html diagramma1.png "Schematic view of a customized neural network"
 \image latex diagramma1.pdf "Schematic view of a customized neural network" width=12cm
