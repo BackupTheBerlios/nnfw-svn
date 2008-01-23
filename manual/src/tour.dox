@@ -15,59 +15,74 @@
 </ul>
 </div>
 
-\section tour_1 A Look from the Sky
-\image html diagramma1.png "an example of neural network looked from the 'sky'"
-\image latex diagramma1.pdf "an example of neural network looked from the 'sky'" width=12cm
 
-The image above reports all the fondamental class of the library in order to create neural network. It also illustrate how they are related among each others:
+ 
+
+
+The BaseNeuralNet class
+
+
+
+Inside a Cluster
+
+
+
+
+Inside a Linker
+
+GIANLUCA: THE FIGURE IS WRONG. YOU SAY RIGHT TO LEFT, BUT INSTEAD IS LEFT TO RIGHT (check out the arrows). The image does not give any information to be honest … 
+
+Linker behaviour when updated
+The class Linker is more abstract than Cluster. It only specifies the source Cluster ('from') and the target ('to') Cluster. The Linker object takes as input the output of the 'from' Cluster, and outputs the result of its calculation to the 'to' Cluster. The Linker object embodies the 'rule' that transforms the Outputs of the 'from' (source) Cluster, into the inputs of 'to' (target) Cluster. They symbolize the neurons axons. For instance, in a feed-forward network, Linkers are just RealMat (matrix of real) objects, which calculate the weighted-sum of the source Cluster outputs, and place the results into the target Cluster neurons inputs.
+
+
+
+
+\section tour_1 A Look from the Sky
+\image html diagramma1.png "Schematic view of a customized neural network"
+\image latex diagramma1.pdf "Schematic view of a customized neural network" width=12cm
+
+The image above shows all the fundamental NNfw classes that allow the user to create a customized neural network. The arrows (linker objects) also illustrate the information flow with the network:
 <ol>
-	<li> <b>BaseNeuralNet</b> is like a Container where you put all the items of your neural network.</li>
-	<li> <b>Cluster</b> is a group of neurons.</li>
-	<li> <b>Linker</b> is a connection between two cluster that transfer/compute information arriving from a Cluster to another Cluster</li>
+	<li> <b>BaseNeuralNet</b>: can be seen as a “container” where all the items of your neural network are placed.</li>
+	<li> <b>Cluster</b>: a group of neurons with common relationships to other objects.</li>
+	<li> <b>Linker</b>: is an object that implements the connection between two clusters, allowing for the transmission/computation of information from one Cluster object to the other.</li>
 </ol>
 
-The key-point of this library is that neural networks are not seen as composed by single-alone neurons connected among each others. In fact, there isn't a class that represent a single neurons, but only a class (Cluster) that represent a group of neurons. (of course, you can create a group composed only by one neuron)
-Hence, a neural network can be seen as "group-of-neurons (Clusters) connected in same way (Linkers)".
-
+A fundamental aspect of the NNfw is that neural networks are not implemented as groups of single neurons interconnected (in fact there’s no implementation of a specific class for artificial neurons). Instead the concept of Cluster is used, which focus on groups of artificial neurons that share the same connectivity (Linkers) patterns.
 \ref introduction_toc "[Up]"
 
-\section tour_2 BaseNeuralNet is a little more than a Container
-Once Clusters and Linkers are created the neural network is already full-functional. So, the BaseNeuralNet is a container-class created for comodity and to improve the usability of big and complex neural networks. In addition of container-features, it has:
-<ol>
-	<li> the possibility to mark a Cluster as 'input' or/and 'output' of a neural network. This is just for user-end facility, there is no changes in functionality when you mark a Cluster as 'input' or 'output' or both 'input'-'output', but you can access them very fast with methods created on purpose,</li>
+\section tour_2 The BaseNeuralNet Class
+
+Once Clusters and Linkers are defined created the neural network is already fully functional. So why do we need the BaseNeuralNet “container”? First of all this class was created for the user commodity, in order to improve the usability of big and complex neural networks. But there are a few other features that are worthwhile to mention:
+
+<b>Input/Output labels</b>: It offers the user the possibility to mark a Cluster as 'input' or/and 'output' of the neural network created. This feature has no consequences whatsoever in the network functionality, but if you mark a Cluster as 'input' or 'output' (or both), you can access them very fast using the methods created with that purpose;
 
 \image html diagramma2.png "Clusters marked as Input or Output of a BaseNeuralNet"
 \image latex diagramma2.pdf "Clusters marked as Input or Output of a BaseNeuralNet" width=12cm
 
-	<li> the <b>order</b> of <em>update</em> calling. This is probabily the most important feature of BaseNeuralNet. In fact, in order to spread the inputs arriving to the neural network through connections, you should call in the appropriate sequence the method <em>update</em> on each Cluster and Linker. For facilitate this, you have just to tell to BaseNeuralNet the sequence and call the method <em>step</em>.</li>
-</ol>
-
-
+<b>Update order</b>: this is probably the most important feature of BaseNeuralNet class. In order to propagate the inputs to the outputs following the desired sequence of Clusters and Linkers update, the BaseNeuralNet class offers the method update. This method tells to each Cluster and Linker within the container BaseNeuralNet the sequence of updates in run-time. After telling this sequence to the BaseNeuralNet you just need to call the method step in order to propagate the inputs to the outputs.
 \ref introduction_toc "[Up]"
 
 \section tour_3 Inside a Cluster
-\image html diagramma3.png "Cluster's Structure"
-\image latex diagramma3.pdf "Cluster's Structure" width=12cm
+\image html diagramma3.png "Cluster class representation"
+\image latex diagramma3.pdf "Cluster class representation" width=12cm
 
-Cluster is composed by three basic properties:
+A Cluster is formed by 3 basic components:
 <ol>
- 	<li><b>inputs</b>: is a RealVec (vector of real) containing the inputs of Cluster's neurons. The inputs can be setted by hand (i.e. in the case of 'input' Cluster where you put external-values), or they are calculated by Linkers computations that incoming to the Cluster.</li>
-	<li> <b>outputs</b>: is a RealVec containing the outputs of Cluster's neurons, or the final-activation of neurons. This values are taken from outgoing Linkers as input for their calculations.</li>
-	<li> <b>OutputFunction</b>: this is the function that govern the information tranfer from inputs to outputs. (i.e. Linear transformation, Logist, Radial-basis functions and so on). This is the 'core' of neurons, the 'rule' on which they behave.</li>
+	<li><b>Inputs</b>: consist of a RealVec (vector of real) object containing the inputs for the Cluster neurons. These inputs can be set “by hand” (e.g. input layer like Cluster 1 in Fig. 1) or by the Linker objects computations that are fed into the Cluster (e.g. Cluster 4 in Fig. 1).</li> 
+	<li><b>Outputs</b>: consist of a RealVec object containing the outputs of Cluster neurons. The Cluster outputs can be used directly as the neural network outputs, or instead fed to any Linker (connected to the Cluster output) as an input for their calculations.</li> 
+	<li><b>OutputFunction</b>: this is the function that governs the information transfer from inputs to outputs within the Cluster object (e.g. linear transformation, logistic, radial-basis and so on). This function dictated the behaviour of the Cluster neurons.</li>
 </ol>
-
 \ref introduction_toc "[Up]"
 
 \section tour_4 Inside a Linker
 
-\image html diagramma4.png "Linker behaviour when updated; on right the 'from' Cluster; on left the 'to' Cluster"
-\image latex diagramma4.pdf "Linker behaviour when updated; on right the 'from' Cluster; on left the 'to' Cluster" width=12cm
+The class Linker is more abstract than Cluster. It only specifies the source Cluster (<em>'from'</em>) and the target (<em>'to'</em>) Cluster. The Linker object takes as input the output of the <em>'from'</em> Cluster, and outputs the result of its calculation to the <em>'to'</em> Cluster. The Linker object embodies the <em>'rule'</em> that transforms the Outputs of the <em>'from'</em> (source) Cluster, into the inputs of <em>'to'</em> (target) Cluster. They symbolize the neurons axons. For instance, in a feed-forward network, Linkers are just RealMat (matrix of real) objects, which calculate the weighted-sum of the source Cluster outputs, and place the results into the target Cluster neurons inputs.
 
-Linker is more abstract than Cluster. It only specify a 'from' and 'to' Clusters. The 'from' Cluster is where the Linker takes its input for calculation, and the 'to' Cluster is where it put the result of calculation.
+There are different types of Linkers that allow the user to customize the way that the clusters are interconnected and the calculations are made. For instance, the <b>DotLinker</b> and <b>NormLinker</b> types  connect all the outputs from the source cluster to all the inputs of the target cluster. Their difference resides on the way they process the information, or in other words, what happens when the network is updated and the inputs are propagated to the output. While the “update()” method in <b>DotLinker</b> performs the dot-product calculation, in <b>NormLinker</b> performs the Euclidian norm calculation.
 
-The Linker represent the 'rule' on which the <b>outputs</b> of 'from' Cluster is transformed/calculated/mapped to <b>inputs</b> of 'to' Cluster. They represents the 'axons' of neurons.
-For instance, in feed-forward network, Linkers are just RealMat (matrix of real) and they calculate the weighted-sum of <em>from</em>'s <b>outputs</b> putting the results into <em>to</em>'s <b>inputs</b>.
-
+There are also two other important types of linkers: <b>CopyLinker</b> and <b>SparseMatrixLinker</b>. The first linker copies the outputs of the source cluster to inputs of the target cluster (fundamental if you work with recurrent networks, like the Elman or Jordan), while the second allows for a non-full connection between clusters (some networks or hypothesis require that not all neurons are interconnected; within this class a few methods allow the user to manage this process; this class is an alternative to the full connectivity offered by DotLinker and NormLinker).
 \ref introduction_toc "[Up]"
 
 
