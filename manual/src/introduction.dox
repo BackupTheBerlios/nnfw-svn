@@ -27,7 +27,7 @@ In the beginning of 2005 I was searching for a neural network library easy to us
 	<li>flexibility in all aspects of neural networks;</li>
 	<li>extensible in a straightforward and documented;</li>
 	<li>computationally efficient.</li>
-
+</ol>
 The Neural Network Framework was created with these aims in mind.
 
 \ref introduction_toc "[Up]"
@@ -93,7 +93,7 @@ The NNFW_CONFIG variable is a string (empty is allowable) can contains the follo
     <li> double : the library will be compiled using the double precision real numbers (default is single precision) </li>
     <li> mkl : the library will use the MKL interface for speed-up math calculations (default is not) </li>
     <li> gsl : the library will use the GSL interface (default is not) </li>
-    <li> shared: a dynamic library will be created instead of the static one; this feature is reported to work only on Linux machines </li>
+    <li> shared: a dynamic library will be created instead of the static one</li>
 </ul>
 For instance, if NNFW_CONFIG is setted to "mkl double" then the library will be compiled with double precision and linked against Math Kernel Library.
 
