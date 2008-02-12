@@ -4,6 +4,8 @@ Current Maintainers:
     * Gianluca Massera <mave@mail.berlios.de>
 
 Thanks: ( randomly ordered ;-) )
+	* Matteo De Felice
+		feedbacks and debugging
 	* Vadim Tikhanoff
 		debugging and testing backpropagation algorithm
 	* Stefano Zappacosta
