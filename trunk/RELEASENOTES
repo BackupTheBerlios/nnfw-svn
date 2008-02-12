@@ -1,3 +1,7 @@
+======= 1.0.1 Release =======
+  * Bugfixs
+	- correct wrongly cloning of SparseMatrixLinker
+
 ======= 1.0.0 Release =======
   * Summary of important changes
 	- added BackPropagationAlgo
