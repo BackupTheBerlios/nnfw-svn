@@ -102,11 +102,28 @@ public:
      */
     void disconnectAll();
 
-    /*! Get the mask
-     */
+    /*! Get the mask 
+	 *  \deprecated use mask() instead
+	 */
     MatrixData<bool>& getMask() {
-		return mask;
+		return maskm;
 	};
+
+    /*! Return the mask */
+    MatrixData<bool>& mask() {
+		return maskm;
+	};
+
+    /*!  Return the mask matrix (Variant ver) */
+    Variant maskP() {
+        return Variant( &maskm );
+    };
+
+    /*!  Set the whole mask matrix */
+    void setMask( const MatrixData<bool>& mask );
+
+    /*!  Set the whole mask matrix (Variant ver) */
+    bool setMask( const Variant& v );
 
 	/*! Clone this SparseMatrixLinker */
 	virtual SparseMatrixLinker* clone() const;
@@ -115,7 +132,7 @@ public:
 
 private:
     /*! Mask Matrix */
-    MatrixData<bool> mask;
+    MatrixData<bool> maskm;
 };
 
 }

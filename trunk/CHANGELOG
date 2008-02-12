@@ -14,6 +14,12 @@ S <mave> comment goes here
     'B' : means a BugFix
     'C' : means that something has been changed (e.g. implementation of a Class or a signature method)
 ==== End of Legend ====
+    ==> 253 - 16/01/2008 - 1.0.1 release <==
+
+C <mave> changed the name of SparseMatrixLinker::getMask() to mask()
+B <mave> SparseMatrixLinker was not Propertized complaint, 
+		added "mask" property and mask/setMask Variant methods
+B <mave> corrected version on nnfw-config
 
     ==> 242 - 16/01/2008 - 1.0.0 release <==
 
