@@ -6,6 +6,7 @@
 
 scriptname="nnfw-config"
 version="0.6.7"
+nnfwconfig="shared"
 prefix="/usr"
 LIBS=" "
 includedir="${prefix}/include"
@@ -16,6 +17,7 @@ cflags=" "
 usage () {
     echo "Usage: "  1>&2
     echo "$scriptname --version         - show installed script and NNFW version"  1>&2
+    echo "$scriptname --config          - show the configuration with NNFW was compiled"  1>&2
     echo "$scriptname --libs            - libraries required to link with NNFW"  1>&2
     echo "$scriptname --cflags          - compiler flags required to find NNFW headers"  1>&2
     echo "$scriptname --help            - show usage info (this message)          "  1>&2
@@ -42,6 +44,10 @@ if test $# -gt 0; then
                 echo "Usage: $0 --version"
                 echo "  Print the NNFW version installed"
             ;;
+            --config)
+                echo "Usage: $0 --config"
+                echo "  Print the content of NNFW_CONFIG variable where NNFW was compiled"
+            ;;
             --cflags)
                 echo "Usage: $0 --cflags"
                 echo "  Print C compiler flags for compiling code that uses NNFW."
@@ -62,6 +68,9 @@ if test $# -gt 0; then
             usage
         fi
         exit 1
+    ;;
+    --config)
+      echo "${nnfwconfig}"
     ;;
     --libs)
       echo "-L${libdir} -lnnfw ${LIBS}"

@@ -1,6 +1,11 @@
 PROJECT( NNFW )
 SET( CMAKE_COLOR_MAKEFILE ON )
 
+###### VERSION INFORMATION
+SET( VER_MAJ 1 )
+SET( VER_MIN 0 )
+SET( VER_PAT 2 )
+
 ### Configure of Library
 ### a string variable that contains configuration keys separated by with spaces:
 ### - double     <= use double precision for Real number
@@ -38,6 +43,7 @@ ELSE ( NNFW_CONFIG MATCHES shared )
     INSTALL( TARGETS nnfw ARCHIVE DESTINATION ${LIB_DIR} )
 ENDIF ( NNFW_CONFIG MATCHES shared )
 
+SET_TARGET_PROPERTIES( nnfw PROPERTIES VERSION ${VER_MAJ}.${VER_MIN}.${VER_PAT} SOVERSION ${VER_MAJ}.${VER_MIN} )
 TARGET_LINK_LIBRARIES( nnfw ${QT_LIBRARIES} )
 
 IF (WIN32)
@@ -65,7 +71,7 @@ IF (UNIX)
     SET( CMAKE_CXX_COMPILER "g++" )
     SET( CMAKE_CXX_FLAGS "-pipe -fPIC -Wall -W " )
     SET( CMAKE_CXX_FLAGS_DEBUG "-g -O0 -DNNFW_DEBUG" )
-    SET( CMAKE_CXX_FLAGS_RELEASE "-O3 " )
+    SET( CMAKE_CXX_FLAGS_RELEASE "-O3  " )
     SET( CMAKE_CXX_FLAGS_RELWITHDEBINFO "-g -O2 -DNNFW_DEBUG" )
     SET( CMAKE_CXX_FLAGS_MINSIZEREL "-O2 -Os" )
     SET_TARGET_PROPERTIES( nnfw PROPERTIES COMPILE_FLAGS "" )
@@ -110,20 +116,33 @@ IF (UNIX)
 	ENDIF ( NNFW_CONFIG MATCHES mkl )
 	STRING( REPLACE "/" "\\/" CFL "${CFLA}" )
     ## Library
-    IF ( NNFW_CONFIG MATCHES mkl )
-        SET( LFLA "-Wl,-rpath,${MKL_PATH}/../lib/32 -L${MKL_PATH}/../lib/32 -lmkl_ia32 -lmkl -lvml -lguide" )
-    ENDIF ( NNFW_CONFIG MATCHES mkl )
-	IF (APPLE)
-		SET( LFLA "-Wl,-rpath,${CMAKE_INSTALL_PREFIX}/${LIB_DIR} ${LFLA} ${GSL_LIB} -F${QT_LIBRARY_DIR} -framework QtCore -framework QtXml" )
-	ELSE (APPLE)
-		SET( LFLA "-Wl,-rpath,${CMAKE_INSTALL_PREFIX}/${LIB_DIR} ${LFLA} ${GSL_LIB} -L${QT_LIBRARY_DIR} -lQtCore -lQtXml" )
-	ENDIF (APPLE)
-	STRING( REPLACE "optimized" "" LFLA "${LFLA}" )
-	STRING( REPLACE "debug" "" LFLA "${LFLA}" )
+	IF ( NNFW_CONFIG MATCHES shared )
+		IF ( NNFW_CONFIG MATCHES mkl )
+			SET( LFLA "-Wl,-rpath,${MKL_PATH}/../lib/32 -L${MKL_PATH}/../lib/32 -lvml " )
+		ENDIF ( NNFW_CONFIG MATCHES mkl )
+		IF (APPLE)
+			SET( LFLA "-Wl,-rpath,${CMAKE_INSTALL_PREFIX}/${LIB_DIR} ${LFLA}" )
+		ELSE (APPLE)
+			SET( LFLA "-Wl,-rpath,${CMAKE_INSTALL_PREFIX}/${LIB_DIR} ${LFLA}" )
+		ENDIF (APPLE)
+	ELSE ( NNFW_CONFIG MATCHES shared )
+        EXEC_PROGRAM( gsl-config ARGS --libs-without-cblas OUTPUT_VARIABLE GSL_ELIB )
+		IF ( NNFW_CONFIG MATCHES mkl )
+			SET( LFLA "-Wl,-rpath,${MKL_PATH}/../lib/32 -L${MKL_PATH}/../lib/32 -lmkl -lvml " )
+		ENDIF ( NNFW_CONFIG MATCHES mkl )
+		IF (APPLE)
+			SET( LFLA "${LFLA} ${GSL_ELIB} -F${QT_LIBRARY_DIR} -framework QtXml" )
+		ELSE (APPLE)
+			SET( LFLA "${LFLA} ${GSL_ELIB} -L${QT_LIBRARY_DIR} -lQtXml" )
+		ENDIF (APPLE)
+	ENDIF ( NNFW_CONFIG MATCHES shared )
     STRING( REPLACE "/" "\\/" LFL "${LFLA}" )
 
+	INSTALL( FILES "${NNFW_BINARY_DIR}/NNFWConfig.cmake" DESTINATION include/nnfw )
+	CONFIGURE_FILE( ${NNFW_SOURCE_DIR}/NNFWConfig.cmake ${NNFW_BINARY_DIR}/NNFWConfig.cmake @ONLY IMMEDIATE )
+
     ADD_CUSTOM_COMMAND( TARGET nnfw POST_BUILD
-        COMMAND sed 's/version=".*"/version="1.0.1"/' ${NNFW_SOURCE_DIR}/bin/nnfw-config_template | sed 's/prefix=".*"/prefix="${PREF}"/' | sed 's/^cflags=".*"/cflags="${CFL}"/' | sed 's/LIBS=".*"/LIBS="${LFL}"/' | sed 's/libdir=".*"/libdir="${PREF}\\/${LIB_DIR}"/' > nnfw-config 
+        COMMAND sed 's/version=".*"/version="${VER_MAJ}.${VER_MIN}.${VER_PAT}"/' ${NNFW_SOURCE_DIR}/bin/nnfw-config_template | sed 's/nnfwconfig=".*"/nnfwconfig="${NNFW_CONFIG}"/' | sed 's/prefix=".*"/prefix="${PREF}"/' | sed 's/^cflags=".*"/cflags="${CFL}"/' | sed 's/LIBS=".*"/LIBS="${LFL}"/' | sed 's/libdir=".*"/libdir="${PREF}\\/${LIB_DIR}"/' > nnfw-config 
     )
 ENDIF (UNIX)
 
