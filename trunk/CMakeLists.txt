@@ -140,6 +140,7 @@ IF (UNIX)
 
 	INSTALL( FILES "${NNFW_BINARY_DIR}/NNFWConfig.cmake" DESTINATION include/nnfw )
 	CONFIGURE_FILE( ${NNFW_SOURCE_DIR}/NNFWConfig.cmake ${NNFW_BINARY_DIR}/NNFWConfig.cmake @ONLY IMMEDIATE )
+	INSTALL( FILES "${NNFW_SOURCE_DIR}/FindNNFW.cmake" DESTINATION ${CMAKE_ROOT}/Modules )
 
     ADD_CUSTOM_COMMAND( TARGET nnfw POST_BUILD
         COMMAND sed 's/version=".*"/version="${VER_MAJ}.${VER_MIN}.${VER_PAT}"/' ${NNFW_SOURCE_DIR}/bin/nnfw-config_template | sed 's/nnfwconfig=".*"/nnfwconfig="${NNFW_CONFIG}"/' | sed 's/prefix=".*"/prefix="${PREF}"/' | sed 's/^cflags=".*"/cflags="${CFL}"/' | sed 's/LIBS=".*"/LIBS="${LFL}"/' | sed 's/libdir=".*"/libdir="${PREF}\\/${LIB_DIR}"/' > nnfw-config 

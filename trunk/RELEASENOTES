@@ -1,3 +1,9 @@
+======= 1.0.2 Release =======
+  * Summary of important changes
+	- added FindNNFW.cmake and NNFWConfig.cmake;
+		now is possible configure CMake project using FIND_PACKAGE( NNFW )
+	- improved nnfw-config script
+
 ======= 1.0.1 Release =======
   * Bugfixs
 	- correct wrongly cloning of SparseMatrixLinker

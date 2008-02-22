@@ -14,6 +14,11 @@ S <mave> comment goes here
     'B' : means a BugFix
     'C' : means that something has been changed (e.g. implementation of a Class or a signature method)
 ==== End of Legend ====
+
+    ==> 257 - 21/02/2008 - 1.0.2 release <==
+
++ <mave> added FindNNFW.cmake; it will be installed in CMAKE_ROOT/Modules
+
     ==> 257 - 21/02/2008 <==
 
 + <mave> added NNFWConfig.cmake for helping configuration with CMake

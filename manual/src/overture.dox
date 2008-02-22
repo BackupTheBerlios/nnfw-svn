@@ -99,6 +99,7 @@ int main( int , char*  ) {
             // --- set the Teachin input
 			tmp[0] = xorT[j][2];
 			bp->setTeachingInput( out, tmp );
+			// --- Learn it
 			bp->learn();
         }
         // ---- Compare outputs with desired patterns
@@ -130,12 +131,108 @@ int main( int , char*  ) {
 
 \section overture_3 Defining the Neural Network using XML file
 
+All the code for create the network topology can be reduced to few lines that load it from an XML files containing the definition of a neural network.
+
 \section overture_31 Create the file
+
+The file that define exactly the neural network used above look like the follow:
+
+\code
+<nnfw version="1.0">
+	<neuralnet>
+		<!-- The Input Layer of the Network -->
+		<cluster name="Input" type="BiasedCluster" size="2" >
+			<outfunction type="SigmoidFunction">
+				<lambda>1.0</lambda>
+			</outfunction>
+			<!-- Randomize the values of biases in the range specified -->
+			<randomize min="-1.0" max="+1.0" />
+		</cluster>
+
+		<!-- The Hidden Layer of the Network -->
+		<cluster name="Hidden" type="BiasedCluster" size="4">
+			<outfunction type="SigmoidFunction">
+				<lambda>1.0</lambda>
+			</outfunction>
+			<!-- Randomize the values of biases in the range specified -->
+			<randomize min="-1.0" max="+1.0" />
+		</cluster>
+
+		<!-- The Output Layer of the Network -->
+		<cluster name="Output" type="BiasedCluster" size="1" >
+			<outfunction type="SigmoidFunction">
+				<lambda>1.0</lambda>
+			</outfunction>
+			<!-- Randomize the values of biases in the range specified -->
+			<randomize min="-1.0" max="+1.0" />
+		</cluster>
+	
+		<!-- Full Connection from Input to Hidden -->
+		<linker name="In2Hid" type="MatrixLinker" from="Input" to="Hidden">
+			<!-- Randomize the values of weights in the range specified -->
+			<randomize min="-1.0" max="+1.0" />
+		</linker>
+
+		<!-- Full Connection from Hidden to Ouput -->
+		<linker name="Hid2Out" type="MatrixLinker" from="Hidden" to="Output">
+			<!-- Randomize the values of weights in the range specified -->
+			<randomize min="-1.0" max="+1.0" />
+		</linker>
+
+		<!-- Specify which are the Input layers -->
+		<inputs> Input </inputs>
+		<!-- Specify which are the Output layers -->
+		<outputs> Output </outputs>
+		<!-- Specify the update order during spreading of the net -->
+		<order> Input In2Hid Hidden Hid2Out Output </order>
+	</neuralnet>
+</nnfw>
+\endcode
 
 \section overture_32 The Code for using the file
 
+After saved the file, change the example above in that way:
+
+\code
+#include "nnfw.h"
+#include "ionnfw.h"
+#include "backpropagationalgo.h"
+using namespace nnfw;
+
+BaseNeuralNet* net;
+
+int main( int , char*  ) {
+
+    Random::setSeed( time(0) );
+	//--- load the neural network from the file
+    net = loadXML( "../xor2/xor1.xml" );
+	
+	//--- register the input and ouput cluster in local variable for fast access
+	//--- WARNING: here we assume that there is only one cluster as Input and Output of the net
+	//---          in general, this is not true. Pay attention when you change this tutorial
+	Cluster* in = net->inputClusters()[0];
+	Cluster* out = net->outputClusters()[0];
+
+	//--- suppose that the reverse order is correct for backpropagation algorithm
+    UpdatableVec bp_ord;
+	bp_ord.resize( net->order().size() );
+	bp_ord.assign_reverse( net->order() );
+	BackPropagationAlgo* bp = new BackPropagationAlgo( net, bp_ord, 0.15 );
+\endcode
+
+The above code substitute the code showed in overture_21 and overture_22.
+Attach the code showed in the overture_23 and you'll get a complete working program.
+
+In addition, just before the "return 0" statement you can save your learned network in this way:
+\code
+	saveXML( "../xor2/xor1_learned.xml", net );
+	return 0;
+}
+\endcode
+
 \section overture_33 Run the application with different architecture
 
+Feel free to change the architecture and see the differences on time convergences for this simple XOR problem.
 
 */
 
