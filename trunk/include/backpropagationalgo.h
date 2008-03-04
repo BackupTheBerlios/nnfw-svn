@@ -62,6 +62,34 @@ public:
 	/*! Starts a single training step. */
 	void learn( );
 
+	/*! Set the learning rate */
+	void setRate( Real newrate ) {
+		learn_rate = newrate;
+	};
+
+	/*! return the learning rate */
+	Real rate() {
+		return learn_rate;
+	};
+
+	/*! Set the momentum value */
+	void setMomentum( Real newmom ) {
+		momentumv = newmom;
+	};
+
+	/*! return the momentum */
+	Real momentum() {
+		return momentumv;
+	};
+
+	/*! Enable the momentum */
+	void enableMomentum();
+
+	/*! Disable momentum */
+	void disableMomentum() {
+		useMomentum = false;
+	};
+
 	/*! Return the error calculated */
 	const RealVec& getError( Cluster* );
 	//@}
@@ -69,6 +97,10 @@ public:
 private:
 	//! The Real learning rate factor
 	Real learn_rate;
+	//! Momentum
+	Real momentumv;
+	//! bool switch for enable/disable momentum
+	Real useMomentum;
 	//! The update order
 	UpdatableVec update_order;
 
@@ -80,8 +112,10 @@ private:
 		bool isOutput;
 		RealVec deltas_outputs;
 		RealVec deltas_inputs;
+		RealVec last_deltas_inputs;
 		LinkerVec incoming_linkers_vec;
 		VectorData<AbstractModifier*> incoming_modlinkers;
+		VectorData<RealVec> incoming_last_outputs;
 	};
 	//! map to help looking for cluster_deltas info
 	std::map<Cluster*, int> mapIndex;
@@ -89,6 +123,10 @@ private:
 	VectorData<cluster_deltas> cluster_deltas_vec;
 	// --- propagate delta through the net
 	void propagDeltas();
+	// --- add a Cluster into the structures above
+	void addCluster( Cluster*, bool );
+	// --- add a Linker into the structures above
+	void addLinker( Linker* );
 
 };
 

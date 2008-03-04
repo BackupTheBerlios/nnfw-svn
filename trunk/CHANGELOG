@@ -15,7 +15,12 @@ S <mave> comment goes here
     'C' : means that something has been changed (e.g. implementation of a Class or a signature method)
 ==== End of Legend ====
 
-    ==> 257 - 21/02/2008 - 1.0.2 release <==
+    ==> 259 - 04/03/2008 - 1.0.3 release <==
+
++ <mave> added momentum to BackPropagationAlgo
++ <mave> added methods setRate, rate to BackPropagationAlgo
+
+    ==> 258 - 22/02/2008 - 1.0.2 release <==
 
 + <mave> added FindNNFW.cmake; it will be installed in CMAKE_ROOT/Modules
 

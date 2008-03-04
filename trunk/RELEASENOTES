@@ -1,3 +1,8 @@
+======= 1.0.3 Release =======
+  * Summary of important changes
+	- added methods for setting the learning rate of Backpropagation Algorithm
+	- added Momentum to Backpropagation Algorithm
+
 ======= 1.0.2 Release =======
   * Summary of important changes
 	- added FindNNFW.cmake and NNFWConfig.cmake;

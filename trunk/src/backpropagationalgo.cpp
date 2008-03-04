@@ -35,52 +35,22 @@ BackPropagationAlgo::BackPropagationAlgo( BaseNeuralNet *n_n, UpdatableVec up_or
 	// pushing the info for output cluster
 	const ClusterVec& outs = n_n->outputClusters();
 	for( int i=0; i<(int)outs.size(); i++ ) {
-		cluster_deltas temp;
-		temp.cluster = outs[i];
-		temp.modcluster = Factory::createModifierFor( temp.cluster );
-		temp.isOutput = true;
-		temp.deltas_outputs.resize( outs[i]->numNeurons() );
-		temp.deltas_inputs.resize( outs[i]->numNeurons() );
-		cluster_deltas_vec.push_back( temp );
-		mapIndex[ outs[i] ] = cluster_deltas_vec.size()-1;
+		addCluster( outs[i], true );
 	}
 	// --- generate information for backpropagation of deltas
 	for( int i=0; i<(int)update_order.size(); i++ ) {
 		cluster_temp = dynamic_cast<Cluster*>(update_order[i]);
 		if ( cluster_temp ) {
-			if( mapIndex.count( cluster_temp ) == 0 ) {
-				cluster_deltas temp;
-				temp.cluster = cluster_temp;
-				temp.modcluster = Factory::createModifierFor( temp.cluster );
-				temp.isOutput = false;
-				temp.deltas_outputs.resize( cluster_temp->numNeurons() );
-				temp.deltas_inputs.resize( cluster_temp->numNeurons() );
-				cluster_deltas_vec.push_back( temp );
-				mapIndex[cluster_temp] = cluster_deltas_vec.size()-1;
-			}
-		} else {
-			MatrixLinker* linker_temp = dynamic_cast<MatrixLinker*>(update_order[i]);
-			if ( linker_temp ) {	//Dot linker subclass of Matrixlinker
-				if ( mapIndex.count( linker_temp->to() ) == 0 ) {
-					cluster_deltas temp;
-					temp.cluster = linker_temp->to();
-					temp.modcluster = Factory::createModifierFor( temp.cluster );
-					temp.isOutput = false;
-					temp.deltas_outputs.resize( temp.cluster->numNeurons() );
-					temp.deltas_inputs.resize( temp.cluster->numNeurons() );
-					temp.incoming_linkers_vec.push_back( linker_temp );
-					temp.incoming_modlinkers.push_back( Factory::createModifierFor( linker_temp ) );
-					cluster_deltas_vec.push_back( temp );
-					mapIndex[temp.cluster] = cluster_deltas_vec.size()-1;
-				}
-				else {
-					int tmp = mapIndex[linker_temp->to()];
-					cluster_deltas_vec[ tmp ].incoming_linkers_vec.push_back( linker_temp );
-					cluster_deltas_vec[ tmp ].incoming_modlinkers.push_back( Factory::createModifierFor( linker_temp ) );
-				}
-			}
+			addCluster( cluster_temp, false );
+			continue;
+		}
+		MatrixLinker* linker_temp = dynamic_cast<MatrixLinker*>(update_order[i]);
+		if ( linker_temp ) {	//Dot linker subclass of Matrixlinker
+			addLinker( linker_temp );
 		}
 	}
+	useMomentum = false;
+	momentumv = 0.0f;
 }
 
 BackPropagationAlgo::~BackPropagationAlgo( ) {
@@ -104,6 +74,17 @@ const RealVec& BackPropagationAlgo::getError( Cluster* cl ) {
 		
 	int index = mapIndex[ cl ];
 	return cluster_deltas_vec[index].deltas_outputs;
+}
+
+void BackPropagationAlgo::enableMomentum() {
+	for ( u_int i=0; i<cluster_deltas_vec.size(); ++i ) {
+		for ( u_int j=0;  j<cluster_deltas_vec[i].incoming_linkers_vec.size(); ++j ) {
+			// --- zeroing data
+			cluster_deltas_vec[i].incoming_last_outputs[j].zeroing();
+			cluster_deltas_vec[i].last_deltas_inputs.zeroing();
+		}
+	}
+	useMomentum = true;
 }
 
 void BackPropagationAlgo::propagDeltas() {
@@ -159,9 +140,58 @@ void BackPropagationAlgo::learn( ) {
 				cluster_deltas_vec[i].incoming_linkers_vec[j]->from()->outputs(),
 				cluster_deltas_vec[i].deltas_inputs
 			);
+			if ( !useMomentum ) continue;
+			// --- add the momentum
+			cluster_deltas_vec[i].incoming_modlinkers[j]->rule(
+				-learn_rate*momentumv,
+				cluster_deltas_vec[i].incoming_last_outputs[j],
+				cluster_deltas_vec[i].last_deltas_inputs
+			);
+			// --- save datas for momentum on the next step
+			cluster_deltas_vec[i].incoming_last_outputs[j].assign( cluster_deltas_vec[i].incoming_linkers_vec[j]->from()->outputs() );
+			cluster_deltas_vec[i].last_deltas_inputs.assign( cluster_deltas_vec[i].deltas_inputs );
 		}
 	}
 	return;
+}
+
+void BackPropagationAlgo::addCluster( Cluster* cl, bool isOut ) {
+	if( mapIndex.count( cl ) == 0 ) {
+		cluster_deltas temp;
+		int size = cl->numNeurons();
+		temp.cluster = cl;
+		temp.modcluster = Factory::createModifierFor( temp.cluster );
+		temp.isOutput = isOut;
+		temp.deltas_outputs.resize( size );
+		temp.deltas_inputs.resize( size );
+		temp.last_deltas_inputs.resize( size );
+		cluster_deltas_vec.push_back( temp );
+		mapIndex[cl] = cluster_deltas_vec.size()-1;
+	}
+}
+
+void BackPropagationAlgo::addLinker( Linker* link ) {
+	if ( mapIndex.count( link->to() ) == 0 ) {
+		cluster_deltas temp;
+		int size = link->to()->numNeurons();
+		temp.cluster = link->to();
+		temp.modcluster = Factory::createModifierFor( temp.cluster );
+		temp.isOutput = false;
+		temp.deltas_outputs.resize( size );
+		temp.deltas_inputs.resize( size );
+		temp.last_deltas_inputs.resize( size );
+		temp.incoming_linkers_vec.push_back( link );
+		temp.incoming_modlinkers.push_back( Factory::createModifierFor( link ) );
+		temp.incoming_last_outputs.push_back( RealVec( link->from()->numNeurons() ) );
+		cluster_deltas_vec.push_back( temp );
+		mapIndex[temp.cluster] = cluster_deltas_vec.size()-1;
+	}
+	else {
+		int tmp = mapIndex[link->to()];
+		cluster_deltas_vec[ tmp ].incoming_linkers_vec.push_back( link );
+		cluster_deltas_vec[ tmp ].incoming_modlinkers.push_back( Factory::createModifierFor( link ) );
+		cluster_deltas_vec[ tmp ].incoming_last_outputs.push_back( RealVec( link->from()->numNeurons() ) );
+	}
 }
 
 }
