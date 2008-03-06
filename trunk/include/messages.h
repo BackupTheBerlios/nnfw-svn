@@ -66,6 +66,8 @@ public:
 	nnfwString& append( const nnfwString& p );
 	/*! assignment operator */
 	nnfwString& operator=( const nnfwString& left );
+	/*! return true is strings are equals */
+	bool operator==( const nnfwString& left );
 	/*! return the UTF8 representation */
 	const char* toUtf8() const;
 	//@}

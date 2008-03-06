@@ -47,6 +47,11 @@ CopyLinker::CopyLinker( Cluster* from, Cluster* to, CopyMode mode, const char* n
 CopyLinker::CopyLinker( PropertySettings& prop )
     : Linker( prop ) {
     Variant& v = prop["mode"];
+    if ( from()->numNeurons() < to()->numNeurons() ) {
+        dimData = from()->numNeurons();
+    } else {
+        dimData = to()->numNeurons();
+    }
     this->mode = (CopyMode)-1;
     if ( v.isNull() ) {
         setMode( Out2In );
@@ -86,8 +91,19 @@ void CopyLinker::setMode( CopyMode cm ) {
 }
 
 bool CopyLinker::setMode( const Variant& v ) {
-    CopyMode cm = (CopyMode)( v.getUInt()%4 );
-    setMode( cm );
+	nnfwString str = v.getString();
+	if ( str == "In2In" ) {
+		setMode( In2In );
+	} else if ( str == "In2Out" ) {
+		setMode( In2Out );
+	} else if ( str == "Out2In" ) {
+		setMode( Out2In );
+	} else if ( str == "Out2Out" ) {
+		setMode( Out2Out );
+	} else {
+		nWarning() << "mode accept exactly only one of 'In2In', 'In2Out', 'Out2In', 'Out2Out'";
+		setMode( Out2In );
+	}
     return true;
 }
 

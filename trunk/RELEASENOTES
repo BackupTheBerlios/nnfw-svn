@@ -1,3 +1,8 @@
+======= 1.0.4 Release =======
+  * Bugfixs
+	- resolved the parsing of 'mode' attribute of CopyLinker
+	- resolved "XML I/O CopyLinker Parse Error" reported on forum
+
 ======= 1.0.3 Release =======
   * Summary of important changes
 	- added methods for setting the learning rate of Backpropagation Algorithm

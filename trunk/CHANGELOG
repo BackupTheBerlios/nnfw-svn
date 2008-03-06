@@ -14,6 +14,10 @@ S <mave> comment goes here
     'B' : means a BugFix
     'C' : means that something has been changed (e.g. implementation of a Class or a signature method)
 ==== End of Legend ====
+    ==> 260 - 06/03/2008 - 1.0.4 release <==
+
+B <mave> resolved the parsing of 'mode' attribute of CopyLinker
+B <mave> resolved "XML I/O CopyLinker Parse Error" reported on forum
 
     ==> 259 - 04/03/2008 - 1.0.3 release <==
 

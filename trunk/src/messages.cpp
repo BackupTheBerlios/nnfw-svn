@@ -84,6 +84,10 @@ nnfwString& nnfwString::operator=( const nnfwString& left ) {
 	return (*this);
 }
 
+bool nnfwString::operator==( const nnfwString& left ) {
+	return ( prv->qstr == left.prv->qstr );
+}
+
 const char* nnfwString::toUtf8() const {
 	return prv->qstr.toUtf8().data();
 }
