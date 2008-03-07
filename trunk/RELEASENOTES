@@ -1,3 +1,7 @@
+======= 1.0.5 Release =======
+  * Bugfixs
+	- resolved inconsistence on saving mode property of CopyLinker on XML
+
 ======= 1.0.4 Release =======
   * Bugfixs
 	- resolved the parsing of 'mode' attribute of CopyLinker

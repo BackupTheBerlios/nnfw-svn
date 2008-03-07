@@ -90,7 +90,10 @@ public:
 		useMomentum = false;
 	};
 
-	/*! Return the error calculated */
+	/*! Return the deltas calculated during the back propagation of the error through the net.<br>
+	 *  If it's called passing an output cluster, it will return the difference between actual
+	 *  output and the last desired output specified using setTeachingInput.
+	 *  \warning The data returned is computed only when learn method is called. */
 	const RealVec& getError( Cluster* );
 	//@}
 
