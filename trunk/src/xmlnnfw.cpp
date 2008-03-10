@@ -654,7 +654,7 @@ QDomNode createPropertyFragment( Variant v, QDomDocument doc, QDomElement elem )
 		nError() << "Impossible to save a generic data pointer";
 		break;
     case Variant::t_real:
-        sub = doc.createTextNode( QString(" %1 ").arg( v.getReal() ) );
+        sub = doc.createTextNode( QString(" %1 ").arg( v.getReal(), 0, 'e', 20 ) );
         break;
     case Variant::t_int:
         sub = doc.createTextNode( QString(" %1 ").arg( v.getInt() ) );
@@ -681,7 +681,7 @@ QDomNode createPropertyFragment( Variant v, QDomDocument doc, QDomElement elem )
     case Variant::t_realvec:
         rv = v.getRealVec();
         for( u_int i=0; i<rv->size(); i++ ) {
-            complex.append( QString(" %1").arg( rv->at(i) ) );
+            complex.append( QString(" %1").arg( rv->at(i), 0, 'e', 20 ) );
         }
         complex.append( " " );
         sub = doc.createTextNode( complex );
@@ -690,7 +690,7 @@ QDomNode createPropertyFragment( Variant v, QDomDocument doc, QDomElement elem )
         mv = v.getRealMat();
         for( u_int r=0; r<mv->rows(); r++ ) {
             for( u_int c=0; c<mv->cols(); c++ ) {
-                complex.append( QString(" %1").arg( mv->at( r, c ) ) );
+                complex.append( QString(" %1").arg( mv->at( r, c ), 0, 'e', 20 ) );
             }
             complex.append( " " );
             //complex.append( "\n" );
@@ -727,7 +727,7 @@ QString createAttributeContent( Variant v ) {
 		return QString();
 		break;
     case Variant::t_real:
-        return QString("%1").arg( v.getReal() );
+        return QString("%1").arg( v.getReal(), 0, 'e', 20 );
         break;
     case Variant::t_int:
         return QString("%1").arg( v.getInt() );
