@@ -5,14 +5,14 @@
 #
 
 scriptname="nnfw-config"
-version="0.6.7"
-nnfwconfig="shared"
-prefix="/usr"
-LIBS=" "
-includedir="${prefix}/include"
+version="@VER_MAJ@.@VER_MIN@.@VER_PAT@"
+nnfwconfig="@NNFW_CONFIG@"
+prefix="@CMAKE_INSTALL_PREFIX@"
+LIBS="@LFLA@"
+includedir="@INCLUDES@"
 libdir="${prefix}/lib"
 bindir="${prefix}/bin"
-cflags=" "
+cflags="@CFLA@"
 
 usage () {
     echo "Usage: "  1>&2
@@ -73,7 +73,7 @@ if test $# -gt 0; then
       echo "${nnfwconfig}"
     ;;
     --libs)
-      echo "-L${libdir} -lnnfw ${LIBS}"
+      echo "${LIBS}"
     ;;
     --cflags)
         unique_cflags=

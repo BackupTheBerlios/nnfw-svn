@@ -15,6 +15,9 @@ S <mave> comment goes here
     'C' : means that something has been changed (e.g. implementation of a Class or a signature method)
 ==== End of Legend ====
 
+C <mave> added support for Mac Os X Frameworks bundle
+C <mave> simplified construction of nnfw-config in CMakeLists.txt
+
     ==> 261 - 06/03/2008 - 1.0.5 release <==
 
 B <mave> resolved inconsistence on saving mode property of CopyLinker on XML
