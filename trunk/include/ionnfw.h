@@ -43,7 +43,7 @@ class BaseNeuralNet;
 /*! Load the net from an XML file, and return a BaseNeuralNet */
 NNFW_API BaseNeuralNet* loadXML( const char* filename );
 /*! Save the BaseNeuralNet passed into an XML file; return true on success */
-NNFW_API bool saveXML( const char* filename, BaseNeuralNet* );
+NNFW_API bool saveXML( const char* filename, BaseNeuralNet*, int precision = -1 );
 
 //@}
 

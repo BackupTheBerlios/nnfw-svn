@@ -640,9 +640,9 @@ BaseNeuralNet* loadXML( const char* filename ) {
     return net;
 }
 
-void saveProperties( QDomDocument doc, QDomElement parent, Propertized* obj, QStringList skip );
+void saveProperties( QDomDocument doc, QDomElement parent, Propertized* obj, QStringList skip, int precision );
 
-QDomNode createPropertyFragment( Variant v, QDomDocument doc, QDomElement elem ) {
+QDomNode createPropertyFragment( Variant v, QDomDocument doc, QDomElement elem, int precision ) {
     QDomNode sub;
     QString complex; // --- used for create string representation of RealVec and RealMat
     const RealVec* rv;
@@ -654,7 +654,7 @@ QDomNode createPropertyFragment( Variant v, QDomDocument doc, QDomElement elem )
 		nError() << "Impossible to save a generic data pointer";
 		break;
     case Variant::t_real:
-        sub = doc.createTextNode( QString(" %1 ").arg( v.getReal(), 0, 'e', 20 ) );
+        sub = doc.createTextNode( QString(" %1 ").arg( v.getReal(), 0, 'e', precision ) );
         break;
     case Variant::t_int:
         sub = doc.createTextNode( QString(" %1 ").arg( v.getInt() ) );
@@ -681,7 +681,7 @@ QDomNode createPropertyFragment( Variant v, QDomDocument doc, QDomElement elem )
     case Variant::t_realvec:
         rv = v.getRealVec();
         for( u_int i=0; i<rv->size(); i++ ) {
-            complex.append( QString(" %1").arg( rv->at(i), 0, 'e', 20 ) );
+            complex.append( QString(" %1").arg( rv->at(i), 0, 'e', precision ) );
         }
         complex.append( " " );
         sub = doc.createTextNode( complex );
@@ -690,7 +690,7 @@ QDomNode createPropertyFragment( Variant v, QDomDocument doc, QDomElement elem )
         mv = v.getRealMat();
         for( u_int r=0; r<mv->rows(); r++ ) {
             for( u_int c=0; c<mv->cols(); c++ ) {
-                complex.append( QString(" %1").arg( mv->at( r, c ), 0, 'e', 20 ) );
+                complex.append( QString(" %1").arg( mv->at( r, c ), 0, 'e', precision ) );
             }
             complex.append( " " );
             //complex.append( "\n" );
@@ -699,7 +699,7 @@ QDomNode createPropertyFragment( Variant v, QDomDocument doc, QDomElement elem )
         break;
     case Variant::t_outfunction:
         elem.setAttribute( "type", v.getOutputFunction()->getTypename().getString() );
-        saveProperties( doc, elem, v.getOutputFunction(), QStringList() << "typename" );
+        saveProperties( doc, elem, v.getOutputFunction(), QStringList() << "typename", precision );
         break;
     case Variant::t_cluster:
         nError() << "Saving a property of type Cluster is not handled" ;
@@ -709,13 +709,13 @@ QDomNode createPropertyFragment( Variant v, QDomDocument doc, QDomElement elem )
         break;
     case Variant::t_propertized:
         elem.setAttribute( "type", v.getPropertized()->getTypename().getString() );
-        saveProperties( doc, elem, v.getPropertized(), QStringList() << "typename" );
+        saveProperties( doc, elem, v.getPropertized(), QStringList() << "typename", precision );
         break;
     }
     return sub;
 }
 
-QString createAttributeContent( Variant v ) {
+QString createAttributeContent( Variant v, int precision ) {
     //QString complex; // --- used for create string representation of RealVec and RealMat
 /*    const RealVec* rv;
     const RealMat* mv;*/
@@ -727,7 +727,7 @@ QString createAttributeContent( Variant v ) {
 		return QString();
 		break;
     case Variant::t_real:
-        return QString("%1").arg( v.getReal(), 0, 'e', 20 );
+        return QString("%1").arg( v.getReal(), 0, 'e', precision );
         break;
     case Variant::t_int:
         return QString("%1").arg( v.getInt() );
@@ -795,7 +795,7 @@ QString createAttributeContent( Variant v ) {
     return QString();
 }
 
-void saveProperties( QDomDocument doc, QDomElement parent, Propertized* obj, QStringList skip ) {
+void saveProperties( QDomDocument doc, QDomElement parent, Propertized* obj, QStringList skip, int precision ) {
     PropertyAccessVec& pvec = obj->properties();
     for( u_int i=0; i<pvec.size(); i++ ) {
         AbstractPropertyAccess* p = pvec[i];
@@ -806,12 +806,12 @@ void saveProperties( QDomDocument doc, QDomElement parent, Propertized* obj, QSt
 			if ( p->isWritable() ) {
 				QDomElement elem = doc.createElement( p->name() );
 				parent.appendChild( elem );
-				QDomNode sub = createPropertyFragment( p->get(), doc, elem );
+				QDomNode sub = createPropertyFragment( p->get(), doc, elem, precision );
 				if ( !sub.isNull() ) {
 					elem.appendChild( sub );
 				}
 			} else {
-				parent.setAttribute( p->name(), createAttributeContent( p->get() ) );
+				parent.setAttribute( p->name(), createAttributeContent( p->get(), precision ) );
 			}
             continue;
         }
@@ -822,7 +822,7 @@ void saveProperties( QDomDocument doc, QDomElement parent, Propertized* obj, QSt
             QDomElement elem = doc.createElement( p->name() );
             elem.setAttribute( "i", QString("%1").arg(id) );
             parent.appendChild( elem );
-            QDomNode sub = createPropertyFragment( v, doc, elem );
+            QDomNode sub = createPropertyFragment( v, doc, elem, precision );
             if ( !sub.isNull() ) {
                 elem.appendChild( sub );
             }
@@ -831,7 +831,7 @@ void saveProperties( QDomDocument doc, QDomElement parent, Propertized* obj, QSt
     }
 }
 
-bool saveXML( const char* filename, BaseNeuralNet* net ) {
+bool saveXML( const char* filename, BaseNeuralNet* net, int precision ) {
     QDomDocument doc("nnfw-xml");
     QDomElement root = doc.createElement( "nnfw" );
     root.setAttribute( "version", "1.1" );
@@ -846,7 +846,7 @@ bool saveXML( const char* filename, BaseNeuralNet* net ) {
         elem.setAttribute( "numNeurons", cls[i]->numNeurons() );
         elem.setAttribute( "type", cls[i]->getTypename().getString() );
         elem.setAttribute( "name", cls[i]->name() );
-        saveProperties( doc, elem, cls[i], QStringList() << "numNeurons" << "typename" << "name" );
+        saveProperties( doc, elem, cls[i], QStringList() << "numNeurons" << "typename" << "name", precision );
         nn.appendChild( elem );
     }
 
@@ -858,7 +858,7 @@ bool saveXML( const char* filename, BaseNeuralNet* net ) {
         elem.setAttribute( "type", ls[i]->getTypename().getString() );
         elem.setAttribute( "name", ls[i]->name() );
         nn.appendChild( elem );
-        saveProperties( doc, elem, ls[i], QStringList() << "to" << "from" << "typename" << "name" );
+        saveProperties( doc, elem, ls[i], QStringList() << "to" << "from" << "typename" << "name", precision );
     }
 
 	QDomElement elem = doc.createElement( "inputs" );

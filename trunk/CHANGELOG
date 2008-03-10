@@ -15,6 +15,10 @@ S <mave> comment goes here
     'C' : means that something has been changed (e.g. implementation of a Class or a signature method)
 ==== End of Legend ====
 
+    ==> 265 - 10/03/2008 <==
+
++ <mave> added a parameter on saveXML for choosing the precision for real data
+C <mave> augmented precision when saving real data on XML file
 C <mave> added support for Mac Os X Frameworks bundle
 C <mave> simplified construction of nnfw-config in CMakeLists.txt
 
