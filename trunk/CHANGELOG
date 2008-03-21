@@ -15,6 +15,20 @@ S <mave> comment goes here
     'C' : means that something has been changed (e.g. implementation of a Class or a signature method)
 ==== End of Legend ====
 
+    ==> 267 - 21/03/2008 <==
+
+C <mave> updated Factory with new output functions
++ <mave> added LinearFunction y=m*x+b
+C <mave> Rename LinearFunction to RampFunction
++ <mave> added WinnerTakeAll output function
++ <mave> added max/minIndex and max/minValue to RealVec
++ <mave> added PseudoGauss output function
++ <mave> added Triangle output function
++ <mave> added Sawtooth output function
++ <mave> added Periodic Output functions
++ <mave> added min and max function to types.h
+C <mave> more comments on BackPropagationAlgo::getError
+
     ==> 265 - 10/03/2008 <==
 
 + <mave> added a parameter on saveXML for choosing the precision for real data

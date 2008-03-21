@@ -312,7 +312,10 @@ public:
     Real max;
 };
 
-/*! \brief Linear Function
+/*! \brief Ramp Function
+ *
+ *  \warning The old name (before version 1.1.0) of RampFunction was LinearFunction while now 
+ *  LinearFunction express a simple linear equation y=mx+b
  *
  * <pre>
  *  maxY            /---------------
@@ -334,77 +337,130 @@ public:
  *   <tr><td>maxY</td> <td>Real</td> <td>read/write</td> <td> function's Y maximun value </td> <td>this</td> </tr>
  *   </table>
  */
+class NNFW_API RampFunction : public DerivableOutputFunction {
+public:
+	/*! \name Constructors */
+	//@{
+	
+	/*! Construct a linear updater */
+	RampFunction( Real minX, Real maxX, Real minY = -1, Real maxY = +1 );
+	
+	/*! Construct */
+	RampFunction( PropertySettings& prop );
+	
+	/*! Destructor */
+	virtual ~RampFunction() { /* Nothing to do */ };
+	
+	//@}
+	/*! \name Interface */
+	//@{
+	
+	/*! Set the minimum value of Xs RampFunction */
+	bool setMinX( const Variant& v );
+	
+	/*! Return the minimum value of Xs RampFunction */
+	Variant minX();
+	
+	/*! Set the maximum value of Xs RampFunction */
+	bool setMaxX( const Variant& v );
+	
+	/*! Return the maximum value of Xs RampFunction */
+	Variant maxX();
+	
+	/*! Set the minimum value of Ys RampFunction */
+	bool setMinY( const Variant& v );
+	
+	/*! Return the minimum value of Ys RampFunction */
+	Variant minY();
+	
+	/*! Set the maximum value of Ys RampFunction */
+	bool setMaxY( const Variant& v );
+	
+	/*! Return the maximum value of Ys RampFunction */
+	Variant maxY();
+	
+	/*! Implement the updating method
+		*/
+	virtual void apply( RealVec& inputs, RealVec& outputs );
+	
+	/*! return the m coefficient if x is in [minX, maxX] and x(1-x) otherwise */
+	virtual void derivate( const RealVec& x, const RealVec& y, RealVec& d ) const;
+	
+	/*! Clone this object */
+	virtual RampFunction* clone() const;
+	
+	//@}
+	
+	/*! minX */
+	Real min_x;
+	/*! maxX */
+	Real max_x;
+	/*! minY */
+	Real min_y;
+	/*! maxY */
+	Real max_y;
+};
+
+/*! \brief Linear equation Function
+ *
+ *  \warning The old name (before version 1.1.0) of RampFunction was LinearFunction while now 
+ *  LinearFunction express a simple linear equation y=mx+b
+ *
+ *  Implements a linear equation y = m*x + b
+ *
+ *   <table class="proptable">
+ *   <tr><td class="prophead" colspan="5">Properties</td></tr>
+ *   <tr><th>Name</th> <th>Type [isVector]</th> <th>Access mode</th> <th>Description</th> <th>Class</th></tr>
+ *   <tr><td>typename</td> <td>string</td> <td>read-only</td> <td> Class's type </td> <td>Propertized</td> </tr>
+ *   <tr><td>m</td> <td>Real</td> <td>read/write</td> <td> m coefficient </td> <td>this</td> </tr>
+ *   <tr><td>b</td> <td>Real</td> <td>read/write</td> <td> b coefficient </td> <td>this</td> </tr>
+ *   </table>
+ */
 class NNFW_API LinearFunction : public DerivableOutputFunction {
 public:
-    /*! \name Constructors */
-    //@{
-
-    /*! Construct a linear updater */
-    LinearFunction( Real minX, Real maxX, Real minY = -1, Real maxY = +1 );
-
-    /*! Construct */
-    LinearFunction( PropertySettings& prop );
-
-    /*! Destructor */
-    virtual ~LinearFunction() { /* Nothing to do */ };
-
-    //@}
-    /*! \name Interface */
-    //@{
-
-    /*! Set the minimum value of Xs LinearFunction
-     */
-    bool setMinX( const Variant& v );
-
-    /*! Return the minimum value of Xs LinearFunction
-     */
-    Variant getMinX();
-
-    /*! Set the maximum value of Xs LinearFunction
-     */
-    bool setMaxX( const Variant& v );
-
-    /*! Return the maximum value of Xs LinearFunction
-     */
-    Variant getMaxX();
-
-    /*! Set the minimum value of Ys LinearFunction
-     */
-    bool setMinY( const Variant& v );
-
-    /*! Return the minimum value of Ys LinearFunction
-     */
-    Variant getMinY();
-
-    /*! Set the maximum value of Ys LinearFunction
-     */
-    bool setMaxY( const Variant& v );
-
-    /*! Return the maximum value of Ys LinearFunction
-     */
-    Variant getMaxY();
-
-    /*! Implement the updating method
-     */
-    virtual void apply( RealVec& inputs, RealVec& outputs );
-
-    /*! return the m coefficient if x is in [minX, maxX] and x(1-x) otherwise */
-    virtual void derivate( const RealVec& x, const RealVec& y, RealVec& d ) const;
-
-    /*! Clone this object
-     */
-    virtual LinearFunction* clone() const;
-
-    //@}
-
-    /*! minX */
-    Real minX;
-    /*! maxX */
-    Real maxX;
-    /*! minY */
-    Real minY;
-    /*! maxY */
-    Real maxY;
+	/*! \name Constructors */
+	//@{
+	
+	/*! Construct a linear updater */
+	LinearFunction( Real m, Real b );
+	
+	/*! Construct */
+	LinearFunction( PropertySettings& prop );
+	
+	/*! Destructor */
+	virtual ~LinearFunction() { /* Nothing to do */ };
+	
+	//@}
+	/*! \name Interface */
+	//@{
+	
+	/*! Set the m coeffiecient of LinearFunction */
+	bool setM( const Variant& v );
+	
+	/*! Return the m coeffiecient of LinearFunction */
+	Variant m();
+	
+	/*! Set the b coeffiecient of LinearFunction */
+	bool setB( const Variant& v );
+	
+	/*! Return the b coeffiecient of Linear Function */
+	Variant b();
+	
+	/*! Implement the updating method */
+	virtual void apply( RealVec& inputs, RealVec& outputs );
+	
+	/*! return the m coefficient */
+	virtual void derivate( const RealVec& x, const RealVec& y, RealVec& d ) const;
+	
+	/*! Clone this object */
+	virtual LinearFunction* clone() const;
+	
+	//@}
+	
+	/*! m */
+	Real mv;
+	/*! b */
+	Real bv;
 };
 
 /*! \brief Step Function

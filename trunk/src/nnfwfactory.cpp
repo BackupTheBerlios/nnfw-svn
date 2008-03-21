@@ -30,6 +30,8 @@
 #include "outputfunction.h"
 #include "liboutputfunctions.h"
 #include "libradialfunctions.h"
+#include "libperiodicfunctions.h"
+#include "libcompetitivefunctions.h"
 
 namespace nnfw {
 
@@ -252,6 +254,8 @@ void Factory::initFactory() {
 	outfuntypes["FakeSigmoidFunction"] = new Creator<FakeSigmoidFunction>();
 	outfuntypes["IdentityFunction"] = new Creator<IdentityFunction>();
 	outfuntypes["LinearFunction"] = new Creator<LinearFunction>();
+	outfuntypes["RampFunction"] = new Creator<RampFunction>();
+	outfuntypes["ScaleFunction"] = new Creator<ScaleFunction>();
 	outfuntypes["ScaledSigmoidFunction"] = new Creator<ScaledSigmoidFunction>();
 	outfuntypes["SigmoidFunction"] = new Creator<SigmoidFunction>();
 	outfuntypes["StepFunction"] = new Creator<StepFunction>();
@@ -260,28 +264,23 @@ void Factory::initFactory() {
 	outfuntypes["CompositeFunction"] = new Creator<CompositeFunction>();
 	outfuntypes["LinearComboFunction"] = new Creator<LinearComboFunction>();
 	outfuntypes["GaussFunction"] = new Creator<GaussFunction>();
+	outfuntypes["PseudoGaussFunction"] = new Creator<PseudoGaussFunction>();
+	outfuntypes["SawtoothFunction"] = new Creator<SawtoothFunction>();
+	outfuntypes["SinFunction"] = new Creator<SinFunction>();
+	outfuntypes["TriangleFunction"] = new Creator<TriangleFunction>();
+	outfuntypes["WinnerTakeAllFunction"] = new Creator<WinnerTakeAllFunction>();
 
 	// Replicate all data above in generic Propertized
-	proptypes["SimpleCluster"] = clustertypes["SimpleCluster"];
-	proptypes["BiasedCluster"] = clustertypes["BiasedCluster"];
-	proptypes["DDECluster"] = clustertypes["DDECluster"];
-	proptypes["FakeCluster"] = clustertypes["FakeCluster"];
-	proptypes["SparseMatrixLinker"] = linkertypes["SparseMatrixLinker"];
-	proptypes["CopyLinker"] = linkertypes["CopyLinker"];
-	proptypes["DotLinker"] = linkertypes["DotLinker"];
-	proptypes["NormLinker"] = linkertypes["NormLinker"];
-	proptypes["MatrixLinker"] = linkertypes["MatrixLinker"];
-	proptypes["FakeSigmoidFunction"] = outfuntypes["FakeSigmoidFunction"];
-	proptypes["IdentityFunction"] = outfuntypes["IdentityFunction"];
-	proptypes["LinearFunction"] = outfuntypes["LinearFunction"];
-	proptypes["ScaledSigmoidFunction"] = outfuntypes["ScaledSigmoidFunction"];
-	proptypes["SigmoidFunction"] = outfuntypes["SigmoidFunction"];
-	proptypes["StepFunction"] = outfuntypes["StepFunction"];
-	proptypes["LeakyIntegratorFunction"] = outfuntypes["LeakyIntegratorFunction"];
-	proptypes["PoolFunction"] = outfuntypes["PoolFunction"];
-	proptypes["CompositeFunction"] = outfuntypes["CompositeFunction"];
-	proptypes["LinearComboFunction"] = outfuntypes["LinearComboFunction"];
-	proptypes["GaussFunction"] = outfuntypes["GaussFunction"];
+	std::map<std::string, AbstractCreator*>::iterator it;
+	for( it = clustertypes.begin(); it!=clustertypes.end(); it++ ) {
+		proptypes[ (*it).first ] = (*it).second;
+	}
+	for( it = linkertypes.begin(); it!=linkertypes.end(); it++ ) {
+		proptypes[ (*it).first ] = (*it).second;
+	}
+	for( it = outfuntypes.begin(); it!=outfuntypes.end(); it++ ) {
+		proptypes[ (*it).first ] = (*it).second;
+	}
 
 	// --- Standard Modifiers
 	modtypes["SimpleCluster"] = new DummyModifier();

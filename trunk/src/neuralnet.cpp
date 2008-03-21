@@ -368,7 +368,7 @@ BaseNeuralNet* BaseNeuralNet::clone() const {
 	}
 	// --- copy the order -- not-efficient
 	UpdatableVec ord;
-	for( int i=0; i<order().size(); i++ ) {
+	for( int i=0; i<(int)order().size(); i++ ) {
 		ord << clone->getByName( order()[i]->name() );
 	}
 	clone->setOrder( ord );

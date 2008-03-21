@@ -312,6 +312,34 @@ public:
 		return this->sum() / vsize;
     };
 
+	/*! return the position of the maximum element in the vector */
+	int maxIndex() {
+		int mi = 0;
+		for( u_int i=1; i<vsize; i++ ) {
+			if ( data[i] > data[mi] ) mi=i;
+		}
+		return mi;
+	}
+
+	/*! return the value of the maximum element in the vector */
+	Real maxValue() {
+		return data[maxIndex()];
+	}
+
+	/*! return the position of the minimum element in the vector */
+	int minIndex() {
+		int mi = 0;
+		for( u_int i=1; i<vsize; i++ ) {
+			if ( data[i] < data[mi] ) mi=i;
+		}
+		return mi;
+	}
+
+	/*! return the value of the minimum element in the vector */
+	Real minValue() {
+		return data[minIndex()];
+	}
+
 	/*! For each element i, data[i] = 0 if data[i] <= threshold; data[i] = 1 otherwise
 	 */
 	RealVec& step( Real threshold ) {

@@ -270,34 +270,34 @@ ScaledSigmoidFunction* ScaledSigmoidFunction::clone() const {
     return new ScaledSigmoidFunction( lambda, min, max );
 }
 
-LinearFunction::LinearFunction( Real minX, Real maxX, Real minY, Real maxY )
+RampFunction::RampFunction( Real minX, Real maxX, Real minY, Real maxY )
     : DerivableOutputFunction() {
-    this->minX = minX;
-    this->maxX = maxX;
-    this->minY = minY;
-    this->maxY = maxY;
-    addProperty( "minX", Variant::t_real, this, &LinearFunction::getMinX, &LinearFunction::setMinX );
-    addProperty( "maxX", Variant::t_real, this, &LinearFunction::getMaxX, &LinearFunction::setMaxX );
-    addProperty( "minY", Variant::t_real, this, &LinearFunction::getMinY, &LinearFunction::setMinY );
-    addProperty( "maxY", Variant::t_real, this, &LinearFunction::getMaxY, &LinearFunction::setMaxY );
-    setTypename( "LinearFunction" );
+	min_x = minX;
+	max_x = maxX;
+	min_y = minY;
+	max_y = maxY;
+	addProperty( "minX", Variant::t_real, this, &RampFunction::minX, &RampFunction::setMinX );
+	addProperty( "maxX", Variant::t_real, this, &RampFunction::maxX, &RampFunction::setMaxX );
+	addProperty( "minY", Variant::t_real, this, &RampFunction::minY, &RampFunction::setMinY );
+	addProperty( "maxY", Variant::t_real, this, &RampFunction::maxY, &RampFunction::setMaxY );
+	setTypename( "RampFunction" );
 }
 
-LinearFunction::LinearFunction( PropertySettings& prop )
+RampFunction::RampFunction( PropertySettings& prop )
     : DerivableOutputFunction() {
-    minX = -1.0;
-    maxX = +1.0;
-    minY = -1.0;
-    maxY = +1.0;
-    addProperty( "minX", Variant::t_real, this, &LinearFunction::getMinX, &LinearFunction::setMinX );
-    addProperty( "maxX", Variant::t_real, this, &LinearFunction::getMaxX, &LinearFunction::setMaxX );
-    addProperty( "minY", Variant::t_real, this, &LinearFunction::getMinY, &LinearFunction::setMinY );
-    addProperty( "maxY", Variant::t_real, this, &LinearFunction::getMaxY, &LinearFunction::setMaxY );
-    setProperties( prop );
-    setTypename( "LinearFunction" );
+	min_x = -1.0;
+	max_x = +1.0;
+	min_y = -1.0;
+	max_y = +1.0;
+	addProperty( "minX", Variant::t_real, this, &RampFunction::minX, &RampFunction::setMinX );
+	addProperty( "maxX", Variant::t_real, this, &RampFunction::maxX, &RampFunction::setMaxX );
+	addProperty( "minY", Variant::t_real, this, &RampFunction::minY, &RampFunction::setMinY );
+	addProperty( "maxY", Variant::t_real, this, &RampFunction::maxY, &RampFunction::setMaxY );
+	setProperties( prop );
+	setTypename( "RampFunction" );
 }
 
-void LinearFunction::apply( RealVec& inputs, RealVec& outputs ) {
+void RampFunction::apply( RealVec& inputs, RealVec& outputs ) {
 #ifdef NNFW_DEBUG
     if ( inputs.size() != outputs.size() ) {
         nError() << "The output dimension doesn't match the input dimension" ;
@@ -306,59 +306,59 @@ void LinearFunction::apply( RealVec& inputs, RealVec& outputs ) {
 #endif
     u_int size = inputs.size();
     for ( u_int i = 0; i<size; i++ ) {
-        Real m = ( maxY-minY )/( maxX-minX );
-        Real q = minY - m*minX;
+        Real m = ( max_y-min_y )/( max_x-min_x );
+        Real q = min_y - m*min_x;
         Real ret = m*(inputs[i]) + q;
-        if (ret < minY) {
-            outputs[i] = minY;
-        } else if (ret > maxY) {
-            outputs[i] = maxY;
+        if (ret < min_y) {
+            outputs[i] = min_y;
+        } else if (ret > max_y) {
+            outputs[i] = max_y;
         } else {
             outputs[i] = ret;
         }
     }
 }
 
-bool LinearFunction::setMinX( const Variant& v ) {
-    minX = v.getReal();
+bool RampFunction::setMinX( const Variant& v ) {
+    min_x = v.getReal();
     return true;
 }
 
-Variant LinearFunction::getMinX() {
-    return Variant( minX );
+Variant RampFunction::minX() {
+    return Variant( min_x );
 }
 
-bool LinearFunction::setMaxX( const Variant& v ) {
-    maxX = v.getReal();
-    return true;
+bool RampFunction::setMaxX( const Variant& v ) {
+	max_x = v.getReal();
+	return true;
 }
 
-Variant LinearFunction::getMaxX() {
-    return Variant( maxX );
+Variant RampFunction::maxX() {
+	return Variant( max_x );
 }
 
-bool LinearFunction::setMinY( const Variant& v ) {
-    minY = v.getReal();
-    return true;
+bool RampFunction::setMinY( const Variant& v ) {
+	min_y = v.getReal();
+	return true;
 }
 
-Variant LinearFunction::getMinY() {
-    return Variant( minY );
+Variant RampFunction::minY() {
+	return Variant( min_y );
 }
 
-bool LinearFunction::setMaxY( const Variant& v ) {
-    maxY = v.getReal();
-    return true;
+bool RampFunction::setMaxY( const Variant& v ) {
+	max_y = v.getReal();
+	return true;
 }
 
-Variant LinearFunction::getMaxY() {
-    return Variant( maxY );
+Variant RampFunction::maxY() {
+	return Variant( max_y );
 }
 
-void LinearFunction::derivate( const RealVec& inputs, const RealVec&, RealVec& derivates ) const {
+void RampFunction::derivate( const RealVec& inputs, const RealVec&, RealVec& derivates ) const {
     for( u_int i=0; i<inputs.size(); i++ ) {
-        if ( inputs[i] >= minX && inputs[i] <= maxX ) {
-            derivates[i] = ( maxY-minY )/( maxX-minX );
+        if ( inputs[i] >= min_x && inputs[i] <= max_x ) {
+            derivates[i] = ( max_y-min_y )/( max_x-min_x );
         } else {
             Real y;
             y = 1.0/( 1.0 + exp( -inputs[i] ) );
@@ -367,8 +367,64 @@ void LinearFunction::derivate( const RealVec& inputs, const RealVec&, RealVec& d
     }
 }
 
+RampFunction* RampFunction::clone() const {
+    return new RampFunction( min_x, max_x, min_y, max_y );
+}
+
+LinearFunction::LinearFunction( Real m, Real b )
+    : DerivableOutputFunction() {
+    mv = m;
+	bv = b;
+    addProperty( "m", Variant::t_real, this, &LinearFunction::m, &LinearFunction::setM );
+    addProperty( "b", Variant::t_real, this, &LinearFunction::b, &LinearFunction::setB );
+    setTypename( "LinearFunction" );
+}
+
+LinearFunction::LinearFunction( PropertySettings& prop )
+    : DerivableOutputFunction() {
+	mv = 1.0;
+	bv = 0.0;
+    addProperty( "m", Variant::t_real, this, &LinearFunction::m, &LinearFunction::setM );
+    addProperty( "b", Variant::t_real, this, &LinearFunction::b, &LinearFunction::setB );
+    setProperties( prop );
+    setTypename( "LinearFunction" );
+}
+
+void LinearFunction::apply( RealVec& inputs, RealVec& outputs ) {
+#ifdef NNFW_DEBUG
+	if ( inputs.size() != outputs.size() ) {
+		nError() << "The output dimension doesn't match the input dimension" ;
+		return;
+	}
+#endif
+	outputs.assign_amulx( mv, inputs );
+	outputs += bv;
+}
+
+bool LinearFunction::setM( const Variant& v ) {
+	mv = v.getReal();
+	return true;
+}
+
+Variant LinearFunction::m() {
+	return Variant( mv );
+}
+
+bool LinearFunction::setB( const Variant& v ) {
+	bv = v.getReal();
+	return true;
+}
+
+Variant LinearFunction::b() {
+	return Variant( bv );
+}
+
+void LinearFunction::derivate( const RealVec& , const RealVec&, RealVec& derivates ) const {
+	derivates.setAll( mv );
+}
+
 LinearFunction* LinearFunction::clone() const {
-    return new LinearFunction( minX, maxX, minY, maxY );
+	return new LinearFunction( mv, bv );
 }
 
 StepFunction::StepFunction( Real min, Real max, Real threshold )

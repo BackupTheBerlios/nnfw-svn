@@ -135,7 +135,7 @@ IF (UNIX)
 	IF( APPLE )
 		SET( INCLUDES "${CMAKE_INSTALL_PREFIX}/Library/Frameworks/nnfw.framework/Headers" )
 	ELSE( APPLE )
-		SET( INCLUDES "${CMAKE_INSTALL_PREFIX}/include/nnfw" )
+		SET( INCLUDES "${CMAKE_INSTALL_PREFIX}/include" )
 	ENDIF( APPLE )
     ## Library
 	IF ( NNFW_CONFIG MATCHES shared )

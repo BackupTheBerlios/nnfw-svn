@@ -90,10 +90,27 @@ public:
 		useMomentum = false;
 	};
 
-	/*! Return the deltas calculated during the back propagation of the error through the net.<br>
-	 *  If it's called passing an output cluster, it will return the difference between actual
-	 *  output and the last desired output specified using setTeachingInput.
-	 *  \warning The data returned is computed only when learn method is called. */
+	/*! This method returns the deltas calculated by the Back-propagation Algorithm.
+	 *  These deltas are set every time new targets are defined for the output layer(s),
+	 *  which are then used to update network weights when the method learn() is called.<br>
+	 *  They are also useful to calculate the network performance, but for that it must be used outside
+	 *  the <em>learning cycle</em> (a full learning iteration, that corresponds to present the network
+	 *  with all the patterns of the train data set). For that you must call
+	 *  getError( Cluster * anyOutputCluster ) for each line of your training set (you'll get a RealVec
+	 *  with the deltas for each unit of the cluster considered).<br>
+	 *  Then you can use those values to calculate your desired performance measure.<br>
+	 *  For instance: if you use it to calculate the Mean Square Error (MSE) of the network
+	 *  for your train data set you must accumulate the square of the the getError( anyOutputCluster ) 
+	 *  output for each line of the set, and at the end divide it by the length of that same set
+	 *  (by definition the MSE is the sum of the squared differences between the target and actual
+	 *  output of a sequence of values). Getting the Root Mean Squared Error (RMSE) from this is
+	 *  trivial (you just need to calculate the square root of the MSE).
+	 *
+	 *  \warning The data returned by getError( Cluster * ) is computed every time you set a new output target,
+	 *  which means every time you call the setTeachingInput( Cluster * anyOutputCluster, const RealVec &
+	 *  teaching_input ) method. If your network has more than one output layer you have to call
+	 *  setTeachingInput() for all the output clusters before calling getError() for any of the clusters.
+	 */
 	const RealVec& getError( Cluster* );
 	//@}
 
