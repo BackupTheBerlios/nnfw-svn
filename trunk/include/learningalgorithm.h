@@ -24,11 +24,63 @@
  */
 
 #include "types.h"
+#include "neuralnet.h"
 #include <map>
 
 namespace nnfw {
 
 class BaseNeuralNet;
+
+/*! \brief Pattern object
+ *
+ *  \par Motivation
+ *  The Pattern object represent a configuration (partial or complete) of the network that can
+ *  be used by a learning algorithm as model to learn.
+ *  A LearningAlgorithm will use Pattern for setup network's inputs, spread network and eventually
+ *  calculate the error, and modify the network's paramenters on the basis of neurons activities
+ *  in order to get closer to neuron activities presented by the Pattern
+ *
+ *  \par Description
+ *  Pattern simply associates inputs/outputs pairs to Clusters:
+ *  \code
+ *  Pattern pat;
+ *  pat->setInputsOf( anInputCluster, Inputs );
+ *  pat->setOutputsOf( anOutputCluster, Outputs );
+ *  pat->setInputOutputsOf( anHiddenClusterToReset, Inputs, Outputs );
+ *  //--- retrieve stored information
+ *  pat[aCluster].inputs;
+ *  pat[anotherCluster].outputs;
+ *  \endcode
+ *
+ *  \par Warnings
+ *
+ *  \todo Supports for storing all properties of Cluster... storing Linkers info ?!?!
+ */
+class Pattern {
+public:
+	/*! \name Constructors */
+	//@{
+	/*! Construct an empty Pattern */
+	Pattern();
+	/*! Destructor */
+	~Pattern();
+
+	//@}
+	/*! \name Interface */
+	//@{
+
+	//@}
+	/*! \name Nested Structures */
+	//@{
+	class PatternInfo {
+	public:
+		RealVec inputs;
+		RealVec outputs;
+	};
+	//@}
+private:
+	std::map<Cluster*, PatternInfo>;
+};
 
 /*! \brief LearningAlgorithm object
  *
