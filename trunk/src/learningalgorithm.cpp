@@ -22,6 +22,39 @@
 
 namespace nnfw {
 
+void Pattern::setInputsOf( Cluster* cl, const RealVec& ins ) {
+	pinfo[cl].inputs = ins;
+};
+
+void Pattern::setOutputsOf( Cluster* cl, const RealVec& ous ) {
+	pinfo[cl].outputs = ous;
+};
+
+void Pattern::setInputsOutputsOf( Cluster* cl, const RealVec& ins, const RealVec& ous ) {
+	pinfo[cl].inputs = ins;
+	pinfo[cl].outputs= ous;
+};
+
+const RealVec& Pattern::inputsOf( Cluster* cl ) const {
+	if ( pinfo.count(cl) != 0 ) {
+		return pinfo[cl].inputs;
+	} else {
+		return empty;
+	}
+};
+
+const RealVec& Pattern::outputsOf( Cluster* cl ) const {
+	if ( pinfo.count(cl) != 0 ) {
+		return pinfo[cl].outputs;
+	} else {
+		return empty;
+	}
+};
+
+Pattern::PatternInfo& Pattern::operator[]( Cluster* cl ) {
+	return pinfo[cl];
+};
+
 LearningAlgorithm::LearningAlgorithm( BaseNeuralNet* net ) {
 	this->netp = net;
 }

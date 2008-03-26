@@ -55,8 +55,7 @@ public:
     /*! \name Constructors */
     //@{
 
-    /*! Default Constructor
-     */
+    /*! Default Constructor */
     VectorData()
         : Observer(), Observable() {
         vsize = 0;
@@ -68,8 +67,7 @@ public:
         idend = 0;
     };
 
-    /*! Construct a vector of dimension size setting all values to defaul constructor of T
-     */
+    /*! Construct a vector of dimension size setting all values to defaul constructor of T */
     VectorData( u_int size ) 
         : Observer(), Observable() {
         vsize = size;
@@ -87,8 +85,7 @@ public:
         idend = 0;
     };
 
-    /*! Construct a vector of dimension size setting all the values as specified
-     */
+    /*! Construct a vector of dimension size setting all the values as specified */
     VectorData( u_int size, T& value )
         : Observer(), Observable() {
         vsize = size;
@@ -104,8 +101,7 @@ public:
         idend = 0;
     };
     
-    /*! Construct a VectorData view
-     */
+    /*! Construct a VectorData view */
     VectorData( VectorData<T>& src, u_int idStart, u_int idEnd )
         : Observer(), Observable() {
         if ( idStart > src.vsize || idEnd > src.vsize || idStart >= idEnd ) {
@@ -124,8 +120,7 @@ public:
         observed = &src;
     };
 
-    /*! Construct by copying data from const T* vector
-     */
+    /*! Construct by copying data from const T* vector */
     VectorData( const T* r, u_int dim )
         : Observer(), Observable() {
         data = new T[dim];
@@ -229,6 +224,20 @@ public:
             data[i] = value;
         }
     };
+
+	/*! Erase the element at position specified */
+	void erase( int id ) {
+		if ( view ) {
+			nError() << "you can't erase element from a VectorData view" ;
+		} else {
+			if ( id < 0 || id >= (int)vsize ) return;
+			for( u_int i=(u_int)id; i<vsize-1; i++ ) {
+				data[id] = data[id+1];
+			}
+			vsize = vsize-1;
+			notifyAll( NotifyEvent( datachanged ) );
+		}
+	};
 
     /*! Assign to first num element the value passed */
     VectorData<T>& assign( u_int num, const T& value ) {

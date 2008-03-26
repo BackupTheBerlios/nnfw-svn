@@ -27,6 +27,7 @@
  */
 
 #include "types.h"
+#include <sys/time.h>
 
 namespace nnfw {
 
@@ -44,6 +45,35 @@ class LearningNetwork;
  *  \param linkerType the Typename of Linker to create (it must be a Typename registered to Factory)
  */
 NNFW_API BaseNeuralNet* feedForwardNet( U_IntVec layers, const char* clusterType = "BiasedCluster", const char* linkerType = "MatrixLinker" );
+
+/*! \brief SimpleTimer object
+ *
+ *  \par Motivation
+ *  It is a simple timer for performance checks
+ *
+ *  \par Description
+ *  SimpleTimer counts microseconds elapsed between tac() calls
+ *
+ *  \par Warnings
+ *
+ */
+class SimpleTimer {
+public:
+	SimpleTimer() {
+		struct timeval tv;
+		gettimeofday( &tv, NULL );
+		lastTime = tv.tv_sec*1000000 + tv.tv_usec;
+	};
+	int tac() {
+		struct timeval tv;
+		gettimeofday( &tv, NULL );
+		int ret = (tv.tv_sec*1000000 + tv.tv_usec) - lastTime;
+		lastTime = (tv.tv_sec*1000000 + tv.tv_usec);
+		return ret;
+	};
+private:
+	long int lastTime;
+};
 
 }
 

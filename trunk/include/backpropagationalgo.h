@@ -59,8 +59,13 @@ public:
 	 */
 	void setTeachingInput( Cluster* output, const RealVec& ti );
 
+	virtual void learn();
+
 	/*! Starts a single training step. */
-	void learn( );
+	virtual void learn( const Pattern& );
+
+	/*! Calculate the Mean Square Error respect to Pattern passed */
+	virtual Real calculateMSE( const Pattern& );
 
 	/*! Set the learning rate */
 	void setRate( Real newrate ) {

@@ -33,7 +33,7 @@
 #include "cluster.h"
 #include "linker.h"
 #include <map>
-
+#include <string>
 
 namespace nnfw {
 
@@ -101,24 +101,22 @@ public:
      */
     void unmarkAll();
 
-    /*! Return true if there isn't Linkers connected with Cluster c 
-     */
+    /*! Return true if there isn't Linkers connected with Cluster c */
     bool isIsolated( Cluster* c ) const;
 
-    /*! Returns the vector of Clusters contained
-     */
+    /*! Returns the vector of Clusters contained */
     const ClusterVec& clusters() const;
 
-    /*! Returns the vector of Input Clusters contained
-     */
+    /*! Returns the vector of Input Clusters contained */
     const ClusterVec& inputClusters() const;
 
-    /*! Returns the vector of Output Clusters contained
-     */
+    /*! Returns the vector of Output Clusters contained */
     const ClusterVec& outputClusters() const;
 
-    /*! Add Linker
-     */
+    /*! Returns the vector of Hidden Clusters contained (i.e. UnMarked Clusters) */
+    const ClusterVec& hiddenClusters() const;
+
+    /*! Add Linker */
     void addLinker( Linker* l );
 
     /*! Remove Linker
@@ -162,6 +160,30 @@ public:
      */
     void randomize( Real min, Real max );
 
+	/*! Search into the net for the presence of an Updatable with name aName;
+	 *  on success set the pointer aPointer and return it,
+	 *  otherwise it set aPointer to zero and return zero.<br>
+	 *  This allow to use it both into an if-statement and an assignment:
+	 *  \code
+	 *  BiasedCluster* bias1;
+	 *  BiasedCluster* bias2;
+	 *  if ( byName("aName", bias1 ) ) {
+	 *      //--- ok, there is a BiasedCluster with name "aName"
+	 *      //--- now bias1 points to the BiasedCluster with name "aName"
+	 *  } else {
+	 *      //--- error, there is no BiasedCluster with that name
+	 *      //--- now bias1 is NULL
+	 *  }
+     *  //--- you can also use it for assignment:
+     *  bias2 = byName("aName", bias1);
+	 *  \endcode
+	 */
+	template<class PointerTo>
+	PointerTo byName( const char* aName, PointerTo& aPointer ) {
+		aPointer = dynamic_cast<PointerTo>( getByName(aName) );
+		return aPointer;
+	};
+
     /*! Return the Updatable with the name specified<br>
      *  Returns NULL-pointer if there's no updatable object whit the name specified<br>
      *  \warning return the first that finds. If you have named different Updatables with same name
@@ -171,15 +193,15 @@ public:
 
     /*! Return true if the Cluster is in this net
      */
-    bool find( const Cluster* ) const;
+    bool find( Cluster* ) const;
 
     /*! Return true if the Linker is in this net
      */
-    bool find( const Linker* ) const;
+    bool find( Linker* ) const;
 
     /*! Return true if the Updatable object is in this net
      */
-    bool find( const Updatable* ) const;
+    bool find( Updatable* ) const;
 
 	/*! Clone this BaseNeuralNet */
 	BaseNeuralNet* clone() const;
@@ -193,14 +215,35 @@ protected:
     ClusterVec inclusters;
     /*! Output Clusters */
     ClusterVec outclusters;
+	/*! unmarked Clusters */
+	ClusterVec hidclusters;
     /*! Linkers */
     LinkerVec  linkersv;
+
+	typedef std::map<std::string, Cluster*> ClustersMap;
+	/*! map name -> Cluster* */
+	ClustersMap clsMap;
+	class ids4t {
+	public:
+		int& operator[]( int i ) { return ids[i]; };
+		int ids[4];
+	};
+	//typedef int ids4t [4];
+	typedef std::map<Cluster*, ids4t> IdsMap;
+	/*! map Cluster* -> indexes where it is into vectors */
+	IdsMap clsIdsMap;
 
     typedef std::map<Cluster*, LinkerVec> LinkVecMap;
     /*! mappa dei linkers entranti (cluster -> vettore linkers entranti) */
     LinkVecMap inLinks;
     /*! map of outgoing linkers (cluster -> vettore linkers uscenti) */
     LinkVecMap outLinks;
+
+	typedef std::map<std::string, Linker*> LinkersMap;
+	/*! map name -> Cluster* */
+	LinkersMap lksMap;
+	typedef std::map<Linker*, ids4t> IdsMapL;
+	IdsMapL lksIdsMap;
 
     /*! Array of Updateables ordered as specified */
     UpdatableVec ups;

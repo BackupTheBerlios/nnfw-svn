@@ -15,6 +15,19 @@ S <mave> comment goes here
     'C' : means that something has been changed (e.g. implementation of a Class or a signature method)
 ==== End of Legend ====
 
+    ==> 270 - 26/03/2008 <==
+
++ <mave> added a method for getting the hidden clusters
++ <mave> speedup BaseNeuralNet::getByName for big networks
++ <mave> added NNFW_VERSION macro
++ <mave> added SimpleTimer class
++ <mave> added erase method to VectorData
++ <mave> added method for calculating MSE and RMSD to LearningAlgorithm
+C <mave> changed LearningAlgorithm interface for dealing with Pattern and PatternSet
++ <mave> added Pattern and PatternSet classes for an easy setup of Learning/Test sets
++ <mave> added BaseNeuralNet::byName template method for an easy retreving of
+	Clusters and Linkers added to BaseNeuralNet objects
+
     ==> 267 - 21/03/2008 <==
 
 C <mave> updated Factory with new output functions

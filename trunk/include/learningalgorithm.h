@@ -26,6 +26,7 @@
 #include "types.h"
 #include "neuralnet.h"
 #include <map>
+#include <cmath>
 
 namespace nnfw {
 
@@ -47,29 +48,21 @@ class BaseNeuralNet;
  *  pat->setInputsOf( anInputCluster, Inputs );
  *  pat->setOutputsOf( anOutputCluster, Outputs );
  *  pat->setInputOutputsOf( anHiddenClusterToReset, Inputs, Outputs );
- *  //--- retrieve stored information
+ *  //--- retrieve stored information:
  *  pat[aCluster].inputs;
  *  pat[anotherCluster].outputs;
+ *  //--- add/modify informations:
+ *  pat[aNewCluster].outputs.assign( aRealVecOfData );
+ *  pat[aNewCluster].outputs += 3.0;
  *  \endcode
  *
  *  \par Warnings
+ *  Pay attention when you use operator[] because it silently add new data. Like std::map::operator[]
  *
  *  \todo Supports for storing all properties of Cluster... storing Linkers info ?!?!
  */
-class Pattern {
+class NNFW_API Pattern {
 public:
-	/*! \name Constructors */
-	//@{
-	/*! Construct an empty Pattern */
-	Pattern();
-	/*! Destructor */
-	~Pattern();
-
-	//@}
-	/*! \name Interface */
-	//@{
-
-	//@}
 	/*! \name Nested Structures */
 	//@{
 	class PatternInfo {
@@ -78,8 +71,73 @@ public:
 		RealVec outputs;
 	};
 	//@}
+	/*! \name Constructors */
+	//@{
+	/*! Construct an empty Pattern */
+	Pattern() : pinfo(), empty() { /*nothing to do*/ };
+	/*! Destructor */
+	~Pattern() { /*nothing to do*/ };
+
+	//@}
+	/*! \name Interface */
+	//@{
+	/*! set the inputs associated with Cluster passed */
+	void setInputsOf( Cluster*, const RealVec& );
+	/*! set the outputs associated with Cluster passed */
+	void setOutputsOf( Cluster*, const RealVec& );
+	/*! set the both inputs and outputs associated with Cluster passed */
+	void setInputsOutputsOf( Cluster*, const RealVec& inputs, const RealVec& outputs );
+
+	/*! return stored information if exists, otherwise it return a zero vector */
+	const RealVec& inputsOf( Cluster* ) const;
+	/*! return stored information if exists, otherwise it return a zero vector */
+	const RealVec& outputsOf( Cluster* ) const;
+
+	/*! return the stored information
+	 *  \warning it silently create a new one if the Cluster passed is not present */
+	PatternInfo& operator[]( Cluster* );
+
+	//@}
 private:
-	std::map<Cluster*, PatternInfo>;
+	mutable std::map<Cluster*, PatternInfo> pinfo;
+	RealVec empty;
+};
+
+/*! \brief PatternSet object
+ *
+ *  \par Motivation
+ *  It represent a collection of Pattern object. It could be a Learning Set or a Training Set
+ *
+ *  \par Description
+ *  PatternSet simply inherit from a VectorData<Pattern>
+ *
+ *  \par Warnings
+ *
+ */
+class NNFW_API PatternSet : public VectorData<Pattern> {
+public:
+    /*! \name Constructors */
+    //@{
+
+    /*! Default Constructor */
+    PatternSet() : VectorData<Pattern>() { };
+
+    /*! Construct a vector of dimension size setting all values to defaul constructor of T */
+    PatternSet( u_int size ) : VectorData<Pattern>( size ) { };
+
+    /*! Construct a vector of dimension size setting all the values as specified */
+    PatternSet( u_int size, Pattern& pat ) : VectorData<Pattern>( size, pat ) { };
+    
+    /*! Construct a VectorData view */
+    PatternSet( PatternSet& src, u_int idS, u_int idE ) : VectorData<Pattern>( src, idS, idE ) { };
+
+    /*! The Copy-Constructor always allocate new memory and copies the data, 
+	 *  even if the source VectorData is a view.
+	 *  Hence, a copy of a VectorData view is not a view but a new copy of data viewed by source.
+	 *  \param src the VectorData to be copied
+     */
+    PatternSet( const PatternSet& src ) : VectorData<Pattern>( src ) { };
+	//@}
 };
 
 /*! \brief LearningAlgorithm object
@@ -104,8 +162,42 @@ public:
 	BaseNeuralNet* net() {
 		return netp;
 	};
-    /*! Modify the object */
-    virtual void learn() = 0;
+
+	/*! a single step of learning algorithm */
+	virtual void learn() = 0;
+
+    /*! Modify the object tring to learn the pattern passed */
+    virtual void learn( const Pattern& ) = 0;
+
+    /*! Modify the object tring to learn all patterns present into PatternSet passed */
+    virtual void learnOnSet( const PatternSet& set ) {
+		for( int i=0; i<(int)set.size(); i++ ) {
+			learn( set[i] );
+		}
+	};
+
+	/*! Calculate the Mean Square Error respect to Pattern passed */
+	virtual Real calculateMSE( const Pattern& ) = 0;
+	
+	/*! Calculate the Mean Square Error respect to all Patterns passed */
+	virtual Real calculateMSEOnSet( const PatternSet& set ) {
+		Real mseacc = 0.0;
+		int dim = (int)set.size();
+		for( int i=0; i<dim; i++ ) {
+			mseacc += calculateMSE( set[i] );
+		}
+		return mseacc/dim;
+	};
+
+	/*! Calculate the Root Mean Square Deviation, i.e. the square root of MSE */
+	Real calculateRMSD( const Pattern& p ) {
+		return sqrt( calculateMSE( p ) );
+	};
+
+	/*! Calculate the Root Mean Square Deviation, i.e. the square root of MSE */
+	Real calculateRMSDOnSet( const PatternSet& p ) {
+		return sqrt( calculateMSEOnSet( p ) );
+	};
 
 	//@}
 

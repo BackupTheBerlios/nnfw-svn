@@ -119,16 +119,14 @@ void BackPropagationAlgo::propagDeltas() {
 	return;
 }
 
-void BackPropagationAlgo::learn( ) {    	
+void BackPropagationAlgo::learn() {
 	// --- zeroing previous step delta information
 	for ( u_int i=0; i<cluster_deltas_vec.size(); ++i ) {
 		if ( cluster_deltas_vec[i].isOutput ) continue;
 		cluster_deltas_vec[i].deltas_outputs.zeroing();
 	}
-
 	// --- propagating the error through the net
 	propagDeltas();
-
 	// --- make the learn !!
 	for ( u_int i=0; i<cluster_deltas_vec.size(); ++i ) {
 		RealVec minus_ones( cluster_deltas_vec[i].cluster->outputs().size( ), -1.0f );
@@ -153,6 +151,40 @@ void BackPropagationAlgo::learn( ) {
 		}
 	}
 	return;
+}
+
+void BackPropagationAlgo::learn( const Pattern& pat ) {
+	// --- set the inputs of the net
+	const ClusterVec& clins = net()->inputClusters();
+	for( u_int i=0; i<clins.size(); i++ ) {
+		clins[i]->inputs().assign( pat.inputsOf( clins[i] ) );
+	}
+	// --- spread the net
+	net()->step();
+	// --- set the teaching input
+	const ClusterVec& clout = net()->outputClusters();
+	for( u_int i=0; i<clout.size(); i++ ) {
+		setTeachingInput( clout[i], pat.outputsOf( clout[i] ) );
+	}
+	learn();
+}
+
+Real BackPropagationAlgo::calculateMSE( const Pattern& pat ) {
+	// --- set the inputs of the net
+	const ClusterVec& clins = net()->inputClusters();
+	for( u_int i=0; i<clins.size(); i++ ) {
+		clins[i]->inputs().assign( pat.inputsOf( clins[i] ) );
+	}
+	// --- spread the net
+	net()->step();
+	// --- calculate the MSE
+	const ClusterVec& clout = net()->outputClusters();
+	Real mseacc = 0.0;
+	int dim = (int)clout.size();
+	for( int i=0; i<dim; i++ ) {
+		mseacc += RealVec::mse( clout[i]->outputs(), pat.outputsOf( clout[i] ) );
+	}
+	return mseacc/dim;
 }
 
 void BackPropagationAlgo::addCluster( Cluster* cl, bool isOut ) {

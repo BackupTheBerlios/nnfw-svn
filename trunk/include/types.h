@@ -42,6 +42,8 @@
 	#define NNFW_TEMPLATE 
 #endif
 
+#define NNFW_VERSION 10100
+
 #include <vector>
 #include <string>
 
