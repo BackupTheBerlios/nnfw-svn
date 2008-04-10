@@ -23,12 +23,13 @@ It's a classic in neural network field.
 \section overture_21 Create the Net
 
 \code
-#include "nnfw.h"
-#include "biasedcluster.h"
-#include "dotlinker.h"
-#include "liboutputfunctions.h"
-#include "backpropagationalgo.h"
-#include "random.h"
+#include "nnfw/nnfw.h"
+#include "nnfw/biasedcluster.h"
+#include "nnfw/dotlinker.h"
+#include "nnfw/liboutputfunctions.h"
+#include "nnfw/backpropagationalgo.h"
+#include "nnfw/random.h"
+
 using namespace nnfw;
 
 //-------- Neural Network Structures
@@ -37,6 +38,7 @@ DotLinker *l1, *l2;
 BaseNeuralNet* net;
 
 int main( int , char*  ) {
+
     Random::setSeed( time(0) );
 
     net = new BaseNeuralNet();
@@ -78,51 +80,39 @@ int main( int , char*  ) {
 \section overture_23 Define the problem... and learn it
 
 \code
-    // --- The learning Set - each row is a pattern
-	RealMat xorT( 4, 3 );
-	xorT[0][0] = 0.0; xorT[0][1] = 0.0; xorT[0][2] = 0.0;
-	xorT[1][0] = 0.0; xorT[1][1] = 1.0; xorT[1][2] = 1.0;
-	xorT[2][0] = 1.0; xorT[2][1] = 0.0; xorT[2][2] = 1.0;
-	xorT[3][0] = 1.0; xorT[3][1] = 1.0; xorT[3][2] = 0.0;
-    Real errorNet;
-    RealVec tmp( 1 );
-    int i;
+    cout.precision( 10 );
+    // --- The learning Set 
+	PatternSet learningSet(4);
+	// --- Input <0,0> -> Output <0>
+	learningSet[0].setInputsOf( in, RealVec() << 0.0 << 0.0 );
+	learningSet[0].setOutputsOf( out, RealVec() << 0.0 );
+	// --- Input <0,1> -> Output <1>
+	learningSet[1].setInputsOf( in, RealVec() << 0.0 << 1.0 );
+	learningSet[1].setOutputsOf( out, RealVec() << 1.0 );
+	// --- Input <1,0> -> Output <1>
+	learningSet[2].setInputsOf( in, RealVec() << 1.0 << 0.0 );
+	learningSet[2].setOutputsOf( out, RealVec() << 1.0 );
+	// --- Input <1,1> -> Output <0>
+	learningSet[3].setInputsOf( in, RealVec() << 1.0 << 1.0 );
+	learningSet[3].setOutputsOf( out, RealVec() << 0.0 );
+
     // --- Main loop for learning the network
+	int i;
     for( i = 0; i<50000; i++ ) {
-        errorNet = 0.0;
-        for( int j = 0; j<4; j++ ) {
-            // --- set the input of current example
-            in->setInput( 0, xorT[j][0] );
-            in->setInput( 1, xorT[j][1] );
-            // --- compute the output
-            net->step();
-            // --- set the Teachin input
-			tmp[0] = xorT[j][2];
-			bp->setTeachingInput( out, tmp );
-			// --- Learn it
-			bp->learn();
-        }
-        // ---- Compare outputs with desired patterns
-        for( int j = 0; j<4; j++ ) {
-            in->setInput( 0, xorT[j][0] );
-            in->setInput( 1, xorT[j][1] );
-            net->step();
-            errorNet += fabs( xorT[j][2] - out->getOutput( 0 ) );
-        }
+		bp->learnOnSet( learningSet );
+		// --- each 1000 iteration print out the error
         if ( i%1000 == 0 ) {
-            cout << "Error: " << errorNet << endl;
-        }
-        if ( errorNet < 0.01 ) {
-            break;
+            cout << "Error: " << bp->calculateMSEOnSet( learningSet ) << endl;
         }
     }
-    cout << "Iterations: " << i << endl;
-    // Compare outputs with desired patterns
-    for( int j = 0; j<4; j++ ) {
-        in->setInput( 0, xorT[j][0] );
-        in->setInput( 1, xorT[j][1] );
-        net->step();
-        cout << "Target: " << xorT[j][2] << "\tRete: " << (out->getOutput( 0 )>0.5 ? 1.0 : 0.0) << "\t" << out->getOutput(0) << endl;
+    cout << "Iterations: " << i << "\tError:" << bp->calculateMSEOnSet( learningSet ) << endl;
+    // --- compare the outputs with learning set
+    for( int i = 0; i<4; i++ ) {
+		in->inputs() = learningSet[i].inputsOf( in );
+		net->step();
+		Real out1 = out->getOutput(0);
+		Real out2 = learningSet[i].outputsOf( out )[0];
+		cout << "Target: " << out2 << "\tRete: " << out1 << endl;
     }
 
     return 0;
@@ -194,9 +184,9 @@ The file that define exactly the neural network used above look like the follow:
 After saved the file, change the example above in that way:
 
 \code
-#include "nnfw.h"
-#include "ionnfw.h"
-#include "backpropagationalgo.h"
+#include "nnfw/nnfw.h"
+#include "nnfw/ionnfw.h"
+#include "nnfw/backpropagationalgo.h"
 using namespace nnfw;
 
 BaseNeuralNet* net;
