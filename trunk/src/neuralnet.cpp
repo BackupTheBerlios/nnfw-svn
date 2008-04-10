@@ -331,15 +331,15 @@ Updatable* BaseNeuralNet::getByName( const char* name ) {
     return NULL;
 }
 
-bool BaseNeuralNet::find( Cluster* cl ) const {
-	return ( clsIdsMap.count( cl ) > 0 );
+bool BaseNeuralNet::find( const Cluster* cl ) const {
+	return ( clsIdsMap.count( (Cluster*)cl ) > 0 );
 }
 
-bool BaseNeuralNet::find( Linker* l ) const {
-	return ( lksIdsMap.count( l ) > 0 );
+bool BaseNeuralNet::find( const Linker* l ) const {
+	return ( lksIdsMap.count( (Linker*)l ) > 0 );
 }
 
-bool BaseNeuralNet::find( Updatable* u ) const {
+bool BaseNeuralNet::find( const Updatable* u ) const {
 	return (
 		( clsIdsMap.count( (Cluster*)u ) > 0 ) ||
 		( lksIdsMap.count( (Linker*)u ) > 0 )

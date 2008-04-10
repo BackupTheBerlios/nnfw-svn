@@ -193,15 +193,15 @@ public:
 
     /*! Return true if the Cluster is in this net
      */
-    bool find( Cluster* ) const;
+    bool find( const Cluster* ) const;
 
     /*! Return true if the Linker is in this net
      */
-    bool find( Linker* ) const;
+    bool find( const Linker* ) const;
 
     /*! Return true if the Updatable object is in this net
      */
-    bool find( Updatable* ) const;
+    bool find( const Updatable* ) const;
 
 	/*! Clone this BaseNeuralNet */
 	BaseNeuralNet* clone() const;
