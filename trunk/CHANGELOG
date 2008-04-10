@@ -15,6 +15,10 @@ S <mave> comment goes here
     'C' : means that something has been changed (e.g. implementation of a Class or a signature method)
 ==== End of Legend ====
 
+    ==> 273 - 10/04/2008 <==
+
+B <mave> Fixed bug in BaseNeuralNet::randomize
+
     ==> 271 - 10/04/2008 - 1.1.0 release <==
 
 + <mave> re-changed BaseNeuralNet::find methods, they accept const pointers

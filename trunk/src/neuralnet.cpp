@@ -313,6 +313,7 @@ void BaseNeuralNet::randomize( Real min, Real max ) {
 	for( int i=0; i<dim; i++ ) {
 		clustersv[i]->randomize( min, max );
 	}
+	dim = linkersv.size();
 	for( int i=0; i<dim; i++ ) {
 		linkersv[i]->randomize( min, max );
 	}
