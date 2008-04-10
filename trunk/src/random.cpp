@@ -101,7 +101,7 @@ int Random::flatInt( int min, int max ) {
 #ifdef NNFW_USE_GSL
     return ( gsl_rng_get(rnd) % (max-min) ) + min;
 #else
-    return (int)(rand() % (max-min) + min-1);
+    return (int)(rand() % (max-min) + min);
 #endif
 }
 
