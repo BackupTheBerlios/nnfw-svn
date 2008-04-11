@@ -4,7 +4,7 @@ SET( CMAKE_COLOR_MAKEFILE ON )
 ###### VERSION INFORMATION
 SET( VER_MAJ 1 )
 SET( VER_MIN 1 )
-SET( VER_PAT 0 )
+SET( VER_PAT 1 )
 
 ### Configure of Library
 ### a string variable that contains configuration keys separated by with spaces:
