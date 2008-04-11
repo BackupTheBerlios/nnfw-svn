@@ -1,3 +1,8 @@
+======= 1.1.1 Release =======
+  * Bugfixs
+	- Fixed bug in Random::flatInt() when GSL is not used
+	- Fixed bug in BaseNeuralNet::randomize
+
 ======= 1.1.0 Release =======
   * WARNING:
 	The LinearFunction of previous version is now called RampFunction. From this version
