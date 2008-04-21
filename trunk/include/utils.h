@@ -27,7 +27,10 @@
  */
 
 #include "types.h"
-#include <sys/time.h>
+
+#ifndef WIN32
+	#include <sys/time.h>
+#endif
 
 namespace nnfw {
 
@@ -60,19 +63,38 @@ NNFW_API BaseNeuralNet* feedForwardNet( U_IntVec layers, const char* clusterType
 class SimpleTimer {
 public:
 	SimpleTimer() {
+#ifdef WIN32
+		QueryPerformanceFrequency( &frequency );
+		QueryPerformanceCounter( &baseCount );
+#else
 		struct timeval tv;
 		gettimeofday( &tv, NULL );
 		lastTime = tv.tv_sec*1000000 + tv.tv_usec;
+#endif
 	};
 	int tac() {
+#ifdef WIN32
+		unsigned ticks;
+		QueryPerformanceCounter( &count );
+		count.QuadPart -= baseCount.QuadPart;
+		ticks = unsigned( count.QuadPart * LONGLONG (1000000) / frequency.QuadPart );
+		return ticks;
+#else
 		struct timeval tv;
 		gettimeofday( &tv, NULL );
 		int ret = (tv.tv_sec*1000000 + tv.tv_usec) - lastTime;
 		lastTime = (tv.tv_sec*1000000 + tv.tv_usec);
 		return ret;
+#endif
 	};
 private:
+#ifdef WIN32
+	LARGE_INTEGER count;
+	LARGE_INTEGER frequency;
+	LARGE_INTEGER baseCount;
+#else
 	long int lastTime;
+#endif
 };
 
 }
