@@ -14,6 +14,11 @@ S <mave> comment goes here
     'B' : means a BugFix
     'C' : means that something has been changed (e.g. implementation of a Class or a signature method)
 ==== End of Legend ====
+    ==> 278 - 21/04/2008 - 1.1.2 release <==
+
+B <mave> fixed installer problems
+B <mave> resolved implementation bug of SimpleTimer on Windows
+
     ==> 275 - 11/04/2008 - 1.1.1 release <==
     ==> 274 - 10/04/2008 <==
 

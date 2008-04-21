@@ -186,5 +186,10 @@ IF( WIN32 AND NOT UNIX )
     ENDIF ( NNFW_CONFIG MATCHES double )
 	TARGET_LINK_LIBRARIES( nnfw "QtXml4" )
 	TARGET_LINK_LIBRARIES( nnfw "QtCore4" )
+
+	## the creation of NNFWConfig.cmake for windows is to correct... fix it
+	CONFIGURE_FILE( ${NNFW_SOURCE_DIR}/bin/nnfw-config_template ${NNFW_BINARY_DIR}/nnfw-config @ONLY IMMEDIATE )
+	CONFIGURE_FILE( ${NNFW_SOURCE_DIR}/NNFWConfig.cmake ${NNFW_BINARY_DIR}/NNFWConfig.cmake @ONLY IMMEDIATE )
+
 ENDIF( WIN32 AND NOT UNIX )
 
