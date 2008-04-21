@@ -1,3 +1,8 @@
+======= 1.1.2 Release =======
+  * Bugfixs
+	- fixed windows installer problems
+	- resolved implementation bug of SimpleTimer on Windows
+
 ======= 1.1.1 Release =======
   * Bugfixs
 	- Fixed bug in Random::flatInt() when GSL is not used
