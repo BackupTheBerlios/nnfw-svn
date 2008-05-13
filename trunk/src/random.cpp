@@ -101,7 +101,7 @@ int Random::flatInt( int min, int max ) {
 #ifdef NNFW_DEBUG
 	if ( min == max ) {
 		nFatal() << "You cannot specify identical min and max values in Random::flatInt" ;
-		return;
+		return min;
 	}
 #endif
 #ifdef NNFW_USE_GSL
