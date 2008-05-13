@@ -707,7 +707,7 @@ QDomNode createPropertyFragment( Variant v, QDomDocument doc, QDomElement elem, 
         for( u_int r=0; r<mv->rows(); r++ ) {
 			complex.append( "\n" + indentation );
             for( u_int c=0; c<mv->cols(); c++ ) {
-				complex.append( QString("%1").arg( mv->at( r, c ), 10, 'g', precision ) );
+				complex.append( QString("%1").arg( mv->at( r, c ), qMax(6, precision+4), 'g', precision ) );
             }
         }
 		complex.append( "\n" + indentation );
