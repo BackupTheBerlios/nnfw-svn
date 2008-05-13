@@ -642,19 +642,35 @@ BaseNeuralNet* loadXML( const char* filename ) {
 
 void saveProperties( QDomDocument doc, QDomElement parent, Propertized* obj, QStringList skip, int precision );
 
+int calcLevelOfIndentation( QDomNode node ) {
+	int i=0;
+	while( ! node.parentNode().isNull() ) {
+		i++;
+		node = node.parentNode();
+	}
+	return i;
+}
+
 QDomNode createPropertyFragment( Variant v, QDomDocument doc, QDomElement elem, int precision ) {
     QDomNode sub;
     QString complex; // --- used for create string representation of RealVec and RealMat
     const RealVec* rv;
     const RealMat* mv;
-    switch( v.type() ) {
+	//--- create a string used to indent row of matrices
+	int level = calcLevelOfIndentation( elem );
+	QString indentation;
+	for( int i=0; i<level-1; i++ ) {
+		indentation.append( "  " );
+	}
+
+	switch( v.type() ) {
     case Variant::t_null:
         break;
 	case Variant::t_dataptr:
 		nError() << "Impossible to save a generic data pointer";
 		break;
     case Variant::t_real:
-        sub = doc.createTextNode( QString(" %1 ").arg( v.getReal(), 0, 'e', precision ) );
+        sub = doc.createTextNode( QString(" %1 ").arg( v.getReal(), 0, 'g', precision ) );
         break;
     case Variant::t_int:
         sub = doc.createTextNode( QString(" %1 ").arg( v.getInt() ) );
@@ -681,7 +697,7 @@ QDomNode createPropertyFragment( Variant v, QDomDocument doc, QDomElement elem, 
     case Variant::t_realvec:
         rv = v.getRealVec();
         for( u_int i=0; i<rv->size(); i++ ) {
-            complex.append( QString(" %1").arg( rv->at(i), 0, 'e', precision ) );
+            complex.append( QString(" %1").arg( rv->at(i), 0, 'g', precision ) );
         }
         complex.append( " " );
         sub = doc.createTextNode( complex );
@@ -689,12 +705,12 @@ QDomNode createPropertyFragment( Variant v, QDomDocument doc, QDomElement elem, 
     case Variant::t_realmat:
         mv = v.getRealMat();
         for( u_int r=0; r<mv->rows(); r++ ) {
+			complex.append( "\n" + indentation );
             for( u_int c=0; c<mv->cols(); c++ ) {
-                complex.append( QString(" %1").arg( mv->at( r, c ), 0, 'e', precision ) );
+				complex.append( QString("%1").arg( mv->at( r, c ), 10, 'g', precision ) );
             }
-            complex.append( " " );
-            //complex.append( "\n" );
         }
+		complex.append( "\n" + indentation );
         sub = doc.createTextNode( complex );
         break;
     case Variant::t_outfunction:
@@ -727,7 +743,7 @@ QString createAttributeContent( Variant v, int precision ) {
 		return QString();
 		break;
     case Variant::t_real:
-        return QString("%1").arg( v.getReal(), 0, 'e', precision );
+        return QString("%1").arg( v.getReal(), 0, 'g', precision );
         break;
     case Variant::t_int:
         return QString("%1").arg( v.getInt() );
@@ -831,7 +847,11 @@ void saveProperties( QDomDocument doc, QDomElement parent, Propertized* obj, QSt
     }
 }
 
-bool saveXML( const char* filename, BaseNeuralNet* net, int precision ) {
+bool saveXML( const char* filename, BaseNeuralNet* net, const char* skipList ) {
+	return saveXML( filename, net, -1, skipList );
+}
+
+bool saveXML( const char* filename, BaseNeuralNet* net, int precision, const char* skipList ) {
     QDomDocument doc("nnfw-xml");
     QDomElement root = doc.createElement( "nnfw" );
     root.setAttribute( "version", "1.1" );
@@ -839,6 +859,13 @@ bool saveXML( const char* filename, BaseNeuralNet* net, int precision ) {
 
     QDomElement nn = doc.createElement( "neuralnet" );
     root.appendChild( nn );
+
+	//--- configure the skiplist
+	QStringList userSkipList;
+	if ( skipList ) {
+		QString str = QString(skipList).simplified();
+		userSkipList = str.split( ' ', QString::SkipEmptyParts );
+	}
 
     const ClusterVec& cls = net->clusters();
     for( unsigned int i=0; i<cls.size(); i++ ) {

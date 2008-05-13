@@ -12,6 +12,7 @@ Thanks: ( randomly ordered ;-) )
 		first version of backpropagation algorithm
 	* Fabio Ruini
 		implementation of RealMat::flatRealMat()
+		Mac OS X tester
     * Federico Cecconi
         for consulting about project design
     * Marco Mirolli

@@ -98,6 +98,12 @@ u_int Random::flatInt( u_int x ) {
 }
 
 int Random::flatInt( int min, int max ) {
+#ifdef NNFW_DEBUG
+	if ( min == max ) {
+		nFatal() << "You cannot specify identical min and max values in Random::flatInt" ;
+		return;
+	}
+#endif
 #ifdef NNFW_USE_GSL
     return ( gsl_rng_get(rnd) % (max-min) ) + min;
 #else

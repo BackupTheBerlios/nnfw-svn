@@ -253,6 +253,7 @@ void Factory::initFactory() {
 	
 	outfuntypes["FakeSigmoidFunction"] = new Creator<FakeSigmoidFunction>();
 	outfuntypes["IdentityFunction"] = new Creator<IdentityFunction>();
+	outfuntypes["GainFunction"] = new Creator<GainFunction>();
 	outfuntypes["LinearFunction"] = new Creator<LinearFunction>();
 	outfuntypes["RampFunction"] = new Creator<RampFunction>();
 	outfuntypes["ScaleFunction"] = new Creator<ScaleFunction>();
@@ -260,6 +261,7 @@ void Factory::initFactory() {
 	outfuntypes["SigmoidFunction"] = new Creator<SigmoidFunction>();
 	outfuntypes["StepFunction"] = new Creator<StepFunction>();
 	outfuntypes["LeakyIntegratorFunction"] = new Creator<LeakyIntegratorFunction>();
+	outfuntypes["LogLikeFunction"] = new Creator<LogLikeFunction>();
 	outfuntypes["PoolFunction"] = new Creator<PoolFunction>();
 	outfuntypes["CompositeFunction"] = new Creator<CompositeFunction>();
 	outfuntypes["LinearComboFunction"] = new Creator<LinearComboFunction>();

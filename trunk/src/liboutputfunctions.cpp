@@ -85,6 +85,39 @@ ScaleFunction* ScaleFunction::clone() const {
     return new ScaleFunction( rate );
 }
 
+GainFunction::GainFunction( Real gain )
+    : OutputFunction() {
+	gainv = gain;
+    addProperty( "gain", Variant::t_real, this, &GainFunction::gain, &GainFunction::setGain );
+    setTypename( "GainFunction" );
+}
+
+GainFunction::GainFunction( PropertySettings& prop )
+    : OutputFunction() {
+	gainv = 1.0;
+    addProperty( "gain", Variant::t_real, this, &GainFunction::gain, &GainFunction::setGain );
+    setProperties( prop );
+    setTypename( "GainFunction" );
+}
+
+bool GainFunction::setGain( const Variant& v ) {
+    gainv = v.getReal();
+    return true;
+}
+
+Variant GainFunction::gain() {
+    return Variant( gainv );
+}
+
+void GainFunction::apply( RealVec& inputs, RealVec& outputs ) {
+    outputs.assign( inputs );
+	outputs += gainv;
+}
+
+GainFunction* GainFunction::clone() const {
+    return new GainFunction( gainv );
+}
+
 SigmoidFunction::SigmoidFunction( Real l ) : DerivableOutputFunction() {
     lambda = l;
     addProperty( "lambda", Variant::t_real, this, &SigmoidFunction::getLambda, &SigmoidFunction::setLambda );
@@ -561,6 +594,61 @@ void LeakyIntegratorFunction::setCluster( Cluster* c ) {
 		delta.resize( c->numNeurons() );
 		outprev.resize( c->numNeurons() );
 	}
+}
+
+LogLikeFunction::LogLikeFunction( Real A, Real B )
+    : OutputFunction() {
+	a = A;
+	b = B;
+	addProperty( "A", Variant::t_real, this, &LogLikeFunction::getAV, &LogLikeFunction::setBV );
+	addProperty( "B", Variant::t_real, this, &LogLikeFunction::getAV, &LogLikeFunction::setBV );
+	setTypename( "LogLikeFunction" );
+}
+
+LogLikeFunction::LogLikeFunction( PropertySettings& prop )
+    : OutputFunction() {
+	a = 1.0;
+	b = 5.0;
+	addProperty( "A", Variant::t_real, this, &LogLikeFunction::getAV, &LogLikeFunction::setBV );
+	addProperty( "B", Variant::t_real, this, &LogLikeFunction::getAV, &LogLikeFunction::setBV );
+	setProperties( prop );
+	setTypename( "LogLikeFunction" );
+}
+
+void LogLikeFunction::apply( RealVec& inputs, RealVec& outputs ) {
+#ifdef NNFW_DEBUG
+    if ( inputs.size() != outputs.size() ) {
+        nError() << "The output dimension doesn't match the input dimension" ;
+        return;
+    }
+#endif
+	//--- y <- x / ( 1+A*x+b )
+	outputs.assign_amulx( a, inputs );
+	outputs += 1.0+b;
+	outputs.inv();
+	outputs *= inputs;
+}
+
+Variant LogLikeFunction::getAV() {
+	return Variant( a );
+}
+
+bool LogLikeFunction::setAV( const Variant& v ) {
+	setA( v.getReal() );
+	return true;
+}
+
+Variant LogLikeFunction::getBV() {
+	return Variant( b );
+}
+
+bool LogLikeFunction::setBV( const Variant& v ) {
+	setB( v.getReal() );
+	return true;
+}
+
+LogLikeFunction* LogLikeFunction::clone() const {
+	return ( new LogLikeFunction( a, b ) );
 }
 
 PoolFunction::PoolFunction( const OutputFunction& prototype, u_int dim )

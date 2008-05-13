@@ -42,8 +42,17 @@ namespace nnfw {
 class BaseNeuralNet;
 /*! Load the net from an XML file, and return a BaseNeuralNet */
 NNFW_API BaseNeuralNet* loadXML( const char* filename );
+/*! Save the BaseNeuralNet passed into an XML file; return true on success
+ *  \param filename the file on which the net will be saved. All previous data will be overwritten
+ *  \param net the Neural Network to save
+ *  \param precision the number of significant decimal digits to save
+ *  \param skipList a list of properties separeted by spaces to skip during saving
+ *         (It will not save those properties) (ex: "inputs outputs")
+ */
+NNFW_API bool saveXML( const char* filename, BaseNeuralNet* net, int precision = -1, const char* skipList = 0 );
+
 /*! Save the BaseNeuralNet passed into an XML file; return true on success */
-NNFW_API bool saveXML( const char* filename, BaseNeuralNet*, int precision = -1 );
+NNFW_API bool saveXML( const char* filename, BaseNeuralNet*, const char* skipList );
 
 //@}
 

@@ -125,6 +125,52 @@ private:
 	Real rate;
 };
 
+/*! \brief GainFunction
+ *
+ * GainFunction add a constan value to inputs
+ *
+ *   <table class="proptable">
+ *   <tr><td class="prophead" colspan="5">Properties</td></tr>
+ *   <tr><th>Name</th> <th>Type [isVector]</th> <th>Access mode</th> <th>Description</th> <th>Class</th></tr>
+ *   <tr><td>typename</td> <td>string</td> <td>read-only</td> <td> Class's type </td> <td>Propertized</td> </tr>
+ *   <tr><td>gain</td> <td>Real</td> <td>read/write</td> <td> value to add to inputs </td> <td>this</td> </tr>
+ *   </table>
+ */
+class NNFW_API GainFunction : public OutputFunction {
+public:
+	/*! \name Constructors */
+	//@{
+	
+	/*! Construct */
+	GainFunction( Real gain = 1.0 );
+	
+	/*! Construct */
+	GainFunction( PropertySettings& prop );
+	
+	/*! Destructor */
+	virtual ~GainFunction() { /* Nothing to do */ };
+	
+	//@}
+	/*! \name Interface */
+	//@{
+	
+	/*! Set the Gain */
+	bool setGain( const Variant& v );
+	
+	/*! Return the Gain function */
+	Variant gain();
+	
+	/*! Implement the Gain function */
+	virtual void apply( RealVec& inputs, RealVec& outputs );
+	
+	/*! Clone this object */
+	virtual GainFunction* clone() const;
+	
+	//@}
+private:
+	Real gainv;
+};
+
 /*! \brief Sigmoid Function
  *
  * Details..
@@ -604,6 +650,86 @@ public:
     RealVec delta;
 	/*! previous outputs */
 	RealVec outprev;
+};
+
+/*! \brief LogLike Function !! 
+ *
+ *  It compute the following equation:
+ *  \f[
+ *     y = \frac{x}{ 1+Ax+B }
+ *  \f]
+ *
+ *   <table class="proptable">
+ *   <tr><td class="prophead" colspan="5">Properties</td></tr>
+ *   <tr><th>Name</th> <th>Type [isVector]</th> <th>Access mode</th> <th>Description</th> <th>Class</th></tr>
+ *   <tr><td>typename</td> <td>string</td> <td>read-only</td> <td> Class's type </td> <td>Propertized</td> </tr>
+ *   <tr><td>A</td> <td>Real</td> <td>read/write</td> <td> A coefficient </td> <td>this</td> </tr>
+ *   <tr><td>B</td> <td>Real</td> <td>read/write</td> <td> B coefficient </td> <td>this</td> </tr>
+ *   </table>
+ */
+class NNFW_API LogLikeFunction : public OutputFunction {
+public:
+    /*! \name Constructors */
+    //@{
+
+    /*! Construct a LogLike with deltas specified */
+    LogLikeFunction( Real A=1.0, Real B=5.0 );
+
+    /*! Construct from PropertySettings */
+    LogLikeFunction( PropertySettings& prop );
+
+    /*! Destructor */
+    virtual ~LogLikeFunction() { /* Nothing to do */ };
+
+    //@}
+    /*! \name Interface */
+    //@{
+
+    /*! Return the A coefficient setted */
+    Real A() {
+		return a;
+	};
+
+    /*! Set the A coefficient */
+    void setA( Real na ) {
+		a = na;
+	};
+
+    /*! Return the A coeffiecient setted (Variant version) */
+    Variant getAV();
+
+    /*! Set the A coefficient (Variant version) */
+    bool setAV( const Variant& v );
+
+    /*! Return the B coefficient setted */
+    Real B() {
+		return b;
+	};
+
+    /*! Set the B coefficient */
+    void setB( Real nb ) {
+		b = nb;
+	};
+
+    /*! Return the B coeffiecient setted (Variant version) */
+    Variant getBV();
+
+    /*! Set the B coefficient (Variant version) */
+    bool setBV( const Variant& v );
+
+    /*! Implement the updating method */
+    virtual void apply( RealVec& inputs, RealVec& outputs );
+
+    /*! Clone this object */
+    virtual LogLikeFunction* clone() const;
+
+    //@}
+
+private:
+	/*! A coefficient */
+	Real a;
+	/*! B coefficient */
+	Real b;
 };
 
 /*! \brief Pool of Functions

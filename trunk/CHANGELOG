@@ -14,6 +14,16 @@ S <mave> comment goes here
     'B' : means a BugFix
     'C' : means that something has been changed (e.g. implementation of a Class or a signature method)
 ==== End of Legend ====
+
+    ==> 280 - 13/05/2008 - 1.1.3 release <==
+
+C <mave> prettyfied printing of RealMat on XML file
++ <mave> added a check to Random::flatInt(min,max) when NNFW is in Debug mode
++ <mave> added new GainFunction to OutputFunction hierarchy
++ <mave> added new LogLikeFunction to OutputFunction hierarchy
++ <mave> added skipList parameter to saveXML
+C <mave> resolved real number printing unfriendly
+
     ==> 278 - 21/04/2008 - 1.1.2 release <==
 
 B <mave> fixed installer problems
