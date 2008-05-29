@@ -866,6 +866,8 @@ bool saveXML( const char* filename, BaseNeuralNet* net, int precision, const cha
 		QString str = QString(skipList).simplified();
 		userSkipList = str.split( ' ', QString::SkipEmptyParts );
 	}
+	//--- add properties saved explicitly into <cluster> and <linker> attributes
+	userSkipList << "numNeurons" << "typename" << "name" << "to" << "from";
 
     const ClusterVec& cls = net->clusters();
     for( unsigned int i=0; i<cls.size(); i++ ) {
@@ -873,7 +875,7 @@ bool saveXML( const char* filename, BaseNeuralNet* net, int precision, const cha
         elem.setAttribute( "numNeurons", cls[i]->numNeurons() );
         elem.setAttribute( "type", cls[i]->getTypename().getString() );
         elem.setAttribute( "name", cls[i]->name() );
-        saveProperties( doc, elem, cls[i], QStringList() << "numNeurons" << "typename" << "name", precision );
+        saveProperties( doc, elem, cls[i], userSkipList, precision );
         nn.appendChild( elem );
     }
 
@@ -885,7 +887,7 @@ bool saveXML( const char* filename, BaseNeuralNet* net, int precision, const cha
         elem.setAttribute( "type", ls[i]->getTypename().getString() );
         elem.setAttribute( "name", ls[i]->name() );
         nn.appendChild( elem );
-        saveProperties( doc, elem, ls[i], QStringList() << "to" << "from" << "typename" << "name", precision );
+        saveProperties( doc, elem, ls[i], userSkipList, precision );
     }
 
 	QDomElement elem = doc.createElement( "inputs" );
