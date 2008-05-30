@@ -654,6 +654,7 @@ int calcLevelOfIndentation( QDomNode node ) {
 QDomNode createPropertyFragment( Variant v, QDomDocument doc, QDomElement elem, int precision ) {
     QDomNode sub;
     QString complex; // --- used for create string representation of RealVec and RealMat
+	QVector<int> colsize; //--- keep dimension of columns while saving matrix data
     const RealVec* rv;
     const RealMat* mv;
 	//--- create a string used to indent row of matrices
@@ -704,12 +705,20 @@ QDomNode createPropertyFragment( Variant v, QDomDocument doc, QDomElement elem, 
         break;
     case Variant::t_realmat:
         mv = v.getRealMat();
-        for( u_int r=0; r<mv->rows(); r++ ) {
+		colsize.resize( mv->cols() );
+		colsize.fill( 0 );
+		for( u_int r=0; r<mv->rows(); r++ ) {
+			for( u_int c=0; c<mv->cols(); c++ ) {
+				int size = QString("%1").arg( mv->at( r, c ), 0, 'g', precision ).size();
+				colsize[c] = qMax( size, colsize[c] );
+			}
+		}
+		for( u_int r=0; r<mv->rows(); r++ ) {
 			complex.append( "\n" + indentation );
-            for( u_int c=0; c<mv->cols(); c++ ) {
-				complex.append( QString("%1").arg( mv->at( r, c ), qMax(6, precision+4), 'g', precision ) );
-            }
-        }
+			for( u_int c=0; c<mv->cols(); c++ ) {
+				complex.append( QString("%1").arg( mv->at( r, c ), colsize[c]+2, 'g', precision ) );
+			}
+		}
 		complex.append( "\n" + indentation );
         sub = doc.createTextNode( complex );
         break;
@@ -872,22 +881,22 @@ bool saveXML( const char* filename, BaseNeuralNet* net, int precision, const cha
     const ClusterVec& cls = net->clusters();
     for( unsigned int i=0; i<cls.size(); i++ ) {
         QDomElement elem = doc.createElement( "cluster" );
-        elem.setAttribute( "numNeurons", cls[i]->numNeurons() );
-        elem.setAttribute( "type", cls[i]->getTypename().getString() );
-        elem.setAttribute( "name", cls[i]->name() );
+		elem.setAttribute( "numNeurons", cls[i]->numNeurons() );
+		elem.setAttribute( "type", cls[i]->getTypename().getString() );
+		elem.setAttribute( "name", cls[i]->name() );
         saveProperties( doc, elem, cls[i], userSkipList, precision );
         nn.appendChild( elem );
     }
 
     const LinkerVec& ls = net->linkers();
     for( unsigned int i=0; i<ls.size(); i++ ) {
-        QDomElement elem = doc.createElement( "linker" );
-        elem.setAttribute( "to", ls[i]->to()->name() );
-        elem.setAttribute( "from", ls[i]->from()->name() );
-        elem.setAttribute( "type", ls[i]->getTypename().getString() );
-        elem.setAttribute( "name", ls[i]->name() );
-        nn.appendChild( elem );
-        saveProperties( doc, elem, ls[i], userSkipList, precision );
+		QDomElement elem = doc.createElement( "linker" );
+		elem.setAttribute( "to", ls[i]->to()->name() );
+		elem.setAttribute( "from", ls[i]->from()->name() );
+		elem.setAttribute( "type", ls[i]->getTypename().getString() );
+		elem.setAttribute( "name", ls[i]->name() );
+		nn.appendChild( elem );
+		saveProperties( doc, elem, ls[i], userSkipList, precision );
     }
 
 	QDomElement elem = doc.createElement( "inputs" );
