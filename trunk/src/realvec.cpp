@@ -29,7 +29,7 @@
 namespace nnfw {
 
 #ifdef NNFW_USE_MKL
-int inutile = vmlSetMode( VML_LA );
+NNFW_INTERNAL int inutile = vmlSetMode( VML_LA );
 #endif
 
 RealVec::RealVec( u_int size )

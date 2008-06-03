@@ -37,9 +37,20 @@
 		#define NNFW_API __declspec(dllimport)
 		#define NNFW_TEMPLATE 
 	#endif
+	#ifdef NNFW_DONT_EXPORT
+		#define NNFW_API 
+		#define NNFW_TEMPLATE 
+	#endif
+	#define NNFW_INTERNAL 
 #else
-	#define NNFW_API
-	#define NNFW_TEMPLATE 
+	#ifdef NNFW_DONT_EXPORT
+		#define NNFW_API __attribute__ ((visibility ("hidden")))
+		#define NNFW_TEMPLATE __attribute__ ((visibility ("hidden")))
+	#else
+		#define NNFW_API
+		#define NNFW_TEMPLATE 
+	#endif
+	#define NNFW_INTERNAL __attribute__ ((visibility ("hidden")))
 #endif
 
 #define NNFW_VERSION 10400
@@ -100,10 +111,10 @@ class Linker;
 typedef VectorData<Linker*> LinkerVec;
 
 /*! Empty LinkerVec constant */
-extern const LinkerVec emptyLinkerVec;
+extern NNFW_API const LinkerVec emptyLinkerVec;
 
 /*! Empty ClusterVec constant */
-extern const ClusterVec emptyClusterVec;
+extern NNFW_API const ClusterVec emptyClusterVec;
 
 class BaseTeachBlock;
 /*! Array of Updatable */

@@ -41,7 +41,7 @@ namespace nnfw {
  *  Updatable object as SimpleCluster needs a Modifier in order to have a complet map factory
  *  and avoid checks
  */
-class DummyModifier : public AbstractModifier {
+class NNFW_INTERNAL DummyModifier : public AbstractModifier {
 public:
     /*! \name Interface */
     //@{
@@ -58,7 +58,7 @@ public:
 
 /*! \brief BiasedClusterModifier
  */
-class BiasedClusterModifier : public AbstractModifier {
+class NNFW_INTERNAL BiasedClusterModifier : public AbstractModifier {
 public:
     /*! \name Interface */
     //@{
@@ -85,7 +85,7 @@ private:
 
 /*! \brief MatrixLinkerModifier
  */
-class MatrixLinkerModifier : public AbstractModifier {
+class NNFW_INTERNAL MatrixLinkerModifier : public AbstractModifier {
 public:
     /*! \name Interface */
     //@{
@@ -112,7 +112,7 @@ private:
 
 /*! \brief SparseMatrixLinkerModifier
  */
-class SparseMatrixLinkerModifier : public AbstractModifier {
+class NNFW_INTERNAL SparseMatrixLinkerModifier : public AbstractModifier {
 public:
     /*! \name Interface */
     //@{

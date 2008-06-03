@@ -33,7 +33,7 @@
 
 namespace nnfw {
 
-void parseProperty_10( QDomElement cur, const Propertized* obj ) {
+NNFW_INTERNAL void parseProperty_10( QDomElement cur, const Propertized* obj ) {
     AbstractPropertyAccess* pacc = obj->propertySearch( cur.tagName().toAscii().constData() );
     if ( !pacc ) {
         nError() << "the property " << cur.tagName().toAscii().constData() << " doesn't exist in "
@@ -219,7 +219,7 @@ void parseProperty_10( QDomElement cur, const Propertized* obj ) {
     return;
 }
 
-void parseCluster_10( QDomElement cur, BaseNeuralNet* net ) {
+NNFW_INTERNAL void parseCluster_10( QDomElement cur, BaseNeuralNet* net ) {
     // --- parsing tag <cluster>
     QString name = cur.attribute( "name" );
     if ( name.isNull() ) {
@@ -274,7 +274,7 @@ void parseCluster_10( QDomElement cur, BaseNeuralNet* net ) {
     }
 }
 
-void parseCluster_11( QDomElement cur, BaseNeuralNet* net ) {
+NNFW_INTERNAL void parseCluster_11( QDomElement cur, BaseNeuralNet* net ) {
     // --- parsing tag <cluster>
     PropertySettings prop;
 	QDomNamedNodeMap amap = cur.attributes();
@@ -325,7 +325,7 @@ void parseCluster_11( QDomElement cur, BaseNeuralNet* net ) {
     }
 }
 
-void parseLinker_10( QDomElement cur, BaseNeuralNet* net ) {
+NNFW_INTERNAL void parseLinker_10( QDomElement cur, BaseNeuralNet* net ) {
     // --- parsing tag <linker>
     QString name = cur.attribute( "name" );
     if ( name.isNull() ) {
@@ -400,7 +400,7 @@ void parseLinker_10( QDomElement cur, BaseNeuralNet* net ) {
     }
 }
 
-void parseLinker_11( QDomElement cur, BaseNeuralNet* net ) {
+NNFW_INTERNAL void parseLinker_11( QDomElement cur, BaseNeuralNet* net ) {
     // --- parsing tag <linker>
     PropertySettings prop;
 	QDomNamedNodeMap amap = cur.attributes();
@@ -451,7 +451,7 @@ void parseLinker_11( QDomElement cur, BaseNeuralNet* net ) {
     }
 }
 
-void parseOrder_10( QDomElement cur, BaseNeuralNet* net ) {
+NNFW_INTERNAL void parseOrder_10( QDomElement cur, BaseNeuralNet* net ) {
     // --- parsing tag <order>
     QStringList list = cur.text().simplified().split( ' ', QString::SkipEmptyParts );
     UpdatableVec ord;
@@ -467,7 +467,7 @@ void parseOrder_10( QDomElement cur, BaseNeuralNet* net ) {
     net->setOrder( ord );
 }
 
-void parseOutputs_10( QDomElement cur, BaseNeuralNet* net ) {
+NNFW_INTERNAL void parseOutputs_10( QDomElement cur, BaseNeuralNet* net ) {
     // --- parsing tag <outputs>
     QStringList list = cur.text().simplified().split( ' ', QString::SkipEmptyParts );
     for( int i=0; i<list.size(); i++ ) {
@@ -481,7 +481,7 @@ void parseOutputs_10( QDomElement cur, BaseNeuralNet* net ) {
     }
 }
 
-void parseInputs_10( QDomElement cur, BaseNeuralNet* net ) {
+NNFW_INTERNAL void parseInputs_10( QDomElement cur, BaseNeuralNet* net ) {
     // --- parsing tag <inputs>
     QStringList list = cur.text().simplified().split( ' ', QString::SkipEmptyParts );
     for( int i=0; i<list.size(); i++ ) {
@@ -495,7 +495,7 @@ void parseInputs_10( QDomElement cur, BaseNeuralNet* net ) {
     }
 }
 
-void parseConfigure_10( QDomElement cur, BaseNeuralNet* net ) {
+NNFW_INTERNAL void parseConfigure_10( QDomElement cur, BaseNeuralNet* net ) {
     // --- parsing tag <configure>
     QString name = cur.attribute( "name" );
     if ( name.isNull() ) {
@@ -520,7 +520,7 @@ void parseConfigure_10( QDomElement cur, BaseNeuralNet* net ) {
     }
 }
 
-void parseNeuralnet_10( QDomElement cur, BaseNeuralNet* net ) {
+NNFW_INTERNAL void parseNeuralnet_10( QDomElement cur, BaseNeuralNet* net ) {
     QDomNode child = cur.firstChild().toElement();
     if ( child.toElement().isNull() ) {
         nError() << "Syntax error" ;
@@ -564,7 +564,7 @@ void parseNeuralnet_10( QDomElement cur, BaseNeuralNet* net ) {
     }
 }
 
-void parseNeuralnet_11( QDomElement cur, BaseNeuralNet* net ) {
+NNFW_INTERNAL void parseNeuralnet_11( QDomElement cur, BaseNeuralNet* net ) {
     QDomNode child = cur.firstChild().toElement();
     if ( child.toElement().isNull() ) {
         nError() << "Syntax error" ;
@@ -640,9 +640,9 @@ BaseNeuralNet* loadXML( const char* filename ) {
     return net;
 }
 
-void saveProperties( QDomDocument doc, QDomElement parent, Propertized* obj, QStringList skip, int precision );
+NNFW_INTERNAL void saveProperties( QDomDocument doc, QDomElement parent, Propertized* obj, QStringList skip, int precision );
 
-int calcLevelOfIndentation( QDomNode node ) {
+NNFW_INTERNAL int calcLevelOfIndentation( QDomNode node ) {
 	int i=0;
 	while( ! node.parentNode().isNull() ) {
 		i++;
@@ -651,7 +651,7 @@ int calcLevelOfIndentation( QDomNode node ) {
 	return i;
 }
 
-QDomNode createPropertyFragment( Variant v, QDomDocument doc, QDomElement elem, int precision ) {
+NNFW_INTERNAL QDomNode createPropertyFragment( Variant v, QDomDocument doc, QDomElement elem, int precision ) {
     QDomNode sub;
     QString complex; // --- used for create string representation of RealVec and RealMat
 	QVector<int> colsize; //--- keep dimension of columns while saving matrix data
@@ -740,7 +740,7 @@ QDomNode createPropertyFragment( Variant v, QDomDocument doc, QDomElement elem, 
     return sub;
 }
 
-QString createAttributeContent( Variant v, int precision ) {
+NNFW_INTERNAL QString createAttributeContent( Variant v, int precision ) {
     //QString complex; // --- used for create string representation of RealVec and RealMat
 /*    const RealVec* rv;
     const RealMat* mv;*/
@@ -820,7 +820,7 @@ QString createAttributeContent( Variant v, int precision ) {
     return QString();
 }
 
-void saveProperties( QDomDocument doc, QDomElement parent, Propertized* obj, QStringList skip, int precision ) {
+NNFW_INTERNAL void saveProperties( QDomDocument doc, QDomElement parent, Propertized* obj, QStringList skip, int precision ) {
     PropertyAccessVec& pvec = obj->properties();
     for( u_int i=0; i<pvec.size(); i++ ) {
         AbstractPropertyAccess* p = pvec[i];

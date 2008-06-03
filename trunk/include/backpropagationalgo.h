@@ -130,7 +130,7 @@ private:
 	UpdatableVec update_order;
 
 	//! The struct of Clusters and Deltas
-	class cluster_deltas {
+	class NNFW_API cluster_deltas {
 	public:
 		Cluster* cluster;
 		AbstractModifier* modcluster;

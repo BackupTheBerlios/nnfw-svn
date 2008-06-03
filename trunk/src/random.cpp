@@ -29,7 +29,7 @@
 namespace nnfw {
 
 #ifdef NNFW_USE_GSL
-gsl_rng* rnd = gsl_rng_alloc( gsl_rng_taus2 );
+NNFW_INTERNAL gsl_rng* rnd = gsl_rng_alloc( gsl_rng_taus2 );
 #endif
 
 void Random::setSeed( long int seed ) {
