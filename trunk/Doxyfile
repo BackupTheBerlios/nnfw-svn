@@ -78,7 +78,7 @@ WARN_LOGFILE           = doxygen.log
 # configuration options related to the input files
 #---------------------------------------------------------------------------
 INPUT                  = ./src \
-                         ./include
+                         ./include ./cinterface
 INPUT_ENCODING         = UTF-8
 FILE_PATTERNS          = *.h
 RECURSIVE              = NO
