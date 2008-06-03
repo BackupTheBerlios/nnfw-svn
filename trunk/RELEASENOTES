@@ -1,3 +1,8 @@
+======= 1.1.4 Release =======
+  * Bugfixs
+	- resolved bug on saving RealMat on XML file
+	- resolved bug when using skipList on saveXML
+
 ======= 1.1.3 Release =======
   * Summary of important changes
 	- prettyfied printing of RealMat on XML file
