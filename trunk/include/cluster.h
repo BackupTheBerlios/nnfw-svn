@@ -49,7 +49,7 @@ namespace nnfw {
  * // create a SimpleCluster, a specialized subclass of Cluster
  * SimpleCluster* simple = new SimpleCluster( 10 ); // this cluster contains 10 neurons
  * // set the SigmoidUpdater for all neurons
- * simple->setUpdater( new SigmoidUpdater( 1.0 ) );
+ * simple->setUpdater( SigmoidUpdater( 1.0 ) );
  *    \endcode
  *  \par Warnings
  *    <b>For whose want to implement a subclass of Cluster: </b>

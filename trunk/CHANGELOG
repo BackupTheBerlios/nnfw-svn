@@ -15,6 +15,10 @@ S <mave> comment goes here
     'C' : means that something has been changed (e.g. implementation of a Class or a signature method)
 ==== End of Legend ====
 
+B <mave> fixed crashing when "name" property is not passed to PropertySettings constructor
+C <mave> Linkers can now be instanciated via PropertySettings without specifying "baseneuralnet"
+C <mave> adjusted nnfw-config and NNFWConfig.cmake scripts for use also C interface
+
     ==> 288 - 30/05/2008 - 1.1.4 release <==
 
 + <mave> added NNFW_INTERNAL macro for un-export internal data and types

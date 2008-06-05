@@ -9,6 +9,8 @@ version="@VER_MAJ@.@VER_MIN@.@VER_PAT@"
 nnfwconfig="@NNFW_CONFIG@"
 prefix="@CMAKE_INSTALL_PREFIX@"
 LIBS="@LFLA@"
+CLIB="@CLIB@"
+CPPLIB="@CPPLIB@"
 includedir="@INCLUDES@"
 libdir="${prefix}/lib"
 bindir="${prefix}/bin"
@@ -18,7 +20,8 @@ usage () {
     echo "Usage: "  1>&2
     echo "$scriptname --version         - show installed script and NNFW version"  1>&2
     echo "$scriptname --config          - show the configuration with NNFW was compiled"  1>&2
-    echo "$scriptname --libs            - libraries required to link with NNFW"  1>&2
+    echo "$scriptname --clibs           - libraries required to link with C interface of NNFW"  1>&2
+    echo "$scriptname --cpplibs         - libraries required to link with NNFW from C++ project"  1>&2
     echo "$scriptname --cflags          - compiler flags required to find NNFW headers"  1>&2
     echo "$scriptname --help            - show usage info (this message)          "  1>&2
     echo "$scriptname --help SUBCOMMAND - show help for SUBCOMMAND                "  1>&2
@@ -51,11 +54,17 @@ if test $# -gt 0; then
             --cflags)
                 echo "Usage: $0 --cflags"
                 echo "  Print C compiler flags for compiling code that uses NNFW."
-                echo "  This includes any \`-I' flags needed to find Sane's header files."
+                echo "  This includes any \`-I' flags needed to find NNFW's header files."
             ;;
-            --libs)
-                echo "Usage: $0 --libs"
-                echo "  Print linker flags for building the executable."
+            --clibs)
+                echo "Usage: $0 --clibs"
+                echo "  Print linker flags for building the executable with C interface of NNFW."
+                echo "  Print the linker command-line flags necessary to link against"
+                echo "  the NNFW library, and any other libraries it requires."
+            ;;
+            --cpplibs)
+                echo "Usage: $0 --cpplibs"
+                echo "  Print linker flags for building the executable for C++ projects."
                 echo "  Print the linker command-line flags necessary to link against"
                 echo "  the NNFW library, and any other libraries it requires."
             ;;
@@ -63,6 +72,10 @@ if test $# -gt 0; then
                 echo "Usage: $0 --version"
                 echo "  Print the prefix used during NNFW compile"
             ;;
+		    *)
+				echo "Command not recognized"
+				echo "Available command are: --config, --libs, --clibs, --cpplibs, --cflags, --prefix"
+			;;
             esac
         else
             usage
@@ -72,8 +85,15 @@ if test $# -gt 0; then
     --config)
       echo "${nnfwconfig}"
     ;;
-    --libs)
-      echo "${LIBS}"
+	--libs)
+	  echo "Deprecated !! Use --clibs or --cpplibs see --help for help"
+	  exit 1
+	;;
+    --clibs)
+      echo "${LIBS} ${CLIB}"
+    ;;
+    --cpplibs)
+      echo "${LIBS} ${CPPLIB}"
     ;;
     --cflags)
         unique_cflags=

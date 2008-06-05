@@ -38,8 +38,20 @@
 #include "copylinker.h"
 #include "outputfunction.h"
 #include "liboutputfunctions.h"
+#include "libradialfunctions.h"
 #include "learningalgorithm.h"
 #include "nnfwfactory.h"
+
+namespace nnfw {
+	//--- for accessing RealVec data from C interface implementation
+	Real* getRawData( RealVec& vec ) {
+		return vec.rawdata();
+	}
+	//--- for accessing from C interface implementation
+	Real* getRawData( RealMat& mat ) {
+		return getRawData( mat.rawdata() );
+	}
+}
 
 using namespace nnfw;
 
@@ -115,8 +127,7 @@ C_NNFW_API void NnfwClusterSetInput( NnfwCluster* cl, unsigned int neuron, Real 
 }
 
 C_NNFW_API Real* NnfwClusterInputs( NnfwCluster* cl ) {
-	printf( "not yet implemented\n" );
-	return 0;
+	return getRawData( cl->cluster->inputs() );
 }
 
 C_NNFW_API Real NnfwClusterInput( NnfwCluster* cl, unsigned int neuron ) {
@@ -133,8 +144,7 @@ C_NNFW_API void NnfwClusterSetOutput( NnfwCluster* cl, unsigned int neuron, Real
 }
 
 C_NNFW_API Real* NnfwClusterOutputs( NnfwCluster* cl ) {
-	printf( "not yet implemented\n" );
-	return 0;
+	return getRawData( cl->cluster->outputs() );
 }
 
 C_NNFW_API Real NnfwClusterOutput( NnfwCluster* cl, unsigned int neuron ) {
@@ -184,8 +194,7 @@ C_NNFW_API void NnfwBiasedClusterSetBias( NnfwCluster* cl, unsigned int neuron, 
 }
 
 C_NNFW_API Real* NnfwBiasedClusterBiases( NnfwCluster* cl ) {
-	printf( "not yet implemented\n" );
-	return 0;
+	return getRawData( ((BiasedCluster*)cl->cluster)->biases() );
 }
 
 C_NNFW_API Real NnfwBiasedClusterBias( NnfwCluster* cl, unsigned int neuron ) {
@@ -201,8 +210,6 @@ C_NNFW_API NnfwCluster* NnfwClusterCreateFake( unsigned int numNeurons ) {
 }
 
 C_NNFW_API NnfwLinker* NnfwLinkerCreate( const char* type, NnfwCluster* from, NnfwCluster* to ) {
-	printf( "not implemented yet\n" );
-	return 0;
 	NnfwLinker* link = new NnfwLinker();
 	PropertySettings param;
 	param["from"] = from->cluster;
@@ -210,6 +217,7 @@ C_NNFW_API NnfwLinker* NnfwLinkerCreate( const char* type, NnfwCluster* from, Nn
 	link->linker = Factory::createLinker( type, param );
 	link->from = from;
 	link->to = to;
+	return link;
 }
 
 C_NNFW_API NnfwCluster* NnfwLinkerFrom( NnfwLinker* link ) {
@@ -265,8 +273,7 @@ C_NNFW_API void NnfwDotLinkerSetWeight( NnfwLinker* link, unsigned int from, uns
 }
 
 C_NNFW_API Real* NnfwDotLinkerWeights( NnfwLinker* link ) {
-	printf( "not yet implemented\n" );
-	return 0;
+	return getRawData( ((DotLinker*)link->linker)->matrix() );
 }
 
 C_NNFW_API Real NnfwDotLinkerWeight( NnfwLinker* link, unsigned int from, unsigned int to ) {
@@ -305,8 +312,7 @@ C_NNFW_API void NnfwNormLinkerSetWeight( NnfwLinker* link, unsigned int from, un
 }
 
 C_NNFW_API Real* NnfwNormLinkerWeights( NnfwLinker* link ) {
-	printf( "not yet implemented\n" );
-	return 0;
+	return getRawData( ((NormLinker*)link->linker)->matrix() );
 }
 
 C_NNFW_API Real NnfwNormLinkerWeight( NnfwLinker* link, unsigned int from, unsigned int to ) {
@@ -347,8 +353,7 @@ C_NNFW_API void NnfwSparseLinkerSetWeight( NnfwLinker* link, unsigned int from, 
 }
 
 C_NNFW_API Real* NnfwSparseLinkerWeights( NnfwLinker* link ) {
-	printf( "not yet implemented\n" );
-	return 0;
+	return getRawData( ((SparseMatrixLinker*)link->linker)->matrix() );
 }
 
 C_NNFW_API Real NnfwSparseLinkerWeight( NnfwLinker* link, unsigned int from, unsigned int to ) {
@@ -387,11 +392,6 @@ C_NNFW_API void NnfwSparseLinkerDisconnectRandom( NnfwLinker* link, Real prob ) 
 	((SparseMatrixLinker*)link->linker)->disconnectRandom( prob );
 }
 
-C_NNFW_API int* NnfwSparseLinkerConnectionMask( NnfwLinker* link ) {
-	printf( "not yet implemented\n" );
-	return 0;
-}
-
 C_NNFW_API int NnfwSparseLinkerConnectionAt( NnfwLinker* link, unsigned int from, unsigned int to ) {
 	return ((SparseMatrixLinker*)link->linker)->mask()[from][to];
 }
@@ -427,6 +427,71 @@ C_NNFW_API void NnfwCopyLinkerSetMode( NnfwLinker* link, NnfwCopyLinkerModes mod
 
 C_NNFW_API NnfwCopyLinkerModes NnfwCopyLinkerMode( NnfwLinker* link ) {
 	return link->copymode;
+}
+
+C_NNFW_API NnfwOutputFunction* NnfwOutputFunctionCreate( const char* type ) {
+	NnfwOutputFunction* fun = new NnfwOutputFunction();
+	PropertySettings param;
+	fun->func = Factory::createOutputFunction( type, param );
+	return fun;
+}
+
+C_NNFW_API NnfwOutputFunction* NnfwOutputFunctionCreateIdentity() {
+	NnfwOutputFunction* fun = new NnfwOutputFunction();
+	fun->func = new IdentityFunction();
+	return fun;	
+}
+
+C_NNFW_API NnfwOutputFunction* NnfwOutputFunctionCreateLinear( Real m, Real b ) {
+	NnfwOutputFunction* fun = new NnfwOutputFunction();
+	fun->func = new LinearFunction( m, b );
+	return fun;	
+}
+
+C_NNFW_API NnfwOutputFunction* NnfwOutputFunctionCreateRamp( Real minX, Real maxX, Real minY, Real maxY ) {
+	NnfwOutputFunction* fun = new NnfwOutputFunction();
+	fun->func = new RampFunction( minX, maxX, minY, maxY );
+	return fun;	
+}
+
+C_NNFW_API NnfwOutputFunction* NnfwOutputFunctionCreateStep( Real min, Real max, Real threshold ) {
+	NnfwOutputFunction* fun = new NnfwOutputFunction();
+	fun->func = new StepFunction( min, max, threshold );
+	return fun;	
+}
+
+C_NNFW_API NnfwOutputFunction* NnfwOutputFunctionCreateSigmoid( Real l ) {
+	NnfwOutputFunction* fun = new NnfwOutputFunction();
+	fun->func = new SigmoidFunction( l );
+	return fun;	
+}
+
+C_NNFW_API NnfwOutputFunction* NnfwOutputFunctionCreateFakeSigmoid( Real l ) {
+	NnfwOutputFunction* fun = new NnfwOutputFunction();
+	fun->func = new FakeSigmoidFunction();
+	return fun;	
+}
+
+C_NNFW_API NnfwOutputFunction* NnfwOutputFunctionCreateScaledSigmoid( Real l, Real min, Real max ) {
+	NnfwOutputFunction* fun = new NnfwOutputFunction();
+	fun->func = new ScaledSigmoidFunction( l, min, max );
+	return fun;	
+}
+
+C_NNFW_API NnfwOutputFunction* NnfwOutputFunctionCreateGaussian( Real centre, Real var, Real max ) {
+	NnfwOutputFunction* fun = new NnfwOutputFunction();
+	fun->func = new GaussFunction( centre, var, max );
+	return fun;	
+}
+
+C_NNFW_API NnfwBaseNeuralNet* NnfwLoadXML( const char* filename ) {
+	printf( "not yet implemented\n" );
+	return 0;
+}
+
+C_NNFW_API void NnfwSaveXML( const char* filename, NnfwBaseNeuralNet* net, int precision, const char* skipList ) {
+	printf( "not yet implemented\n" );
+	return;
 }
 
 #ifdef __cplusplus

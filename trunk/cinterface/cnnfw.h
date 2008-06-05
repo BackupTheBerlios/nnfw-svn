@@ -60,10 +60,11 @@ typedef struct NnfwLinker{} NnfwLinker;
 typedef struct NnfwOutputFunction{} NnfwOutputFunction;
 typedef struct NnfwBaseNeuralNet{} NnfwBaseNeuralNet;
 typedef struct NnfwLearningAlgorithm{} NnfwLearningAlgorithm;
+typedef struct NnfwIterator{} NnfwIterator;
 
 /*! \defgroup cinterface C Interface */
 
-/*! \defgroup cluster
+/*! \defgroup cluster Cluster functions
  *  \ingroup cinterface
  */
 //@{
@@ -110,7 +111,7 @@ C_NNFW_API NnfwOutputFunction* NnfwClusterFunction( NnfwCluster* );
 C_NNFW_API NnfwCluster* NnfwClusterClone( NnfwCluster* );
 //@}
 
-/*! \defgroup simplecluster Simple Cluster specific operations
+/*! \defgroup simplecluster Simple Cluster
  *  \ingroup cluster
  */
 //@{
@@ -118,7 +119,7 @@ C_NNFW_API NnfwCluster* NnfwClusterClone( NnfwCluster* );
 C_NNFW_API NnfwCluster* NnfwClusterCreateSimple( unsigned int numNeurons );
 //@}
 
-/*! \defgroup biasedcluster Biased Cluster specific operations
+/*! \defgroup biasedcluster Biased Cluster
  *  \ingroup cluster
  */
 //@{
@@ -134,7 +135,7 @@ C_NNFW_API Real* NnfwBiasedClusterBiases( NnfwCluster* );
 C_NNFW_API Real NnfwBiasedClusterBias( NnfwCluster*, unsigned int neuron );
 //@}
 
-/*! \defgroup fakecluster Fake Cluster specific operations
+/*! \defgroup fakecluster Fake Cluster
  *  \ingroup cluster
  */
 //@{
@@ -142,7 +143,7 @@ C_NNFW_API Real NnfwBiasedClusterBias( NnfwCluster*, unsigned int neuron );
 C_NNFW_API NnfwCluster* NnfwClusterCreateFake( unsigned int numNeurons );
 //@}
 
-/*! \defgroup linker
+/*! \defgroup linker Linker functions
  *  \ingroup cinterface
  */
 //@{
@@ -162,7 +163,7 @@ C_NNFW_API void NnfwLinkerRandomize( NnfwLinker*, Real min, Real max );
 C_NNFW_API NnfwLinker* NnfwLinkerClone( NnfwLinker* );
 //@}
 
-/*! \defgroup dotlinker Dot Matrix Linker specific operations
+/*! \defgroup dotlinker Dot Matrix Linker
  *  \ingroup linker
  */
 //@{
@@ -183,7 +184,7 @@ C_NNFW_API int NnfwDotLinkerRows( NnfwLinker* );
 C_NNFW_API int NnfwDotLinkerCols( NnfwLinker* );
 //@}
 
-/*! \defgroup normlinker Norm Matrix Linker specific operations
+/*! \defgroup normlinker Norm Matrix Linker
  *  \ingroup linker
  */
 //@{
@@ -204,7 +205,7 @@ C_NNFW_API int NnfwNormLinkerRows( NnfwLinker* );
 C_NNFW_API int NnfwNormLinkerCols( NnfwLinker* );
 //@}
 
-/*! \defgroup sparselinker Sparse Matrix Linker specific operations
+/*! \defgroup sparselinker Sparse Matrix Linker
  *  \ingroup linker
  */
 //@{
@@ -235,13 +236,14 @@ C_NNFW_API void NnfwSparseLinkerDisconnect( NnfwLinker*, unsigned int from, unsi
 C_NNFW_API void NnfwSparseLinkerDisconnectAll( NnfwLinker* );
 /*! disconnect with probability prob */
 C_NNFW_API void NnfwSparseLinkerDisconnectRandom( NnfwLinker*, Real prob );
-/*! return the connection mask matrix, 1 mean connected, 0 means disconnected */
-C_NNFW_API int* NnfwSparseLinkerConnectionMask( NnfwLinker* );
+//--- the connection matrix can't be returned because there is no obvious or conventional way
+//--- (or portable) to convert the bool C++ type into an "int-boolean" C value
+//C_NNFW_API int* NnfwSparseLinkerConnectionMask( NnfwLinker* );
 /*! return 1 if neurons are connected, 0 otherwise */
 C_NNFW_API int NnfwSparseLinkerConnectionAt( NnfwLinker*, unsigned int from, unsigned int to );
 //@}
 
-/*! \defgroup copylinker Copy Linker specific operations
+/*! \defgroup copylinker Copy Linker
  *  \ingroup linker
  */
 //@{
@@ -253,6 +255,147 @@ C_NNFW_API NnfwLinker* NnfwLinkerCreateCopy( NnfwCluster* from, NnfwCluster* to 
 C_NNFW_API void NnfwCopyLinkerSetMode( NnfwLinker* link, NnfwCopyLinkerModes mode );
 /*! Return the modality of copying */
 C_NNFW_API NnfwCopyLinkerModes NnfwCopyLinkerMode( NnfwLinker* link );
+//@}
+
+/*! \defgroup outfunc Output Functions
+ *  \ingroup cinterface
+ */
+//@{
+/*! Create an OutputFunction with type specified */
+C_NNFW_API NnfwOutputFunction* NnfwOutputFunctionCreate( const char* type );
+//@}
+/*! \defgroup func1 Identity Function
+ *  \ingroup outfunc
+ */
+//@{
+/*! Create an Identity Function */
+C_NNFW_API NnfwOutputFunction* NnfwOutputFunctionCreateIdentity();
+//@}
+/*! \defgroup func2 Linear Function
+ *  \ingroup outfunc
+ */
+//@{
+/*! Create an Linear Function */
+C_NNFW_API NnfwOutputFunction* NnfwOutputFunctionCreateLinear( Real m, Real b );
+//@}
+/*! \defgroup func3 Ramp Function
+ *  \ingroup outfunc
+ */
+//@{
+/*! Create an Ramp Function */
+C_NNFW_API NnfwOutputFunction* NnfwOutputFunctionCreateRamp( Real minX, Real maxX, Real minY, Real maxY );
+//@}
+/*! \defgroup func4 Step Function
+ *  \ingroup outfunc
+ */
+//@{
+/*! Create an Step Function */
+C_NNFW_API NnfwOutputFunction* NnfwOutputFunctionCreateStep( Real min, Real max, Real threshold );
+//@}
+/*! \defgroup func5 Sigmoid Function
+ *  \ingroup outfunc
+ */
+//@{
+/*! Create an Sigmoid Function */
+C_NNFW_API NnfwOutputFunction* NnfwOutputFunctionCreateSigmoid( Real l );
+//@}
+/*! \defgroup func6 Fake Sigmoid Function
+ *  \ingroup outfunc
+ */
+//@{
+/*! Create an Fake Sigmoid Function */
+C_NNFW_API NnfwOutputFunction* NnfwOutputFunctionCreateFakeSigmoid( Real l );
+//@}
+/*! \defgroup func7 Scaled Sigmoid Function
+ *  \ingroup outfunc
+ */
+//@{
+/*! Create an Scaled Sigmoid Function */
+C_NNFW_API NnfwOutputFunction* NnfwOutputFunctionCreateScaledSigmoid( Real l, Real min, Real max );
+//@}
+/*! \defgroup func8 Gaussian Function
+ *  \ingroup outfunc
+ */
+//@{
+/*! Create an Gaussian Function */
+C_NNFW_API NnfwOutputFunction* NnfwOutputFunctionCreateGaussian( Real centre, Real var, Real max );
+//@}
+
+/*! \defgroup net Base Neural Net functions
+ *  \ingroup cinterface
+ */
+//@{
+/*! Create a BaseNeuralNet */
+C_NNFW_API NnfwBaseNeuralNet* NnfwBaseNeuralNetCreate();
+/*! Add an Input Cluster to BaseNeuralNet */
+C_NNFW_API void NnfwBaseNeuralNetAddInputCluster( NnfwBaseNeuralNet* net, NnfwCluster* cl );
+/*! Add an Hidden Cluster to BaseNeuralNet */
+C_NNFW_API void NnfwBaseNeuralNetAddHiddenCluster( NnfwBaseNeuralNet* net, NnfwCluster* cl );
+/*! Add an Output Cluster to BaseNeuralNet */
+C_NNFW_API void NnfwBaseNeuralNetAddOutputCluster( NnfwBaseNeuralNet* net, NnfwCluster* cl );
+/*! Remove the Cluster from BaseNeuralNet */
+C_NNFW_API void NnfwBaseNeuralNetRemoveCluster( NnfwBaseNeuralNet* net, NnfwCluster* cl );
+/*! Mark the Cluster passed as an Input Cluster of the BaseNeuralNet */
+C_NNFW_API void NnfwBaseNeuralNetMarkAsInput( NnfwBaseNeuralNet* net, NnfwCluster* cl );
+/*! Mark the Cluster passed as an Output Cluster of the BaseNeuralNet */
+C_NNFW_API void NnfwBaseNeuralNetMarkAsOutput( NnfwBaseNeuralNet* net, NnfwCluster* cl );
+/*! Mark the Cluster passed as an Hidden Cluster of the BaseNeuralNet */
+C_NNFW_API void NnfwBaseNeuralNetMarkAsHidden( NnfwBaseNeuralNet* net, NnfwCluster* cl );
+/*! Return the iterator over all Clusters of the BaseNeuralNet */
+C_NNFW_API NnfwIterator* NnfwBaseNeuralNetClusters( NnfwBaseNeuralNet* net );
+/*! Return the iterator over Input Clusters of the BaseNeuralNet */
+C_NNFW_API NnfwIterator* NnfwBaseNeuralNetInputClusters( NnfwBaseNeuralNet* net );
+/*! Return the iterator over Hidden Clusters of the BaseNeuralNet */
+C_NNFW_API NnfwIterator* NnfwBaseNeuralNetHiddenClusters( NnfwBaseNeuralNet* net );
+/*! Return the iterator over Output Clusters of the BaseNeuralNet */
+C_NNFW_API NnfwIterator* NnfwBaseNeuralNetOutputClusters( NnfwBaseNeuralNet* net );
+/*! Add a Linker to BaseNeuralNet */
+C_NNFW_API void NnfwBaseNeuralNetAddLinker( NnfwBaseNeuralNet* net, NnfwLinker* link );
+/*! Remove a Linker to BaseNeuralNet */
+C_NNFW_API void NnfwBaseNeuralNetRemoveLinker( NnfwBaseNeuralNet* net, NnfwLinker* link );
+/*! Return the iterator over all Linkers of the BaseNeuralNet */
+C_NNFW_API NnfwIterator* NnfwBaseNeuralNetLinkers( NnfwBaseNeuralNet* net );
+/*! Return the iterator over Linkers out-going from Cluster passed of the BaseNeuralNet */
+C_NNFW_API NnfwIterator* NnfwBaseNeuralNetOutGoingLinkers( NnfwBaseNeuralNet* net, NnfwCluster* cl );
+/*! Return the iterator over Linkers incoming to Cluster passed of the BaseNeuralNet */
+C_NNFW_API NnfwIterator* NnfwBaseNeuralNetIncomingLinkers( NnfwBaseNeuralNet* net, NnfwCluster* cl );
+/*! Set the order of net spreading */
+C_NNFW_API void NnfwBaseNeuralNetSetOrder( NnfwBaseNeuralNet* net, ... );
+/*! Return the iterator over the spreading order */
+C_NNFW_API NnfwIterator* NnfwBaseNeuralNetOrder( NnfwBaseNeuralNet* net );
+/*! Update the net */
+C_NNFW_API void NnfwBaseNeuralNetStep( NnfwBaseNeuralNet* net );
+/*! Randomize the net */
+C_NNFW_API void NnfwBaseNeuralNetRandomize( NnfwBaseNeuralNet* net, Real min, Real max );
+//@}
+/*! \defgroup itera NnfwIterator functions
+ *  NnfwIterator is an encapsulation of vectors implemented in NNFW.
+ *  They behaves like array, but you cannot use the indexing operator '[]',
+ *  so, an appropriate function has been provided for accessing elements
+ *  \ingroup net
+ */
+//@{
+/*! Return the number of elements */
+C_NNFW_API int NnfwIteratorSize( NnfwIterator* itera );
+/*! Return the current position of the iterator */
+C_NNFW_API int NnfwIteratorIndex( NnfwIterator* itera );
+/*! Set the position of the Iterator */
+C_NNFW_API int NnfwIteratorSetAt( NnfwIterator* itera, int pos );
+/*! Go to the next position if it can */
+C_NNFW_API int NnfwIteratorNext( NnfwIterator* itera );
+/*! Return true if there is a successive element,
+ *  false if it is the last element */
+C_NNFW_API int NnfwIteratorHasNext( NnfwIterator* itera );
+//@}
+
+/*! \defgroup iocnnfw I/O functions
+ *  \ingroup cinterface
+ */
+//@{
+/*! load a neural network from an XML file */
+C_NNFW_API NnfwBaseNeuralNet* NnfwLoadXML( const char* filename );
+/*! save the neural network to an XML file */
+C_NNFW_API void NnfwSaveXML( const char* filename, NnfwBaseNeuralNet*, int precision, const char* skipList );
 //@}
 
 #ifdef __cplusplus

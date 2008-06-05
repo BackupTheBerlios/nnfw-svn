@@ -34,8 +34,18 @@ Linker::Linker( Cluster* from, Cluster* to, const char* name )
 Linker::Linker( PropertySettings& prop )
     : Updatable( prop ) {
 	Variant& v = prop["baseneuralnet"];
+	if ( v.isNull() ) {
+		//--- suppose you pass directly Cluster pointers into "from" and "to"
+		fromc = prop["from"].getCluster();
+		toc = prop["to"].getCluster();
+		addProperty( "from", Variant::t_cluster, this, &Linker::fromP );
+		addProperty( "to", Variant::t_cluster, this, &Linker::toP );
+		// setTypename( "Linker" ); --- it's no instanciable
+		return;
+	}
 	BaseNeuralNet* net = v.getDataPtr<BaseNeuralNet>();
-    
+	//--- suppose you pass the name of Clusters "from" and "to"
+	//--- it will check if they exists on the "baseneuralnet" passed
 	v = prop["from"];
     if ( v.isNull() ) {
         nFatal() << "You can't construct a Linker wihout specifying a Cluster From";

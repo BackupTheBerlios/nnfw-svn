@@ -31,8 +31,6 @@
  *  \brief This file contains the RealVec Class; Don't include this file directly, instead include types.h
  */
 
-
-
 namespace nnfw {
 
 /*! \brief RealVec Class
@@ -390,17 +388,17 @@ public:
 protected:
 
     friend class RealMat;
-
-    /*! return the rawdata
-     */
+    /*! return the rawdata */
     Real* rawdata() const {
         return VectorData<Real>::rawdata();
     };
 
+	//--- for accessing from C interface implementation
+	friend Real* getRawData( RealVec& );
+
 };
 
 }
-
 
 #endif
 

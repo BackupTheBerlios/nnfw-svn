@@ -233,6 +233,9 @@ public:
 
     //@}
 
+	//--- for accessing from C interface implementation
+	friend Real* getRawData( RealMat& );
+
 };
 
 }

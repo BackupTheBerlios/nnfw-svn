@@ -33,7 +33,11 @@ Updatable::Updatable( const char* name )
 Updatable::Updatable( PropertySettings& prop )
     : Propertized() {
     this->namev = 0;
-    setName( prop["name"].getString() );
+	if ( prop["name"].isNull() ) {
+		setName( "unnamed" );
+	} else {
+    	setName( prop["name"].getString() );
+	}
     addProperty( "name", Variant::t_string, this, &Updatable::getNameV, &Updatable::setName );
     // setTypename( "Updatable" ); --- it's no instanciable
 }
