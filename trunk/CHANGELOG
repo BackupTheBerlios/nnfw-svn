@@ -15,14 +15,14 @@ S <mave> comment goes here
     'C' : means that something has been changed (e.g. implementation of a Class or a signature method)
 ==== End of Legend ====
 
-    ==> 291 - 30/05/2008 - 1.1.5 release <==
+    ==> 291 - 6/06/2008 - 1.1.5 release <==
 
 + <mave> completed the version 1.0 of C interface
 B <mave> fixed crashing when "name" property is not passed to PropertySettings constructor
 C <mave> Linkers can now be instanciated via PropertySettings without specifying "baseneuralnet"
 C <mave> adjusted nnfw-config and NNFWConfig.cmake scripts for use also C interface
 
-    ==> 288 - 30/05/2008 <==
+    ==> 288 - 4/06/2008 <==
 
 + <mave> added NNFW_INTERNAL macro for un-export internal data and types
 + <mave> added initial draft of C interface
