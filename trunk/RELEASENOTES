@@ -1,3 +1,7 @@
+======= 1.1.5 Release =======
+  * Summary of important changes
+	- added a C interface for allow to use NNFW library from C projects
+
 ======= 1.1.4 Release =======
   * Bugfixs
 	- resolved bug on saving RealMat on XML file

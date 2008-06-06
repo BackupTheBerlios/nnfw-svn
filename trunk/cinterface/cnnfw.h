@@ -61,6 +61,7 @@ typedef struct NnfwOutputFunction{} NnfwOutputFunction;
 typedef struct NnfwBaseNeuralNet{} NnfwBaseNeuralNet;
 typedef struct NnfwLearningAlgorithm{} NnfwLearningAlgorithm;
 typedef struct NnfwIterator{} NnfwIterator;
+typedef struct NnfwPatternSet{} NnfwPatternSet;
 
 /*! \defgroup cinterface C Interface */
 
@@ -359,8 +360,10 @@ C_NNFW_API NnfwIterator* NnfwBaseNeuralNetLinkers( NnfwBaseNeuralNet* net );
 C_NNFW_API NnfwIterator* NnfwBaseNeuralNetOutGoingLinkers( NnfwBaseNeuralNet* net, NnfwCluster* cl );
 /*! Return the iterator over Linkers incoming to Cluster passed of the BaseNeuralNet */
 C_NNFW_API NnfwIterator* NnfwBaseNeuralNetIncomingLinkers( NnfwBaseNeuralNet* net, NnfwCluster* cl );
-/*! Set the order of net spreading */
-C_NNFW_API void NnfwBaseNeuralNetSetOrder( NnfwBaseNeuralNet* net, ... );
+/*! Set the order of net spreading
+ *  \param n is the number of element listed after it
+ */
+C_NNFW_API void NnfwBaseNeuralNetSetOrder( NnfwBaseNeuralNet* net, int n, ... );
 /*! Return the iterator over the spreading order */
 C_NNFW_API NnfwIterator* NnfwBaseNeuralNetOrder( NnfwBaseNeuralNet* net );
 /*! Update the net */
@@ -375,17 +378,65 @@ C_NNFW_API void NnfwBaseNeuralNetRandomize( NnfwBaseNeuralNet* net, Real min, Re
  *  \ingroup net
  */
 //@{
+/*! enum of possible types inside NnfwIterator */
+typedef enum { ClusterType, LinkerType } NnfwIteratorElementTypes;
 /*! Return the number of elements */
 C_NNFW_API int NnfwIteratorSize( NnfwIterator* itera );
-/*! Return the current position of the iterator */
-C_NNFW_API int NnfwIteratorIndex( NnfwIterator* itera );
-/*! Set the position of the Iterator */
-C_NNFW_API int NnfwIteratorSetAt( NnfwIterator* itera, int pos );
-/*! Go to the next position if it can */
-C_NNFW_API int NnfwIteratorNext( NnfwIterator* itera );
-/*! Return true if there is a successive element,
- *  false if it is the last element */
-C_NNFW_API int NnfwIteratorHasNext( NnfwIterator* itera );
+/*! Return the type of element at i-th position */
+C_NNFW_API NnfwIteratorElementTypes NnfwIteratorGetType( NnfwIterator* itera, int i );
+/*! Return true is at i-th position there is a NnfwCluster */
+C_NNFW_API int NnfwIteratorIsCluster( NnfwIterator* itera, int i );
+/*! Return true is at i-th position there is a NnfwLinker */
+C_NNFW_API int NnfwIteratorIsLinker( NnfwIterator* itera, int i );
+/*! Return the i-th position element */
+C_NNFW_API NnfwCluster* NnfwIteratorGetCluster( NnfwIterator* itera, int i );
+/*! Return the i-th position element */
+C_NNFW_API NnfwLinker* NnfwIteratorGetLinker( NnfwIterator* itera, int i );
+//@}
+
+/*! \defgroup patternset Pattern Set functions
+ *  \ingroup cinterface
+ */
+//@{
+/*! Create a PatternSet of dimension size */
+C_NNFW_API NnfwPatternSet* NnfwPatternSetCreate( int size );
+/*! Return the number of Patterns containted into the PatternSet */
+C_NNFW_API int NnfwPatternSetSize( NnfwPatternSet* set );
+/*! Configure the Input of NnfwCluster passed for the i-th pattern */
+C_NNFW_API void NnfwPatternSetSetInputsOf( NnfwPatternSet* pset, int i, NnfwCluster* cl, Real* inputs );
+/*! Configure the Output of NnfwCluster passed for the i-th pattern */
+C_NNFW_API void NnfwPatternSetSetOutputsOf( NnfwPatternSet* pset, int i, NnfwCluster* cl, Real* outputs );
+/*! Return the Input of NnfwCluster of the pattern i-th */
+C_NNFW_API Real* NnfwPatternSetGetInputsOf( NnfwPatternSet* pset, int i, NnfwCluster* cl );
+/*! Return the Output of NnfwCluster of the pattern i-th */
+C_NNFW_API Real* NnfwPatternSetGetOutputsOf( NnfwPatternSet* pset, int i, NnfwCluster* cl );
+//@}
+
+/*! \defgroup backprop BackPropagation Algorithm Learning
+ *  \ingroup cinterface
+ */
+//@{
+/*! Create a BackPropagation Algorithm 
+ *  \param neuralnet is the Neural Network to teach (optimize)
+ *  \param lear_rate is the learning rate to use
+ *  \param n is the number of successive elements that specifies the teaching order
+ *  \param ... is the order of backpropagation of the error (usually the reverse order of spreading)
+ */
+C_NNFW_API NnfwLearningAlgorithm* NnfwBackPropagationCreate( NnfwBaseNeuralNet* net, Real learn_rate, int n, ... );
+/*! Enable/Disable momentum */
+C_NNFW_API void NnfwBackPropagationEnableMomentum( NnfwLearningAlgorithm* bp, int enable );
+/*! Set Learn Rate */
+C_NNFW_API void NnfwBackPropagationSetLearnRate( NnfwLearningAlgorithm* bp, Real rate );
+/*! Set Momentum Rate */
+C_NNFW_API void NnfwBackPropagationSetMomentum( NnfwLearningAlgorithm* bp, Real mom );
+/*! Return Learn Rate */
+C_NNFW_API Real NnfwBackPropagationLearnRate( NnfwLearningAlgorithm* bp );
+/*! Return Momentum Rate */
+C_NNFW_API Real NnfwBackPropagationMomentum( NnfwLearningAlgorithm* bp );
+/*! Iterate over PatternSet passed and teach the net */
+C_NNFW_API void NnfwBackPropagationLearn( NnfwLearningAlgorithm* bp, NnfwPatternSet* pset );
+/*! Calculate the MSE over PatternSet passed */
+C_NNFW_API Real NnfwBackPropagationCalcMSE( NnfwLearningAlgorithm* bp, NnfwPatternSet* pset );
 //@}
 
 /*! \defgroup iocnnfw I/O functions
