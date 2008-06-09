@@ -116,7 +116,7 @@ IF (UNIX)
     SET_TARGET_PROPERTIES( nnfw PROPERTIES COMPILE_FLAGS "" )
     SET_TARGET_PROPERTIES( nnfw PROPERTIES LINK_FLAGS "" )
     SET_TARGET_PROPERTIES( cnnfw PROPERTIES COMPILE_FLAGS " -DNNFW_DONT_EXPORT " )
-    SET_TARGET_PROPERTIES( cnnfw PROPERTIES LINK_FLAGS " -static -static-libgcc " )
+    SET_TARGET_PROPERTIES( cnnfw PROPERTIES LINK_FLAGS " -static-libgcc " )
     ### --- double check
     IF ( NNFW_CONFIG MATCHES double )
         ADD_DEFINITIONS( "-DNNFW_DOUBLE_PRECISION" )
@@ -200,6 +200,11 @@ IF( USE_FRAMEWORKS )
 		COMMAND chmod +x nnfw-config
 		COMMAND cp nnfw-config nnfw.framework
 		COMMAND install_name_tool -id ${CMAKE_INSTALL_PREFIX}/nnfw.framework/nnfw nnfw.framework/nnfw
+		COMMAND install_name_tool -id ${CMAKE_INSTALL_PREFIX}/cnnfw.framework/nnfw cnnfw.framework/cnnfw
+	)
+	ADD_CUSTOM_COMMAND( TARGET cnnfw POST_BUILD
+		COMMAND chmod +x nnfw-config
+		COMMAND cp nnfw-config cnnfw.framework
 		COMMAND install_name_tool -id ${CMAKE_INSTALL_PREFIX}/cnnfw.framework/nnfw cnnfw.framework/cnnfw
 	)
 ELSE( USE_FRAMEWORKS )
