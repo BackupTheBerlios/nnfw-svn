@@ -77,20 +77,7 @@ namespace nnfw {
 
 #undef TYPES_INCLUDES
 
-
 namespace nnfw {
-
-/*! max function */
-template<class T>
-inline T max( T a, T b ) {
-	return (a>b) ? a : b;
-}
-
-/*! min function */
-template<class T>
-inline T min( T a, T b ) {
-	return (a<b) ? a : b;
-}
 
 /*! Array of Boolean */
 typedef VectorData<bool> BoolVec;
