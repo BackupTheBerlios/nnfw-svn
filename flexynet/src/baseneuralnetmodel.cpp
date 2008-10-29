@@ -26,8 +26,13 @@
 #include "nnfw/ionnfw.h"
 using namespace nnfw;
 
-BaseNeuralNetModel::BaseNeuralNetModel( nnfw::BaseNeuralNet* net ) {
-	this->net = net;
+BaseNeuralNetModel::BaseNeuralNetModel() {
+	net = new BaseNeuralNet();
+	ischanged = false;
+}
+
+BaseNeuralNetModel::BaseNeuralNetModel( QString filename ) {
+	net = loadXML( filename.toAscii().data() );
 	ischanged = false;
 }
 

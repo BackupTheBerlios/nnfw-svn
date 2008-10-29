@@ -34,11 +34,8 @@ class QBoxLayout;
 class QSlider;
 class QCheckBox;
 class QActionGroup;
-class NNRenderer;
-class FBrowser;
-class NNPlotter;
-
-#include "fnnwrapper.h"
+class NeuralNetView;
+class BaseNeuralNetModel;
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -54,8 +51,6 @@ public slots:
 	void fileClose();
 
     void credits();
-
-	void randStep();
 
 private:
 	bool askSaveFilename();
@@ -74,23 +69,16 @@ private:
     QToolBar* fileT;
 
 	//--- central Widget
-	NNRenderer* centre;
+	NeuralNetView* centre;
 
 	//--- DockWidgets
-	FBrowser* browse;
-	NNPlotter* plotter;
 	
 	//--- current NeuralNet opened
-	FNNWrapper* nn;
+	BaseNeuralNetModel* nn;
 
 	bool hasChanges;
 	QString filename;
 	QFileInfo infoFile;
-
-	//--- codice temporaneo per prova di ClusterPlotter
-	QTimer timer;
-	int steps;
-	//--- fine codice temporaneo per prova di ClusterPlotter
 
 };
 

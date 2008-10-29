@@ -39,10 +39,7 @@
 #include <QDebug>
 
 #include "mainWindow.h"
-#include "nnrenderer.h"
-#include "fbrowser.h"
-#include "nnplotter.h"
-#include "nnfw/random.h"
+#include "neuralnetview.h"
 
 using namespace nnfw;
 
@@ -114,7 +111,7 @@ MainWindow::MainWindow( QWidget* parent )
 	statusBar()->setStyleSheet( "::item { border: 0px }" );
 	statusBar()->showMessage( tr("Ready") );
 
-	centre = new NNRenderer( this );
+	centre = new NeuralNetView( this );
 	nn = 0;
 	centre->setNeuralNet( 0 );
 	setCentralWidget( centre );
@@ -153,7 +150,7 @@ void MainWindow::fileNew() {
     }
 	filename = QString();
 	if ( !nn ) delete nn;
-	nn = new FNNWrapper( new BaseNeuralNet() );
+	nn = new BaseNeuralNetModel( new BaseNeuralNet() );
 	// --- display it
 	centre->setNeuralNet( nn );
 	browse->setNeuralNet( nn );
@@ -186,7 +183,7 @@ void MainWindow::fileLoad() {
     infoFile = QFileInfo( filename );
 	if ( !nn ) delete nn;
 	// --- open the neural network
-	nn = new FNNWrapper( loadXML( filename.toAscii().data() ) );
+	nn = new BaseNeuralNetModel( filename );
 	// --- display it
 	centre->setNeuralNet( nn );
 	browse->setNeuralNet( nn );
@@ -246,7 +243,7 @@ void MainWindow::credits() {
     QBoxLayout* lay = new QVBoxLayout( dialog );
     QLabel* lb = new QLabel( dialog );
     //lb->setPixmap( QPixmap( ":/Credits.png" ).scaled( 640, 480, Qt::KeepAspectRatio, Qt::SmoothTransformation ) );
-	lb->setText( "<h1>NNFW Displayer</h1> <br> by G. Massera, copyright 2007 <br>" );
+	lb->setText( "<h1>NNFW Visual Editor</h1> <br> by G. Massera, copyright 2007-2008 <br>" );
     lay->addWidget( lb );
     QPushButton* bt = new QPushButton( tr("Ok"), dialog );
     lay->addWidget( bt );
@@ -280,38 +277,18 @@ bool MainWindow::askSaveFilename() {
 }
 
 void MainWindow::createBrowser() {
-	QDockWidget* fb = new QDockWidget( tr("Browser"), this );
+/*	QDockWidget* fb = new QDockWidget( tr("Browser"), this );
 	fb->setAllowedAreas( Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea );
 	addDockWidget( Qt::RightDockWidgetArea, fb );
 	// --- create the content
 	browse = new FBrowser( fb );
-	fb->layout()->addWidget( browse );
+	fb->layout()->addWidget( browse );*/
 }
 
 void MainWindow::createPlotter() {
-	QDockWidget* fb = new QDockWidget( tr("Plotter"), this );
+/*	QDockWidget* fb = new QDockWidget( tr("Plotter"), this );
 	addDockWidget( Qt::BottomDockWidgetArea, fb );
 	// --- create the content
 	plotter = new NNPlotter( fb );
-	fb->layout()->addWidget( plotter );
-}
-
-void MainWindow::randStep() {
-	//--- codice temporaneo per prova di ClusterPlotter
-	if ( steps == 0 ) {
-		nn->randomize( -10.0, +10.0 );
-	}
-	if ( steps < 500 ) {
-		const ClusterVec& cls = nn->inputClusters();
-		for( unsigned int i=0; i<cls.size(); i++ ) {
-			for( unsigned int k=0; k<cls[i]->numNeurons(); k++ ) {
-				cls[i]->inputs()[k] = Random::flatReal( -5.0, +5.0 );
-			}
-		}
-		nn->step();
-		steps++;
-		return;
-	}
-	timer.stop();
-	//--- fine codice temporaneo per prova di ClusterPlotter
+	fb->layout()->addWidget( plotter );*/
 }

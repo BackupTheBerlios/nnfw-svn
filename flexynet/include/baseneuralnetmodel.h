@@ -34,8 +34,10 @@ class UpdatableModel;
 class FLEX_API BaseNeuralNetModel : public QObject {
 	Q_OBJECT
 public:
-	/*! create a BaseNeuralNet model for the net passed */
-	BaseNeuralNetModel( nnfw::BaseNeuralNet* net );
+	/*! create a new BaseNeuralNet */
+	BaseNeuralNetModel( );
+	/*! create the BaseNeuralNet specified on file */
+	BaseNeuralNetModel( QString filename );
 
 public slots:
 	/*! Save to XML file passed */
