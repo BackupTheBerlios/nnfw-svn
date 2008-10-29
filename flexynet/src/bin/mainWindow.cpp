@@ -40,11 +40,10 @@
 
 #include "mainWindow.h"
 #include "neuralnetview.h"
-
-using namespace nnfw;
+#include "baseneuralnetmodel.h"
 
 MainWindow::MainWindow( QWidget* parent )
-    : QMainWindow( parent ), hasChanges(false), filename(), infoFile(), timer() {
+    : QMainWindow( parent ), hasChanges(false), filename(), infoFile() {
 
     fileNewA = new QAction( QIcon(":/fileNew.png"), tr( "New" ), this );
     fileNewA->setShortcut( tr("Ctrl+N") );
@@ -129,9 +128,6 @@ MainWindow::MainWindow( QWidget* parent )
     fileSaveA->setEnabled( false );
     fileSaveasA->setEnabled( false );
     fileCloseA->setEnabled( false );
-
-	connect( &timer, SIGNAL( timeout() ),
-			this, SLOT( randStep() ) );
 }
 
 void MainWindow::fileNew() {
@@ -150,11 +146,9 @@ void MainWindow::fileNew() {
     }
 	filename = QString();
 	if ( !nn ) delete nn;
-	nn = new BaseNeuralNetModel( new BaseNeuralNet() );
+	nn = new BaseNeuralNetModel();
 	// --- display it
 	centre->setNeuralNet( nn );
-	browse->setNeuralNet( nn );
-	plotter->setNeuralNet( nn );
     fileSaveA->setEnabled( true );
     fileSaveasA->setEnabled( true );
     fileCloseA->setEnabled( true );
@@ -186,17 +180,9 @@ void MainWindow::fileLoad() {
 	nn = new BaseNeuralNetModel( filename );
 	// --- display it
 	centre->setNeuralNet( nn );
-	browse->setNeuralNet( nn );
-	plotter->setNeuralNet( nn );
     fileSaveA->setEnabled( true );
     fileSaveasA->setEnabled( true );
     fileCloseA->setEnabled( true );
-
-	//--- codice temporaneo per prova di ClusterPlotter
-	steps = 0;
-	timer.start( 0 );
-	//--- fine codice temporaneo per prova di ClusterPlotter
-
 }
 
 void MainWindow::fileClose() {
@@ -215,8 +201,6 @@ void MainWindow::fileClose() {
     }
 	// --- empty the display
 	centre->setNeuralNet( 0 );
-	browse->setNeuralNet( 0 );
-	plotter->setNeuralNet( 0 );
     fileSaveA->setEnabled( false );
     fileSaveasA->setEnabled( false );
     fileCloseA->setEnabled( false );

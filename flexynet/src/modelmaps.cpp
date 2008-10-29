@@ -70,17 +70,17 @@ void ModelMaps::delEntry( nnfw::OutputFunction* cl ) {
 }
 
 ClusterModel* ModelMaps::modelOf( nnfw::Cluster* cl ) {
-	if ( mapcluster.contains( cl ) ) {
-		return mapcluster[cl];
+	if ( !mapcluster.contains( cl ) ) {
+		addEntry( new ClusterModel(cl), cl );
 	}
-	return 0;
+	return mapcluster[cl];
 }
 
 LinkerModel* ModelMaps::modelOf( nnfw::Linker* cl ) {
-	if ( maplinker.contains( cl ) ) {
-		return maplinker[cl];
+	if ( !maplinker.contains( cl ) ) {
+		addEntry( new LinkerModel(cl), cl );
 	}
-	return 0;
+	return maplinker[cl];
 }
 
 UpdatableModel* ModelMaps::modelOf( nnfw::Updatable* cl ) {
@@ -94,8 +94,8 @@ UpdatableModel* ModelMaps::modelOf( nnfw::Updatable* cl ) {
 }
 
 OutputFunctionModel* ModelMaps::modelOf( nnfw::OutputFunction* cl ) {
-	if ( mapfunction.contains( cl ) ) {
-		return mapfunction[cl];
+	if ( !mapfunction.contains( cl ) ) {
+		addEntry( new OutputFunctionModel(cl), cl );
 	}
-	return 0;
+	return mapfunction[cl];
 }

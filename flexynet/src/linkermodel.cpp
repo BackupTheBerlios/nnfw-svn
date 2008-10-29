@@ -25,20 +25,9 @@ using namespace nnfw;
 LinkerModel::LinkerModel( nnfw::Linker* link )
 	: UpdatableModel(link) {
 	ModelMaps* maps = ModelMaps::instance();
-	if ( maps->modelOf( link ) ) {
-		//--- errore molto grave
-		qFatal( "Is not allowed to create more that one model for the same Linker" );
-	}
-	maps->addEntry( this, link );
 	linker = link;
 	fromm = maps->modelOf( linker->from() );
-	if ( !fromm ) {
-		fromm = new ClusterModel( linker->from() );
-	}
 	tom = maps->modelOf( linker->to() );
-	if ( !tom ) {
-		tom = new ClusterModel( linker->to() );
-	}
 }
 
 LinkerModel::~LinkerModel() {

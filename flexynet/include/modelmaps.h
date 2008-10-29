@@ -43,12 +43,6 @@ public:
 	/*! return the instance of it */
 	static ModelMaps* instance();
 
-	/*! register a model */
-	void addEntry( ClusterModel* model, nnfw::Cluster* cl );
-	/*! register a model */
-	void addEntry( LinkerModel* model, nnfw::Linker* cl );
-	/*! register a model */
-	void addEntry( OutputFunctionModel* model, nnfw::OutputFunction* cl );
 	/*! delete an entry */
 	void delEntry( nnfw::Cluster* cl );
 	/*! delete an entry */
@@ -65,6 +59,13 @@ public:
 	OutputFunctionModel* modelOf( nnfw::OutputFunction* cl );
 
 private:
+	/*! register a model \internal */
+	void addEntry( ClusterModel* model, nnfw::Cluster* cl );
+	/*! register a model \internal */
+	void addEntry( LinkerModel* model, nnfw::Linker* cl );
+	/*! register a model \internal */
+	void addEntry( OutputFunctionModel* model, nnfw::OutputFunction* cl );
+
 	static bool inited;
 	static ModelMaps* instancev;
 

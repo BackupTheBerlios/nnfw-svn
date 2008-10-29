@@ -23,14 +23,7 @@ using namespace nnfw;
 
 OutputFunctionModel::OutputFunctionModel( nnfw::OutputFunction* f )
 	: PropertizedModel( f ) {
-	ModelMaps* maps = ModelMaps::instance();
-	if ( maps->modelOf( f ) ) {
-		//--- errore molto grave
-		qFatal( "Is not allowed to create more that one model for the same OutputFunction" );
-	}
-	maps->addEntry( this, f );
 	function = f;
-
 }
 
 OutputFunctionModel::~OutputFunctionModel() {

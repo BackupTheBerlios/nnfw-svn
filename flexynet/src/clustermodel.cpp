@@ -25,16 +25,8 @@ using namespace nnfw;
 ClusterModel::ClusterModel( nnfw::Cluster* cl )
 	: UpdatableModel( cl ) {
 	ModelMaps* maps = ModelMaps::instance();
-	if ( maps->modelOf( cl ) ) {
-		//--- errore molto grave
-		qFatal( "Is not allowed to create more that one model for the same Cluster" );
-	}
-	maps->addEntry( this, cl );
 	cluster = cl;
 	outfunc = maps->modelOf( cl->getFunction() );
-	if ( !outfunc ) {
-		outfunc = new OutputFunctionModel( cl->getFunction() );
-	} 
 }
 
 ClusterModel::~ClusterModel() {
