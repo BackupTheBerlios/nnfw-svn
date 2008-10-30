@@ -169,7 +169,7 @@ void MainWindow::fileLoad() {
         }
     }
     // --- ask for a file
-    QString newf = QFileDialog::getOpenFileName( this, tr("Open Document from..."), infoFile.absolutePath(), tr("Neural Network (*.nnx);;All Types (*)" ) );
+    QString newf = QFileDialog::getOpenFileName( this, tr("Open Document from..."), infoFile.absolutePath(), tr("Neural Network (*.xml);;All Types (*)" ) );
     if ( newf.isNull() ) {
         return;
     }
@@ -244,9 +244,9 @@ bool MainWindow::askSaveFilename() {
     if ( path == QString("") ) {
         path = QCoreApplication::applicationDirPath();
     }
-	filed = new QFileDialog( this, tr("Save Neural Network in..."), path, "Neural Network (*.nnx)" );
+	filed = new QFileDialog( this, tr("Save Neural Network in..."), path, "Neural Network (*.xml)" );
 	filed->setFileMode( QFileDialog::AnyFile );
-	filed->setDefaultSuffix( "nnx" );
+	filed->setDefaultSuffix( "xml" );
 	filed->setAcceptMode( QFileDialog::AcceptSave );
 	if ( filed->exec() ) {
 		newf = filed->selectedFiles()[0];

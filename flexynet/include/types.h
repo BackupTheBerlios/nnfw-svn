@@ -39,10 +39,4 @@
 	#define FLEX_API
 #endif
 
-#define TYPES_INCLUDES
-// --- for checking the privates includes
-// --- see nnfw/vectordata.h
-#undef TYPES_INCLUDES
-
-
 #endif
