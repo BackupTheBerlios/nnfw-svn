@@ -28,7 +28,8 @@ class ClusterModel;
 
 /*! \brief Model of OutputFunction class
  *
- *  Details here
+ * \par Description
+ * \par Warnings
  */
 class FLEX_API OutputFunctionModel : public PropertizedModel {
 	Q_OBJECT

@@ -6,5 +6,7 @@
 		<file>fileClose.png</file>
 		<file>fileSave.png</file>
 		<file>fileSaveas.png</file>
+		<file>addCluster.png</file>
+		<file>addLinker.png</file>
     </qresource>
 </RCC>

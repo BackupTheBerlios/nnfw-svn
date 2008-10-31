@@ -50,6 +50,9 @@ public slots:
 	bool fileSaveas();
 	void fileClose();
 
+	void addCluster();
+	void addLinker();
+
     void credits();
 
 private:
@@ -63,10 +66,10 @@ private:
 	QAction* fileSaveasA;
 	QAction* fileCloseA;
 
-	QAction* showCreditsA;
+	QAction* addClusterA;
+	QAction* addLinkerA;
 
-    // --- Toolbar file
-    QToolBar* fileT;
+	QAction* showCreditsA;
 
 	//--- central Widget
 	NeuralNetView* centre;
@@ -76,10 +79,8 @@ private:
 	//--- current NeuralNet opened
 	BaseNeuralNetModel* nn;
 
-	bool hasChanges;
 	QString filename;
 	QFileInfo infoFile;
-
 };
 
 #endif

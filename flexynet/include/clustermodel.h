@@ -28,7 +28,8 @@ class OutputFunctionModel;
 
 /*! \brief Model of Cluster class
  *
- *  Details here
+ *  \par Description
+ *  \par Warnings
  */
 class FLEX_API ClusterModel : public UpdatableModel {
 	Q_OBJECT

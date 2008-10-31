@@ -28,7 +28,8 @@ class ClusterModel;
 
 /*! \brief Model of Linker class
  *
- *  Details here
+ * \par Description
+ * \par Warnings
  */
 class FLEX_API LinkerModel : public UpdatableModel {
 	Q_OBJECT

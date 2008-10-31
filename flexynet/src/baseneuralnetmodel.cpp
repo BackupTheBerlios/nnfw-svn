@@ -53,32 +53,38 @@ bool BaseNeuralNetModel::hasChanges() {
 
 void BaseNeuralNetModel::addCluster( ClusterModel* c, bool isInput, bool isOutput ) {
 	net->addCluster( c->nnCluster(), isInput, isOutput );
+	ischanged = true;
 	emit clusterAdded( c, isInput, isOutput );
 }
 
 bool BaseNeuralNetModel::removeCluster( ClusterModel* c ) {
 	bool ret = net->removeCluster( c->nnCluster() );
+	ischanged = true;
 	emit clusterRemoved( c );
 	return ret;
 }
 
 void BaseNeuralNetModel::markAsInput( ClusterModel* c ) {
 	net->markAsInput( c->nnCluster() );
+	ischanged = true;
 	emit markedAsInput( c );
 }
 
 void BaseNeuralNetModel::markAsOutput( ClusterModel* c ) {
 	net->markAsOutput( c->nnCluster() );
+	ischanged = true;
 	emit markedAsOutput( c );
 }
 
 void BaseNeuralNetModel::unmark( ClusterModel* c ) {
 	net->unmark( c->nnCluster() );
+	ischanged = true;
 	emit unmarked( c );
 }
 
 void BaseNeuralNetModel::unmarkAll() {
 	net->unmarkAll();
+	ischanged = true;
 	emit unmarkedAll();
 }
 
@@ -115,11 +121,13 @@ QVector<ClusterModel*> BaseNeuralNetModel::outputClusters() const {
 
 void BaseNeuralNetModel::addLinker( LinkerModel* l ) {
 	net->addLinker( l->nnLinker() );
+	ischanged = true;
 	emit linkerAdded( l );
 }
 
 bool BaseNeuralNetModel::removeLinker( LinkerModel* l ) {
 	bool ret = net->removeLinker( l->nnLinker() );
+	ischanged = true;
 	emit linkerRemoved( l );
 	return ret;
 }
@@ -156,6 +164,7 @@ void BaseNeuralNetModel::setOrder( QStringList order ) {
 		}
 	}
 	net->setOrder( ups );
+	ischanged = true;
 	emit orderChanged( order2 );
 }
 
@@ -169,11 +178,13 @@ QStringList BaseNeuralNetModel::order() const {
 
 void BaseNeuralNetModel::step() {
 	net->step();
+	ischanged = true;
 	emit stepped();
 }
 
 void BaseNeuralNetModel::randomize( nnfw::Real min, nnfw::Real max ) {
 	net->randomize( min, max );
+	ischanged = true;
 	emit randomized();
 }
 

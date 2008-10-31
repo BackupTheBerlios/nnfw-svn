@@ -27,7 +27,8 @@
 
 /*! \brief Model of Updatable class
  *
- *  Details here
+ * \par Description
+ * \par Warnings
  */
 class FLEX_API UpdatableModel : public PropertizedModel {
 	Q_OBJECT

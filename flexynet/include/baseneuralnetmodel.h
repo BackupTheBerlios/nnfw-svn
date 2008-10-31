@@ -31,6 +31,11 @@ class ClusterModel;
 class LinkerModel;
 class UpdatableModel;
 
+/*!  \brief BaseNeuralNetModel
+ *
+ *  \par Description
+ *  \par Warnings
+ */
 class FLEX_API BaseNeuralNetModel : public QObject {
 	Q_OBJECT
 public:

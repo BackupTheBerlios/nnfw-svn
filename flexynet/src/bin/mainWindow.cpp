@@ -41,68 +41,97 @@
 #include "mainWindow.h"
 #include "neuralnetview.h"
 #include "baseneuralnetmodel.h"
+#include "clustermodel.h"
+
+#include "nnfw/simplecluster.h"
+using namespace nnfw;
 
 MainWindow::MainWindow( QWidget* parent )
-    : QMainWindow( parent ), hasChanges(false), filename(), infoFile() {
+	: QMainWindow( parent ), filename(), infoFile() {
+	
+	fileNewA = new QAction( QIcon(":/fileNew.png"), tr( "New" ), this );
+	fileNewA->setShortcut( tr("Ctrl+N") );
+	fileNewA->setStatusTip( tr("Create a New NeuralNetwork") );
+	fileNewA->setCheckable( false );
+	connect( fileNewA, SIGNAL( triggered() ),
+			this, SLOT( fileNew() ) );
+	
+	fileLoadA = new QAction( QIcon(":/fileOpen.png"), tr( "Open" ), this );
+	fileLoadA->setShortcut( tr("Ctrl+O") );
+	fileLoadA->setStatusTip( tr("Load a NeuralNetwork from file") );
+	fileLoadA->setCheckable( false );
+	connect( fileLoadA, SIGNAL( triggered() ),
+			this, SLOT( fileLoad() ) );
+	
+	fileCloseA = new QAction( QIcon(":/fileClose.png"), tr( "Close" ), this );
+	fileCloseA->setShortcut( tr("Ctrl+W") );
+	fileCloseA->setStatusTip( tr("Close NeuralNetwork") );
+	fileCloseA->setCheckable( false );
+	connect( fileCloseA, SIGNAL( triggered() ),
+			this, SLOT( fileClose() ) );
+	
+	fileSaveA = new QAction( QIcon(":/fileSave.png"), tr( "Save" ), this );
+	fileSaveA->setShortcut( tr("Ctrl+S") );
+	fileSaveA->setStatusTip( tr("Save NeuralNetwork") );
+	fileSaveA->setCheckable( false );
+	connect( fileSaveA, SIGNAL( triggered() ),
+			this, SLOT( fileSave() ) );
+	
+	fileSaveasA = new QAction( QIcon(":/fileSaveas.png"), tr( "Save as ..." ), this );
+	fileSaveasA->setShortcut( tr("Ctrl+S") );
+	fileSaveasA->setStatusTip( tr("Save NeuralNetwork with differente name") );
+	fileSaveasA->setCheckable( false );
+	connect( fileSaveasA, SIGNAL( triggered() ),
+			this, SLOT( fileSaveas() ) );
+	
+	addClusterA = new QAction( QIcon(":/addCluster.png"), tr( "Add a new Cluster" ), this );
+	addClusterA->setShortcut( tr("Alt+C") );
+	addClusterA->setStatusTip( tr("Create a new Cluster") );
+	addClusterA->setCheckable( false );
+	connect( addClusterA, SIGNAL( triggered() ),
+			this, SLOT( addCluster() ) );
 
-    fileNewA = new QAction( QIcon(":/fileNew.png"), tr( "New" ), this );
-    fileNewA->setShortcut( tr("Ctrl+N") );
-    fileNewA->setStatusTip( tr("Create a New NeuralNetwork") );
-    fileNewA->setCheckable( false );
-    connect( fileNewA, SIGNAL( triggered() ),
-            this, SLOT( fileNew() ) );
+	addLinkerA = new QAction( QIcon(":/addLinker.png"), tr( "Add a new Linker" ), this );
+	addLinkerA->setShortcut( tr("Alt+L") );
+	addLinkerA->setStatusTip( tr("Create a new Linker") );
+	addLinkerA->setCheckable( false );
+	connect( addLinkerA, SIGNAL( triggered() ),
+			this, SLOT( addLinker() ) );
 
-    fileLoadA = new QAction( QIcon(":/fileOpen.png"), tr( "Open" ), this );
-    fileLoadA->setShortcut( tr("Ctrl+O") );
-    fileLoadA->setStatusTip( tr("Load a NeuralNetwork from file") );
-    fileLoadA->setCheckable( false );
-    connect( fileLoadA, SIGNAL( triggered() ),
-            this, SLOT( fileLoad() ) );
+	QAction* showCreditsA = new QAction( tr( "Credits" ), this );
+	connect( showCreditsA, SIGNAL( triggered() ),
+			this, SLOT( credits() ) );
 
-    fileCloseA = new QAction( QIcon(":/fileClose.png"), tr( "Close" ), this );
-    fileCloseA->setShortcut( tr("Ctrl+W") );
-    fileCloseA->setStatusTip( tr("Close NeuralNetwork") );
-    fileCloseA->setCheckable( false );
-    connect( fileCloseA, SIGNAL( triggered() ),
-            this, SLOT( fileClose() ) );
-
-    fileSaveA = new QAction( QIcon(":/fileSave.png"), tr( "Save" ), this );
-    fileSaveA->setShortcut( tr("Ctrl+S") );
-    fileSaveA->setStatusTip( tr("Save NeuralNetwork") );
-    fileSaveA->setCheckable( false );
-    connect( fileSaveA, SIGNAL( triggered() ),
-            this, SLOT( fileSave() ) );
-
-    fileSaveasA = new QAction( QIcon(":/fileSaveas.png"), tr( "Save as ..." ), this );
-    fileSaveasA->setShortcut( tr("Ctrl+S") );
-    fileSaveasA->setStatusTip( tr("Save NeuralNetwork with differente name") );
-    fileSaveasA->setCheckable( false );
-    connect( fileSaveasA, SIGNAL( triggered() ),
-            this, SLOT( fileSaveas() ) );
-
-    QAction* showCreditsA = new QAction( tr( "Credits" ), this );
-    connect( showCreditsA, SIGNAL( triggered() ),
-            this, SLOT( credits() ) );
-
-    // ------- TOOLBAR
-    fileT = addToolBar( tr("Views") );
-    fileT->addAction( fileNewA );
-    fileT->addAction( fileLoadA );
-    fileT->addAction( fileCloseA );
-    fileT->addAction( fileSaveA );
-    fileT->addAction( fileSaveasA );
+	// ------- TOOLBAR
+	QToolBar* fileT = addToolBar( tr("File") );
+	fileT->setObjectName( "File-ToolBar" );
+	fileT->addAction( fileNewA );
+	fileT->addAction( fileLoadA );
+	fileT->addAction( fileCloseA );
+	fileT->addAction( fileSaveA );
+	fileT->addAction( fileSaveasA );
 	fileT->setMovable( false );
 
-    // ------- MENU
-    QMenuBar* bar = menuBar();
-    QMenu* menu = bar->addMenu( tr("File") );
-    menu->addAction( fileNewA );
-    menu->addAction( fileLoadA );
-    menu->addAction( fileCloseA );
-    menu->addAction( fileSaveA );
-    menu->addAction( fileSaveasA );
+	fileT = addToolBar( tr("Edit") );
+	fileT->setObjectName( "Edit-ToolBar" );
+	fileT->addAction( addClusterA );
+	fileT->addAction( addLinkerA );
+	fileT->setMovable( false );
 
-    QMenu* mviews = bar->addMenu( tr("Views") );
+	// ------- MENU
+	QMenuBar* bar = menuBar();
+	QMenu* menu = bar->addMenu( tr("File") );
+	menu->addAction( fileNewA );
+	menu->addAction( fileLoadA );
+	menu->addAction( fileCloseA );
+	menu->addAction( fileSaveA );
+	menu->addAction( fileSaveasA );
+	
+	menu = bar->addMenu( tr("Edit") );
+	menu->addAction( addClusterA );
+	menu->addAction( addLinkerA );
+	
+	QMenu* mviews = bar->addMenu( tr("Views") );
 
     menu = bar->addMenu( tr("&About") );
     menu->addAction( showCreditsA );
@@ -128,10 +157,12 @@ MainWindow::MainWindow( QWidget* parent )
     fileSaveA->setEnabled( false );
     fileSaveasA->setEnabled( false );
     fileCloseA->setEnabled( false );
+	addClusterA->setEnabled( false );
+	addLinkerA->setEnabled( false );
 }
 
 void MainWindow::fileNew() {
-    if ( hasChanges ) {
+    if ( nn && nn->hasChanges() ) {
         switch( QMessageBox::warning( this, tr("NNFW Editor"), tr("Save changes to the current neural network?? <br><br>"), tr("Save"), tr("Cancel"), tr("Don't save"), 0, 1 ) ) {
         case 0:
             if ( fileSave() ) {
@@ -152,10 +183,12 @@ void MainWindow::fileNew() {
     fileSaveA->setEnabled( true );
     fileSaveasA->setEnabled( true );
     fileCloseA->setEnabled( true );
+	addClusterA->setEnabled( true );
+	addLinkerA->setEnabled( true );
 }
 
 void MainWindow::fileLoad() {
-    if ( hasChanges ) {
+    if ( nn && nn->hasChanges() ) {
         switch( QMessageBox::warning( this, tr("NNFW Editor"), tr("Save changes to the current neural network?? <br><br>"), tr("Save"), tr("Cancel"), tr("Don't save"), 0, 1 ) ) {
         case 0:
             if ( fileSave() ) {
@@ -183,10 +216,12 @@ void MainWindow::fileLoad() {
     fileSaveA->setEnabled( true );
     fileSaveasA->setEnabled( true );
     fileCloseA->setEnabled( true );
+	addClusterA->setEnabled( true );
+	addLinkerA->setEnabled( true );
 }
 
 void MainWindow::fileClose() {
-    if ( hasChanges ) {
+    if ( nn && nn->hasChanges() ) {
         switch( QMessageBox::warning( this, tr("NNFW Editor"), tr("Save changes to the current neural network?? <br><br>"), tr("Save"), tr("Cancel"), tr("Don't save"), 0, 1 ) ) {
         case 0:
             if ( fileSave() ) {
@@ -204,6 +239,8 @@ void MainWindow::fileClose() {
     fileSaveA->setEnabled( false );
     fileSaveasA->setEnabled( false );
     fileCloseA->setEnabled( false );
+	addClusterA->setEnabled( false );
+	addLinkerA->setEnabled( false );
 }
 
 bool MainWindow::fileSave() {
@@ -220,6 +257,13 @@ bool MainWindow::fileSaveas() {
 		return false;
 	}
 	return nn->saveTo( filename );
+}
+
+void MainWindow::addCluster() {
+	nn->addCluster( new ClusterModel( new SimpleCluster( 5 ) ) );
+}
+
+void MainWindow::addLinker() {
 }
 
 void MainWindow::credits() {

@@ -35,7 +35,8 @@ class OutputFunctionModel;
 
 /*! \brief keep trace of all models allocated associating them to nnfw classes
  *
- *  Details here
+ * \par Description
+ * \par Warnings
  */
 class FLEX_API ModelMaps : public QObject {
 	Q_OBJECT

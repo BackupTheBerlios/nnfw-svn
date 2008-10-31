@@ -30,7 +30,8 @@ class PropertizedModel;
 
 /*! \brief Model of AbstractPropertyAccess and its hierachy classes
  *
- *  Details here
+ * \par Description
+ * \par Warnings
  */
 class FLEX_API PropertyAccessModel : public QObject {
 	Q_OBJECT
@@ -69,7 +70,8 @@ private:
 
 /*! \brief Model of Propertized class
  *
- *  Details here
+ * \par Description
+ * \par Warnings
  */
 class FLEX_API PropertizedModel : public QObject {
 	Q_OBJECT
