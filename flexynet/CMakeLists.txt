@@ -1,5 +1,6 @@
 PROJECT( FLEXYNET )
 SET( CMAKE_COLOR_MAKEFILE ON )
+cmake_minimum_required(VERSION 2.4)
 
 ### configure CMake to link against Qt4
 FIND_PACKAGE( Qt4 REQUIRED )
