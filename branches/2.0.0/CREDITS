@@ -1,0 +1,29 @@
+Copyright 2005-2008 Gianluca Massera <gmassera@istc.cnr.it>
+
+Current Maintainers:
+    * Gianluca Massera <mave@mail.berlios.de>
+
+Thanks: ( randomly ordered ;-) )
+	* Matteo De Felice
+		feedbacks and debugging
+	* Vadim Tikhanoff
+		debugging and testing backpropagation algorithm
+	* Stefano Zappacosta
+		first version of backpropagation algorithm
+	* Fabio Ruini
+		implementation of RealMat::flatRealMat()
+		Mac OS X tester
+    * Federico Cecconi
+        for consulting about project design
+    * Marco Mirolli
+        project design, in particular redesigning of learning part, developing library, debugging
+    * Francesco Mannella
+        implementation of RealVec::norm() and
+        outer-product RealVec::mul()
+    * Eduardo Coutinho
+        feedback about real usage of NNFW in research
+
+Thanks to all people involved in follow projects:
+    * CMake: very useful tool for cross-platform compiling
+    * Intel Matrix Kernel Library
+    * trolltech QT library

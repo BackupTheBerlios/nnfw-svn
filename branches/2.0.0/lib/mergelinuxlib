@@ -1,0 +1,5 @@
+open libnnfw.a
+addlib libgsl.a
+save
+end
+

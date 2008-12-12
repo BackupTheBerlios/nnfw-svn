@@ -1,0 +1,544 @@
+==== Legend of this File ====
+ - Each SVN commit is highlighted by an entry row of following template:
+
+    ==> #revision - dd/mm/yyyy <==
+
+ - Each change comment starts with a symbols indicating the type, followed by
+    author name within brakets and the comment:
+
+S <mave> comment goes here
+
+   where S can be one of the following symbols:
+    '+' : means that something has been added to NNFW
+    '-' : means that something has been dropped from NNFW
+    'B' : means a BugFix
+    'C' : means that something has been changed (e.g. implementation of a Class or a signature method)
+==== End of Legend ====
+
+    ==> 291 - 6/06/2008 - 1.1.5 release <==
+
++ <mave> completed the version 1.0 of C interface
+B <mave> fixed crashing when "name" property is not passed to PropertySettings constructor
+C <mave> Linkers can now be instanciated via PropertySettings without specifying "baseneuralnet"
+C <mave> adjusted nnfw-config and NNFWConfig.cmake scripts for use also C interface
+
+    ==> 288 - 4/06/2008 <==
+
++ <mave> added NNFW_INTERNAL macro for un-export internal data and types
++ <mave> added initial draft of C interface
+
+    ==> 285 - 30/05/2008 - 1.1.4 release <==
+
+B <mave> resolved bug in saving of RealMat on XML file
+B <mave> resolved bug in skipList when saving on XML file
+
+    ==> 280 - 13/05/2008 - 1.1.3 release <==
+
+C <mave> prettyfied printing of RealMat on XML file
++ <mave> added a check to Random::flatInt(min,max) when NNFW is in Debug mode
++ <mave> added new GainFunction to OutputFunction hierarchy
++ <mave> added new LogLikeFunction to OutputFunction hierarchy
++ <mave> added skipList parameter to saveXML
+C <mave> resolved real number printing unfriendly
+
+    ==> 278 - 21/04/2008 - 1.1.2 release <==
+
+B <mave> fixed installer problems
+B <mave> resolved implementation bug of SimpleTimer on Windows
+
+    ==> 275 - 11/04/2008 - 1.1.1 release <==
+    ==> 274 - 10/04/2008 <==
+
+B <mave> Fixed bug in Random::flatInt() when GSL is not used
+
+    ==> 273 - 10/04/2008 <==
+
+B <mave> Fixed bug in BaseNeuralNet::randomize
+
+    ==> 271 - 10/04/2008 - 1.1.0 release <==
+
++ <mave> re-changed BaseNeuralNet::find methods, they accept const pointers
+
+    ==> 270 - 26/03/2008 <==
+
++ <mave> added a method for getting the hidden clusters
++ <mave> speedup BaseNeuralNet::getByName for big networks
++ <mave> added NNFW_VERSION macro
++ <mave> added SimpleTimer class
++ <mave> added erase method to VectorData
++ <mave> added method for calculating MSE and RMSD to LearningAlgorithm
+C <mave> changed LearningAlgorithm interface for dealing with Pattern and PatternSet
++ <mave> added Pattern and PatternSet classes for an easy setup of Learning/Test sets
++ <mave> added BaseNeuralNet::byName template method for an easy retreving of
+	Clusters and Linkers added to BaseNeuralNet objects
+
+    ==> 267 - 21/03/2008 <==
+
+C <mave> updated Factory with new output functions
++ <mave> added LinearFunction y=m*x+b
+C <mave> Rename LinearFunction to RampFunction
++ <mave> added WinnerTakeAll output function
++ <mave> added max/minIndex and max/minValue to RealVec
++ <mave> added PseudoGauss output function
++ <mave> added Triangle output function
++ <mave> added Sawtooth output function
++ <mave> added Periodic Output functions
++ <mave> added min and max function to types.h
+C <mave> more comments on BackPropagationAlgo::getError
+
+    ==> 265 - 10/03/2008 <==
+
++ <mave> added a parameter on saveXML for choosing the precision for real data
+C <mave> augmented precision when saving real data on XML file
+C <mave> added support for Mac Os X Frameworks bundle
+C <mave> simplified construction of nnfw-config in CMakeLists.txt
+
+    ==> 261 - 06/03/2008 - 1.0.5 release <==
+
+B <mave> resolved inconsistence on saving mode property of CopyLinker on XML
+C <mave> improved comments on BackPropagationAlgo::getError
+
+    ==> 260 - 06/03/2008 - 1.0.4 release <==
+
+B <mave> resolved the parsing of 'mode' attribute of CopyLinker
+B <mave> resolved "XML I/O CopyLinker Parse Error" reported on forum
+
+    ==> 259 - 04/03/2008 - 1.0.3 release <==
+
++ <mave> added momentum to BackPropagationAlgo
++ <mave> added methods setRate, rate to BackPropagationAlgo
+
+    ==> 258 - 22/02/2008 - 1.0.2 release <==
+
++ <mave> added FindNNFW.cmake; it will be installed in CMAKE_ROOT/Modules
+
+    ==> 257 - 21/02/2008 <==
+
++ <mave> added NNFWConfig.cmake for helping configuration with CMake
++ <mave> added "--config" to nnfw-config that print-out the NNFW_CONFIG
+C <mave> improved nnfw-config eliminating unecessary flags reported by the script
+C <mave> improved CMake build; added version information to library
+
+    ==> 253 - 16/01/2008 - 1.0.1 release <==
+
+C <mave> changed the name of SparseMatrixLinker::getMask() to mask()
+B <mave> SparseMatrixLinker was not Propertized complaint, 
+		added "mask" property and mask/setMask Variant methods
+B <mave> corrected version on nnfw-config
+
+    ==> 242 - 16/01/2008 - 1.0.0 release <==
+
+C <mave> BackPropagationAlgo uses AbstractModifier retrievied by Factory
++ <mave> added method in Factory for getting/registering AbstractModifier subclasses
++ <mave> added AbstractModifier hierarchy
++ <mave> added 'cover' method to RealMat
+
+    ==> 241 - 15/01/2008 <==
+
+B <mave> resolved problem on nnfw-config on Mac OSX
++ <mave> implemented BaseNeuralNet::clone()
+C <mave> now the setOrder accept 'const UpdatableVec&'
++ <mave> added propertySettings method for retrieving the current status of Propertized objects
+- <mave> deleted uility for creating backpropagation algorithm
+- <mave> deleted modifier and subclasses;
+		it seem enough the deltarule methods added to RealVec & RealMat
+- <mave> deleted all classes of previous implementation of learning algorithms
+B <mave> resolved a bug in feedForwardNet utility
++ <mave> added assign_reverse method to VectorData that assign the element in revers order
++ <mave> completed the first version of BackPropagationAlgo
+
+    ==> 240 - 10/12/2007 <==
+
+C <mave> changed CMakeLists.txt for better support on Mac OSX
+
+    ==> 238 - 3/12/2007 <==
+
++ <mave> Propertized and all its subclasses are now clonable via clone() method
++ <mave> added const versions of Cluster::inputs and ::outputs methods
+C <mave> Cluster::isAccumulate and ::getFunction now are const methods as suppose to be
+C <mave> Updatable::name now is a const method as suppose to be
+
+    ==> 236 - 29/10/2007 <==
+
+C <mave> scale, square, normalize, neg and step RealVec methods now returns a reference to itself
+
+    ==> 234 - 13/09/2007 - 0.9.3 release  <==
+
++ <mave> added norm and normalize for RealMat
+B <mave> fixed a bug in GaussFunction constructor (Propertized version)
++ <mave> added LinearComboFunction
+B <mave> fixed visibility bug in doxygen comments
+
+    ==> 230 - 6/08/2007 - 0.9.2 release  <==
+
+B <mave> resolved linkage problem with nMessages under windows
+
+    ==> 228 - 2/07/2007 - 0.9.1 release <==
+
++ <mave> added ScaleFunction that scale the inputs vector of Cluster
++ <mave> added normalize method to RealVec for normalize it
++ <mave> added Random::flatRealVec to randomize a vector
++ <mave> added Random::flatRealMat to randomize a matrix
+
+    ==> 224 - 5/06/2007 - 0.9.0 release <==
+
+C <mave> renamed Updatable::getName() to name() 
+
+    ==> 223 - 5/06/2007 <==
+
+B <mave> fixed error while loading old-format XML files
+C <mave> to Linker constructor by PropertySettings are now passed a pointer to BaseNeuralNet
++ <mave> added a generic data pointer (void*) to Variant and two template method for accessing it
+B <mave> bugfix error in exporting template classes in Windows; added NNFW_TEMPLATE macro for 
+		handling the exportation of template classes
+
+    ==> 222 - 4/06/2007 <==
+
+B <mave> bugfix in clone method of GaussFunction
+
+    ==> 221 - 2/06/2007 <==
+
+C <mave> new version of XML files; now the read-only properties are written
+		as attributes of node <cluster> and passed to the constructor via
+		Creatore registered into the Factory
++ <mave> add the method Propertized::convertStringTo for converting the string-type
+		Variant readed from XML into the type required by class
+
+    ==> 220 - 25/05/2007 <==
+
+C <mave> improved error messages in xml processing
+B <mave> added more exit-points in xml processing to avoid data corruption when
+		mandatory tags are not present
+B <mave> bugfixed segmentation fault when it's omitted the attribute 'i' in the xml 
+		file for vector properties
+B <mave> bugfixed segmentation fault when processed a non-existing property in xml files
++ <mave> added an experimental class nnfwString for future Unicode support
+- <mave> the old nnfwMessage is not present anymore
+C <mave> created a new system for warning, error and fatal messages
+C <mave> NNFW_DEBUG is defined also when CMake built type is ReleaseWithDebugInfo
+
+    ==> 218 - 25/05/2007 <==
+
+B <mave> now nnfw-config report correctly the MKL include directory
+C <mave> renamed RealVec::mul to RealVec::outprod, and bugfixed
++ <mave> added class BackPropagationAlgo, a sub-class of LearningAlgorithm for BackPropagation
++ <mave> implemented clone method to sub-classes of MatrixModifier and VectorModifier
+C <mave> renamed some methods of sub-classes of MatrixModifier
+C <mave> Variant methods getRealVec and getRealMat now returns non-const pointers
+C <mave> now Modifier class inheritance from Clonable
++ <mave> added methods setVectorModifier, setMatrixModifier to LearningAlgorithm
+
+    ==> 201 - 10/05/2007 <==
+
+C <mave> Factory map "MatrixLinker" to "DotLinker" for backward compatibility
+
+    ==> 200 - 10/05/2007 <==
+
+C <mave> Cluster::accumulate() renamed to setAccumulate()
+- <mave> remove Cluster::size(); use Cluster::numNeurons()
+
+    ==> 199 - 10/05/2007 <==
+
+- <mave> removed deprecated methods: MatrixLinker::getRows() and getCols()
+B <mave> adjusted Doxygen documentation; now all methods are displayed corretcly
+C <mave> MatrixLinker is now Abstract; use DotLinker
++ <mave> added a method RealVec::neg() but with different signature that old VectorData::neg()
+- <mave> removed the method VectorData::neg()
+C <mave> changes in Doxygen documentation
+
+    ==> 192 - 20/04/2007 - 0.8.1 release <==
+
++ <mave> added two method for convenience: BaseNeuralNet::addInputCluster and addOutputCluster
+- <mave> removed template method BaseNeuralNet::byName
+C <mave> moved VectorData::sum() to RealVec::sum()
+
+    ==> 177 - 20/04/2007 - 0.8.0 release <==
+
+C <mave> Cluster::size() renamed into numNeurons()
+
+    ==> 176 - 20/04/2007 <==
+
+B <mave> bugfix in assignment operator of RealVec and VectorData
++ <mave> added LeakyIntegratorFunction
+
+    ==> 169 - 12/04/2007 - 0.7.2 release <==
+
++ <mave> added support for Windows; created Installer
+
+    ==> 156 - 28/03/2007 - 0.7.1 release <==
+
++ <mave> various bugfixes; Important bugfix in XML save/load
+
+    ==> 146 - 5/02/2007 - 0.7.0 release <==
+
++ <mave> added Outer-product, thanks to Francesco
+
+    ==> 145 - 5/02/2007 <==
+
++ <mave> added another Random::flatInt method
+
+    ==> 143/144 - 4/01/2007 <==
+
+B <mave> bugfix in nnfw-config script generation
++ <mave> added nnfw-config script for Linux users
+
+    ==> 142 - 4/01/2007 <==
+
+C <mave> implemented Random::gauss with GSL library
+B <mave> correct wrong initialization in switch
+
+    ==> 141 - 29/11/2006 <==
+
++ <mave> memoryCopy & memoryZeroing specialization for bool type
++ <mave> SparseMatrixLinker, added methods: disconnectRandom(Real), connectRandom(Real) and disconnectAll()
+C <mave> disconnect(Real) changed name in disconnectRandom(Real), SparseMatrixLinker
+C <mave> all attributes of MatrixLinker are privates now
+
+    ==> 140 - 27/11/2006 <==
+
++ <mave> added Gaussian output function (this complete the support for RBF networks)
++ <mave> added NormLinker (perform the euclidean norm calculation)
++ <mave> added DotLinker (perform the dot-product calculation)
+B <mave> in CMakeLists.txt
++ <mave> added documentation about properties of classes
+C <mave> CSS apidoc's stylesheet changed
++ <mave> now Vector property are saved into XML files
+
+    ==> 135 - 13/11/2006 <==
+
+B <mave> bugfixs in Doxygen documentation
++ <mave> implemented saveXML (vector properties are not yet supported)
++ <mave> method RealVec::at(int) for accessing element from a pointer (an alternative to operator[])
+B <mave> bugfixs in parsing primitive types (int, u_int, char, u_char, boolean)
+C <mave> improved and optimized XML parsing implementation
+- <mave> removed special tag <outputfunction>
+
+    ==> 133 - 10/11/2006 <==
+
+B <mave> resolved bug in recursive property parsing
++ <mave> new method setCluster into OutputFunction class; this method is called when the function is inserted
+            into a Cluster by the Cluster
++ <mave> xml parser now support Vector property and check is a property is writable before parsing it
++ <mave> added a Vector property to PoolFunction, 'functions', for settings the OutputFunction
++ <mave> New kind of properties that handles a Vector of Variant instead of single Variant value;
+            new methods for creating/accessing them: addVectorProperty & set/getVectorProperty( name, index )
+
+    ==> 132 - 10/11/2006 <==
+
++ <mave> Factory now creates also Propertized objects
+
+    ==> 131 - 8/11/2006 <==
+
+C <mave> messages.h headers can only be included by types.h
+C <mave> all headers include directly "types.h" (a preparation of DLL for windows)
++ <mave> added 'shared' option to NNFW_CONFIG for building shared library
+- <mave> dropped 'debug' from NNFW_CONFIG, use CMAKE_BUILD_TYPE instead
+C <mave> Improved CMakeLists.txt
+
+    ==> 124 - 1/11/2006 <==
+
+C <mave> prettified the output of output stream operators
+B <mave> resolved bug in Updatable class (moved implementation into a .cpp file)
+C <mave> updated todo list
+
+    ==> 123 - 30/10/2006 <==
+
+C <mave> <outfunction> tag now is handled by xml I/O
+
+    ==> 122 - 30/10/2006 <==
+
+C <mave> updated the todo list
+
+    ==> 120 - 30/10/2006 <==
+
++ <mave> typedef checking to print out an error message when users tries to includes directly
+        primtypes.h, observ.h, vectordata.h, matrixdata.h, realvec.h and realmat.h
+
+    ==> 119 - 27/10/2006 <==
+
+C <mave> updated the ToDo List
+C <mave> also <outputfunction> tag is correctly parsed
++ <mave> Factory now manage (create/register) OutputFunction classes
+- <mave> deprecated all input stream operator
++ <mave> now OutputFunction, Cluster and Linker are properly managed by '<<' operators
++ <mave> added method for creating subclasses of OutputFunction from a PropertySettings map
+C <mave> moved implementation of subclasses of OutputFunction from .h to .cpp file
++ <mave> added method setProperties to Propertized class
+
+    ==> 117 - 27/10/2006 <==
+
+B <mave> resolved bug in sparsematrixlinker.h
+
+    ==> 116 - 27/10/2006 <==
+
+B <mave> bugfix in parsing <order> tag
+
+    ==> 115 - 27/10/2006 <==
+
+C <mave> added random.h to includes presents in nnfw.h
+
+    ==> 114 - 25/10/2006 <==
+
+C <mave> a little change in parsing <cluster> ;-)
+
+    ==> 113 - 25/10/2006 <==
+
+C <mave> due to problems to elaborate xmlChar* strings of libxml2, I used the QT library for parsing
+        xml files; Now, the NNFW depends on QT-4
+
+    ==> 105 - 25/10/2006 <==
+
+C <mave> improved the new style of Doxygen documentation
+
+    ==> 104 - 25/10/2006 <==
+
+C <mave> updated Doxygen to version 1.5.0 and restyled
+
+    ==> 103 - 17/10/2006 <==
+
+- <mave> Dropped make targets: distclean, apidoc, apidoc-clean (these doesn't support out-source buildings)
+- <mave> Dropped the support for QMake compilation procedure
+C <mave> Starting implementation of load/save operation from XML files;
+            used libxml2 for parsing the XML files;
+            modified CMakeList.txt to link against libxml2
+C <mave> Moved implementation of Variant from inline to normal function (propertized.cpp)
++ <mave> Variant now support Linker* type
+C <mave> Propertized has a property 'typename' for registering the name of the class;
+B <mave> fixed memory-leak in Updatable name allocation
+
+    ==> 102 - 17/10/2006 <==
+
+- <marmir> Removed mask property (and the related functions) from BaseNeuralNet in neuralnet.h (you can use SetOrder, instead)
++ <marmir> Added another constructor to SparseMatrixLinker in which you can specify the probability of connectivity and whether the matrix has zeros in the diagonal
+
+    ==> 101 - 10/10/2006 <==
+
+C <mave> all OutputFunction (except for PoolFunction) are propertized
+C <mave> VectorData copy-constructor create always a VectorData with own data allocated
+
+    ==> 100 - 05/10/2006 <==
+
+C <mave> CopyLinker propertized
+B <mave> various bugfixes in the library
+C <mave> Factory is now integrated with Propertized classes and use PropertySettings as
+            creators' parameters
+
+    ==> 99 - 20/09/2006 <==
+
+C <mave> SparseMatrixLinker propertized
+C <mave> MatrixLinker propertized
+C <mave> Linker propertized
+C <mave> add Cluster* type to Variant
+C <mave> in the Linker hierarchy, clusters from and to are now attributes of base class Linker;
+            subclasses changed accordlying
+C <mave> DDECluster propertized
+C <mave> using VectorData views for speed-up implementation of FakeCluster
+C <mave> FakeCluster propertized
+
+    ==> 98 - 20/09/2006 <==
+
+C <mave> BiasedCluster propertized
+C <mave> SimpleCluster propertized
+C <mave> Cluster propertized
+C <mave> Updatable propertized
++ <mave> Variant now support OutputFunction pointers
+
+    ==> 97 - 20/09/2006 <==
+
+C <mave> nnfw.h also includes ionnfw header, now
+C <mave> the method Cluster::setUpdater has been renamed to setFunction
+C <mave> all subclasses of ClusterUpdater are changed accordlying;
+           i.e. SigmoidUpdater to SigmoidFunction, etc
+C <mave> ClusterUpdater class has been renamed to OutputFunction
+
+    ==> 96 - 11/09/2006 <==
+
++ <mave> PropertySettings type: the base type for configuring object via Properties
+
+    ==> 95 - 08/09/2006 <==
+
+C <mave> CREDITS file
+
+    ==> 94 - 08/09/2006 <==
+
+B <mave> in result accessing in VectorData::neg()
+B <mave> in reallocating memory in VectorData::resize()
+
+    ==> 92 - 08/09/2006 <==
+
++ <marmir> Added three headers and 1 cpp: 
+            modifier.h (abstract classes: Modifier, MatrixModifier and VectorModifier), 
+            libmatrixmodifiers.h/cpp (with three matrixmodifiers), and 
+            learningalgorithm.h (abstract learning algorithm)
+
+    ==> 91 - 07/09/2006 <==
+
++ <marmir> Added functions compare, sum, and not for VectorData in vectordata.h
++ <marmir> Added implementation of >> operator for RealMat in ionnfw.cpp
++ <marmir> Added matrix() function to MatrixLinker
+C <marmir> Generalized BinaryUpdater in StepUpdater (min e max are now settable)
+
+    ==> 90 - 04/09/2006 <==
+
+C <mave> prettified printing of boolean values of Variant
+B <mave> fixed error in boolean constructor of Variant
++ <mave> property 'size' and 'accumulate' to Cluster class
++ <mave> method for getting the value of Accumulate flag
+C <mave> re-organization of doxygen groups
+
+    ==> 89 - 03/09/2006 <==
+
+B <mave> fixed errors in PoolUpdater::clone() implementation
++ <mave> added Properties 'inputs' and 'outputs' to Cluster class
+C <mave> re-arranging method declaration in Cluster.h using doxygen groups
++ <mave> added Property 'name' to Updtable class
+C <mave> Updatable inherits from Propertized now
++ <mave> added const char* (constant string) type support to Variant; changed ionnfw for handling the new type
+
+    ==> 88 - 02/09/2006 <==
+
++ <mave> added ionnfw.h module that contains all functions regarding input/output operation;
+        it contains overloaded operators << for almost all types of NNFW; not yet full implemented
+B <mave> fixed memory leak in Updatable and BaseTeachBlock implementations
+C <mave> continuing developing of Property feature
+
+    ==> 87 - 29/08/2006 <==
+
+B <mave> fixes in Propertized compiling
+
+    ==> 86 - 29/08/2006 <==
+
+B <marco> fix observ.h 
+
+    ==> 85 - 29/08/2006 <==
+
++ <mave> a draft of future support of properties of class
+C <mave> setUpdater() method of Cluster is changed; now it requires only a reference to ClusterUpdater
+        and it'll create an internal copy of ClusterUpdater via clone() method; so it's possible to
+        pass temporary object to setUpdater() now
+C <mave> ClusterUpdater inherits from Clonable too
++ <mave> added the PoolUpdater, a special ClusterUpdater that allow to set different ClusterUpdater for
+        different neurons; it implements the capability below dropped from Cluster
+C <mave> from Cluster was dropped the possibility to set different ClusterUpdater for different neurons,
+        this simplify the subclasses implementation
+
+    ==> 84 - 22/08/2006 <==
+
+B <mave> in CMakeLists.txt, fixed routing for searching MKL path on Linux
+
+    ==> 83 - 22/08/2006 <==
+
+C <mave> Improved CMakeLists.txt
++ <mave> Added MatrixData view functionality for viewing VectorData as MatrixData
+C <mave> VectorData inherit publically from Observable now
++ <mave> Added a VectorData::assign() method for copying data between VectorData with different sizes
++ <mave> Added RealVec::norm() method, thanks to Francesco
+
+    ==> 82 - 17/08/2006 <==
+
+B <mave> data inconsistence after destroying a VectorData before its views
+C <mave> Observer/Observable pattern now can notify different events
++ <mave> CMake project file CMakeLists.txt
++ <mave> this CHANGELOG
+
+    ==> 81 - 16/08/2006 <==

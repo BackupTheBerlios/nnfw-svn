@@ -1,0 +1,581 @@
+body {
+    background-color: white;
+    background: url(../img/sfondo2.jpg);
+    font: 11px "Helvetica", "Tahoma", "Verdana", sans-serif;
+}
+
+p, span, caption, td, th, ul, li, dl, div {
+    font: 11px "Helvetica", "Tahoma", "Verdana", sans-serif;
+}
+
+p {
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+
+li {
+    list-style-image: url(../img/bullet.gif);
+}
+
+br {
+    margin-top: -10px;
+}
+
+center {
+    font: 10px "Helvetica", "Tahoma", "Verdana", sans-serif;
+    text-align: center;
+}
+
+caption {
+    font-weight: bold;
+}
+
+h1 {
+    text-align: center;
+    font-size: 16px;
+    color: #005AF6;
+}
+
+h2 {
+    font: bold italic 14px "Helvetica", "Verdana", sans-serif;
+    color: #005AF6;
+    padding-left: 8px;
+    text-align: left;
+    border-bottom: 2px solid #888;
+    margin-bottom: 0px;
+}
+
+h3,h4,h5,h6 {
+    text-align: left;
+    font-size: 12px;
+    color: #005AF6;
+    border-bottom: 1px solid #888;
+    padding-left: 16px;
+}
+
+#head {
+    background-color: white;
+    margin-bottom: -6px;
+}
+
+dt {
+    text-align: left;
+    font-size: 12px;
+    color: #005AF6;
+    border-bottom: 1px solid #888;
+    padding-left: 14px;
+}
+
+div.tabs {
+    position: relative; top: 0px; left: 0px;
+    padding: 0px 0px 0px 0px;
+    margin: 0px 0px 0px 0px;
+}
+
+div.tabs ul {
+    padding: 0px 0px 0px 0px;
+    margin: 0px 0px 7px 0px;
+}
+
+div.tabs li {
+    font-size: 14px;
+    display: inline;
+}
+
+div.tabs a {
+    display: inline;
+    font: 14px "Helvetica", "Tahoma", "Verdana", sans-serif;
+    color: black;
+    width: 130px;
+    padding: 0px 6px 4px 6px;
+    background: url(../img/sfondo_menu.jpg);
+    border-top: 1px solid #CCC;
+    border-left: 1px solid #AAA;
+    border-right: 1px solid #666;
+    border-bottom: 1px solid #000;
+    margin-bottom: 1px;
+    text-decoration: none;
+}
+
+div.tabs a:hover {
+    color: #0000FF;
+    font-style: italic;
+    border-top: 1px solid #666;
+    border-left: 1px solid #666;
+    border-right: 1px solid #AAA;
+    border-bottom: 1px solid #CCC;
+}
+
+/*********************************************************/
+/*************** Table of Contents      *****************/
+/*********************************************************/
+#tocHead {
+    font: italic 16px "Helvetica", "Tahoma", "Verdana", sans-serif;
+    background-color: #C4EFA1;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-top: 1px solid #CCC;
+    border-left: 1px solid #AAA;
+    border-right: 1px solid #666;
+}
+#tocContent li {
+    list-style-type: none;
+}
+#tocContent {
+    font: 12px "Helvetica", "Tahoma", "Verdana", sans-serif;
+    background-color: #E4ECEC;
+    padding: 4px 10px 4px 10px;
+    border-left: 1px solid #AAA;
+    border-right: 1px solid #666;
+    border-bottom: 1px solid #000;
+    margin-bottom: 15px;
+}
+#tocContent ul {
+    list-style-type: none;    
+}
+#tocContent a,
+#tocContent a:visited {
+    color: black;
+    text-decoration: none;
+}
+#tocContent a:hover {
+    border-top: 1px solid #888;
+    border-bottom: 1px solid #888;
+}
+#tocContent ul.level_one {
+    padding: 0px 0px 0px 5px;
+}
+#tocContent ul.level_two {
+    padding: 0px 0px 0px 15px;
+}
+
+/*********************************************************/
+/*************** PIE PAGINA' & COPYRIGHT *****************/
+/*********************************************************/
+#piepagina {
+    border-top: 2px solid #777;
+    padding: 5px 5px 5px 5px;
+    margin-top: 100px;
+}
+
+#logos {
+    float: left;
+    text-align: left;
+}
+
+#logos a,
+#logos a:visited {
+    font: italic 14px "Helvetica", "Tahoma", "Verdana", sans-serif;
+    text-decoration: none;
+}
+#logos a:hover {
+    color: red;
+}
+
+#copyright {
+    float: right;
+    text-align: right;
+}
+
+#copyright a,
+#copyright a:visited {
+    font: italic 14px "Helvetica", "Tahoma", "Verdana", sans-serif;
+    text-decoration: none;
+}
+#copyright a:hover {
+    color: red;
+}
+
+#copyright span,
+#copyright p {
+    font: 12px "Helvetica", "Tahoma", "Verdana", sans-serif;
+    margin: 0px 0px 0px 0px;
+}
+/*********************************************************/
+
+/*****************************************/
+/****** Table of Properties   ***********/
+/****************************************/
+table.proptable {
+    border: none;
+    background-color: #f5f5f5;
+    border-left: 1px solid #AAA;
+    border-right: 1px solid #666;
+    border-top: 1px solid #CCC;
+    border-bottom: 1px solid #000;
+    margin-top: 5px;
+}
+table.proptable th {
+    border: none;
+    font-weight: bold;
+    text-align: center;
+    border-bottom: 2px dotted #C8CED2;
+}
+table.proptable td {
+    background-color: #f5f5f5;
+    border: none;
+    text-align: center;
+}
+table.proptable td.prophead {
+    background-color: #E8EEF2;
+    text-align: center;
+    font-size: 13px;
+    font-variant: small-caps;
+}
+
+/*********************************************************/
+/****** Modified default settings of Doxygen ***********/
+/*********************************************************/
+DIV.qindex {
+    width: 100%;
+    background-color: #e8eef2;
+    border: 1px solid #84b0c7;
+    text-align: center;
+    margin: 2px;
+    padding: 2px;
+    line-height: 140%;
+}
+DIV.nav {
+    width: 100%;
+    background-color: #e8eef2;
+    border: 1px solid #84b0c7;
+    text-align: center;
+    margin: 2px;
+    padding: 2px;
+    line-height: 140%;
+}
+DIV.navtab {
+       background-color: #e8eef2;
+       border: 1px solid #84b0c7;
+       text-align: center;
+       margin: 2px;
+       margin-right: 15px;
+       padding: 2px;
+}
+TD.navtab {
+       font-size: 70%;
+}
+A.qindex {
+       text-decoration: none;
+       font-weight: bold;
+       color: #1A419D;
+}
+A.qindex:visited {
+       text-decoration: none;
+       font-weight: bold;
+       color: #1A419D
+}
+A.qindex:hover {
+    text-decoration: none;
+    background-color: #ddddff;
+}
+A.qindexHL {
+    text-decoration: none;
+    font-weight: bold;
+    background-color: #6666cc;
+    color: #ffffff;
+    border: 1px double #9295C2;
+}
+A.qindexHL:hover {
+    text-decoration: none;
+    background-color: #6666cc;
+    color: #ffffff;
+}
+A.qindexHL:visited { text-decoration: none; background-color: #6666cc; color: #ffffff }
+A.el {
+    text-decoration: none;
+    font-weight: bold;
+}
+A.elRef { font-weight: bold }
+A.code:link { text-decoration: none; font-weight: normal; color: #0000FF}
+A.code:visited { text-decoration: none; font-weight: normal; color: #0000FF}
+A.codeRef:link { font-weight: normal; color: #0000FF}
+A.codeRef:visited { font-weight: normal; color: #0000FF}
+A:hover { text-decoration: none; background-color: #f2f2ff }
+DL.el { margin-left: -1cm }
+.fragment {
+       font-family: monospace, fixed;
+       font-size: 11px;
+}
+PRE.fragment {
+    border: 1px solid #CCCCCC;
+    background-color: #f5f5f5;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    margin-left: 2px;
+    margin-right: 8px;
+    padding-left: 6px;
+    padding-right: 6px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+DIV.ah { background-color: black; font-weight: bold; color: #ffffff; margin-bottom: 3px; margin-top: 3px }
+
+DIV.groupHeader {
+       margin-left: 16px;
+       margin-top: 12px;
+       margin-bottom: 6px;
+       font-weight: bold;
+}
+DIV.groupText { margin-left: 16px; font-style: italic; font-size: 90% }
+TD.indexkey {
+    background-color: #e8eef2;
+    font-weight: bold;
+    padding-right  : 10px;
+    padding-top    : 2px;
+    padding-left   : 10px;
+    padding-bottom : 2px;
+    margin-left    : 0px;
+    margin-right   : 0px;
+    margin-top     : 2px;
+    margin-bottom  : 2px;
+    border: 1px solid #CCCCCC;
+}
+TD.indexvalue {
+    background-color: #e8eef2;
+    font-style: italic;
+    padding-right  : 10px;
+    padding-top    : 2px;
+    padding-left   : 10px;
+    padding-bottom : 2px;
+    margin-left    : 0px;
+    margin-right   : 0px;
+    margin-top     : 2px;
+    margin-bottom  : 2px;
+    border: 1px solid #CCCCCC;
+}
+TR.memlist {
+   background-color: #f0f0f0; 
+}
+P.formulaDsp { text-align: center; }
+IMG.formulaDsp { }
+IMG.formulaInl { vertical-align: middle; }
+SPAN.keyword {
+    font-weight: bold;
+    color: #000000;
+}
+SPAN.keywordtype   {
+    color: #800000;
+}
+SPAN.keywordflow {
+    font-weight: bold;
+    color: #000000;
+}
+SPAN.comment {
+    font-style: italic;
+    color: #0000FF;
+}
+SPAN.preprocessor  {
+    color: #008000;
+}
+SPAN.stringliteral {
+    color: #DD0000;
+}
+SPAN.charliteral {
+    color: #FF00FF;
+}
+.mdescLeft {
+       padding: 0px 8px 4px 8px;
+    font-size: 10px;
+    font-style: italic;
+    background-color: #FAFAFA;
+    border-top: 1px none #E0E0E0;
+    border-right: 1px none #E0E0E0;
+    border-bottom: 1px none #E0E0E0;
+    border-left: 1px none #E0E0E0;
+    margin: 0px;
+}
+.mdescRight {
+       padding: 0px 8px 4px 8px;
+    font-size: 10px;
+    font-style: italic;
+    background-color: #FAFAFA;
+    border-top: 1px none #E0E0E0;
+    border-right: 1px none #E0E0E0;
+    border-bottom: 1px none #E0E0E0;
+    border-left: 1px none #E0E0E0;
+    margin: 0px;
+}
+.memItemLeft {
+    padding: 1px 0px 0px 8px;
+    margin: 4px;
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    border-top-color: #E0E0E0;
+    border-right-color: #E0E0E0;
+    border-bottom-color: #E0E0E0;
+    border-left-color: #E0E0E0;
+    border-top-style: solid;
+    border-right-style: none;
+    border-bottom-style: none;
+    border-left-style: none;
+    background-color: #FAFAFA;
+    font-size: 10px;
+}
+.memItemRight {
+    padding: 1px 8px 0px 8px;
+    margin: 4px;
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    border-top-color: #E0E0E0;
+    border-right-color: #E0E0E0;
+    border-bottom-color: #E0E0E0;
+    border-left-color: #E0E0E0;
+    border-top-style: solid;
+    border-right-style: none;
+    border-bottom-style: none;
+    border-left-style: none;
+    background-color: #FAFAFA;
+    font-size: 10px;
+}
+.memTemplItemLeft {
+    padding: 1px 0px 0px 8px;
+    margin: 4px;
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    border-top-color: #E0E0E0;
+    border-right-color: #E0E0E0;
+    border-bottom-color: #E0E0E0;
+    border-left-color: #E0E0E0;
+    border-top-style: none;
+    border-right-style: none;
+    border-bottom-style: none;
+    border-left-style: none;
+    background-color: #FAFAFA;
+    font-size: 10px;
+}
+.memTemplItemRight {
+    padding: 1px 8px 0px 8px;
+    margin: 4px;
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    border-top-color: #E0E0E0;
+    border-right-color: #E0E0E0;
+    border-bottom-color: #E0E0E0;
+    border-left-color: #E0E0E0;
+    border-top-style: none;
+    border-right-style: none;
+    border-bottom-style: none;
+    border-left-style: none;
+    background-color: #FAFAFA;
+    font-size: 10px;
+}
+.memTemplParams {
+    padding: 1px 0px 0px 8px;
+    margin: 4px;
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    border-top-color: #E0E0E0;
+    border-right-color: #E0E0E0;
+    border-bottom-color: #E0E0E0;
+    border-left-color: #E0E0E0;
+    border-top-style: solid;
+    border-right-style: none;
+    border-bottom-style: none;
+    border-left-style: none;
+       color: #606060;
+    background-color: #FAFAFA;
+    font-size: 10px;
+}
+.search     { color: #003399;
+              font-weight: bold;
+}
+FORM.search {
+              margin-bottom: 0px;
+              margin-top: 0px;
+}
+INPUT.search { font-size: 75%;
+               color: #000080;
+               font-weight: normal;
+               background-color: #e8eef2;
+}
+TD.tiny      { font-size: 75%;
+}
+a {
+    color: #1A41A8;
+}
+a:visited {
+    color: #2A3798;
+}
+.dirtab { padding: 4px;
+          border-collapse: collapse;
+          border: 1px solid #84b0c7;
+}
+TH.dirtab { background: #e8eef2;
+            font-weight: bold;
+}
+HR {
+    height: 0px;
+    border: none;
+}
+
+/* Style for detailed member documentation */
+.memtemplate {
+  font-size: 10px;
+  color: #606060;
+  font-weight: normal;
+} 
+.memnav { 
+  background-color: #e8eef2;
+  border: 1px solid #84b0c7;
+  text-align: center;
+  margin: 2px;
+  margin-right: 15px;
+  padding: 2px;
+}
+.memitem {
+    margin-top: 5px;
+}
+.memname {
+  white-space: nowrap;
+  font-weight: bold;
+}
+.memdoc{
+    background-color: #f5f5f5;
+    border-left: 1px solid #AAA;
+    border-right: 1px solid #666;
+    border-bottom: 1px solid #000;
+    padding-left: 7px;
+    padding-top: 2px;
+    padding-bottom: 7px;
+}
+.memproto {
+    background-color: #E8EEF2;
+    border-top: 1px solid #CCC;
+    border-left: 1px solid #AAA;
+    border-right: 1px solid #666;
+}
+.paramkey {
+  text-align: right;
+}
+.paramtype {
+  white-space: nowrap;
+}
+.paramname {
+  color: #602020;
+  font-style: italic;
+  white-space: nowrap;
+}
+/* End Styling for detailed member documentation */
+
+/* for the tree view */
+.ftvtree {
+    font-family: sans-serif;
+    margin:0.5em;
+}
+.directory { font-size: 9pt; font-weight: bold; }
+.directory h3 { margin: 0px; margin-top: 1em; font-size: 11pt; }
+.directory > h3 { margin-top: 0; }
+.directory p { margin: 0px; white-space: nowrap; }
+.directory div { display: none; margin: 0px; }
+.directory img { vertical-align: -30%; }

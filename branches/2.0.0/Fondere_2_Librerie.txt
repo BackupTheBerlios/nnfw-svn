@@ -1,0 +1,15 @@
+***** SOTTO LINUX *******
+Non ho ancora capito come farlo con le opzioni da riga di comando di 'ar', pero'
+lanciando 'ar -M' si apre una console speciale per elaborare le librerie e li eseguire:
+ > open libnnfw.a
+ > addlib libgsl.a
+ > save
+ > end
+
+***** SOTTO WINDOWS *******
+con il comando 'LIB.EXE' :
+ > LIB /OUT:"MergedLib.lib" Pezzo1.lib Pezzo2.lib
+
+******* QT e QMAKE ******
+Non ho ancora capito come includere le operazioni sopra nel file .pro 
+ 

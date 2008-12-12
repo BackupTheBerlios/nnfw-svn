@@ -1,5 +1,6 @@
 PROJECT( NNFW )
 SET( CMAKE_COLOR_MAKEFILE ON )
+cmake_minimum_required( VERSION 2.4 )
 
 ###### VERSION INFORMATION
 SET( VER_MAJ 1 )

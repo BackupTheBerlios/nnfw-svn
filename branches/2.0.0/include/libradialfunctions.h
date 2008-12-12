@@ -1,0 +1,103 @@
+/********************************************************************************
+ *  Neural Network Framework.                                                   *
+ *  Copyright (C) 2005-2008 Gianluca Massera <emmegian@yahoo.it>                *
+ *                                                                              *
+ *  This program is free software; you can redistribute it and/or modify        *
+ *  it under the terms of the GNU General Public License as published by        *
+ *  the Free Software Foundation; either version 2 of the License, or           *
+ *  (at your option) any later version.                                         *
+ *                                                                              *
+ *  This program is distributed in the hope that it will be useful,             *
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of              *
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the               *
+ *  GNU General Public License for more details.                                *
+ *                                                                              *
+ *  You should have received a copy of the GNU General Public License           *
+ *  along with this program; if not, write to the Free Software                 *
+ *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA  *
+ ********************************************************************************/
+
+#ifndef LIBRADIALFUNCTIONS_H
+#define LIBRADIALFUNCTIONS_H
+
+#include "types.h"
+
+/*! \file
+ *  \brief Library of Radial OutputFunction
+ *
+ */
+
+#include "outputfunction.h"
+#include "derivableoutputfunction.h"
+
+
+namespace nnfw {
+
+/*! \brief GaussFunction
+ *
+ *   <table class="proptable">
+ *   <tr><td class="prophead" colspan="5">Properties</td></tr>
+ *   <tr><th>Name</th> <th>Type [isVector]</th> <th>Access mode</th> <th>Description</th> <th>Class</th></tr>
+ *   <tr><td>typename</td> <td>string</td> <td>read-only</td> <td> Class's type </td> <td>Propertized</td> </tr>
+ *   <tr><td>centre</td> <td>double</td> <td>read/write</td> <td> Gaussian centre </td> <td>this</td> </tr>
+ *   <tr><td>variance</td> <td>double</td> <td>read/write</td> <td> Gaussian variance (sigma) </td> <td>this</td> </tr>
+ *   <tr><td>max</td> <td>double</td> <td>read/write</td> <td>function's maximum value</td> <td>this</td> </tr>
+ *   </table>
+ */
+class NNFW_API GaussFunction : public DerivableOutputFunction {
+public:
+    /*! \name Constructors */
+    //@{
+
+    /*! Construct */
+    GaussFunction( double centre = 0.0, double variance = 1.0, double maxvaule = 1.0 );
+
+    /*! Construct */
+    GaussFunction( PropertySettings& prop );
+
+    /*! Destructor */
+    virtual ~GaussFunction() { /* Nothing to do */ };
+
+    //@}
+    /*! \name Interface */
+    //@{
+
+    /*! Set the centre */
+    bool setCentre( const Variant& v );
+    /*! Return the centre */
+    Variant getCentre();
+
+    /*! Set the Variance */
+    bool setVariance( const Variant& v );
+    /*! Return the variance */
+    Variant getVariance();
+
+    /*! Set the Max value */
+    bool setMax( const Variant& v );
+    /*! Return the Max */
+    Variant getMax();
+
+    /*! Implement the Gaussian function */
+    virtual void apply( doubleVec& inputs, doubleVec& outputs );
+    /*! derivate of Gauss function */
+    virtual void derivate( const doubleVec& x, const doubleVec& y, doubleVec& d ) const;
+    /*! Clone this object */
+    virtual GaussFunction* clone() const;
+
+    //@}
+
+private:
+    // centre
+    double centre;
+    // variance
+    double variance;
+    // minus squared-variance
+    double msqrvar;
+    // max value
+    double max;
+};
+
+}
+
+#endif
+
