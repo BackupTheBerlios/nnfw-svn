@@ -46,9 +46,9 @@ void NormLinker::update() {
         to()->resetInputs();
     }
     temp.zeroing();
-    for( u_int j=0; j<cols(); j++ ) {
-        for( u_int i=0; i<rows(); i++ ) {
-            Real d = from()->outputs()[i] - matrix()[i][j];
+    for( unsigned int j=0; j<cols(); j++ ) {
+        for( unsigned int i=0; i<rows(); i++ ) {
+            double d = from()->outputs()[i] - matrix()[i][j];
             temp[j] += d*d;
         }
         temp[j] = std::sqrt( temp[j] );

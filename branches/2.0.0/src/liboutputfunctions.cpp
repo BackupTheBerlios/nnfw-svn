@@ -53,7 +53,7 @@ IdentityFunction* IdentityFunction::clone() const {
     return new IdentityFunction();
 }
 
-ScaleFunction::ScaleFunction( Real rate )
+ScaleFunction::ScaleFunction( double rate )
     : OutputFunction() {
 	this->rate = rate;
     addProperty( "rate", Variant::t_real, this, &ScaleFunction::getRate, &ScaleFunction::setRate );
@@ -69,7 +69,7 @@ ScaleFunction::ScaleFunction( PropertySettings& prop )
 }
 
 bool ScaleFunction::setRate( const Variant& v ) {
-    rate = v.getReal();
+    rate = v.getdouble();
     return true;
 }
 
@@ -85,7 +85,7 @@ ScaleFunction* ScaleFunction::clone() const {
     return new ScaleFunction( rate );
 }
 
-GainFunction::GainFunction( Real gain )
+GainFunction::GainFunction( double gain )
     : OutputFunction() {
 	gainv = gain;
     addProperty( "gain", Variant::t_real, this, &GainFunction::gain, &GainFunction::setGain );
@@ -101,7 +101,7 @@ GainFunction::GainFunction( PropertySettings& prop )
 }
 
 bool GainFunction::setGain( const Variant& v ) {
-    gainv = v.getReal();
+    gainv = v.getdouble();
     return true;
 }
 
@@ -118,7 +118,7 @@ GainFunction* GainFunction::clone() const {
     return new GainFunction( gainv );
 }
 
-SigmoidFunction::SigmoidFunction( Real l ) : DerivableOutputFunction() {
+SigmoidFunction::SigmoidFunction( double l ) : DerivableOutputFunction() {
     lambda = l;
     addProperty( "lambda", Variant::t_real, this, &SigmoidFunction::getLambda, &SigmoidFunction::setLambda );
     setTypename( "SigmoidFunction" );
@@ -146,7 +146,7 @@ void SigmoidFunction::apply( RealVec& inputs, RealVec& outputs ) {
 }
 
 bool SigmoidFunction::setLambda( const Variant& v ) {
-    lambda = v.getReal();
+    lambda = v.getdouble();
     return true;
 }
 
@@ -165,7 +165,7 @@ SigmoidFunction* SigmoidFunction::clone() const {
     return new SigmoidFunction( lambda );
 }
 
-FakeSigmoidFunction::FakeSigmoidFunction( Real l )
+FakeSigmoidFunction::FakeSigmoidFunction( double l )
     : DerivableOutputFunction() {
     lambda = l;
     addProperty( "lambda", Variant::t_real, this, &FakeSigmoidFunction::getLambda, &FakeSigmoidFunction::setLambda );
@@ -187,11 +187,11 @@ void FakeSigmoidFunction::apply( RealVec& inputs, RealVec& outputs ) {
         return;
     }
 #endif
-    u_int size = inputs.size();
-    Real x;
-    Real x0 = 6. + 2./3.;
-    Real zero = 0.5;
-    for ( u_int i = 0; i<size; i++ ) {
+    unsigned int size = inputs.size();
+    double x;
+    double x0 = 6. + 2./3.;
+    double zero = 0.5;
+    for ( unsigned int i = 0; i<size; i++ ) {
         x = inputs[i];
         x *= lambda;
         x -= (.5 - zero) / (.075 + zero);
@@ -208,7 +208,7 @@ void FakeSigmoidFunction::apply( RealVec& inputs, RealVec& outputs ) {
 }
 
 bool FakeSigmoidFunction::setLambda( const Variant& v ) {
-    lambda = v.getReal();
+    lambda = v.getdouble();
     return true;
 }
 
@@ -227,7 +227,7 @@ FakeSigmoidFunction* FakeSigmoidFunction::clone() const {
     return new FakeSigmoidFunction( lambda );
 }
 
-ScaledSigmoidFunction::ScaledSigmoidFunction( Real l, Real min, Real max )
+ScaledSigmoidFunction::ScaledSigmoidFunction( double l, double min, double max )
     : DerivableOutputFunction() {
     lambda = l;
     this->min = min;
@@ -257,16 +257,16 @@ void ScaledSigmoidFunction::apply( RealVec& inputs, RealVec& outputs ) {
         return;
     }
 #endif
-    u_int size = inputs.size();
+    unsigned int size = inputs.size();
     outputs.assign_amulx( -lambda, inputs );
     outputs.exp();
-    for ( u_int i = 0; i<size; i++ ) {
+    for ( unsigned int i = 0; i<size; i++ ) {
         outputs[i] = (max - min ) * (1.0/( 1.0 + outputs[i] )) + min;
     }
 }
 
 bool ScaledSigmoidFunction::setLambda( const Variant& v ) {
-    lambda = v.getReal();
+    lambda = v.getdouble();
     return true;
 }
 
@@ -275,7 +275,7 @@ Variant ScaledSigmoidFunction::getLambda() {
 }
 
 bool ScaledSigmoidFunction::setMin( const Variant& v ) {
-    min = v.getReal();
+    min = v.getdouble();
     return true;
 }
 
@@ -284,7 +284,7 @@ Variant ScaledSigmoidFunction::getMin() {
 }
 
 bool ScaledSigmoidFunction::setMax( const Variant& v ) {
-    max = v.getReal();
+    max = v.getdouble();
     return true;
 }
 
@@ -303,7 +303,7 @@ ScaledSigmoidFunction* ScaledSigmoidFunction::clone() const {
     return new ScaledSigmoidFunction( lambda, min, max );
 }
 
-RampFunction::RampFunction( Real minX, Real maxX, Real minY, Real maxY )
+RampFunction::RampFunction( double minX, double maxX, double minY, double maxY )
     : DerivableOutputFunction() {
 	min_x = minX;
 	max_x = maxX;
@@ -337,11 +337,11 @@ void RampFunction::apply( RealVec& inputs, RealVec& outputs ) {
         return;
     }
 #endif
-    u_int size = inputs.size();
-    for ( u_int i = 0; i<size; i++ ) {
-        Real m = ( max_y-min_y )/( max_x-min_x );
-        Real q = min_y - m*min_x;
-        Real ret = m*(inputs[i]) + q;
+    unsigned int size = inputs.size();
+    for ( unsigned int i = 0; i<size; i++ ) {
+        double m = ( max_y-min_y )/( max_x-min_x );
+        double q = min_y - m*min_x;
+        double ret = m*(inputs[i]) + q;
         if (ret < min_y) {
             outputs[i] = min_y;
         } else if (ret > max_y) {
@@ -353,7 +353,7 @@ void RampFunction::apply( RealVec& inputs, RealVec& outputs ) {
 }
 
 bool RampFunction::setMinX( const Variant& v ) {
-    min_x = v.getReal();
+    min_x = v.getdouble();
     return true;
 }
 
@@ -362,7 +362,7 @@ Variant RampFunction::minX() {
 }
 
 bool RampFunction::setMaxX( const Variant& v ) {
-	max_x = v.getReal();
+	max_x = v.getdouble();
 	return true;
 }
 
@@ -371,7 +371,7 @@ Variant RampFunction::maxX() {
 }
 
 bool RampFunction::setMinY( const Variant& v ) {
-	min_y = v.getReal();
+	min_y = v.getdouble();
 	return true;
 }
 
@@ -380,7 +380,7 @@ Variant RampFunction::minY() {
 }
 
 bool RampFunction::setMaxY( const Variant& v ) {
-	max_y = v.getReal();
+	max_y = v.getdouble();
 	return true;
 }
 
@@ -389,11 +389,11 @@ Variant RampFunction::maxY() {
 }
 
 void RampFunction::derivate( const RealVec& inputs, const RealVec&, RealVec& derivates ) const {
-    for( u_int i=0; i<inputs.size(); i++ ) {
+    for( unsigned int i=0; i<inputs.size(); i++ ) {
         if ( inputs[i] >= min_x && inputs[i] <= max_x ) {
             derivates[i] = ( max_y-min_y )/( max_x-min_x );
         } else {
-            Real y;
+            double y;
             y = 1.0/( 1.0 + exp( -inputs[i] ) );
             derivates[i] = y * ( 1.0 - y );
         }
@@ -404,7 +404,7 @@ RampFunction* RampFunction::clone() const {
     return new RampFunction( min_x, max_x, min_y, max_y );
 }
 
-LinearFunction::LinearFunction( Real m, Real b )
+LinearFunction::LinearFunction( double m, double b )
     : DerivableOutputFunction() {
     mv = m;
 	bv = b;
@@ -435,7 +435,7 @@ void LinearFunction::apply( RealVec& inputs, RealVec& outputs ) {
 }
 
 bool LinearFunction::setM( const Variant& v ) {
-	mv = v.getReal();
+	mv = v.getdouble();
 	return true;
 }
 
@@ -444,7 +444,7 @@ Variant LinearFunction::m() {
 }
 
 bool LinearFunction::setB( const Variant& v ) {
-	bv = v.getReal();
+	bv = v.getdouble();
 	return true;
 }
 
@@ -460,7 +460,7 @@ LinearFunction* LinearFunction::clone() const {
 	return new LinearFunction( mv, bv );
 }
 
-StepFunction::StepFunction( Real min, Real max, Real threshold )
+StepFunction::StepFunction( double min, double max, double threshold )
     : DerivableOutputFunction() {
     this->min = min;
     this->max = max;
@@ -484,20 +484,20 @@ StepFunction::StepFunction( PropertySettings& prop )
 }
 
 void StepFunction::apply( RealVec& inputs, RealVec& outputs ) {
-    u_int size = inputs.size();
+    unsigned int size = inputs.size();
 #ifdef NNFW_DEBUG
     if ( inputs.size() != outputs.size() ) {
         nError() << "The output dimension doesn't match the input dimension" ;
         return;
     }
 #endif
-    for ( u_int i = 0; i<size; i++ ) {
+    for ( unsigned int i = 0; i<size; i++ ) {
         ( inputs[i] > threshold ) ? outputs[i] = max : outputs[i] = min;
     }
 }
 
 bool StepFunction::setMin( const Variant& v ) {
-    min = v.getReal();
+    min = v.getdouble();
     return true;
 }
 
@@ -506,7 +506,7 @@ Variant StepFunction::getMin() {
 }
 
 bool StepFunction::setMax( const Variant& v ) {
-    max = v.getReal();
+    max = v.getdouble();
     return true;
 }
 
@@ -515,7 +515,7 @@ Variant StepFunction::getMax() {
 }
 
 bool StepFunction::setThreshold( const Variant& v ) {
-    threshold = v.getReal();
+    threshold = v.getdouble();
     return true;
 }
 
@@ -524,8 +524,8 @@ Variant StepFunction::getThreshold() {
 }
 
 void StepFunction::derivate( const RealVec& inputs, const RealVec&, RealVec& derivates ) const {
-    for( u_int i=0; i<inputs.size(); i++ ) {
-        Real y;
+    for( unsigned int i=0; i<inputs.size(); i++ ) {
+        double y;
         y = 1.0/( 1.0 + exp( -inputs[i] ) );
         derivates[i] = y * ( 1.0 - y );
     }
@@ -596,7 +596,7 @@ void LeakyIntegratorFunction::setCluster( Cluster* c ) {
 	}
 }
 
-LogLikeFunction::LogLikeFunction( Real A, Real B )
+LogLikeFunction::LogLikeFunction( double A, double B )
     : OutputFunction() {
 	a = A;
 	b = B;
@@ -634,7 +634,7 @@ Variant LogLikeFunction::getAV() {
 }
 
 bool LogLikeFunction::setAV( const Variant& v ) {
-	setA( v.getReal() );
+	setA( v.getdouble() );
 	return true;
 }
 
@@ -643,7 +643,7 @@ Variant LogLikeFunction::getBV() {
 }
 
 bool LogLikeFunction::setBV( const Variant& v ) {
-	setB( v.getReal() );
+	setB( v.getdouble() );
 	return true;
 }
 
@@ -651,9 +651,9 @@ LogLikeFunction* LogLikeFunction::clone() const {
 	return ( new LogLikeFunction( a, b ) );
 }
 
-PoolFunction::PoolFunction( const OutputFunction& prototype, u_int dim )
+PoolFunction::PoolFunction( const OutputFunction& prototype, unsigned int dim )
     : OutputFunction(), ups(dim) {
-    for( u_int i=0; i<dim; i++ ) {
+    for( unsigned int i=0; i<dim; i++ ) {
         ups[i] = prototype.clone();
     }
     // --- if dimension is zero, set at least one element to OutputFunction
@@ -669,7 +669,7 @@ PoolFunction::PoolFunction( const OutputFunction& prototype, u_int dim )
     setTypename( "PoolFunction" );
 }
 
-PoolFunction::PoolFunction( u_int dim )
+PoolFunction::PoolFunction( unsigned int dim )
     : OutputFunction(), ups(dim) {
     // --- if dimension is zero, set at least one element to OutputFunction
     if ( dim == 0 ) {
@@ -700,12 +700,12 @@ PoolFunction::PoolFunction( PropertySettings& prop )
 }
 
 PoolFunction::~PoolFunction() {
-    for( u_int i=0; i<ups.size(); i++ ) {
+    for( unsigned int i=0; i<ups.size(); i++ ) {
         delete (ups[i]);
     }
 }
 
-OutputFunction* PoolFunction::getOutputFunction( u_int i ) {
+OutputFunction* PoolFunction::getOutputFunction( unsigned int i ) {
 #ifdef NNFW_DEBUG
     if ( i >= ups.size() ) {
         nError() << "Accessing beyond boundary of this PoolFunction" ;
@@ -715,7 +715,7 @@ OutputFunction* PoolFunction::getOutputFunction( u_int i ) {
     return ups[i];
 }
 
-void PoolFunction::setOutputFunction( u_int i, const OutputFunction& prototype ) {
+void PoolFunction::setOutputFunction( unsigned int i, const OutputFunction& prototype ) {
 #ifdef NNFW_DEBUG
     if ( i >= ups.size() ) {
         nError() << "Setting a OutputFunction beyond boundary of this PoolFunction";
@@ -727,7 +727,7 @@ void PoolFunction::setOutputFunction( u_int i, const OutputFunction& prototype )
     return;
 }
 
-Variant PoolFunction::getOutputFunctionV( u_int i ) {
+Variant PoolFunction::getOutputFunctionV( unsigned int i ) {
     if ( i < ups.size() ) {
         return Variant( ups[i] );
     } else {
@@ -735,7 +735,7 @@ Variant PoolFunction::getOutputFunctionV( u_int i ) {
     }
 }
 
-bool PoolFunction::setOutputFunction( u_int i, const Variant& v ) {
+bool PoolFunction::setOutputFunction( unsigned int i, const Variant& v ) {
     if ( i >= ups.size() ) {
         return false;
     }
@@ -752,25 +752,25 @@ Variant PoolFunction::sizeV() {
 }
 
 void PoolFunction::apply( RealVec& inputs, RealVec& outputs ) {
-    u_int dim = ups.size();
-    for( u_int i=0; i<dim; i++ ) {
+    unsigned int dim = ups.size();
+    for( unsigned int i=0; i<dim; i++ ) {
         outputs[i] = ups[i]->apply( inputs[i] );
     }
 }
 
 PoolFunction* PoolFunction::clone() const {
     PoolFunction* pool = new PoolFunction( ups.size() );
-    for( u_int i=0; i<ups.size(); i++ ) {
+    for( unsigned int i=0; i<ups.size(); i++ ) {
         pool->ups[i] = this->ups[i]->clone();
     }
     return pool;
 }
 
 void PoolFunction::setCluster( Cluster* c ) {
-    u_int oldDim = ups.size();
-    u_int newDim = c->numNeurons();
+    unsigned int oldDim = ups.size();
+    unsigned int newDim = c->numNeurons();
     ups.resize( newDim );
-    for( u_int i=oldDim; i<newDim; i++ ) {
+    for( unsigned int i=oldDim; i<newDim; i++ ) {
         ups[i] = new OutputFunction();
     }
 }
@@ -844,7 +844,7 @@ void CompositeFunction::setCluster( Cluster* c ) {
 	second->setCluster( c );
 }
 
-LinearComboFunction::LinearComboFunction( Real w1, const OutputFunction& f, Real w2, const OutputFunction& g )
+LinearComboFunction::LinearComboFunction( double w1, const OutputFunction& f, double w2, const OutputFunction& g )
     : OutputFunction(), mid() {
 	first = f.clone();
 	second = g.clone();
@@ -903,7 +903,7 @@ Variant LinearComboFunction::getFirstFunction() {
 }
 
 bool LinearComboFunction::setFirstWeight( const Variant& v ) {
-	w1 = v.getReal();
+	w1 = v.getdouble();
     return true;
 }
 
@@ -923,7 +923,7 @@ Variant LinearComboFunction::getSecondFunction() {
 }
 
 bool LinearComboFunction::setSecondWeight( const Variant& v ) {
-	w2 = v.getReal();
+	w2 = v.getdouble();
     return true;
 }
 

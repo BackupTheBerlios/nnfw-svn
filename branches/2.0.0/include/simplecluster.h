@@ -51,7 +51,7 @@ public:
 
     /*! Construct a Cluster that contains numNeurons neuron
      */
-    SimpleCluster( u_int numNeurons, const char* name = "unnamed" );
+    SimpleCluster( unsigned int numNeurons, const char* name = "unnamed" );
 
     /*! Construct by a PropertySettings
      */
@@ -71,7 +71,7 @@ public:
 
     /*! Randomize Nothing ;-)
      */
-    void randomize( Real, Real ) { /* Nothing To Do */ };
+    void randomize( double, double ) { /* Nothing To Do */ };
 
 	/*! Clone this SimpleCluster */
 	virtual SimpleCluster* clone() const;

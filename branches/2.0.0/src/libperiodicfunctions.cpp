@@ -22,7 +22,7 @@
 
 namespace nnfw {
 
-PeriodicFunction::PeriodicFunction( Real phase, Real span, Real amplitude )
+PeriodicFunction::PeriodicFunction( double phase, double span, double amplitude )
     : OutputFunction() {
 	phasev = phase;
 	spanv = span;
@@ -47,7 +47,7 @@ PeriodicFunction::PeriodicFunction( PropertySettings& prop )
 }
 
 bool PeriodicFunction::setPhase( const Variant& v ) {
-	phasev = v.getReal();
+	phasev = v.getdouble();
 	return true;
 }
 
@@ -56,7 +56,7 @@ Variant PeriodicFunction::phase() {
 }
 
 bool PeriodicFunction::setSpan( const Variant& v ) {
-	spanv = v.getReal();
+	spanv = v.getdouble();
 	return true;
 }
 
@@ -65,7 +65,7 @@ Variant PeriodicFunction::span() {
 }
 
 bool PeriodicFunction::setAmplitude( const Variant& v ) {
-	amplitudev = v.getReal();
+	amplitudev = v.getdouble();
 	return true;
 }
 
@@ -73,7 +73,7 @@ Variant PeriodicFunction::amplitude() {
 	return amplitudev;
 }
 
-SawtoothFunction::SawtoothFunction( Real phase, Real span, Real amplitude )
+SawtoothFunction::SawtoothFunction( double phase, double span, double amplitude )
     : PeriodicFunction(phase,span,amplitude) {
 	setTypename( "SawtoothFunction" );
 }
@@ -94,7 +94,7 @@ SawtoothFunction* SawtoothFunction::clone() const {
 	return (new SawtoothFunction( phasev, spanv, amplitudev ) );
 }
 
-TriangleFunction::TriangleFunction( Real phase, Real span, Real amplitude )
+TriangleFunction::TriangleFunction( double phase, double span, double amplitude )
     : PeriodicFunction(phase,span,amplitude) {
 	setTypename( "TriangleFunction" );
 }
@@ -107,7 +107,7 @@ TriangleFunction::TriangleFunction( PropertySettings& prop )
 void TriangleFunction::apply( RealVec& inputs, RealVec& outputs ) {
     // --- out <- 2.0*( (x-c)/a-floor((x-c)/a+0.5) )
 	for( int i=0; i<(int)inputs.size(); i++ ) {
-		Real sawtooth = (inputs[i]-phasev)/spanv-floor((inputs[i]-phasev)/spanv+0.5);
+		double sawtooth = (inputs[i]-phasev)/spanv-floor((inputs[i]-phasev)/spanv+0.5);
 		outputs[i] = amplitudev*( 1.0 - fabs( sawtooth ) );
 	}
 }
@@ -118,7 +118,7 @@ TriangleFunction* TriangleFunction::clone() const {
 
 #define PI_GRECO 3.14159265358979323846
 
-SinFunction::SinFunction( Real phase, Real span, Real amplitude )
+SinFunction::SinFunction( double phase, double span, double amplitude )
     : PeriodicFunction(phase,span,amplitude) {
 	setTypename( "SinFunction" );
 }
@@ -128,7 +128,7 @@ SinFunction::SinFunction( PropertySettings& prop )
 	setTypename( "SinFunction" );
 }
 
-Real SinFunction::frequency() {
+double SinFunction::frequency() {
 	return 2.0*PI_GRECO/spanv;
 }
 
@@ -142,7 +142,7 @@ SinFunction* SinFunction::clone() const {
 	return (new SinFunction( phasev, spanv, amplitudev ) );
 }
 
-PseudoGaussFunction::PseudoGaussFunction( Real phase, Real span, Real amplitude )
+PseudoGaussFunction::PseudoGaussFunction( double phase, double span, double amplitude )
     : PeriodicFunction(phase,span,amplitude) {
 	setTypename( "PseudoGaussFunction" );
 }

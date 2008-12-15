@@ -24,6 +24,7 @@
  */
 
 #include "types.h"
+#include <string.h>
 
 namespace nnfw {
 

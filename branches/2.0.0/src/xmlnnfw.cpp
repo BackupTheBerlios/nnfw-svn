@@ -671,7 +671,7 @@ NNFW_INTERNAL QDomNode createPropertyFragment( Variant v, QDomDocument doc, QDom
 		nError() << "Impossible to save a generic data pointer";
 		break;
     case Variant::t_real:
-        sub = doc.createTextNode( QString(" %1 ").arg( v.getReal(), 0, 'g', precision ) );
+        sub = doc.createTextNode( QString(" %1 ").arg( v.getdouble(), 0, 'g', precision ) );
         break;
     case Variant::t_int:
         sub = doc.createTextNode( QString(" %1 ").arg( v.getInt() ) );
@@ -697,7 +697,7 @@ NNFW_INTERNAL QDomNode createPropertyFragment( Variant v, QDomDocument doc, QDom
         break;
     case Variant::t_realvec:
         rv = v.getRealVec();
-        for( u_int i=0; i<rv->size(); i++ ) {
+        for( unsigned int i=0; i<rv->size(); i++ ) {
             complex.append( QString(" %1").arg( rv->at(i), 0, 'g', precision ) );
         }
         complex.append( " " );
@@ -707,15 +707,15 @@ NNFW_INTERNAL QDomNode createPropertyFragment( Variant v, QDomDocument doc, QDom
         mv = v.getRealMat();
 		colsize.resize( mv->cols() );
 		colsize.fill( 0 );
-		for( u_int r=0; r<mv->rows(); r++ ) {
-			for( u_int c=0; c<mv->cols(); c++ ) {
+		for( unsigned int r=0; r<mv->rows(); r++ ) {
+			for( unsigned int c=0; c<mv->cols(); c++ ) {
 				int size = QString("%1").arg( mv->at( r, c ), 0, 'g', precision ).size();
 				colsize[c] = qMax( size, colsize[c] );
 			}
 		}
-		for( u_int r=0; r<mv->rows(); r++ ) {
+		for( unsigned int r=0; r<mv->rows(); r++ ) {
 			complex.append( "\n" + indentation );
-			for( u_int c=0; c<mv->cols(); c++ ) {
+			for( unsigned int c=0; c<mv->cols(); c++ ) {
 				complex.append( QString("%1").arg( mv->at( r, c ), colsize[c]+2, 'g', precision ) );
 			}
 		}
@@ -752,7 +752,7 @@ NNFW_INTERNAL QString createAttributeContent( Variant v, int precision ) {
 		return QString();
 		break;
     case Variant::t_real:
-        return QString("%1").arg( v.getReal(), 0, 'g', precision );
+        return QString("%1").arg( v.getdouble(), 0, 'g', precision );
         break;
     case Variant::t_int:
         return QString("%1").arg( v.getInt() );
@@ -780,7 +780,7 @@ NNFW_INTERNAL QString createAttributeContent( Variant v, int precision ) {
 		nWarning() << "RealVec read-only property not handled yet";
 		return QString();
 /*        rv = v.getRealVec();
-        for( u_int i=0; i<rv->size(); i++ ) {
+        for( unsigned int i=0; i<rv->size(); i++ ) {
             complex.append( QString(" %1").arg( rv->at(i) ) );
         }
         complex.append( " " );
@@ -790,8 +790,8 @@ NNFW_INTERNAL QString createAttributeContent( Variant v, int precision ) {
 		nWarning() << "RealMat read-only property not handled yet";
 		return QString();
 /*        mv = v.getRealMat();
-        for( u_int r=0; r<mv->rows(); r++ ) {
-            for( u_int c=0; c<mv->cols(); c++ ) {
+        for( unsigned int r=0; r<mv->rows(); r++ ) {
+            for( unsigned int c=0; c<mv->cols(); c++ ) {
                 complex.append( QString(" %1").arg( mv->at( r, c ) ) );
             }
             complex.append( " " );
@@ -822,7 +822,7 @@ NNFW_INTERNAL QString createAttributeContent( Variant v, int precision ) {
 
 NNFW_INTERNAL void saveProperties( QDomDocument doc, QDomElement parent, Propertized* obj, QStringList skip, int precision ) {
     PropertyAccessVec& pvec = obj->properties();
-    for( u_int i=0; i<pvec.size(); i++ ) {
+    for( unsigned int i=0; i<pvec.size(); i++ ) {
         AbstractPropertyAccess* p = pvec[i];
         if ( skip.contains( QString( p->name() ) ) ) {
             continue;

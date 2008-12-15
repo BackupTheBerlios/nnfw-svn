@@ -32,29 +32,29 @@ namespace nnfw {
 NNFW_INTERNAL int inutile = vmlSetMode( VML_LA );
 #endif
 
-RealVec::RealVec( u_int size )
-    : VectorData<Real>( size ) {
+RealVec::RealVec( unsigned int size )
+    : VectorData<double>( size ) {
 }
 
-RealVec::RealVec( u_int size, Real value )
-    : VectorData<Real>(size, value) {
+RealVec::RealVec( unsigned int size, double value )
+    : VectorData<double>(size, value) {
 }
 
 
 RealVec::RealVec()
-    : VectorData<Real>() {
+    : VectorData<double>() {
 }
 
-RealVec::RealVec( const Real* r, u_int dim )
-    : VectorData<Real>(r, dim) {
+RealVec::RealVec( const double* r, unsigned int dim )
+    : VectorData<double>(r, dim) {
 }
 
-RealVec::RealVec( RealVec& src, u_int idStart, u_int idEnd )
-    : VectorData<Real>(src, idStart, idEnd) {
+RealVec::RealVec( RealVec& src, unsigned int idStart, unsigned int idEnd )
+    : VectorData<double>(src, idStart, idEnd) {
 }
 
 RealVec::RealVec( const RealVec& src )
-    : VectorData<Real>(src) {
+    : VectorData<double>(src) {
 }
 
 RealVec& RealVec::exp() {
@@ -65,7 +65,7 @@ RealVec& RealVec::exp() {
     vdExp( vsize, data, data );
 #endif
 #else
-    for( u_int i=0; i<vsize; i++ ) {
+    for( unsigned int i=0; i<vsize; i++ ) {
         data[i] = std::exp( data[i] );
     };
 #endif
@@ -80,14 +80,14 @@ RealVec& RealVec::inv() {
     vdInv( vsize, data, data );
 #endif
 #else
-    for( u_int i=0; i<vsize; i++ ) {
+    for( unsigned int i=0; i<vsize; i++ ) {
         data[i] = 1.0/data[i];
     };
 #endif
     return (*this);
 }
 
-Real RealVec::norm() {
+double RealVec::norm() {
 #ifdef NNFW_USE_MKL
 #ifndef NNFW_DOUBLE_PRECISION
     return cblas_snrm2( vsize, data, 1 );
@@ -95,8 +95,8 @@ Real RealVec::norm() {
     return cblas_dnrm2( vsize, data, 1 );
 #endif
 #else
-    Real res = 0.0;
-    for( u_int i=0; i<vsize; i++ ) {
+    double res = 0.0;
+    for( unsigned int i=0; i<vsize; i++ ) {
         res += data[i]*data[i];
     }
     res = std::sqrt( res );
@@ -106,9 +106,9 @@ Real RealVec::norm() {
 
 RealMat& RealVec::outprod( RealMat& m, const RealVec& x, const RealVec& y ) {
 #ifdef NNFW_USE_MKL
-    Real* mRaw = m.rawdata().rawdata();
-    Real* xRaw = x.rawdata();
-    Real* yRaw = y.rawdata();
+    double* mRaw = m.rawdata().rawdata();
+    double* xRaw = x.rawdata();
+    double* yRaw = y.rawdata();
 #ifndef NNFW_DOUBLE_PRECISION
     cblas_sgemm( CblasRowMajor, CblasNoTrans, CblasNoTrans,
                 m.rows(), m.cols(), 1, 1.0f, xRaw, 1, yRaw, m.cols(), 1.0f, mRaw, m.cols() );
@@ -117,8 +117,8 @@ RealMat& RealVec::outprod( RealMat& m, const RealVec& x, const RealVec& y ) {
                 m.rows(), m.cols(), 1, 1.0f, xRaw, 1, yRaw, m.cols(), 1.0f, mRaw, m.cols() );
 #endif
 #else
-	for ( u_int r=0; r<m.rows(); r++ ) {
-		for ( u_int c=0; c<m.cols(); c++ ) {
+	for ( unsigned int r=0; r<m.rows(); r++ ) {
+		for ( unsigned int c=0; c<m.cols(); c++ ) {
 			m[r][c] += x[r] * y[c];
 		}
 	}
@@ -126,9 +126,9 @@ RealMat& RealVec::outprod( RealMat& m, const RealVec& x, const RealVec& y ) {
     return m;
 }
 
-void RealVec::createAllBinaries( RealVec* v, unsigned long int pats, u_int dims ) {
+void RealVec::createAllBinaries( RealVec* v, unsigned long int pats, unsigned int dims ) {
 	unsigned long int totPat = 1;
-	for (u_int x = 0; x < dims; x++)
+	for (unsigned int x = 0; x < dims; x++)
 		totPat *= 2;
 #ifdef NNFW_DEBUG
 	if ( totPat != pats ) {
@@ -137,7 +137,7 @@ void RealVec::createAllBinaries( RealVec* v, unsigned long int pats, u_int dims 
 	}
 #endif	
 	//Create the first string of all 0s
-	u_int i;
+	unsigned int i;
 	for (i = 0; i < dims; i++)
 		v[0][i] = 0.;
 	for (unsigned long int number = 1; number < pats; number++) {
@@ -155,7 +155,7 @@ void RealVec::createAllBinaries( RealVec* v, unsigned long int pats, u_int dims 
 };
 
 
-Real RealVec::mse( const RealVec& target, const RealVec& actual ) {
+double RealVec::mse( const RealVec& target, const RealVec& actual ) {
 #ifdef NNFW_DEBUG
 	if ( target.size() != actual.size() ) {
 		nError() << "Error in mse: target and actual vectors have different size" ;

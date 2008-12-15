@@ -49,7 +49,7 @@ namespace nnfw {
  *   <tr><td>name</td> <td>string</td> <td>read/write</td> <td> name of the object </td> <td>Updatable</td> </tr>
  *   <tr><td>from</td> <td>Cluster</td> <td>read-only</td> <td> incoming Cluster </td> <td>Linker</td> </tr>
  *   <tr><td>to</td> <td>Cluster</td> <td>read-only</td> <td> outgoing Cluster </td> <td>Linker</td> </tr>
- *   <tr><td>weights</td> <td>doubleMat</td> <td>read/write</td> <td> connections' weights </td> <td>this</td> </tr>
+ *   <tr><td>weights</td> <td>RealMat</td> <td>read/write</td> <td> connections' weights </td> <td>this</td> </tr>
  *   </table>
  *
  */
@@ -104,12 +104,12 @@ public:
 
     /*!  Return the weight matrix
      */
-	doubleMat& matrix() {
+	RealMat& matrix() {
 		return w;
 	};
 
 	/*! const version of matrix() method */
-	const doubleMat& matrix() const {
+	const RealMat& matrix() const {
 		return w;
 	};
 
@@ -121,7 +121,7 @@ public:
 
     /*!  Set the whole weight matrix
      */
-    void setMatrix( const doubleMat& mat );
+    void setMatrix( const RealMat& mat );
 
     /*!  Set the whole weight matrix (Variant ver)
      */
@@ -133,7 +133,7 @@ private:
     /*! Registers the dimensions of the matrix */
     unsigned int nrows, ncols;
     /*! Weight Matrix */
-    doubleMat w;
+    RealMat w;
 };
 
 }

@@ -38,18 +38,18 @@ namespace nnfw {
  *  \par Description
  *  \par Warnings
  */
-class NNFW_API RealVec : public VectorData<Real> {
+class NNFW_API RealVec : public VectorData<double> {
 public:
     /*! \name Constructors */
     //@{
 
     /*! Construct an empty vector of dimension size
      */
-    RealVec( u_int size );
+    RealVec( unsigned int size );
     
     /*! Construct a vector of dimension size with all values set to value
      */
-    RealVec( u_int size, Real value );
+    RealVec( unsigned int size, double value );
 
     /*! Construct an empty vector with dimesion zero
      */
@@ -57,11 +57,11 @@ public:
 
     /*! Construct a RealVec view
      */
-    RealVec( RealVec& src, u_int idStart, u_int idEnd );
+    RealVec( RealVec& src, unsigned int idStart, unsigned int idEnd );
 
-    /*! Construct by copying data from const Real* vector
+    /*! Construct by copying data from const double* vector
      */
-    RealVec( const Real* r, u_int dim );
+    RealVec( const double* r, unsigned int dim );
 
     /*! Copy-Constructor
      */
@@ -82,7 +82,7 @@ public:
 
     /*! Append Operator
      */
-    RealVec& operator<<( const Real& value ) {
+    RealVec& operator<<( const double& value ) {
         append( value );
         return (*this);
     };
@@ -93,7 +93,7 @@ public:
 
     /*! Operator - */
     RealVec& operator-() {
-        for( u_int i=0; i<vsize; i++ ) {
+        for( unsigned int i=0; i<vsize; i++ ) {
             data[i] = -data[i];
         }
         return (*this);
@@ -111,14 +111,14 @@ public:
             return (*this);
         }
 #endif
-        for( u_int i=0; i<vsize; i++ ) {
+        for( unsigned int i=0; i<vsize; i++ ) {
             data[i] += r.data[i];
         }
         return (*this);
     };
-    /*! Operator += with Real */
-    RealVec& operator+=(const Real& r ) {
-        for( u_int i=0; i<vsize; i++ ) {
+    /*! Operator += with double */
+    RealVec& operator+=(const double& r ) {
+        for( unsigned int i=0; i<vsize; i++ ) {
             data[i] += r;
         }
         return (*this);
@@ -131,14 +131,14 @@ public:
             return *this;
         }
 #endif
-        for( u_int i=0; i<vsize; i++ ) {
+        for( unsigned int i=0; i<vsize; i++ ) {
             data[i] -= r.data[i];
         }
         return (*this);
     };
-    /*! Operator -= with Real */
-    RealVec& operator-=(const Real& r ) {
-        for( u_int i=0; i<vsize; i++ ) {
+    /*! Operator -= with double */
+    RealVec& operator-=(const double& r ) {
+        for( unsigned int i=0; i<vsize; i++ ) {
             data[i] -= r;
         }
         return (*this);
@@ -151,14 +151,14 @@ public:
             return (*this);
         }
 #endif
-        for( u_int i=0; i<vsize; i++ ) {
+        for( unsigned int i=0; i<vsize; i++ ) {
             data[i] *= r.data[i];
         }
         return (*this);
     };
-    /*! Operator *= with Real */
-    RealVec& operator*=(const Real& r ) {
-        for( u_int i=0; i<vsize; i++ ) {
+    /*! Operator *= with double */
+    RealVec& operator*=(const double& r ) {
+        for( unsigned int i=0; i<vsize; i++ ) {
             data[i] *= r;
         }
         return (*this);
@@ -171,29 +171,29 @@ public:
             return (*this);
         }
 #endif
-        for( u_int i=0; i<vsize; i++ ) {
+        for( unsigned int i=0; i<vsize; i++ ) {
             data[i] /= r.data[i];
         }
         return (*this);
     };
-    /*! Operator /= with Real */
-    RealVec& operator/=(const Real& r ) {
-        for( u_int i=0; i<vsize; i++ ) {
+    /*! Operator /= with double */
+    RealVec& operator/=(const double& r ) {
+        for( unsigned int i=0; i<vsize; i++ ) {
             data[i] /= r;
         }
         return (*this);
     };
 
     /*! Dot product */
-    Real dot( const RealVec& r ) {
+    double dot( const RealVec& r ) {
 #ifdef NNFW_DEBUG
         if( vsize != r.vsize ) {
             nError() << "Different numbers of element" ;
             return 0.0;
         }
 #endif
-        Real ret = 0.0;
-        for( u_int i=0; i<vsize; i++ ) {
+        double ret = 0.0;
+        for( unsigned int i=0; i<vsize; i++ ) {
             ret += data[i] * r.data[i];
         }
         return ret;
@@ -209,8 +209,8 @@ public:
 
     /*! Scaling (scalar-vector multiply)
      */
-    RealVec& scale( const Real v ) {
-        for( u_int i=0; i<vsize; i++ ) {
+    RealVec& scale( const double v ) {
+        for( unsigned int i=0; i<vsize; i++ ) {
             data[i] *= v;
         }
 		return (*this);
@@ -222,12 +222,12 @@ public:
 
     /*! vector norm: ||x||
      */
-    Real norm();
+    double norm();
 
     /*! Calculate the square of each element
      */
 	RealVec& square() {
-        for( u_int i=0; i<vsize; i++ ) {
+        for( unsigned int i=0; i<vsize; i++ ) {
             data[i] *= data[i];
         }
 		return (*this);
@@ -235,9 +235,9 @@ public:
 	
     /*! Return the sum of the vector's elements
      */
-	Real sum() {
-		Real s = 0.0;
-        for( u_int i=0; i<vsize; i++ ) {
+	double sum() {
+		double s = 0.0;
+        for( unsigned int i=0; i<vsize; i++ ) {
             s += data[i];
         }
 		return s;
@@ -246,9 +246,9 @@ public:
 	/*! Normalize the vector, so the norm is equal to one
 	 */
 	RealVec& normalize() {
-		Real n = norm();
+		double n = norm();
 		if ( n==0.0 ) return (*this);
-        for( u_int i=0; i<vsize; i++ ) {
+        for( unsigned int i=0; i<vsize; i++ ) {
             data[i] /= n;
         }
 		return (*this);
@@ -258,7 +258,7 @@ public:
 	 *  It apply the operator '!' to all elements of RealVec
      */
     RealVec& neg() {
-        for( u_int i=0; i<vsize; i++ ) {
+        for( unsigned int i=0; i<vsize; i++ ) {
 			data[i] = !data[i];
         }
 		return (*this);
@@ -267,7 +267,7 @@ public:
     /*! Equation: x-y
      */
     void assign_xminusy( const RealVec& x, const RealVec& y ) {
-        for( u_int i=0; i<vsize; i++ ) {
+        for( unsigned int i=0; i<vsize; i++ ) {
             data[i] = x[i]-y[i];
         }
     };
@@ -275,73 +275,73 @@ public:
     /*! Equation: -x
      */
     void assign_minusx( const RealVec& x ) {
-        for( u_int i=0; i<vsize; i++ ) {
+        for( unsigned int i=0; i<vsize; i++ ) {
             data[i] = -x[i];
         }
     };
 
     /*! Equation: a-x
      */
-    void assign_aminusx( Real a, const RealVec& x ) {
-        for( u_int i=0; i<vsize; i++ ) {
+    void assign_aminusx( double a, const RealVec& x ) {
+        for( unsigned int i=0; i<vsize; i++ ) {
             data[i] = a-x[i];
         }
     };
 
     /*! Equation: a*x
      */
-    void assign_amulx( const Real a, const RealVec& x ) {
-        for( u_int i=0; i<vsize; i++ ) {
+    void assign_amulx( const double a, const RealVec& x ) {
+        for( unsigned int i=0; i<vsize; i++ ) {
             data[i] = a*x[i];
         }
     };
 
     /*! Equation: a/x
      */
-    void assign_adivx( const Real a, const RealVec& x ) {
-        for( u_int i=0; i<vsize; i++ ) {
+    void assign_adivx( const double a, const RealVec& x ) {
+        for( unsigned int i=0; i<vsize; i++ ) {
             data[i] = a/x[i];
         }
     };
 		
     /*! Return the mean value of the vector's elements
      */
-	Real mean() {
+	double mean() {
 		return this->sum() / vsize;
     };
 
 	/*! return the position of the maximum element in the vector */
 	int maxIndex() {
 		int mi = 0;
-		for( u_int i=1; i<vsize; i++ ) {
+		for( unsigned int i=1; i<vsize; i++ ) {
 			if ( data[i] > data[mi] ) mi=i;
 		}
 		return mi;
 	}
 
 	/*! return the value of the maximum element in the vector */
-	Real maxValue() {
+	double maxValue() {
 		return data[maxIndex()];
 	}
 
 	/*! return the position of the minimum element in the vector */
 	int minIndex() {
 		int mi = 0;
-		for( u_int i=1; i<vsize; i++ ) {
+		for( unsigned int i=1; i<vsize; i++ ) {
 			if ( data[i] < data[mi] ) mi=i;
 		}
 		return mi;
 	}
 
 	/*! return the value of the minimum element in the vector */
-	Real minValue() {
+	double minValue() {
 		return data[minIndex()];
 	}
 
 	/*! For each element i, data[i] = 0 if data[i] <= threshold; data[i] = 1 otherwise
 	 */
-	RealVec& step( Real threshold ) {
-		for ( u_int i = 0; i<vsize; i++ ) {
+	RealVec& step( double threshold ) {
+		for ( unsigned int i = 0; i<vsize; i++ ) {
 		    ( data[i] > threshold ) ? data[i] = 1.0f : data[i] = 0.0f;
 		}
 		return (*this);
@@ -349,11 +349,11 @@ public:
 
     /*! Create all the binary vectors of a given dimension
      */
-	static void createAllBinaries( RealVec* vector, unsigned long int pats, u_int dims );
+	static void createAllBinaries( RealVec* vector, unsigned long int pats, unsigned int dims );
 
     /*! Return the mean square error of the vector's elements
      */
-	static Real mse( const RealVec& target, const RealVec& actual );
+	static double mse( const RealVec& target, const RealVec& actual );
 
 	/*! Delta-Rule: r += rate * x * y<br>
 	 *  Add to itselt the scaled by rate of the element-by-element multiplication of x with y
@@ -361,8 +361,8 @@ public:
 	 *  \param x is the first vector
 	 *  \param y is the second vector
 	 */
-	RealVec& deltarule( Real rate, const RealVec& x, const RealVec& y ) {
-		for( u_int i=0; i<vsize; i++ ) {
+	RealVec& deltarule( double rate, const RealVec& x, const RealVec& y ) {
+		for( unsigned int i=0; i<vsize; i++ ) {
 			data[i] += rate*x[i]*y[i];
 		}
 		return (*this);
@@ -389,12 +389,12 @@ protected:
 
     friend class RealMat;
     /*! return the rawdata */
-    Real* rawdata() const {
-        return VectorData<Real>::rawdata();
+    double* rawdata() const {
+        return VectorData<double>::rawdata();
     };
 
 	//--- for accessing from C interface implementation
-	friend Real* getRawData( RealVec& );
+	friend double* getRawData( RealVec& );
 
 };
 

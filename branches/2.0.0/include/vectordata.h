@@ -68,7 +68,7 @@ public:
     };
 
     /*! Construct a vector of dimension size setting all values to defaul constructor of T */
-    VectorData( u_int size ) 
+    VectorData( unsigned int size ) 
         : Observer(), Observable() {
         vsize = size;
         allocated = size;
@@ -86,12 +86,12 @@ public:
     };
 
     /*! Construct a vector of dimension size setting all the values as specified */
-    VectorData( u_int size, T& value )
+    VectorData( unsigned int size, T& value )
         : Observer(), Observable() {
         vsize = size;
         allocated = size;
         (vsize==0) ? (data = 0) : (data = new T[vsize]);
-        for(u_int i = 0; i<size; i++) {
+        for(unsigned int i = 0; i<size; i++) {
             data[i] = value;
         }
         // --- view attribute
@@ -102,7 +102,7 @@ public:
     };
     
     /*! Construct a VectorData view */
-    VectorData( VectorData<T>& src, u_int idStart, u_int idEnd )
+    VectorData( VectorData<T>& src, unsigned int idStart, unsigned int idEnd )
         : Observer(), Observable() {
         if ( idStart > src.vsize || idEnd > src.vsize || idStart >= idEnd ) {
             nError() << "Wrongs indexes specified in VectorData constructor; using 0 and src.size()" ;
@@ -121,7 +121,7 @@ public:
     };
 
     /*! Construct by copying data from const T* vector */
-    VectorData( const T* r, u_int dim )
+    VectorData( const T* r, unsigned int dim )
         : Observer(), Observable() {
         data = new T[dim];
         vsize = dim;
@@ -180,7 +180,7 @@ public:
 
     /*! Return the size of VectorData
      */
-    u_int size() const {
+    unsigned int size() const {
         return vsize;
     };
 
@@ -195,7 +195,7 @@ public:
     bool operator==( const VectorData<T>& b ) {
         if ( this->size() != b.size() ) return false;
         VectorData<T>& self = *this;
-        for( u_int i=0; i<size(); i++ ) {
+        for( unsigned int i=0; i<size(); i++ ) {
             if ( self[i] != b[i] ) {
                 return false;
             }
@@ -220,7 +220,7 @@ public:
 
     /*! Set all values to value */
     void setAll( const T& value ) {
-        for( u_int i=0; i<vsize; i++ ) {
+        for( unsigned int i=0; i<vsize; i++ ) {
             data[i] = value;
         }
     };
@@ -231,7 +231,7 @@ public:
 			nError() << "you can't erase element from a VectorData view" ;
 		} else {
 			if ( id < 0 || id >= (int)vsize ) return;
-			for( u_int i=(u_int)id; i<vsize-1; i++ ) {
+			for( unsigned int i=(unsigned int)id; i<vsize-1; i++ ) {
 				data[id] = data[id+1];
 			}
 			vsize = vsize-1;
@@ -240,14 +240,14 @@ public:
 	};
 
     /*! Assign to first num element the value passed */
-    VectorData<T>& assign( u_int num, const T& value ) {
+    VectorData<T>& assign( unsigned int num, const T& value ) {
 #ifdef NNFW_DEBUG
         if ( num > vsize ) {
             nError() << "Wrong number of elements passed to assign method" ;
             num = vsize;
         }
 #endif
-        for( u_int i=0; i<num; i++ ) {
+        for( unsigned int i=0; i<num; i++ ) {
             data[i] = value;
         }
         return (*this);
@@ -268,7 +268,7 @@ public:
     /*! Assignment method allow to copy data from a VectorData to another VectorData with different size.
 	 *  \param sizec the size of data to be assigned 
      */
-    VectorData<T>& assign( const VectorData<T>& src, u_int sizec ) {
+    VectorData<T>& assign( const VectorData<T>& src, unsigned int sizec ) {
 #ifdef NNFW_DEBUG
         if ( vsize < sizec || src.size() < sizec ) {
             nError() << "Wrong size specified in assign method" ;
@@ -287,7 +287,7 @@ public:
             return (*this);
         }
 #endif
-		for( u_int i=0, j=vsize-1; i<vsize; i++, j-- ) {
+		for( unsigned int i=0, j=vsize-1; i<vsize; i++, j-- ) {
 			data[i] = src.data[j];
 		}
         return (*this);
@@ -310,7 +310,7 @@ public:
 #endif
         VectorData<T>& self = *this;
 		comparison.resize(size());
-        for( u_int i=0; i<size(); i++ ) {
+        for( unsigned int i=0; i<size(); i++ ) {
             if ( self[i] == b[i] ) {
                 comparison[i] = true;
             }
@@ -324,7 +324,7 @@ public:
 	/*! Indexing operator
      *  \warning Boundary check activated only when DEBUG if defined
      */
-    T& operator[]( u_int index ) {
+    T& operator[]( unsigned int index ) {
 #ifdef NNFW_DEBUG
         if( index >= vsize ) {
             nError() << "Accessing elements outside boundary" ;
@@ -337,7 +337,7 @@ public:
     /*! Indexing operator (Const Version)
      *  \warning Boundary check activated only when DEBUG if defined
      */
-    const T& operator[]( u_int index ) const {
+    const T& operator[]( unsigned int index ) const {
 #ifdef NNFW_DEBUG
         if( index >= vsize ) {
             nError() << "Accessing elements outside boundary" ;
@@ -350,7 +350,7 @@ public:
     /*! Accessing method
      *  \warning Boundary check activated only when DEBUG if defined
      */
-    T& at( u_int index ) {
+    T& at( unsigned int index ) {
 #ifdef NNFW_DEBUG
         if( index >= vsize ) {
             nError() << "Accessing elements outside boundary" ;
@@ -363,7 +363,7 @@ public:
     /*! Accessing method (Const Version)
      *  \warning Boundary check activated only when DEBUG if defined
      */
-    const T& at( u_int index ) const {
+    const T& at( unsigned int index ) const {
 #ifdef NNFW_DEBUG
         if( index >= vsize ) {
             nError() << "Accessing elements outside boundary" ;
@@ -374,7 +374,7 @@ public:
     };
 
     /*! Resize the VectorData */
-    void resize( u_int newsize ) {
+    void resize( unsigned int newsize ) {
         if ( view ) {
             nError() << "It's not possible resize RealVec views" ;
             return;
@@ -417,7 +417,7 @@ public:
     /*! Configure the indexes of starting and ending of this VectorData view. <br>
      *  If VectorData is not a view, then it will shows an error message
      */
-    void setView( u_int idStart, u_int idEnd ) {
+    void setView( unsigned int idStart, unsigned int idEnd ) {
         if ( !view ) {
             nError() << "setView can be called only if VectorData is a view" ;
             return;
@@ -437,7 +437,7 @@ public:
 
     /*! Convert this VectorData to a view of VectorData src passed
      */
-    void convertToView( VectorData<T>& src, u_int idStart, u_int idEnd ) {
+    void convertToView( VectorData<T>& src, unsigned int idStart, unsigned int idEnd ) {
         if ( observed == (&src) ) {
             setView( idStart, idEnd );
             return;
@@ -527,8 +527,8 @@ public:
         if ( view ) {
             nError() << "you can't erase element from a VectorData view" ;
         } else {
-            u_int id = pos.getIndex();
-            for( u_int i=id; i<vsize-1; i++ ) {
+            unsigned int id = pos.getIndex();
+            for( unsigned int i=id; i<vsize-1; i++ ) {
                 data[id] = data[id+1];
             }
             vsize = vsize-1;
@@ -551,7 +551,7 @@ public:
     class vectordataIterator : public std::iterator<std::bidirectional_iterator_tag,T,ptrdiff_t> {
     public:
         /*! create the iterator */
-        vectordataIterator( VectorData& data, u_int startId = 0 ) : vecdata(data), id(startId) { /*nothing to do*/ };
+        vectordataIterator( VectorData& data, unsigned int startId = 0 ) : vecdata(data), id(startId) { /*nothing to do*/ };
         /*! Copy-Constructor */
         vectordataIterator( const vectordataIterator& src ) : vecdata(src.vecdata), id(src.id) { /* nothing to do */  };
         /*! Assignement operator */
@@ -597,14 +597,14 @@ public:
             return (*this);
         };
         /*! Return the id (used by VectorData for accessing) */
-        u_int getIndex() {
+        unsigned int getIndex() {
             return id;
         };
     private:
         /*! Vector over iterates */
         VectorData& vecdata;
         /*! current index */
-        u_int id;
+        unsigned int id;
     };
     //@}
 
@@ -616,18 +616,18 @@ protected:
     };
 
     /*! The actual size of VectorData */
-    u_int vsize;
+    unsigned int vsize;
     /*! The allocated space */
-    u_int allocated;
+    unsigned int allocated;
     /*! Data */
     T* data;
 
     /*! Is View */
     bool view;
     /*! start index */
-    u_int idstart;
+    unsigned int idstart;
     /*! end index */
-    u_int idend;
+    unsigned int idend;
     /*! Observed VectorData */
     VectorData* observed;
 

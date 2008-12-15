@@ -22,7 +22,7 @@
 
 namespace nnfw {
 
-DDECluster::DDECluster( const RealVec& c, u_int numNeurons, const char* name )
+DDECluster::DDECluster( const RealVec& c, unsigned int numNeurons, const char* name )
     : Cluster( numNeurons, name ), tmpdata(numNeurons), tmpdata2(numNeurons) {
     setCoeff( c );
     propdefs();
@@ -53,7 +53,7 @@ void DDECluster::setCoeff( const RealVec& c ) {
     coeff.resize( c.size() );
     coeff.assign( c );
     ds.resize( (c.size()>3) ? c.size()-3 : 0 );
-    for( u_int i=0; i<ds.size(); i++ ) {
+    for( unsigned int i=0; i<ds.size(); i++ ) {
         ds[i].resize( numNeurons() );
         ds[i].zeroing();
     }
@@ -69,7 +69,7 @@ Variant DDECluster::getCoeffP() {
 }
 
 void DDECluster::update() {
-    u_int csize = coeff.size();
+    unsigned int csize = coeff.size();
     if ( csize == 0 ) {
         // uscita un po' strana!
         outputs().zeroing();
@@ -102,7 +102,7 @@ void DDECluster::update() {
     }
 
     // --- tmp <- a0 + a1*f(x) + a2*x + a3*y ... aN*y^(n-3)
-    for( u_int i=0; i<ds.size(); i++ ) {
+    for( unsigned int i=0; i<ds.size(); i++ ) {
         tmpdata2.assign_amulx( coeff[i+3], ds[i] );
         tmpdata += tmpdata2;
     }
@@ -131,7 +131,7 @@ void DDECluster::updateDs() {
         // ----- Problemi di questo tipo di calcolo:
         // *** calcola, cmq, anche la derivata ds.size()+1... l'ultimo tmpdata calcolato prima di uscire.
         tmpdata.assign( outputs() );
-        for( u_int i=0; i<ds.size(); i++ ) {
+        for( unsigned int i=0; i<ds.size(); i++ ) {
             if ( i%2 == 0 ) {
                 // calcola la derivata i+1 per il ciclo successivo
                 tmpdata2.assign_xminusy( tmpdata, ds[i] );

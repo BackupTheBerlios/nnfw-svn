@@ -64,10 +64,10 @@ public:
     //@{
 
     /*! Implement the identity function */
-    virtual void apply( doubleVec& inputs, doubleVec& outputs );
+    virtual void apply( RealVec& inputs, RealVec& outputs );
 
     /*! return always 1 (an explain of why will be coming soon) */
-    virtual void derivate( const doubleVec& x, const doubleVec& y, doubleVec& d ) const;
+    virtual void derivate( const RealVec& x, const RealVec& y, RealVec& d ) const;
 
     /*! Clone this object
      */
@@ -114,7 +114,7 @@ public:
     Variant getRate();
 
     /*! Implement the identity function */
-    virtual void apply( doubleVec& inputs, doubleVec& outputs );
+    virtual void apply( RealVec& inputs, RealVec& outputs );
 
     /*! Clone this object
      */
@@ -161,7 +161,7 @@ public:
 	Variant gain();
 	
 	/*! Implement the Gain function */
-	virtual void apply( doubleVec& inputs, doubleVec& outputs );
+	virtual void apply( RealVec& inputs, RealVec& outputs );
 	
 	/*! Clone this object */
 	virtual GainFunction* clone() const;
@@ -210,10 +210,10 @@ public:
 
     /*! Implement the updating method
      */
-    virtual void apply( doubleVec& inputs, doubleVec& outputs );
+    virtual void apply( RealVec& inputs, RealVec& outputs );
 
     /*! return the approximation commonly used in backpropagation learning: x(1-x) */
-    virtual void derivate( const doubleVec& x, const doubleVec& y, doubleVec& d ) const;
+    virtual void derivate( const RealVec& x, const RealVec& y, RealVec& d ) const;
 
     /*! Clone this object
      */
@@ -264,10 +264,10 @@ public:
 
     /*! Implement the updating method
      */
-    virtual void apply( doubleVec& inputs, doubleVec& outputs );
+    virtual void apply( RealVec& inputs, RealVec& outputs );
 
     /*! return the approximation commonly used in backpropagation learning: x(1-x) */
-    virtual void derivate( const doubleVec& x, const doubleVec& y, doubleVec& d ) const;
+    virtual void derivate( const RealVec& x, const RealVec& y, RealVec& d ) const;
 
     /*! Clone this object
      */
@@ -339,10 +339,10 @@ public:
 
     /*! Implement the updating method
      */
-    virtual void apply( doubleVec& inputs, doubleVec& outputs );
+    virtual void apply( RealVec& inputs, RealVec& outputs );
 
     /*! return the approximation commonly used in backpropagation learning: x(1-x) */
-    virtual void derivate( const doubleVec& x, const doubleVec& y, doubleVec& d ) const;
+    virtual void derivate( const RealVec& x, const RealVec& y, RealVec& d ) const;
 
     /*! Clone this object
      */
@@ -427,10 +427,10 @@ public:
 	
 	/*! Implement the updating method
 		*/
-	virtual void apply( doubleVec& inputs, doubleVec& outputs );
+	virtual void apply( RealVec& inputs, RealVec& outputs );
 	
 	/*! return the m coefficient if x is in [minX, maxX] and x(1-x) otherwise */
-	virtual void derivate( const doubleVec& x, const doubleVec& y, doubleVec& d ) const;
+	virtual void derivate( const RealVec& x, const RealVec& y, RealVec& d ) const;
 	
 	/*! Clone this object */
 	virtual RampFunction* clone() const;
@@ -493,10 +493,10 @@ public:
 	Variant b();
 	
 	/*! Implement the updating method */
-	virtual void apply( doubleVec& inputs, doubleVec& outputs );
+	virtual void apply( RealVec& inputs, RealVec& outputs );
 	
 	/*! return the m coefficient */
-	virtual void derivate( const doubleVec& x, const doubleVec& y, doubleVec& d ) const;
+	virtual void derivate( const RealVec& x, const RealVec& y, RealVec& d ) const;
 	
 	/*! Clone this object */
 	virtual LinearFunction* clone() const;
@@ -566,10 +566,10 @@ public:
 
     /*! Implement the updating method
      */
-    virtual void apply( doubleVec& inputs, doubleVec& outputs );
+    virtual void apply( RealVec& inputs, RealVec& outputs );
 
     /*! Using the derivate of the sigmoid function!!!  */
-    virtual void derivate( const doubleVec& x, const doubleVec& y, doubleVec& d ) const;
+    virtual void derivate( const RealVec& x, const RealVec& y, RealVec& d ) const;
 
     /*! Clone this object
      */
@@ -593,7 +593,7 @@ public:
  *   <tr><td class="prophead" colspan="5">Properties</td></tr>
  *   <tr><th>Name</th> <th>Type [isVector]</th> <th>Access mode</th> <th>Description</th> <th>Class</th></tr>
  *   <tr><td>typename</td> <td>string</td> <td>read-only</td> <td> Class's type </td> <td>Propertized</td> </tr>
- *   <tr><td>delta</td> <td>doubleVec</td> <td>read/write</td> <td> leak rates </td> <td>this</td> </tr>
+ *   <tr><td>delta</td> <td>RealVec</td> <td>read/write</td> <td> leak rates </td> <td>this</td> </tr>
  *   </table>
  */
 class NNFW_API LeakyIntegratorFunction : public OutputFunction {
@@ -602,7 +602,7 @@ public:
     //@{
 
     /*! Construct a LeakyIntegrator with deltas specified */
-    LeakyIntegratorFunction( const doubleVec& d );
+    LeakyIntegratorFunction( const RealVec& d );
 
     /*! Construct from PropertySettings */
     LeakyIntegratorFunction( PropertySettings& prop );
@@ -615,12 +615,12 @@ public:
     //@{
 
     /*! Return the i-th Delta setted */
-    doubleVec& getDelta() {
+    RealVec& getDelta() {
 		return delta;
 	};
 
     /*! Set the i-th Delta */
-    void setDelta( const doubleVec& v ) {
+    void setDelta( const RealVec& v ) {
 		delta.assign( v );
 	};
 
@@ -636,7 +636,7 @@ public:
     /*! Implement the updating method<br>
      * it computes: y(t) <- delta * y(t-1) + (1.0-delta) * inputs
      */
-    virtual void apply( doubleVec& inputs, doubleVec& outputs );
+    virtual void apply( RealVec& inputs, RealVec& outputs );
 
     /*! Clone this object */
     virtual LeakyIntegratorFunction* clone() const;
@@ -647,9 +647,9 @@ public:
     //@}
 
     /*! delta is the leak rate of the function */
-    doubleVec delta;
+    RealVec delta;
 	/*! previous outputs */
-	doubleVec outprev;
+	RealVec outprev;
 };
 
 /*! \brief LogLike Function !! 
@@ -718,7 +718,7 @@ public:
     bool setBV( const Variant& v );
 
     /*! Implement the updating method */
-    virtual void apply( doubleVec& inputs, doubleVec& outputs );
+    virtual void apply( RealVec& inputs, RealVec& outputs );
 
     /*! Clone this object */
     virtual LogLikeFunction* clone() const;
@@ -795,9 +795,9 @@ public:
     Variant sizeV();
 
     /*! Implement the updating method <br>
-     *  Apply OutputFunctions setted by setOutputFunction to elements of doubleVec inputs
+     *  Apply OutputFunctions setted by setOutputFunction to elements of RealVec inputs
      */
-    virtual void apply( doubleVec& inputs, doubleVec& outputs );
+    virtual void apply( RealVec& inputs, RealVec& outputs );
 
     /*! Clone this object
      */
@@ -862,7 +862,7 @@ public:
      * it computes: y(t) <- second( first( input, mid ), outputs ) <br>
 	 * where mid is a private vector that traces the outputs of first function
      */
-    virtual void apply( doubleVec& inputs, doubleVec& outputs );
+    virtual void apply( RealVec& inputs, RealVec& outputs );
 
     /*! Clone this object */
     virtual CompositeFunction* clone() const;
@@ -876,7 +876,7 @@ public:
 	OutputFunction* first;
 	OutputFunction* second;
 	//--- intermediate result
-	doubleVec mid;
+	RealVec mid;
 	//--- Cluster
 	Cluster* cl;
 };
@@ -934,7 +934,7 @@ public:
     /*! Implement the updating method <br>
      * it computes: y(t) <- w1*first(input,output) + w2*second(input,outputs)
      */
-    virtual void apply( doubleVec& inputs, doubleVec& outputs );
+    virtual void apply( RealVec& inputs, RealVec& outputs );
 
     /*! Clone this object */
     virtual LinearComboFunction* clone() const;
@@ -947,7 +947,7 @@ public:
 	OutputFunction* first;
 	OutputFunction* second;
 	//--- temporary result
-	doubleVec mid;
+	RealVec mid;
 	//--- weights
 	double w1, w2;
 	//--- Cluster

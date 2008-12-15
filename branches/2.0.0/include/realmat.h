@@ -38,20 +38,20 @@ namespace nnfw {
  *  \par Description
  *  \par Warnings
  */
-class NNFW_API RealMat : public MatrixData<Real, RealVec> {
+class NNFW_API RealMat : public MatrixData<double, RealVec> {
 public:
     /*! \name Constructors */
     //@{
 
     /*! Construct matrix of dimension size initialized to zero
      */
-    RealMat( u_int rows, u_int cols );
+    RealMat( unsigned int rows, unsigned int cols );
 
     /*! Construct a Matrix view from VectorData passed
      *  \param src is the RealVec from which this method constructs a RealMat view.
      *  <b>See Documentation about MatrixData view constructor</b>
      */
-    RealMat( RealVec& src, u_int rstart, u_int rend, u_int rows, u_int cols );
+    RealMat( RealVec& src, unsigned int rstart, unsigned int rend, unsigned int rows, unsigned int cols );
 
     /*! Destructor
      */
@@ -69,10 +69,10 @@ public:
 
     /*! Transpose this RealMat */
     RealMat& transpose() {
-        Real tmp;
+        double tmp;
         RealMat& self = *this;
-        for( u_int i=0; i<rows(); i++ ) {
-            for( u_int j=i+1; j<cols(); j++ ) {
+        for( unsigned int i=0; i<rows(); i++ ) {
+            for( unsigned int j=i+1; j<cols(); j++ ) {
                 tmp = self[i][j];
                 self[i][j] = self[j][i];
                 self[j][i] = tmp;
@@ -98,8 +98,8 @@ public:
         return (*this);
     };
     
-	/*! Operator += with Real */
-    RealMat& operator+=(const Real& r ) {
+	/*! Operator += with double */
+    RealMat& operator+=(const double& r ) {
         rawdata() += r;
         return (*this);
     };
@@ -116,8 +116,8 @@ public:
         return (*this);
     };
     
-	/*! Operator -= with Real */
-    RealMat& operator-=(const Real& r ) {
+	/*! Operator -= with double */
+    RealMat& operator-=(const double& r ) {
         rawdata() -= r;
         return (*this);
     };
@@ -134,8 +134,8 @@ public:
         return (*this);
     };
     
-	/*! Operator *= with Real */
-    RealMat& operator*=(const Real& r ) {
+	/*! Operator *= with double */
+    RealMat& operator*=(const double& r ) {
         rawdata() *= r;
         return (*this);
     };
@@ -152,8 +152,8 @@ public:
         return (*this);
     };
     
-	/*! Operator /= with Real */
-    RealMat& operator/=(const Real& r ) {
+	/*! Operator /= with double */
+    RealMat& operator/=(const double& r ) {
         rawdata() /= r;
         return (*this);
     };
@@ -185,7 +185,7 @@ public:
 	 *  \param x is the first vector, its dimension have to be the same of matrix's rows
 	 *  \param y is the second vector, its dimension have to be the same of matrix's columns
 	 */
-	RealMat& deltarule( Real rate, const RealVec& x, const RealVec& y );
+	RealMat& deltarule( double rate, const RealVec& x, const RealVec& y );
 
     //@}
     /*! \name Matrix-Matrix Operators */
@@ -194,8 +194,8 @@ public:
 	/*! Put to zero all elements at positions where mask elements are false */
 	RealMat& cover( const MatrixData<bool>& mask ) {
 		RealMat& self = *this;
-		for( u_int r=0; r<rows(); r++ ) {
-			for( u_int c=0; c<cols(); c++ ) {
+		for( unsigned int r=0; r<rows(); r++ ) {
+			for( unsigned int c=0; c<cols(); c++ ) {
 				if ( !mask[r][c] ) {
 					self[r][c] = 0.0;
 				}
@@ -212,8 +212,8 @@ public:
     RealMat& exp();
 
     /*! Scaling (scalar-vector multiply) */
-    RealMat& scale( const Real v ) {
-        for( u_int i=0; i<size(); i++ ) {
+    RealMat& scale( const double v ) {
+        for( unsigned int i=0; i<size(); i++ ) {
             rawdata()[i] *= v;
         }
         return (*this);
@@ -223,7 +223,7 @@ public:
     RealMat& inv();
 
 	/*! "Entrywise" Norm of order 2 or Frobenius norm */
-	Real norm() {
+	double norm() {
 		return rawdata().norm();
 	};
 	/*! normalize the matrix, so the "entrywise" norm is one */
@@ -234,7 +234,7 @@ public:
     //@}
 
 	//--- for accessing from C interface implementation
-	friend Real* getRawData( RealMat& );
+	friend double* getRawData( RealMat& );
 
 };
 

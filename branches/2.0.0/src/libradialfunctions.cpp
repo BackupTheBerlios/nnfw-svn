@@ -21,7 +21,7 @@
 
 namespace nnfw {
 
-GaussFunction::GaussFunction( Real centre, Real variance, Real maxvalue )
+GaussFunction::GaussFunction( double centre, double variance, double maxvalue )
     : DerivableOutputFunction() {
     this->centre = centre;
     this->variance = variance;
@@ -47,7 +47,7 @@ GaussFunction::GaussFunction( PropertySettings& prop )
 }
 
 bool GaussFunction::setCentre( const Variant& v ) {
-    centre = v.getReal();
+    centre = v.getdouble();
     return true;
 }
 
@@ -56,7 +56,7 @@ Variant GaussFunction::getCentre() {
 }
 
 bool GaussFunction::setVariance( const Variant& v ) {
-    variance = v.getReal();
+    variance = v.getdouble();
     msqrvar = -( variance*variance );
     return true;
 }
@@ -66,7 +66,7 @@ Variant GaussFunction::getVariance() {
 }
 
 bool GaussFunction::setMax( const Variant& v ) {
-    max = v.getReal();
+    max = v.getdouble();
     return true;
 }
 

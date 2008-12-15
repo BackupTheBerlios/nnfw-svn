@@ -35,9 +35,9 @@ BaseNeuralNet* feedForwardNet( U_IntVec layers, const char* clusterType, const c
     Linker* ml = 0;
     UpdatableVec ord;
     char buf[150];
-    u_int clCount = 1;
-    u_int mlCount = 1;
-    for( u_int i=0; i<layers.size(); i++ ) {
+    unsigned int clCount = 1;
+    unsigned int mlCount = 1;
+    for( unsigned int i=0; i<layers.size(); i++ ) {
         PropertySettings prop;
         sprintf( buf, "%d", layers[i] );
         prop["numNeurons"] = buf;

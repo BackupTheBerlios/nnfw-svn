@@ -90,7 +90,7 @@ public:
     void update();
 
     /*! Randomize Nothing ;-) */
-    void randomize( Real, Real ) { /* Nothing To Do */ };
+    void randomize( double, double ) { /* Nothing To Do */ };
 
 	/*! Clone this DDECluster */
 	virtual DDECluster* clone() const;

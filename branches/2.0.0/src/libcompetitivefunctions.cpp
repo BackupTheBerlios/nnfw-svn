@@ -22,7 +22,7 @@
 
 namespace nnfw {
 
-WinnerTakeAllFunction::WinnerTakeAllFunction( Real value )
+WinnerTakeAllFunction::WinnerTakeAllFunction( double value )
     : OutputFunction() {
 	valuev = value;
 	
@@ -39,7 +39,7 @@ WinnerTakeAllFunction::WinnerTakeAllFunction( PropertySettings& prop )
 }
 
 bool WinnerTakeAllFunction::setValue( const Variant& v ) {
-	valuev = v.getReal();
+	valuev = v.getdouble();
 	return true;
 }
 

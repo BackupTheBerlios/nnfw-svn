@@ -26,8 +26,8 @@ namespace nnfw {
 SparseMatrixLinker::SparseMatrixLinker( Cluster* from, Cluster* to, const char* name )
     : MatrixLinker( from, to, name ), maskm(rows(), cols()) {
     // --- Init data
-    for( u_int i=0; i<rows(); i++ ) {
-        for( u_int j=0; j<cols(); j++ ) {
+    for( unsigned int i=0; i<rows(); i++ ) {
+        for( unsigned int j=0; j<cols(); j++ ) {
             maskm[i][j] = true;
         }
     }
@@ -35,11 +35,11 @@ SparseMatrixLinker::SparseMatrixLinker( Cluster* from, Cluster* to, const char* 
     setTypename( "SparseMatrixLinker" );
 }
 
-SparseMatrixLinker::SparseMatrixLinker( Real prob, Cluster* from, Cluster* to, const char* name )
+SparseMatrixLinker::SparseMatrixLinker( double prob, Cluster* from, Cluster* to, const char* name )
     : MatrixLinker( from, to, name ), maskm(rows(), cols()) {
     // --- Init data
-    for( u_int i=0; i<rows(); i++ ) {
-        for( u_int j=0; j<cols(); j++ ) {
+    for( unsigned int i=0; i<rows(); i++ ) {
+        for( unsigned int j=0; j<cols(); j++ ) {
             maskm[i][j] = Random::boolean( prob );
         }
     }
@@ -47,7 +47,7 @@ SparseMatrixLinker::SparseMatrixLinker( Real prob, Cluster* from, Cluster* to, c
     setTypename( "SparseMatrixLinker" );
 }
 
-SparseMatrixLinker::SparseMatrixLinker( Cluster* from, Cluster* to, Real prob, bool zeroDiagonal,
+SparseMatrixLinker::SparseMatrixLinker( Cluster* from, Cluster* to, double prob, bool zeroDiagonal,
                                         bool symmetricMask, const char* name )
     : MatrixLinker( from, to, name ), maskm(rows(), cols()) {
 #ifdef NNFW_DEBUG
@@ -56,20 +56,20 @@ SparseMatrixLinker::SparseMatrixLinker( Cluster* from, Cluster* to, Real prob, b
         return;
     }
 #endif
-    u_int zeroD = 0;
+    unsigned int zeroD = 0;
     if ( zeroDiagonal ) {
         zeroD = 1;
     }
     if ( symmetricMask ) {
-        for( u_int i=0; i<rows(); i++ ) {
-            for( u_int j=i+zeroD; j<cols(); j++ ) {
+        for( unsigned int i=0; i<rows(); i++ ) {
+            for( unsigned int j=i+zeroD; j<cols(); j++ ) {
                 maskm[i][j] = Random::boolean( prob );
                 maskm[j][i] = maskm[i][j];
             }
         }
     } else {
-        for( u_int i=0; i<rows(); i++ ) {
-            for( u_int j=i+zeroD; j<cols(); j++ ) {
+        for( unsigned int i=0; i<rows(); i++ ) {
+            for( unsigned int j=i+zeroD; j<cols(); j++ ) {
                 maskm[i][j] = Random::boolean( prob );
                 maskm[j][i] = Random::boolean( prob );
             }
@@ -93,7 +93,7 @@ SparseMatrixLinker::SparseMatrixLinker( PropertySettings& prop )
 SparseMatrixLinker::~SparseMatrixLinker() {
 }
 
-void SparseMatrixLinker::setWeight( u_int from, u_int to, Real weight ) {
+void SparseMatrixLinker::setWeight( unsigned int from, unsigned int to, double weight ) {
     if ( from >= rows() ) {
         // Messaggio di errore !!!
         return;
@@ -109,11 +109,11 @@ void SparseMatrixLinker::setWeight( u_int from, u_int to, Real weight ) {
     }
 }
 
-void SparseMatrixLinker::randomize( Real min, Real max ) {
-    for ( u_int i = 0; i<rows(); i++ ) {
-        for ( u_int j = 0; j<cols(); j++ ) {
+void SparseMatrixLinker::randomize( double min, double max ) {
+    for ( unsigned int i = 0; i<rows(); i++ ) {
+        for ( unsigned int j = 0; j<cols(); j++ ) {
             if ( maskm[i][j] ) {
-                matrix()[i][j] = Random::flatReal( min, max );
+                matrix()[i][j] = Random::flatdouble( min, max );
             } else {
                 matrix()[i][j] = 0.0;
             }
@@ -130,7 +130,7 @@ void SparseMatrixLinker::update() {
     return;
 }
 
-void SparseMatrixLinker::connect( u_int from, u_int to ) {
+void SparseMatrixLinker::connect( unsigned int from, unsigned int to ) {
     if ( from >= rows() ) {
         // Messaggio di errore !!!
         return;
@@ -142,23 +142,23 @@ void SparseMatrixLinker::connect( u_int from, u_int to ) {
     maskm[from][to] = true;
 }
 
-void SparseMatrixLinker::connectRandom( Real prob ) {
-    for ( u_int r = 0; r < rows(); r++ ) {
-        for ( u_int c = 0; c < cols(); c++ ) {
-            maskm[r][c] = ! ( Random::flatReal() < prob );
+void SparseMatrixLinker::connectRandom( double prob ) {
+    for ( unsigned int r = 0; r < rows(); r++ ) {
+        for ( unsigned int c = 0; c < cols(); c++ ) {
+            maskm[r][c] = ! ( Random::flatdouble() < prob );
         }
     }
 }
 
 void SparseMatrixLinker::connectAll() {
-    for ( u_int r = 0; r < rows(); r++ ) {
-        for ( u_int c = 0; c < cols(); c++ ) {
+    for ( unsigned int r = 0; r < rows(); r++ ) {
+        for ( unsigned int c = 0; c < cols(); c++ ) {
             maskm[r][c] = true;
         }
     }
 }
 
-void SparseMatrixLinker::disconnect( u_int from, u_int to ) {
+void SparseMatrixLinker::disconnect( unsigned int from, unsigned int to ) {
     if ( from >= rows() ) {
         // Messaggio di errore !!!
         return;
@@ -175,10 +175,10 @@ void SparseMatrixLinker::disconnectAll() {
     maskm.zeroing();
 }
 
-void SparseMatrixLinker::disconnectRandom( Real prob ) {
-    for ( u_int r = 0; r < rows(); r++ ) {
-        for ( u_int c = 0; c < cols(); c++ ) {
-            maskm[r][c] = ! ( Random::flatReal() < prob );
+void SparseMatrixLinker::disconnectRandom( double prob ) {
+    for ( unsigned int r = 0; r < rows(); r++ ) {
+        for ( unsigned int c = 0; c < cols(); c++ ) {
+            maskm[r][c] = ! ( Random::flatdouble() < prob );
         }
     }
 }

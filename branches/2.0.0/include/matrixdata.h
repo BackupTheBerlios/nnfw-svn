@@ -385,7 +385,7 @@ public:
     //@}
 
 protected:
-    friend class doubleVec;
+    friend class RealVec;
 
     /*! Return the VectorData of the data
      */

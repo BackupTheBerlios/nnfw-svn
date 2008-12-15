@@ -159,7 +159,7 @@ public:
     /*! Set all the inputs with the same value
      * Details...
      */
-    virtual void setAllInputs( Real value );
+    virtual void setAllInputs( double value );
 
     /*! Reset the inputs of this cluster, typically this means that the inputs will be set to zero.
      * Details...

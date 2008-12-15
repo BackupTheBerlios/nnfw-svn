@@ -22,15 +22,15 @@
 
 #include "types.h"
 #include "clonable.h"
-#include <map>
-#include <string>
+#include <QMap>
+#include <QVector>
+#include <QString>
 
 /*! \file
  *  \brief The infrastructure for implementing properties
  *
  *
  */
-
 
 namespace nnfw {
 
@@ -39,7 +39,7 @@ class Propertized;
 class AbstractPropertyAccess;
 
 /*! Vector of PropertyAccess */
-typedef VectorData<AbstractPropertyAccess*> PropertyAccessVec;
+typedef QVector<AbstractPropertyAccess*> PropertyAccessVec;
 
 /*! \brief Incapsulate values of different types/classes in a unified way (like union)
  */
@@ -73,9 +73,9 @@ public:
     /*! Constructor */
     Variant( char* d );
     /*! Constructor */
-    Variant( doubleVec* d );
+    Variant( RealVec* d );
     /*! Constructor */
-    Variant( doubleMat* d );
+    Variant( RealMat* d );
     /*! Constructor */
     Variant( OutputFunction* d );
     /*! Constructor */
@@ -111,7 +111,7 @@ public:
     /*! \name Retrieving data */
     //@{
     /*! return the double value */
-    double getdouble() const;
+    double getDouble() const;
     /*! return the Int value */
     int getInt() const;
     /*! return the UInt value */
@@ -124,10 +124,10 @@ public:
     bool getBool() const;
     /*! return the const char* (constant string) value */
     const char* getString() const;
-    /*! return the doubleVec value */
-    doubleVec* getdoubleVec() const;
-    /*! return the doubleMat value */
-    doubleMat* getdoubleMat() const;
+    /*! return the RealVec value */
+    RealVec* getRealVec() const;
+    /*! return the RealMat value */
+    RealMat* getRealMat() const;
     /*! return the OutputFunction value */
     OutputFunction* getOutputFunction() const;
     /*! return the Cluster value */
@@ -164,8 +164,8 @@ private:
     unsigned char   duchar;
     bool            dbool;
     char*           dstring;
-    doubleVec*         ddoublevec;
-    doubleMat*         ddoublemat;
+    RealVec*         ddoublevec;
+    RealMat*         ddoublemat;
     OutputFunction*  doutfun;
     Cluster*         dcluster;
     Linker*          dlinker;
@@ -385,7 +385,7 @@ public:
 	int index;
 };
 /*! PropertySettings */
-typedef std::map< std::string, Variant > PropertySettings;
+typedef QMap< QString, Variant > PropertySettings;
 
 /*! \brief Implements the capability to access internal data via properties
  *
@@ -519,7 +519,7 @@ protected:
 
 private:
     /*! mapping name -> PropertyAccess */
-    std::map< std::string, AbstractPropertyAccess* > props;
+    QMap< QString, AbstractPropertyAccess* > props;
     /*! vector of all PropertyAccess in order of registering */
     PropertyAccessVec vecProps;
     /*! the name of the class */

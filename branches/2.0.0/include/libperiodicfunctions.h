@@ -76,7 +76,7 @@ public:
 	Variant amplitude();
 	
 	/*! Implement the Sawtooth function */
-	virtual void apply( doubleVec& inputs, doubleVec& outputs ) = 0;
+	virtual void apply( RealVec& inputs, RealVec& outputs ) = 0;
 
 	/*! Clone this object */
 	virtual PeriodicFunction* clone() const = 0;
@@ -119,7 +119,7 @@ public:
 	//@{
 	
 	/*! Implement the Sawtooth function */
-	virtual void apply( doubleVec& inputs, doubleVec& outputs );
+	virtual void apply( RealVec& inputs, RealVec& outputs );
 
 	/*! Clone this object */
 	virtual SawtoothFunction* clone() const;
@@ -157,7 +157,7 @@ public:
 	//@{
 	
 	/*! Implement the Triangle function */
-	virtual void apply( doubleVec& inputs, doubleVec& outputs );
+	virtual void apply( RealVec& inputs, RealVec& outputs );
 
 	/*! Clone this object */
 	virtual TriangleFunction* clone() const;
@@ -201,7 +201,7 @@ public:
 	double frequency();
 	
 	/*! Implement the Sin function */
-	virtual void apply( doubleVec& inputs, doubleVec& outputs );
+	virtual void apply( RealVec& inputs, RealVec& outputs );
 
 	/*! Clone this object */
 	virtual SinFunction* clone() const;
@@ -239,7 +239,7 @@ public:
 	//@{
 	
 	/*! Implement the Triangle function */
-	virtual void apply( doubleVec& inputs, doubleVec& outputs );
+	virtual void apply( RealVec& inputs, RealVec& outputs );
 
 	/*! Clone this object */
 	virtual PseudoGaussFunction* clone() const;

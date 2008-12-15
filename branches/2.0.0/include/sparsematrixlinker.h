@@ -45,14 +45,14 @@ public:
 
     /*! Connect neurons of Clusters with a random connections with the passed probability.
      */
-	SparseMatrixLinker( Real prob, Cluster* from, Cluster* to, const char* name = "unnamed" );
+	SparseMatrixLinker( double prob, Cluster* from, Cluster* to, const char* name = "unnamed" );
 
     /*! Connect neurons of Clusters with a random connections with the passed probability.<br>
 	 * With this contructor you must also specify whether the diagonal of the matrix is made of zeros
      * and whether the matrix is symmetrical
      * \warning You can use this constructor only with square matrices, otherwise it will generate a memory error!!!
 	 */
-	SparseMatrixLinker( Cluster* from, Cluster* to, Real prob, bool zeroDiagonal = false, bool symmetricMask = false, const char* name = "unnamed" );
+	SparseMatrixLinker( Cluster* from, Cluster* to, double prob, bool zeroDiagonal = false, bool symmetricMask = false, const char* name = "unnamed" );
 
     /*! Construct by PropertySettings
      */
@@ -68,11 +68,11 @@ public:
 
     /*! Set the weight of the connection specified
      */
-    virtual void setWeight( u_int from, u_int to, Real weight );
+    virtual void setWeight( unsigned int from, unsigned int to, double weight );
 
     /*! Randomize the weights of the SparseMatrixLinker
      */
-    virtual void randomize( Real min, Real max );
+    virtual void randomize( double min, double max );
 
     /*! Performs the dot-product calculation where the non-connection are considered as zero
      */
@@ -80,11 +80,11 @@ public:
 
     /*! Connect two neurons
      */
-    void connect( u_int from, u_int to );
+    void connect( unsigned int from, unsigned int to );
 
     /*! Connects randomly according to the given probability
      */
-    void connectRandom( Real prob );
+    void connectRandom( double prob );
 
     /*! Connect all couples of neurons
      */
@@ -92,11 +92,11 @@ public:
 
     /*! Disconnect the two neurons
      */
-    void disconnect( u_int from, u_int to );
+    void disconnect( unsigned int from, unsigned int to );
 
     /*! Disconnects randomly according to the given probability
      */
-    void disconnectRandom( Real prob );
+    void disconnectRandom( double prob );
 
     /*! Disonnect all couples of neurons
      */

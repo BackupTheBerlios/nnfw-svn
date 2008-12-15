@@ -20,13 +20,10 @@
 #include "fakecluster.h"
 #include "liboutputfunctions.h"
 #include "random.h"
-#include <cstdio>
-#include <cstring>
-
 
 namespace nnfw {
 
-FakeCluster::FakeCluster( u_int size, const char* name )
+FakeCluster::FakeCluster( unsigned int size, const char* name )
     : Cluster( size, name) {
     // Set the outputs as a View of inputs
     outputs().convertToView( inputs(), 0, numNeurons() );
@@ -49,7 +46,7 @@ void FakeCluster::update() {
     return;
 }
 
-void FakeCluster::randomize( Real , Real ) {
+void FakeCluster::randomize( double , double ) {
     return;
 }
 

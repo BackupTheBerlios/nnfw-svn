@@ -19,8 +19,6 @@
 
 #include "copylinker.h"
 #include "random.h"
-#include <cstdio>
-
 
 namespace nnfw {
 
@@ -139,7 +137,7 @@ void CopyLinker::update() {
     return;
 }
 
-u_int CopyLinker::size() const {
+unsigned int CopyLinker::size() const {
     return dimData;
 }
 

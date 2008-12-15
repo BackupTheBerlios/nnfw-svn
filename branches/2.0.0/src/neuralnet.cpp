@@ -19,10 +19,6 @@
 
 #include "neuralnet.h"
 #include "nnfwfactory.h"
-#include <algorithm>
-#include <functional>
-#include <cstring>
-
 
 namespace nnfw {
 
@@ -285,9 +281,9 @@ const LinkerVec& BaseNeuralNet::linkers( Cluster* c, bool out ) const {
     return emptyLinkerVec;
 }
 
-void BaseNeuralNet::setOrder( Updatable* u[], u_int dim ) {
+void BaseNeuralNet::setOrder( Updatable* u[], unsigned int dim ) {
     ups.clear();
-    for( u_int i = 0; i<dim; i++ ) {
+    for( unsigned int i = 0; i<dim; i++ ) {
         if ( find( u[i] ) ) {
             ups.push_back( u[i] );
         }
@@ -298,8 +294,8 @@ void BaseNeuralNet::setOrder( Updatable* u[], u_int dim ) {
 
 void BaseNeuralNet::setOrder( const UpdatableVec& u ) {
     ups.clear();
-    u_int dim = u.size();
-    for( u_int i = 0; i<dim; i++ ) {
+    unsigned int dim = u.size();
+    for( unsigned int i = 0; i<dim; i++ ) {
         if ( find( u[i] ) ) {
             ups.push_back( u[i] );
         }
@@ -308,7 +304,7 @@ void BaseNeuralNet::setOrder( const UpdatableVec& u ) {
     return;
 }
 
-void BaseNeuralNet::randomize( Real min, Real max ) {
+void BaseNeuralNet::randomize( double min, double max ) {
 	int dim = clustersv.size();
 	for( int i=0; i<dim; i++ ) {
 		clustersv[i]->randomize( min, max );

@@ -41,33 +41,33 @@ void Random::setSeed( long int seed ) {
     return;
 }
 
-Real Random::flatReal( ) {
+double Random::flatdouble( ) {
 #ifdef NNFW_USE_GSL
-    return (Real)( gsl_rng_uniform( rnd ) );
+    return (double)( gsl_rng_uniform( rnd ) );
 #else
-    return (Real) rand() / RAND_MAX;
+    return (double) rand() / RAND_MAX;
 #endif
 }
 
-Real Random::flatReal( Real min, Real max ) {
+double Random::flatdouble( double min, double max ) {
 #ifdef NNFW_USE_GSL
-    return (Real)( gsl_ran_flat( rnd, (double)min, (double)max ) );
+    return (double)( gsl_ran_flat( rnd, (double)min, (double)max ) );
 #else
-    return ( ( ( (Real) rand() ) / RAND_MAX ) * (max-min) ) + min;
+    return ( ( ( (double) rand() ) / RAND_MAX ) * (max-min) ) + min;
 #endif
 }
 
-RealVec& Random::flatRealVec( RealVec& vec, Real min, Real max ) {
-	for( u_int i=0; i<vec.size(); i++ ) {
-		vec[i] = flatReal( min, max );
+RealVec& Random::flatRealVec( RealVec& vec, double min, double max ) {
+	for( unsigned int i=0; i<vec.size(); i++ ) {
+		vec[i] = flatdouble( min, max );
 	}
 	return vec;
 }
 
-RealMat& Random::flatRealMat( RealMat& mat, Real min, Real max ) {
-	for( u_int row_nr=0; row_nr<mat.rows(); row_nr++ ) {
-		for( u_int col_nr=0; col_nr<mat.cols(); col_nr++ ) {
-			mat[row_nr][col_nr] = flatReal( min, max );
+RealMat& Random::flatRealMat( RealMat& mat, double min, double max ) {
+	for( unsigned int row_nr=0; row_nr<mat.rows(); row_nr++ ) {
+		for( unsigned int col_nr=0; col_nr<mat.cols(); col_nr++ ) {
+			mat[row_nr][col_nr] = flatdouble( min, max );
 		}
 	}
 	return mat;
@@ -81,17 +81,17 @@ bool Random::boolean( ) {
 #endif
 }
 
-bool Random::boolean( Real trueProb ) {
+bool Random::boolean( double trueProb ) {
 #ifdef NNFW_USE_GSL
     return ( trueProb > gsl_rng_uniform( rnd ) );
 #else
-    return ( trueProb >  ( (Real)( rand() )/RAND_MAX ) );
+    return ( trueProb >  ( (double)( rand() )/RAND_MAX ) );
 #endif
 }
 
-u_int Random::flatInt( u_int x ) {
+unsigned int Random::flatInt( unsigned int x ) {
 #ifdef NNFW_USE_GSL
-    return (u_int)( gsl_rng_uniform_int( rnd, x ) );
+    return (unsigned int)( gsl_rng_uniform_int( rnd, x ) );
 #else
 	return (int)(rand() % x);
 #endif
@@ -111,14 +111,14 @@ int Random::flatInt( int min, int max ) {
 #endif
 }
 
-Real Random::gauss( Real mean, Real stdev ) {
+double Random::gauss( double mean, double stdev ) {
 #ifdef NNFW_USE_GSL
     return mean + gsl_ran_gaussian( rnd, (double)stdev );
 #else
-    Real x1, x2, w;
+    double x1, x2, w;
     do {
-        x1 = 2. * flatReal() - 1.;
-        x2 = 2. * flatReal() - 1.;
+        x1 = 2. * flatdouble() - 1.;
+        x2 = 2. * flatdouble() - 1.;
         w = x1 * x1 + x2 * x2;
     } while ( w >= 1. );
     w = sqrt( (-2. * log( w ) ) / w );

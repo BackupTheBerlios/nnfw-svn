@@ -20,8 +20,6 @@
 #include "cluster.h"
 #include "liboutputfunctions.h"
 #include "random.h"
-#include <cstdio>
-#include <cstring>
 
 namespace nnfw {
 
@@ -29,7 +27,7 @@ namespace nnfw {
  *  Implementation of Cluster Class     *
  **********************************************/
 
-Cluster::Cluster( u_int numNeurons, const char* name )
+Cluster::Cluster( unsigned int numNeurons, const char* name )
     : Updatable(name), inputdata(numNeurons), outputdata(numNeurons) {
     this->numneurons = numNeurons;
     outputdata.zeroing();
@@ -96,7 +94,7 @@ void Cluster::setFunction( const OutputFunction& up ) {
     updater->setCluster( this );
 }
 
-void Cluster::setInput( u_int neuron, Real value ) {
+void Cluster::setInput( unsigned int neuron, double value ) {
 #ifdef NNFW_DEBUG
     if ( neuron >= numneurons ) {
 		nError() << "The neuron " << neuron << " doesn't exists! The operation setInput will be ignored";
@@ -110,7 +108,7 @@ void Cluster::setInputs( const RealVec& inputs ) {
 	inputdata.assign( inputs );
 }
 
-void Cluster::setAllInputs( Real value ) {
+void Cluster::setAllInputs( double value ) {
     inputdata.assign( numneurons, value );
     setNeedReset( false );
 }
@@ -120,7 +118,7 @@ void Cluster::resetInputs() {
     setNeedReset( false );
 }
 
-Real Cluster::getInput( u_int neuron ) const {
+double Cluster::getInput( unsigned int neuron ) const {
 #ifdef NNFW_DEBUG
     if ( neuron >= numneurons ) {
         nError() << "The neuron " << neuron << " doesn't exists! The operation getInput will return 0.0";
@@ -130,7 +128,7 @@ Real Cluster::getInput( u_int neuron ) const {
     return inputdata[neuron];
 }
 
-void Cluster::setOutput( u_int neuron, Real value ) {
+void Cluster::setOutput( unsigned int neuron, double value ) {
 #ifdef NNFW_DEBUG
     if ( neuron >= numneurons ) {
         nError() << "The neuron " << neuron << " doesn't exists! The operation setOutput will be ignored";
@@ -144,7 +142,7 @@ void Cluster::setOutputs( const RealVec& outputs ) {
 	outputdata.assign( outputs );
 }
 
-Real Cluster::getOutput( u_int neuron ) const {
+double Cluster::getOutput( unsigned int neuron ) const {
 #ifdef NNFW_DEBUG
     if ( neuron >= numneurons ) {
         nError() << "The neuron " << neuron << " doesn't exists! The operation getOutput will return 0.0";

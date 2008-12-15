@@ -20,13 +20,10 @@
 #include "biasedcluster.h"
 #include "liboutputfunctions.h"
 #include "random.h"
-#include <cstdio>
-#include <cstring>
-
 
 namespace nnfw {
 
-BiasedCluster::BiasedCluster( u_int numNeurons, const char* name )
+BiasedCluster::BiasedCluster( unsigned int numNeurons, const char* name )
     : Cluster( numNeurons, name), biasesdata(numNeurons), tempdata(numNeurons) {
     biasesdata.zeroing();
     tempdata.zeroing();
@@ -55,7 +52,7 @@ void BiasedCluster::update() {
     setNeedReset( true );
 }
 
-void BiasedCluster::setBias( u_int neuron, Real bias ) {
+void BiasedCluster::setBias( unsigned int neuron, double bias ) {
 #ifdef NNFW_DEBUG
     if ( neuron >= numNeurons() ) {
 		nError() << "The neuron " << neuron << " doesn't exists! The operation setBias will be ignored";
@@ -65,7 +62,7 @@ void BiasedCluster::setBias( u_int neuron, Real bias ) {
     biasesdata[neuron] = bias;
 }
 
-void BiasedCluster::setAllBiases( Real bias ) {
+void BiasedCluster::setAllBiases( double bias ) {
     biases().assign( numNeurons(), bias );
 }
 
@@ -73,7 +70,7 @@ void BiasedCluster::setBiases( const RealVec& bias ) {
     biases().assign( bias );
 }
 
-Real BiasedCluster::getBias( u_int neuron ) {
+double BiasedCluster::getBias( unsigned int neuron ) {
 #ifdef NNFW_DEBUG
     if ( neuron >= numNeurons() ) {
 		nError() << "The neuron " << neuron << "doesn't exists! The operation getBias will return 0.0";
@@ -83,9 +80,9 @@ Real BiasedCluster::getBias( u_int neuron ) {
     return biasesdata[neuron];
 }
 
-void BiasedCluster::randomize( Real min, Real max ) {
-    for ( u_int i = 0; i < numNeurons(); i++ ) {
-        biasesdata[i] = Random::flatReal( min, max );
+void BiasedCluster::randomize( double min, double max ) {
+    for ( unsigned int i = 0; i < numNeurons(); i++ ) {
+        biasesdata[i] = Random::flatdouble( min, max );
     }
 }
 

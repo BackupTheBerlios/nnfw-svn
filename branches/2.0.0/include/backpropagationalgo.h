@@ -44,7 +44,7 @@ public:
 	 *
 	 *  \param neural_network the BaseNeuralNet neural network to train
 	 *  \param update_order the UpdatableVec for the backpropagation sequence
-	 *  \param learn_rate the Real learning rate factor
+	 *  \param learn_rate the double learning rate factor
 	 */
 	BackPropagationAlgo( BaseNeuralNet *n_n, UpdatableVec update_order, double l_r = 0.1 );
 
@@ -121,7 +121,7 @@ public:
 	//@}
 
 private:
-	//! The Real learning rate factor
+	//! The double learning rate factor
 	double learn_rate;
 	//! Momentum
 	double momentumv;

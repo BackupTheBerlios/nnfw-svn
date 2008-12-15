@@ -47,7 +47,7 @@ public:
     //@{
 
     /*! apply the rule changing the Updatable object */
-    virtual void rule( Real, const RealVec&, const RealVec& ) const { /* nothing to do */ };
+    virtual void rule( double, const RealVec&, const RealVec& ) const { /* nothing to do */ };
 
     /*! Virtual Copy-Constructor */
     virtual DummyModifier* clone() const {
@@ -70,7 +70,7 @@ public:
 	};
 
     /*! apply the rule changing the Updatable object */
-    virtual void rule( Real learn_rate, const RealVec& x, const RealVec& y ) const {
+    virtual void rule( double learn_rate, const RealVec& x, const RealVec& y ) const {
 		cl->biases().deltarule( learn_rate, x, y );
 	};
 
@@ -97,7 +97,7 @@ public:
 	};
 
     /*! apply the rule changing the Updatable object */
-    virtual void rule( Real learn_rate, const RealVec& x, const RealVec& y ) const {
+    virtual void rule( double learn_rate, const RealVec& x, const RealVec& y ) const {
 		ml->matrix().deltarule( learn_rate, x, y );
 	};
 
@@ -124,7 +124,7 @@ public:
 	};
 
     /*! apply the rule changing the Updatable object */
-    virtual void rule( Real learn_rate, const RealVec& x, const RealVec& y ) const {
+    virtual void rule( double learn_rate, const RealVec& x, const RealVec& y ) const {
 		sml->matrix().deltarule( learn_rate, x, y );
 		sml->matrix().cover( sml->getMask() );
 	};
@@ -140,7 +140,7 @@ private:
 
 Cluster* Factory::createCluster( const char* type, PropertySettings& p ) {
     if ( !isInit ) { initFactory(); };
-    std::string key(type);
+    QString key(type);
     if ( clustertypes.count( key ) ) {
         return (Cluster*)( clustertypes[key]->create( p ) );
     }
@@ -149,7 +149,7 @@ Cluster* Factory::createCluster( const char* type, PropertySettings& p ) {
 
 Linker* Factory::createLinker( const char* type, PropertySettings& p ) {
     if ( !isInit ) { initFactory(); };
-    std::string key(type);
+    QString key(type);
     if( linkertypes.count( key ) ) {
         return (Linker*)( linkertypes[key]->create( p ) );
     }
@@ -158,7 +158,7 @@ Linker* Factory::createLinker( const char* type, PropertySettings& p ) {
 
 OutputFunction* Factory::createOutputFunction( const char* type, PropertySettings& p ) {
     if ( !isInit ) { initFactory(); };
-    std::string key(type);
+    QString key(type);
     if( outfuntypes.count( key ) ) {
         return (OutputFunction*)( outfuntypes[key]->create( p ) );
     }
@@ -167,7 +167,7 @@ OutputFunction* Factory::createOutputFunction( const char* type, PropertySetting
 
 Propertized* Factory::createPropertized( const char* type, PropertySettings& p ) {
     if ( !isInit ) { initFactory(); };
-    std::string key(type);
+    QString key(type);
     if( proptypes.count( key ) ) {
         return ( proptypes[key]->create( p ) );
     }
@@ -176,7 +176,7 @@ Propertized* Factory::createPropertized( const char* type, PropertySettings& p )
 
 bool Factory::registerCluster( const AbstractCreator& c, const char* type ) {
     if ( !isInit ) { initFactory(); };
-    std::string key(type);
+    QString key(type);
     if ( clustertypes.count( key ) == 0 ) {
         clustertypes[key] = c.clone();
 		proptypes[key] = clustertypes[key];
@@ -187,7 +187,7 @@ bool Factory::registerCluster( const AbstractCreator& c, const char* type ) {
 
 bool Factory::registerLinker( const AbstractCreator& c, const char* type ) {
     if ( !isInit ) { initFactory(); };
-    std::string key(type);
+    QString key(type);
     if ( linkertypes.count( key ) == 0 ) {
         linkertypes[key] = c.clone();
 		proptypes[key] = linkertypes[key];
@@ -198,7 +198,7 @@ bool Factory::registerLinker( const AbstractCreator& c, const char* type ) {
 
 bool Factory::registerOutputFunction( const AbstractCreator& c, const char* type ) {
     if ( !isInit ) { initFactory(); };
-    std::string key(type);
+    QString key(type);
     if ( outfuntypes.count( key ) == 0 ) {
         outfuntypes[key] = c.clone();
 		proptypes[key] = outfuntypes[key];
@@ -209,7 +209,7 @@ bool Factory::registerOutputFunction( const AbstractCreator& c, const char* type
 
 bool Factory::registerPropertized( const AbstractCreator& c, const char* type ) {
     if ( !isInit ) { initFactory(); };
-    std::string key(type);
+    QString key(type);
     if ( proptypes.count( key ) == 0 ) {
         proptypes[key] = c.clone();
         return true;
@@ -219,7 +219,7 @@ bool Factory::registerPropertized( const AbstractCreator& c, const char* type ) 
 
 AbstractModifier* Factory::createModifierFor( Updatable* objectToLearn ) {
 	if ( !isInit ) { initFactory(); };
-	std::string key( objectToLearn->getTypename().getString() );
+	QString key( objectToLearn->getTypename().getString() );
 	if ( modtypes.count( key ) ) {
 		AbstractModifier* ret = modtypes[key]->clone();
 		ret->setUpdatable( objectToLearn );
@@ -230,7 +230,7 @@ AbstractModifier* Factory::createModifierFor( Updatable* objectToLearn ) {
 
 bool Factory::registerModifier( const AbstractModifier& m, const char* type ) {
 	if ( !isInit ) { initFactory(); };
-	std::string key(type);
+	QString key(type);
 	if ( modtypes.count( key ) == 0 ) {
 		modtypes[key] = m.clone();
 		return true;
@@ -273,7 +273,7 @@ void Factory::initFactory() {
 	outfuntypes["WinnerTakeAllFunction"] = new Creator<WinnerTakeAllFunction>();
 
 	// Replicate all data above in generic Propertized
-	std::map<std::string, AbstractCreator*>::iterator it;
+	QMap<QString, AbstractCreator*>::iterator it;
 	for( it = clustertypes.begin(); it!=clustertypes.end(); it++ ) {
 		proptypes[ (*it).first ] = (*it).second;
 	}
@@ -299,11 +299,11 @@ void Factory::initFactory() {
 }
 
 bool Factory::isInit = false;
-std::map<std::string, AbstractCreator*> Factory::clustertypes;
-std::map<std::string, AbstractCreator*> Factory::linkertypes;
-std::map<std::string, AbstractCreator*> Factory::outfuntypes;
-std::map<std::string, AbstractCreator*> Factory::proptypes;
-std::map<std::string, AbstractModifier*> Factory::modtypes;
+QMap<QString, AbstractCreator*> Factory::clustertypes;
+QMap<QString, AbstractCreator*> Factory::linkertypes;
+QMap<QString, AbstractCreator*> Factory::outfuntypes;
+QMap<QString, AbstractCreator*> Factory::proptypes;
+QMap<QString, AbstractModifier*> Factory::modtypes;
 
 }
 

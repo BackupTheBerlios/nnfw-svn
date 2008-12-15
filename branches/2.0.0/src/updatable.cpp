@@ -50,7 +50,7 @@ void Updatable::setName( const char* newname ) {
     if (namev) {
         delete []namev;
     }
-    u_int size = strlen(newname);
+    unsigned int size = strlen(newname);
     namev = new char[size+1];
     strcpy( namev, newname );
 }

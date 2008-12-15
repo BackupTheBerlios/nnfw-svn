@@ -26,14 +26,14 @@
 namespace nnfw {
 
 std::ostream& operator<<(std::ostream& stream, const RealVec& v) {
-    for ( u_int i = 0; i < v.size(); i++ ) {
+    for ( unsigned int i = 0; i < v.size(); i++ ) {
         stream << v[i] << "\t";
     }
     return stream;
 }
 
 std::ostream& operator<<(std::ostream& stream, const RealMat& m) {
-    for( u_int i=0; i<m.rows(); i++ ) {
+    for( unsigned int i=0; i<m.rows(); i++ ) {
         stream << m[i] << std::endl;
     }
     return stream;
@@ -49,7 +49,7 @@ std::ostream& operator<<(std::ostream& stream, const Variant var) {
     Propertized* p;
     switch( var.type() ) {
     case Variant::t_null: stream << "Null"; break;
-    case Variant::t_real: stream << var.getReal(); break;
+    case Variant::t_real: stream << var.getdouble(); break;
     case Variant::t_int: stream << var.getInt(); break;
     case Variant::t_uint: stream << var.getUInt(); break;
     case Variant::t_char: stream << var.getChar(); break;
@@ -83,7 +83,7 @@ std::ostream& operator<<(std::ostream& stream, const Propertized& p) {
     static int indent = -1;
     PropertyAccessVec& ps = p.properties();
     indent++;
-    for( u_int i=0; i<ps.size(); i++ ) {
+    for( unsigned int i=0; i<ps.size(); i++ ) {
         // --- indentation
         for( int k=0; k<indent; k++ ) {
             stream << "  ";

@@ -78,9 +78,9 @@ public:
     Variant getMax();
 
     /*! Implement the Gaussian function */
-    virtual void apply( doubleVec& inputs, doubleVec& outputs );
+    virtual void apply( RealVec& inputs, RealVec& outputs );
     /*! derivate of Gauss function */
-    virtual void derivate( const doubleVec& x, const doubleVec& y, doubleVec& d ) const;
+    virtual void derivate( const RealVec& x, const RealVec& y, RealVec& d ) const;
     /*! Clone this object */
     virtual GaussFunction* clone() const;
 

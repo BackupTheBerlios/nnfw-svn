@@ -46,19 +46,19 @@ MatrixLinker::MatrixLinker( PropertySettings& prop )
 MatrixLinker::~MatrixLinker() {
 }
 
-u_int MatrixLinker::size() const {
+unsigned int MatrixLinker::size() const {
     return nrows*ncols;
 }
 
-void MatrixLinker::randomize( Real min, Real max ) {
-    for ( u_int i = 0; i<nrows; i++ ) {
-        for ( u_int j = 0; j<ncols; j++ ) {
-            w[i][j] = Random::flatReal( min, max );
+void MatrixLinker::randomize( double min, double max ) {
+    for ( unsigned int i = 0; i<nrows; i++ ) {
+        for ( unsigned int j = 0; j<ncols; j++ ) {
+            w[i][j] = Random::flatdouble( min, max );
         }
     }
 }
 
-void MatrixLinker::setWeight( u_int from, u_int to, Real weight ) {
+void MatrixLinker::setWeight( unsigned int from, unsigned int to, double weight ) {
 #ifdef NNFW_DEBUG
     if ( from >= nrows ) {
         nError() << "Accessing out of Rows Boundary" ;
@@ -72,7 +72,7 @@ void MatrixLinker::setWeight( u_int from, u_int to, Real weight ) {
     w[from][to] = weight;
 }
 
-Real MatrixLinker::getWeight( u_int from, u_int to ) {
+double MatrixLinker::getWeight( unsigned int from, unsigned int to ) {
 #ifdef NNFW_DEBUG
     if ( from >= nrows ) {
         nError() << "Accessing out of Rows Boundary" ;

@@ -30,7 +30,7 @@ namespace nnfw {
  *  Implementation of SimpleCluster Class     *
  **********************************************/
 
-SimpleCluster::SimpleCluster( u_int numNeurons, const char* name )
+SimpleCluster::SimpleCluster( unsigned int numNeurons, const char* name )
     : Cluster( numNeurons, name) {
     setTypename( "SimpleCluster" );
 }

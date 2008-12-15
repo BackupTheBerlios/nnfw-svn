@@ -24,7 +24,7 @@
 namespace nnfw {
 
 const char* Variant::typen[t_dataptr+1] = { 
-	"Null", "Real", "int", "unsigned int", "char", "unsigned char", "bool",
+	"Null", "double", "int", "unsigned int", "char", "unsigned char", "bool",
     "String (const char*)", "RealVec*", "RealMat*", "OutputFunction*", "Cluster*",
 	"Linker*", "Propertized*", "Generic Data Pointer" };
 
@@ -53,7 +53,7 @@ Variant::Variant( const Variant& src ) {
     }
 }
 
-Variant::Variant( Real d ) {
+Variant::Variant( double d ) {
     dtype = t_real;
     dreal = d;
 }
@@ -63,7 +63,7 @@ Variant::Variant( int d ) {
     dint = d;
 }
 
-Variant::Variant( u_int d ) {
+Variant::Variant( unsigned int d ) {
     dtype = t_uint;
     duint = d;
 }
@@ -85,14 +85,14 @@ Variant::Variant( bool d ) {
 
 Variant::Variant( const char* d ) {
     dtype = t_string;
-    u_int size = strlen(d);
+    unsigned int size = strlen(d);
     dstring = new char[size+1];
     strcpy( dstring, d );
 }
 
 Variant::Variant( char* d ) {
     dtype = t_string;
-    u_int size = strlen(d);
+    unsigned int size = strlen(d);
     dstring = new char[size+1];
     strcpy( dstring, d );
 }
@@ -161,7 +161,7 @@ bool Variant::isNull() {
     return ( dtype == t_null );
 }
 
-Real Variant::getReal() const {
+double Variant::getdouble() const {
     checkType( t_real );
     return dreal;
 }
@@ -171,7 +171,7 @@ int Variant::getInt() const {
     return dint;
 }
 
-u_int Variant::getUInt() const {
+unsigned int Variant::getUInt() const {
     checkType( t_uint );
     return duint;
 }
@@ -248,7 +248,7 @@ Propertized::Propertized()
 
 Propertized::~Propertized() {
     props.clear();
-    for( u_int i=0; i<vecProps.size(); i++ ) {
+    for( unsigned int i=0; i<vecProps.size(); i++ ) {
         delete (vecProps[i]);
     }
     vecProps.clear();
@@ -267,7 +267,7 @@ void Propertized::setTypename( const char* type ) {
     if (vtypename) {
         delete []vtypename;
     }
-    u_int size = strlen(type);
+    unsigned int size = strlen(type);
     vtypename = new char[size+1];
     strcpy( vtypename, type );
 }

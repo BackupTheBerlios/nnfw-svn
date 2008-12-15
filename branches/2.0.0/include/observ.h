@@ -31,9 +31,7 @@
  *  \brief This file contains the pattern Observer/Observable ; Don't include this file directly, instead include types.h
  */
 
-#include <list>
-#include <algorithm>
-
+#include <QList>
 
 namespace nnfw {
 
@@ -113,7 +111,7 @@ public:
     /*! Add a new Observer watching the event i-th
      */
     void addObserver( Observer* ob ) {
-        std::list<Observer*>::iterator it = std::find( observers.begin(), observers.end(), ob );
+        QList<Observer*>::iterator it = std::find( observers.begin(), observers.end(), ob );
         if ( it != observers.end() ) return;
         observers.push_back( ob );
     };
@@ -121,7 +119,7 @@ public:
     /*! Remove the Observer watching the event i-th
      */
     void delObserver( Observer* ob ) {
-        std::list<Observer*>::iterator it = std::find( observers.begin(), observers.end(), ob );
+        QList<Observer*>::iterator it = std::find( observers.begin(), observers.end(), ob );
         if ( it == observers.end() ) return;
         observers.erase( it );
     };
@@ -129,8 +127,8 @@ public:
     /*! Notify the event i-th
      */
     void notifyAll( const NotifyEvent& event = NotifyEvent() ) {
-        std::list<Observer*>::iterator it = observers.begin();
-        std::list<Observer*>::iterator end = observers.end();
+        QList<Observer*>::iterator it = observers.begin();
+        QList<Observer*>::iterator end = observers.end();
         while( it != end ) {
             (*it)->notify( event );
             it++;
@@ -141,7 +139,7 @@ public:
 
 private:
     /*! list of ObserverDelegate indexed by event */
-    std::list<Observer*> observers;
+    QList<Observer*> observers;
 };
 
 }

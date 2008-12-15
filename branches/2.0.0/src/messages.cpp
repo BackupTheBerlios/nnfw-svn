@@ -49,7 +49,7 @@ nnfwString::nnfwString( int i ) {
 	prv->qstr = QString("%1").arg(i);
 }
 
-nnfwString::nnfwString( u_int i ) {
+nnfwString::nnfwString( unsigned int i ) {
 	prv = new nnfwStringPrivate();
 	prv->qstr = QString("%1").arg(i);
 }
