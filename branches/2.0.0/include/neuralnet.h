@@ -32,8 +32,6 @@
 #include "clonable.h"
 #include "cluster.h"
 #include "linker.h"
-#include <map>
-#include <string>
 
 namespace nnfw {
 

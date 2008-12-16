@@ -40,17 +40,6 @@ namespace nnfw {
  * The effective computation of inputs' 'to' is done in the subclasses (DotLinker, NormLinker, etc).
  *
  * \par Warning
- * From 0.7.0 release the update method will become pure-virtual.
- *
- *   <table class="proptable">
- *   <tr><td class="prophead" colspan="5">Properties</td></tr>
- *   <tr><th>Name</th> <th>Type [isVector]</th> <th>Access mode</th> <th>Description</th> <th>Class</th></tr>
- *   <tr><td>typename</td> <td>string</td> <td>read-only</td> <td> Class's type </td> <td>Propertized</td> </tr>
- *   <tr><td>name</td> <td>string</td> <td>read/write</td> <td> name of the object </td> <td>Updatable</td> </tr>
- *   <tr><td>from</td> <td>Cluster</td> <td>read-only</td> <td> incoming Cluster </td> <td>Linker</td> </tr>
- *   <tr><td>to</td> <td>Cluster</td> <td>read-only</td> <td> outgoing Cluster </td> <td>Linker</td> </tr>
- *   <tr><td>weights</td> <td>RealMat</td> <td>read/write</td> <td> connections' weights </td> <td>this</td> </tr>
- *   </table>
  *
  */
 class NNFW_API MatrixLinker : public Linker {
@@ -58,52 +47,38 @@ public:
     /*! \name Constructors */
     //@{
 
-    /*!  Connect clusters with a complete connections
-     */
-    MatrixLinker( Cluster* from, Cluster* to, const char* name = "unnamed" );
-
-    /*!  Construct by PropertySettings
-     */
-    MatrixLinker( PropertySettings& prop );
-
-    /*!  Destructor
-     */
+    /*!  Connect clusters with a complete connections */
+    MatrixLinker( Cluster* from, Cluster* to, QString name = "unnamed" );
+    /*!  Destructor */
     virtual ~MatrixLinker();
 
     //@}
     /*! \name Interface */
     //@{
 
-    /*!  Get the number of rows
-     */
+    /*!  Get the number of rows */
     unsigned int rows() {
         return nrows;
     };
 
-    /*!  Get the number of cols
-     */
+    /*!  Get the number of cols */
     unsigned int cols() {
         return ncols;
     };
 
-    /*!  Returns the total number of the links: rows*cols
-     */
+    /*!  Returns the total number of the links: rows*cols */
     unsigned int size() const;
 
-    /*!  Randomize the weights of the MatrixLinker
-     */
+    /*!  Randomize the weights of the MatrixLinker */
     virtual void randomize( double min, double max );
 
-    /*!  Set the weight of the connection specified
-     */
+    /*!  Set the weight of the connection specified */
     virtual void setWeight( unsigned int from, unsigned int to, double weight );
 
-    /*!  Get the weight of the connection specified
-     */
+    /*!  Get the weight of the connection specified */
     virtual double getWeight( unsigned int from, unsigned int to );
 
-    /*!  Return the weight matrix
-     */
+    /*!  Return the weight matrix */
 	RealMat& matrix() {
 		return w;
 	};
@@ -113,19 +88,8 @@ public:
 		return w;
 	};
 
-    /*!  Return the weight matrix (Variant ver)
-     */
-    Variant matrixP() {
-        return Variant( &w );
-    };
-
-    /*!  Set the whole weight matrix
-     */
+    /*!  Set the whole weight matrix */
     void setMatrix( const RealMat& mat );
-
-    /*!  Set the whole weight matrix (Variant ver)
-     */
-    bool setMatrix( const Variant& v );
 
     //@}
 

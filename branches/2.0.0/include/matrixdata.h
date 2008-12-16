@@ -81,7 +81,7 @@ public:
         : Observer(), Observable(), data(src, rstart, rend), rowView() {
         // --- Check the validity of dimensions
         if ( data.size() != rows*cols ) {
-            nError() << "Wrongs dimensions specified in MatrixData view constructor; This MatrixData will be invalidate" ;
+            qCritical() << "Wrongs dimensions specified in MatrixData view constructor; This MatrixData will be invalidate" ;
             rows = 0;
             cols = 0;
         }
@@ -151,7 +151,7 @@ public:
     /*! Resize the matrix */
     void resize( unsigned int rows, unsigned int cols ) {
         if ( view ) {
-            nError() << "you can't resize a MatrixData view - use setView instead" ;
+            qCritical() << "you can't resize a MatrixData view - use setView instead" ;
             return;
         }
         nrows = rows;
@@ -181,11 +181,11 @@ public:
     T& at( unsigned int row, unsigned int col ) {
 #ifdef NNFW_DEBUG
         if ( row >= nrows ) {
-            nError() << "Accessing an element beyond Row boundary of matrix" ;
+            qCritical() << "Accessing an element beyond Row boundary of matrix" ;
             return data[0];
         }
         if ( col >= ncols ) {
-            nError() << "Accessing an element beyond Column boundary of matrix" ;
+            qCritical() << "Accessing an element beyond Column boundary of matrix" ;
             return data[0];
         }
 #endif
@@ -196,11 +196,11 @@ public:
     const T& at( unsigned int row, unsigned int col ) const {
 #ifdef NNFW_DEBUG
         if ( row >= nrows ) {
-            nError() << "Accessing an element beyond Row boundary of matrix" ;
+            qCritical() << "Accessing an element beyond Row boundary of matrix" ;
             return data[0];
         }
         if ( col >= ncols ) {
-            nError() << "Accessing an element beyond Column boundary of matrix" ;
+            qCritical() << "Accessing an element beyond Column boundary of matrix" ;
             return data[0];
         }
 #endif
@@ -213,7 +213,7 @@ public:
     Vec& operator[]( unsigned int row ) {
 #ifdef NNFW_DEBUG
         if( row >= nrows ) {
-            nError() << "Accessing elements outside boundary" ;
+            qCritical() << "Accessing elements outside boundary" ;
             return rowView[0];
         }
 #endif
@@ -226,7 +226,7 @@ public:
     const Vec& operator[]( unsigned int row ) const {
 #ifdef NNFW_DEBUG
         if( row >= nrows ) {
-            nError() << "Accessing elements outside boundary" ;
+            qCritical() << "Accessing elements outside boundary" ;
             return rowView[0];
         }
 #endif
@@ -238,7 +238,7 @@ public:
     MatrixData& assign( const MatrixData& src ) {
 #ifdef NNFW_DEBUG
         if( rows() != src.rows() || cols() != src.cols() ) {
-            nError() << "Different dimension" ;
+            qCritical() << "Different dimension" ;
             return (*this);
         }
 #endif
@@ -291,7 +291,7 @@ public:
      */
     void clear() {
         if ( view ) {
-            nError() << "you can't clear a MatrixData view" ;
+            qCritical() << "you can't clear a MatrixData view" ;
         } else {
             resize( 0, 0 );
         }
@@ -413,7 +413,7 @@ private:
         switch( event.type() ) {
         case Vec::datachanged:
 #ifdef NNFW_DEBUG
-            nWarning() << "Arrange a MatrixData view after a VectorData resizing can lead to inconsistent settings - see documentation if you not sure" ;
+            qDebug() << "Arrange a MatrixData view after a VectorData resizing can lead to inconsistent settings - see documentation if you not sure" ;
 #endif
             ncols = data.size() / nrows ;
             if ( ncols == 0 ) {
@@ -431,7 +431,7 @@ private:
             break;
         case Vec::datadestroying:
 #ifdef NNFW_DEBUG
-            nWarning() << "Destroying a VectorData before its views!!!" ;
+            qDebug() << "Destroying a VectorData before its views!!!" ;
 #endif
             // --- reconvert to a regular MatrixData with size zero
             view = false;

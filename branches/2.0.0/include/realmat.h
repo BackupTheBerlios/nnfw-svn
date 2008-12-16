@@ -90,7 +90,7 @@ public:
     RealMat& operator+=(const RealMat& r ) {
 #ifdef NNFW_DEBUG
         if( rows() != r.rows() || cols() != r.cols() ) {
-            nError() << "Different dimension";
+            qCritical() << "Different dimension";
             return (*this);
         }
 #endif
@@ -108,7 +108,7 @@ public:
     RealMat& operator-=(const RealMat& r ) {
 #ifdef NNFW_DEBUG
         if( rows() != r.rows() || cols() != r.cols() ) {
-            nError() << "Different dimension";
+            qCritical() << "Different dimension";
             return (*this);
         }
 #endif
@@ -126,7 +126,7 @@ public:
     RealMat& operator*=(const RealMat& r ) {
 #ifdef NNFW_DEBUG
         if( rows() != r.rows() || cols() != r.cols() ) {
-            nError() << "Different dimension";
+            qCritical() << "Different dimension";
             return (*this);
         }
 #endif
@@ -144,7 +144,7 @@ public:
     RealMat& operator/=(const RealMat& r ) {
 #ifdef NNFW_DEBUG
         if( rows() != r.rows() || cols() != r.cols() ) {
-            nError() << "Different dimension";
+            qCritical() << "Different dimension";
             return (*this);
         }
 #endif

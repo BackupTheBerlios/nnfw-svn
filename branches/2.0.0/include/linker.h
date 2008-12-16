@@ -29,19 +29,9 @@
 #include "cluster.h"
 #include "updatable.h"
 
-
 namespace nnfw {
 
 /*! \brief Abstract Linker Class. This define the common interface among Linkers
- *
- *   <table class="proptable">
- *   <tr><td class="prophead" colspan="5">Properties</td></tr>
- *   <tr><th>Name</th> <th>Type [isVector]</th> <th>Access mode</th> <th>Description</th> <th>Class</th></tr>
- *   <tr><td>typename</td> <td>string</td> <td>read-only</td> <td> Class's type </td> <td>Propertized</td> </tr>
- *   <tr><td>name</td> <td>string</td> <td>read/write</td> <td> name of the object </td> <td>Updatable</td> </tr>
- *   <tr><td>from</td> <td>Cluster</td> <td>read-only</td> <td> incoming Cluster </td> <td>this</td> </tr>
- *   <tr><td>to</td> <td>Cluster</td> <td>read-only</td> <td> outgoing Cluster </td> <td>this</td> </tr>
- *   </table>
  *
  */
 class NNFW_API Linker : public Updatable {
@@ -50,54 +40,20 @@ public:
     //@{
 
     /*! Construct */
-    Linker( Cluster* from, Cluster* to, const char* name = "unnamed" );
-
-    /*! Construct by PropertySettings
-     */
-    Linker( PropertySettings& );
-
-    //@}
-    /*! \name Deprecated Methods */
-    //@{
-
-    /*! Return the Cluster From -- Deprecated ( use from() )
-     */
-    Cluster* getFrom() const {
-        return fromc;
-    };
-
-    /*! Return the Cluster to -- Deprecated ( use to() )
-     */
-    Cluster* getTo() const {
-        return toc;
-    };
+    Linker( Cluster* from, Cluster* to, QString name = "unnamed" );
 
     //@}
     /*! \name Interface */
     //@{
 
-    /*! Return the Cluster From
-     */
+    /*! Return the Cluster From */
     Cluster* from() const {
         return fromc;
     };
 
-    /*! Return the Cluster to
-     */
+    /*! Return the Cluster to */
     Cluster* to() const {
         return toc;
-    };
-
-    /*! Return Cluster from (Variant version)
-     */
-    Variant fromP() {
-        return Variant( fromc );
-    };
-
-    /*! Return Cluster to (Variant version)
-     */
-    Variant toP() {
-        return Variant( toc );
     };
 
     /*! Returns the 'size' of the linker<br>

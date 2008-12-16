@@ -24,32 +24,20 @@
  */
 
 #include "types.h"
-#include "propertized.h"
 
 namespace nnfw {
 
 /*! \brief Updatables objects
  *
  *  The Updatable objects has a name.
- *
- *   <table class="proptable">
- *   <tr><td class="prophead" colspan="5">Properties</td></tr>
- *   <tr><th>Name</th> <th>Type [isVector]</th> <th>Access mode</th> <th>Description</th> <th>Class</th></tr>
- *   <tr><td>typename</td> <td>string</td> <td>read-only</td> <td> Class's type </td> <td>Propertized</td> </tr>
- *   <tr><td>name</td> <td>string</td> <td>read/write</td> <td> name of the object </td> <td>this</td> </tr>
- *   </table>
  */
-class NNFW_API Updatable : public Propertized {
+class NNFW_API Updatable {
 public:
     /*! \name Constructors */
     //@{
 
     /*! Constructor */
-    Updatable( const char* name = "unnamed" );
-
-    /*! Constructor with PropertySettings */
-    Updatable( PropertySettings& prop );
-
+    Updatable( QString name = "unnamed" );
     /*! Destructor */
     virtual ~Updatable();
 
@@ -60,18 +48,14 @@ public:
     /*! Update the object */
     virtual void update() = 0;
     /*! Set the name of Updatable */
-    void setName( const char* newname );
-    /*! Set the name of Updatable (Varian version) */
-    bool setName( const Variant& nv );
+    void setName( QString newname );
 	/*! Return its name */
-	const char* name() const;
-    /*! Return the name (version that use Variant for property) */
-    Variant getNameV();
+	QString name() const;
 
     //@}
 
 protected:
-    char* namev;
+	QString namev;
 };
 
 }

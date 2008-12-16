@@ -44,18 +44,6 @@ namespace nnfw {
  *  this means that a call to resetInputs() method also resets the outputs!! In general, all methods
  *  that modify inputs also modify outputs and viceversa.
  *
- *   <table class="proptable">
- *   <tr><td class="prophead" colspan="5">Properties</td></tr>
- *   <tr><th>Name</th> <th>Type [isVector]</th> <th>Access mode</th> <th>Description</th> <th>Class</th></tr>
- *   <tr><td>typename</td> <td>string</td> <td>read-only</td> <td> Class's type </td> <td>Propertized</td> </tr>
- *   <tr><td>name</td> <td>string</td> <td>read/write</td> <td> name of the object </td> <td>Updatable</td> </tr>
- *   <tr><td>accumulate</td> <td>boolean</td> <td>read/write</td> <td> if inputs are accumulated </td> <td>Cluster</td> </tr>
- *   <tr><td>inputs</td> <td>RealVec</td> <td>read/write</td> <td> neuron's input </td> <td>Cluster</td> </tr>
- *   <tr><td>outfunction</td> <td>OutputFunction</td> <td>read/write</td> <td> ignored </td> <td>Cluster</td> </tr>
- *   <tr><td>outputs</td> <td>RealVec</td> <td>read/write</td> <td> neuron's output (same of inputs) </td> <td>Cluster</td> </tr>
- *   <tr><td>size</td> <td>unsigned int</td> <td>read-only</td> <td> number of neurons </td> <td>Cluster</td> </tr>
- *   </table>
- *
  */
 class NNFW_API FakeCluster : public Cluster {
 public:
@@ -63,10 +51,7 @@ public:
     //@{
 
     /*! Construct a FakeCluster */
-    FakeCluster( unsigned int size, const char* name = "unnamed" );
-
-    /*! Construct by PropertySettings */
-    FakeCluster( PropertySettings& );
+    FakeCluster( unsigned int size, QString name = "unnamed" );
 
     /*! Destructor */
     virtual ~FakeCluster();

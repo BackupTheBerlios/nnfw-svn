@@ -68,27 +68,13 @@ namespace nnfw {
  *    by inputs (or outputs) and works over them.
  * \nosubgrouping
  *
- *   <table class="proptable">
- *   <tr><td class="prophead" colspan="5">Properties</td></tr>
- *   <tr><th>Name</th> <th>Type [isVector]</th> <th>Access mode</th> <th>Description</th> <th>Class</th></tr>
- *   <tr><td>typename</td> <td>string</td> <td>read-only</td> <td> Class's type </td> <td>Propertized</td> </tr>
- *   <tr><td>name</td> <td>string</td> <td>read/write</td> <td> name of the object </td> <td>Updatable</td> </tr>
- *   <tr><td>accumulate</td> <td>boolean</td> <td>read/write</td> <td> if inputs are accumulated </td> <td>this</td> </tr>
- *   <tr><td>inputs</td> <td>RealVec</td> <td>read/write</td> <td> neuron's input </td> <td>this</td> </tr>
- *   <tr><td>outfunction</td> <td>OutputFunction</td> <td>read/write</td> <td> neuron's output function </td> <td>this</td> </tr>
- *   <tr><td>outputs</td> <td>RealVec</td> <td>read/write</td> <td> neuron's output </td> <td>this</td> </tr>
- *   <tr><td>numNeurons</td> <td>unsigned int</td> <td>read-only</td> <td> number of neurons </td> <td>this</td> </tr>
- *   </table>
- *
  */
 class NNFW_API Cluster : public Updatable {
 public:
     /*! \name Constructors */
     //@{
     /*! Construct a Cluster */
-    Cluster( unsigned int numNeurons, const char* name = "unnamed" );
-    /*! Construct a Cluster with PropertySettings */
-    Cluster( PropertySettings& prop );
+    Cluster( unsigned int numNeurons, QString name = "unnamed" );
     /*! Destructor */
     virtual ~Cluster();
 
@@ -124,25 +110,6 @@ public:
      */
     virtual void randomize( double min, double max ) = 0;
 
-    /*! Read Access to property 'size'
-     */
-    Variant numNeuronsP() {
-        return Variant( numNeurons() );
-    };
-
-    /*! Read Access to property 'accumulate'
-     */
-    Variant accumP() {
-        return Variant( isAccumulate() );
-    };
-
-    /*! Write Access to property 'accumulate'
-     */
-    bool setAccumP( const Variant& b ) {
-        setAccumulate( b.getBool() );
-        return true;
-    };
-
     //@}
     /*! \name Operations on Input's vector */
     //@{
@@ -152,8 +119,7 @@ public:
      */
     virtual void setInput( unsigned int neuron, double value );
 
-    /*! Set the inputs from the vector given
-     */
+    /*! Set the inputs from the vector given */
     virtual void setInputs( const RealVec& inputs );
 
     /*! Set all the inputs with the same value
@@ -182,31 +148,17 @@ public:
         return inputdata;
     };
 
-    /*! For property 'inputs' */
-    Variant inputsP() {
-        return Variant( &inputdata );
-    };
-
-    /*! setting the property 'inputs' */
-    bool setInputsP( const Variant& v ) {
-        inputdata.assign( *(v.getRealVec()) );
-        return true;
-    };
-
     //@}
     /*! \name Operations on Output's vector */
     //@{
 
-    /*! Force the output of the neuron at value specified
-     */
+    /*! Force the output of the neuron at value specified */
     virtual void setOutput( unsigned int neuron, double value );
 
-    /*! Set the outputs from the vector given
-     */
+    /*! Set the outputs from the vector given */
     virtual void setOutputs( const RealVec& outputs );
 
-    /*! Get the output of neuron
-     */
+    /*! Get the output of neuron */
     virtual double getOutput( unsigned int neuron ) const;
 
     /*! Get the array of outputs<br>
@@ -220,17 +172,6 @@ public:
 	const RealVec& outputs() const {
 		return outputdata;
 	};
-
-    /*! For property 'outputs' */
-    Variant outputsP() {
-        return Variant( &outputdata );
-    };
-
-    /*! setting the property 'outputs' */
-    bool setOutputsP( const Variant& v ) {
-        outputdata.assign( *(v.getRealVec()) );
-        return true;
-    };
 
     //@}
     /*! \name Operations on OutputFunction */
@@ -246,17 +187,6 @@ public:
      */
     OutputFunction* const getFunction() const {
         return updater;
-    };
-
-    /*! read property 'outfunction' */
-    Variant getFunctionP() {
-        return Variant( updater );
-    };
-
-    /*! sets the property 'outfunction' */
-    bool setFunction( const Variant& outf ) {
-        setFunction( *(outf.getOutputFunction()) );
-        return true;
     };
 
 	/*! Clone this Cluster */
@@ -288,9 +218,6 @@ private:
      *  --- Warns for developers --- accOff == true means NO-ACCUMULATION
      */
     bool accOff;
-
-    /*! define properties */
-    void propdefs();
 };
 
 }

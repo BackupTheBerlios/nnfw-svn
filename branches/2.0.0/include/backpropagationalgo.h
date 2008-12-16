@@ -140,8 +140,8 @@ private:
 		RealVec deltas_inputs;
 		RealVec last_deltas_inputs;
 		LinkerVec incoming_linkers_vec;
-		VectorData<AbstractModifier*> incoming_modlinkers;
-		VectorData<RealVec> incoming_last_outputs;
+		QVector<AbstractModifier*> incoming_modlinkers;
+		QVector<RealVec> incoming_last_outputs;
 	};
 	//! map to help looking for cluster_deltas info
 	QMap<Cluster*, int> mapIndex;

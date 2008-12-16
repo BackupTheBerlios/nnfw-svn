@@ -35,8 +35,6 @@
  */
 
 #include "memutils.h"
-#include <vector>
-
 
 namespace nnfw {
 
@@ -105,7 +103,7 @@ public:
     VectorData( VectorData<T>& src, unsigned int idStart, unsigned int idEnd )
         : Observer(), Observable() {
         if ( idStart > src.vsize || idEnd > src.vsize || idStart >= idEnd ) {
-            nError() << "Wrongs indexes specified in VectorData constructor; using 0 and src.size()" ;
+            qCritical() << "Wrongs indexes specified in VectorData constructor; using 0 and src.size()" ;
             idstart = 0;
             idend = src.size();
         } else {
@@ -228,7 +226,7 @@ public:
 	/*! Erase the element at position specified */
 	void erase( int id ) {
 		if ( view ) {
-			nError() << "you can't erase element from a VectorData view" ;
+			qCritical() << "you can't erase element from a VectorData view" ;
 		} else {
 			if ( id < 0 || id >= (int)vsize ) return;
 			for( unsigned int i=(unsigned int)id; i<vsize-1; i++ ) {
@@ -243,7 +241,7 @@ public:
     VectorData<T>& assign( unsigned int num, const T& value ) {
 #ifdef NNFW_DEBUG
         if ( num > vsize ) {
-            nError() << "Wrong number of elements passed to assign method" ;
+            qCritical() << "Wrong number of elements passed to assign method" ;
             num = vsize;
         }
 #endif
@@ -257,7 +255,7 @@ public:
     VectorData<T>& assign( const VectorData<T>& src ) {
 #ifdef NNFW_DEBUG
         if ( vsize != src.vsize ) {
-            nError() << "Wrong number of elements between VectorData to assign method" ;
+            qCritical() << "Wrong number of elements between VectorData to assign method" ;
             return (*this);
         }
 #endif
@@ -271,7 +269,7 @@ public:
     VectorData<T>& assign( const VectorData<T>& src, unsigned int sizec ) {
 #ifdef NNFW_DEBUG
         if ( vsize < sizec || src.size() < sizec ) {
-            nError() << "Wrong size specified in assign method" ;
+            qCritical() << "Wrong size specified in assign method" ;
             return (*this);
         }
 #endif
@@ -283,7 +281,7 @@ public:
     VectorData<T>& assign_reverse( const VectorData<T>& src ) {
 #ifdef NNFW_DEBUG
         if ( vsize != src.vsize ) {
-            nError() << "Wrong number of elements between VectorData to assign method" ;
+            qCritical() << "Wrong number of elements between VectorData to assign method" ;
             return (*this);
         }
 #endif
@@ -304,7 +302,7 @@ public:
     VectorData<int>& compare( const VectorData<T>& b, VectorData<int>& comparison ) {
 #ifdef NNFW_DEBUG
         if ( vsize != b.vsize ) {
-            nError() << "Wrong number of elements between VectorData to compare method" ;
+            qCritical() << "Wrong number of elements between VectorData to compare method" ;
             return (*this);
         }
 #endif
@@ -327,7 +325,7 @@ public:
     T& operator[]( unsigned int index ) {
 #ifdef NNFW_DEBUG
         if( index >= vsize ) {
-            nError() << "Accessing elements outside boundary" ;
+            qCritical() << "Accessing elements outside boundary" ;
             return data[0];
         }
 #endif
@@ -340,7 +338,7 @@ public:
     const T& operator[]( unsigned int index ) const {
 #ifdef NNFW_DEBUG
         if( index >= vsize ) {
-            nError() << "Accessing elements outside boundary" ;
+            qCritical() << "Accessing elements outside boundary" ;
             return data[0];
         }
 #endif
@@ -353,7 +351,7 @@ public:
     T& at( unsigned int index ) {
 #ifdef NNFW_DEBUG
         if( index >= vsize ) {
-            nError() << "Accessing elements outside boundary" ;
+            qCritical() << "Accessing elements outside boundary" ;
             return data[0];
         }
 #endif
@@ -366,7 +364,7 @@ public:
     const T& at( unsigned int index ) const {
 #ifdef NNFW_DEBUG
         if( index >= vsize ) {
-            nError() << "Accessing elements outside boundary" ;
+            qCritical() << "Accessing elements outside boundary" ;
             return data[0];
         }
 #endif
@@ -376,7 +374,7 @@ public:
     /*! Resize the VectorData */
     void resize( unsigned int newsize ) {
         if ( view ) {
-            nError() << "It's not possible resize RealVec views" ;
+            qCritical() << "It's not possible resize RealVec views" ;
             return;
         }
         if ( allocated < newsize ) {
@@ -419,11 +417,11 @@ public:
      */
     void setView( unsigned int idStart, unsigned int idEnd ) {
         if ( !view ) {
-            nError() << "setView can be called only if VectorData is a view" ;
+            qCritical() << "setView can be called only if VectorData is a view" ;
             return;
         }
         if ( idStart > observed->vsize || idEnd > observed->vsize || idStart >= idEnd ) {
-            nError() << "Wrongs indexes specified in VectorData setView; using 0 and observed->size()" ;
+            qCritical() << "Wrongs indexes specified in VectorData setView; using 0 and observed->size()" ;
             idstart = 0;
             idend = observed->size();
         }
@@ -451,7 +449,7 @@ public:
         }
     
         if ( idStart > src.vsize || idEnd > src.vsize || idStart >= idEnd ) {
-            nError() << "Wrongs indexes specified in convertToView; using 0 and src.size()" ;
+            qCritical() << "Wrongs indexes specified in convertToView; using 0 and src.size()" ;
             idstart = 0;
             idend = src.size();
         } else {
@@ -466,146 +464,6 @@ public:
         observed->addObserver( this );
     };
 
-    //@}
-    /*! \name STL compatibility */
-    //@{
-
-    class vectordataIterator;
-    friend class vectordataIterator;
-
-    /*! Value type */
-    typedef T value_type;
-    /*! Reference type */
-    typedef T& reference;
-    /*! Const Reference type */
-    typedef const T& const_reference;
-    /*! Iterator */
-    typedef vectordataIterator iterator;
-    /*! Const Iterator */
-    typedef const vectordataIterator const_iterator;
-    /*! Size type */
-    typedef size_t size_type;
-    /*! Difference pointer type */
-    typedef ptrdiff_t difference_type;
-
-    /*! Max size allowed */
-    size_type max_size() {
-        return 300000; // <- FIXME it must return the maximum space of memory allocable
-    };
-
-    /*! Is Empty */
-    bool empty() {
-        return (vsize==0);
-    };
-
-    /*! Append an element */
-    void push_back( const T& value ) {
-        resize( vsize+1 );
-        data[vsize-1] = value;
-    };
-
-    /*! Iterator at initial position */
-    iterator begin() {
-        return vectordataIterator( *this );
-    };
-    /*! Iterator at initial position */
-    const_iterator begin() const {
-        return vectordataIterator( ((VectorData&)*this) );
-    };
-
-    /*! Iterator at past-end position */
-    iterator end() {
-        return vectordataIterator( *this, vsize );
-    };
-    /*! Iterator at past-end position */
-    const_iterator end() const {
-        return vectordataIterator( ((VectorData&)*this), vsize );
-    };
-
-    /*! Erase method */
-    iterator erase( iterator pos ) {
-        if ( view ) {
-            nError() << "you can't erase element from a VectorData view" ;
-        } else {
-            unsigned int id = pos.getIndex();
-            for( unsigned int i=id; i<vsize-1; i++ ) {
-                data[id] = data[id+1];
-            }
-            vsize = vsize-1;
-            notifyAll( NotifyEvent( datachanged ) );
-        }
-        return (pos);
-    };
-
-    /*! Erase All elements */
-    void clear() {
-        if ( view ) {
-            nError() << "you can't clear a VectorData view" ;
-        } else {
-            vsize = 0;
-            notifyAll( NotifyEvent( datachanged ) );
-        }
-    };
-
-    /*! Inner-class implements iterator over VectorData */
-    class vectordataIterator : public std::iterator<std::bidirectional_iterator_tag,T,ptrdiff_t> {
-    public:
-        /*! create the iterator */
-        vectordataIterator( VectorData& data, unsigned int startId = 0 ) : vecdata(data), id(startId) { /*nothing to do*/ };
-        /*! Copy-Constructor */
-        vectordataIterator( const vectordataIterator& src ) : vecdata(src.vecdata), id(src.id) { /* nothing to do */  };
-        /*! Assignement operator */
-        vectordataIterator& operator=( const vectordataIterator& src ) {
-            vecdata = src.vecdata;
-            id = src.id;
-            return (*this);
-        };
-        /*! equal operator */
-        bool operator==( const vectordataIterator& x ) const {
-            return ( &vecdata == &(x.vecdata) && id == x.id );
-        };
-        /*! not-equal operator */
-        bool operator!=( const vectordataIterator& x ) const {
-            return ( &vecdata != &(x.vecdata) || id != x.id );
-        };
-        /*! Accessing element (const version) */
-        const T& operator*() const {
-            return vecdata[id];
-        };
-        /*! Accessing element (non-const version) */
-        T& operator*() {
-            return vecdata[id];
-        };
-        /*! Forward movement */
-        vectordataIterator& operator++() {
-            id = (id < vecdata.size()) ? id+1 : vecdata.size();
-            return (*this);
-        };
-        /*! Forward movement */
-        const vectordataIterator& operator++() const {
-            id = (id < vecdata.size()) ? id+1 : vecdata.size();
-            return (*this);
-        };
-        /*! Backward movement */
-        vectordataIterator& operator--() {
-            id = ( id > 0 ) ? id-1 : 0;
-            return (*this);
-        };
-        /*! Backward movement */
-        const vectordataIterator& operator--() const {
-            id = ( id > 0 ) ? id-1 : 0;
-            return (*this);
-        };
-        /*! Return the id (used by VectorData for accessing) */
-        unsigned int getIndex() {
-            return id;
-        };
-    private:
-        /*! Vector over iterates */
-        VectorData& vecdata;
-        /*! current index */
-        unsigned int id;
-    };
     //@}
 
 protected:
@@ -636,7 +494,7 @@ protected:
         switch( event.type() ) {
         case datachanged:
             if ( idstart > observed->vsize || idend > observed->vsize ) {
-                nError() << "Indexes become invalid after data changing; using 0 and viewed->size()" ;
+                qCritical() << "Indexes become invalid after data changing; using 0 and viewed->size()" ;
                 idstart = 0;
                 idend = observed->size();
             }
@@ -646,7 +504,7 @@ protected:
             break;
         case datadestroying:
 #ifdef NNFW_DEBUG
-            nWarning() << "Destroying a VectorData before its views!!!" ;
+            qDebug() << "Destroying a VectorData before its views!!!" ;
 #endif
             // --- reconvert to a regular VectorData with size zero
             view = false;

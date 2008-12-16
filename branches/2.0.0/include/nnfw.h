@@ -44,11 +44,9 @@
 
 #include "types.h"
 #include "clonable.h"
-#include "propertized.h"
 #include "cluster.h"
 #include "linker.h"
 #include "outputfunction.h"
-#include "ionnfw.h"
 #include "random.h"
 #include "neuralnet.h"
 

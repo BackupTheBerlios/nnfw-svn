@@ -107,7 +107,7 @@ public:
     RealVec& operator+=(const RealVec& r ) {
 #ifdef NNFW_DEBUG
         if( vsize != r.vsize ) {
-            nError() << "Different numbers of element" ;
+            qCritical() << "Different numbers of element" ;
             return (*this);
         }
 #endif
@@ -127,7 +127,7 @@ public:
     RealVec& operator-=(const RealVec& r ) {
 #ifdef NNFW_DEBUG
         if( vsize != r.vsize ) {
-            nError() << "Different numbers of element" ;
+            qCritical() << "Different numbers of element" ;
             return *this;
         }
 #endif
@@ -147,7 +147,7 @@ public:
     RealVec& operator*=(const RealVec& r ) {
 #ifdef NNFW_DEBUG
         if( vsize != r.vsize ) {
-            nError() << "Different numbers of element" ;
+            qCritical() << "Different numbers of element" ;
             return (*this);
         }
 #endif
@@ -167,7 +167,7 @@ public:
     RealVec& operator/=(const RealVec& r ) {
 #ifdef NNFW_DEBUG
         if( vsize != r.vsize ) {
-            nError() << "Different numbers of element" ;
+            qCritical() << "Different numbers of element" ;
             return (*this);
         }
 #endif
@@ -188,7 +188,7 @@ public:
     double dot( const RealVec& r ) {
 #ifdef NNFW_DEBUG
         if( vsize != r.vsize ) {
-            nError() << "Different numbers of element" ;
+            qCritical() << "Different numbers of element" ;
             return 0.0;
         }
 #endif

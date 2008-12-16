@@ -56,12 +56,12 @@
 #define NNFW_VERSION 20000
 
 #include <QVector>
+#include <QMap>
 #include <QString>
+#include <QDebug>
 
 #define TYPES_INCLUDES
 
-#include "messages.h"
-#include "primtypes.h"
 #include "observ.h"
 #include "vectordata.h"
 #include "matrixdata.h"

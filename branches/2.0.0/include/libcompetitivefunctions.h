@@ -33,12 +33,6 @@ namespace nnfw {
 
 /*! \brief WinnerTakeAllFunction
  *
- *   <table class="proptable">
- *   <tr><td class="prophead" colspan="5">Properties</td></tr>
- *   <tr><th>Name</th> <th>Type [isVector]</th> <th>Access mode</th> <th>Description</th> <th>Class</th></tr>
- *   <tr><td>typename</td> <td>string</td> <td>read-only</td> <td> Class's type </td> <td>Propertized</td> </tr>
- *   <tr><td>value</td> <td>double</td> <td>read/write</td> <td> value of the output of winner </td> <td>this</td> </tr>
- *   </table>
  */
 class NNFW_API WinnerTakeAllFunction : public OutputFunction {
 public:
@@ -47,10 +41,6 @@ public:
 	
 	/*! Construct */
 	WinnerTakeAllFunction( double value = 1.0 );
-	
-	/*! Construct */
-	WinnerTakeAllFunction( PropertySettings& prop );
-	
 	/*! Destructor */
 	virtual ~WinnerTakeAllFunction() { /* Nothing to do */ };
 	
@@ -59,9 +49,9 @@ public:
 	//@{
 	
 	/*! Set the value */
-	bool setValue( const Variant& v );
+	bool setValue( double v );
 	/*! Return the value */
-	Variant value();
+	double value();
 	
 	/*! Implement the Sawtooth function */
 	virtual void apply( RealVec& inputs, RealVec& outputs );
@@ -74,7 +64,6 @@ public:
 private:
 	double valuev;
 };
-
 
 }
 

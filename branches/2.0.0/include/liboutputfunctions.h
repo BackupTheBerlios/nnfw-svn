@@ -32,18 +32,11 @@
 #include "outputfunction.h"
 #include "derivableoutputfunction.h"
 
-
 namespace nnfw {
 
 /*! \brief IdentityFunction
  *
  * IdentityFunction copyies the inputs to the outputs
- *
- *   <table class="proptable">
- *   <tr><td class="prophead" colspan="5">Properties</td></tr>
- *   <tr><th>Name</th> <th>Type [isVector]</th> <th>Access mode</th> <th>Description</th> <th>Class</th></tr>
- *   <tr><td>typename</td> <td>string</td> <td>read-only</td> <td> Class's type </td> <td>Propertized</td> </tr>
- *   </table>
  */
 class NNFW_API IdentityFunction : public DerivableOutputFunction {
 public:
@@ -52,10 +45,6 @@ public:
 
     /*! Construct */
     IdentityFunction();
-
-    /*! Construct */
-    IdentityFunction( PropertySettings& prop );
-
     /*! Destructor */
     virtual ~IdentityFunction() { /* Nothing to do */ };
 
@@ -79,13 +68,6 @@ public:
 /*! \brief ScaleFunction
  *
  * ScaleFunction scales the inputs vector to the outputs
- *
- *   <table class="proptable">
- *   <tr><td class="prophead" colspan="5">Properties</td></tr>
- *   <tr><th>Name</th> <th>Type [isVector]</th> <th>Access mode</th> <th>Description</th> <th>Class</th></tr>
- *   <tr><td>typename</td> <td>string</td> <td>read-only</td> <td> Class's type </td> <td>Propertized</td> </tr>
- *   <tr><td>rate</td> <td>double</td> <td>read/write</td> <td> rate of scaling </td> <td>this</td> </tr>
- *   </table>
  */
 class NNFW_API ScaleFunction : public OutputFunction {
 public:
@@ -94,10 +76,6 @@ public:
 
     /*! Construct */
     ScaleFunction( double rate = 1.0 );
-
-    /*! Construct */
-    ScaleFunction( PropertySettings& prop );
-
     /*! Destructor */
     virtual ~ScaleFunction() { /* Nothing to do */ };
 
@@ -105,19 +83,16 @@ public:
     /*! \name Interface */
     //@{
 
-    /*! Set the rate of Scaling function
-     */
-    bool setRate( const Variant& v );
+    /*! Set the rate of Scaling function */
+    bool setRate( double v );
 
-    /*! Return the rate of Scaling function
-     */
-    Variant getRate();
+    /*! Return the rate of Scaling function */
+    double getRate();
 
     /*! Implement the identity function */
     virtual void apply( RealVec& inputs, RealVec& outputs );
 
-    /*! Clone this object
-     */
+    /*! Clone this object */
     virtual ScaleFunction* clone() const;
 
     //@}
@@ -128,13 +103,6 @@ private:
 /*! \brief GainFunction
  *
  * GainFunction add a constan value to inputs
- *
- *   <table class="proptable">
- *   <tr><td class="prophead" colspan="5">Properties</td></tr>
- *   <tr><th>Name</th> <th>Type [isVector]</th> <th>Access mode</th> <th>Description</th> <th>Class</th></tr>
- *   <tr><td>typename</td> <td>string</td> <td>read-only</td> <td> Class's type </td> <td>Propertized</td> </tr>
- *   <tr><td>gain</td> <td>double</td> <td>read/write</td> <td> value to add to inputs </td> <td>this</td> </tr>
- *   </table>
  */
 class NNFW_API GainFunction : public OutputFunction {
 public:
@@ -143,10 +111,6 @@ public:
 	
 	/*! Construct */
 	GainFunction( double gain = 1.0 );
-	
-	/*! Construct */
-	GainFunction( PropertySettings& prop );
-	
 	/*! Destructor */
 	virtual ~GainFunction() { /* Nothing to do */ };
 	
@@ -155,10 +119,10 @@ public:
 	//@{
 	
 	/*! Set the Gain */
-	bool setGain( const Variant& v );
+	bool setGain( double v );
 	
 	/*! Return the Gain function */
-	Variant gain();
+	double gain();
 	
 	/*! Implement the Gain function */
 	virtual void apply( RealVec& inputs, RealVec& outputs );
@@ -174,13 +138,6 @@ private:
 /*! \brief Sigmoid Function
  *
  * Details..
- *
- *   <table class="proptable">
- *   <tr><td class="prophead" colspan="5">Properties</td></tr>
- *   <tr><th>Name</th> <th>Type [isVector]</th> <th>Access mode</th> <th>Description</th> <th>Class</th></tr>
- *   <tr><td>typename</td> <td>string</td> <td>read-only</td> <td> Class's type </td> <td>Propertized</td> </tr>
- *   <tr><td>lambda</td> <td>double</td> <td>read/write</td> <td> function's slope </td> <td>this</td> </tr>
- *   </table>
  */
 class NNFW_API SigmoidFunction : public DerivableOutputFunction {
 public:
@@ -189,10 +146,6 @@ public:
 
     /*! Construct a sigmoid updater with parameter l */
     SigmoidFunction( double l = 1.0 );
-
-    /*! Construct */
-    SigmoidFunction( PropertySettings& prop );
-
     /*! Destructor */
     virtual ~SigmoidFunction() { /* Nothing to do */ };
 
@@ -200,23 +153,19 @@ public:
     /*! \name Interface */
     //@{
 
-    /*! Set the slope of SigmoidFunction
-     */
-    bool setLambda( const Variant& v );
+    /*! Set the slope of SigmoidFunction */
+    bool setLambda( double v );
 
-    /*! Return the slope of SigmoidFunction
-     */
-    Variant getLambda();
+    /*! Return the slope of SigmoidFunction */
+    double getLambda();
 
-    /*! Implement the updating method
-     */
+    /*! Implement the updating method */
     virtual void apply( RealVec& inputs, RealVec& outputs );
 
     /*! return the approximation commonly used in backpropagation learning: x(1-x) */
     virtual void derivate( const RealVec& x, const RealVec& y, RealVec& d ) const;
 
-    /*! Clone this object
-     */
+    /*! Clone this object */
     virtual SigmoidFunction* clone() const;
 
     //@}
@@ -227,14 +176,6 @@ private:
 
 /*! \brief Fake Sigmoid Function !! Is a linear approximation of sigmoid function
  *
- * Details..
- *
- *   <table class="proptable">
- *   <tr><td class="prophead" colspan="5">Properties</td></tr>
- *   <tr><th>Name</th> <th>Type [isVector]</th> <th>Access mode</th> <th>Description</th> <th>Class</th></tr>
- *   <tr><td>typename</td> <td>string</td> <td>read-only</td> <td> Class's type </td> <td>Propertized</td> </tr>
- *   <tr><td>lambda</td> <td>double</td> <td>read/write</td> <td> function's slope </td> <td>this</td> </tr>
- *   </table>
  */
 class NNFW_API FakeSigmoidFunction : public DerivableOutputFunction {
 public:
@@ -243,10 +184,6 @@ public:
 
     /*! Construct a sigmoid updater with parameter l */
     FakeSigmoidFunction( double l = 1.0 );
-
-    /*! Construct */
-    FakeSigmoidFunction( PropertySettings& prop );
-
     /*! Destructor */
     virtual ~FakeSigmoidFunction() { /* Nothing to do */ };
 
@@ -254,23 +191,19 @@ public:
     /*! \name Interface */
     //@{
 
-    /*! Set the slope of FakeSigmoidFunction
-     */
-    bool setLambda( const Variant& v );
+    /*! Set the slope of FakeSigmoidFunction */
+    bool setLambda( double v );
 
-    /*! Return the slope of FakeSigmoidFunction
-     */
-    Variant getLambda();
+    /*! Return the slope of FakeSigmoidFunction */
+    double getLambda();
 
-    /*! Implement the updating method
-     */
+    /*! Implement the updating method */
     virtual void apply( RealVec& inputs, RealVec& outputs );
 
     /*! return the approximation commonly used in backpropagation learning: x(1-x) */
     virtual void derivate( const RealVec& x, const RealVec& y, RealVec& d ) const;
 
-    /*! Clone this object
-     */
+    /*! Clone this object */
     virtual FakeSigmoidFunction* clone() const;
 
     //@}
@@ -286,14 +219,6 @@ public:
  * max is the y value when x -> +infinite <br>
  * (max-min) is the y value when x == 0
  *
- *   <table class="proptable">
- *   <tr><td class="prophead" colspan="5">Properties</td></tr>
- *   <tr><th>Name</th> <th>Type [isVector]</th> <th>Access mode</th> <th>Description</th> <th>Class</th></tr>
- *   <tr><td>typename</td> <td>string</td> <td>read-only</td> <td> Class's type </td> <td>Propertized</td> </tr>
- *   <tr><td>lambda</td> <td>double</td> <td>read/write</td> <td> function's slope </td> <td>this</td> </tr>
- *   <tr><td>min</td> <td>double</td> <td>read/write</td> <td> function's minimun value </td> <td>this</td> </tr>
- *   <tr><td>max</td> <td>double</td> <td>read/write</td> <td> function's maximun value </td> <td>this</td> </tr>
- *   </table>
  */
 class NNFW_API ScaledSigmoidFunction : public DerivableOutputFunction {
 public:
@@ -302,10 +227,6 @@ public:
 
     /*! Construct a scaled sigmoid updater with parameter l */
     ScaledSigmoidFunction( double l = 1.0, double min = -1.0, double max = +1.0 );
-
-    /*! Construct */
-    ScaledSigmoidFunction( PropertySettings& prop );
-
     /*! Destructor */
     virtual ~ScaledSigmoidFunction() { /* Nothing to do */ };
 
@@ -313,39 +234,31 @@ public:
     /*! \name Interface */
     //@{
 
-    /*! Set the slope of ScaledSigmoidFunction
-     */
-    bool setLambda( const Variant& v );
+    /*! Set the slope of ScaledSigmoidFunction */
+    bool setLambda( double v );
 
-    /*! Return the slope of ScaledSigmoidFunction
-     */
-    Variant getLambda();
+    /*! Return the slope of ScaledSigmoidFunction */
+    double getLambda();
 
-    /*! Set the minimum value of ScaledSigmoidFunction
-     */
-    bool setMin( const Variant& v );
+    /*! Set the minimum value of ScaledSigmoidFunction */
+    bool setMin( double v );
 
-    /*! Return the minimum value of ScaledSigmoidFunction
-     */
-    Variant getMin();
+    /*! Return the minimum value of ScaledSigmoidFunction */
+    double getMin();
 
-    /*! Set the maximum value of ScaledSigmoidFunction
-     */
-    bool setMax( const Variant& v );
+    /*! Set the maximum value of ScaledSigmoidFunction */
+    bool setMax( double v );
 
-    /*! Return the maximum value of ScaledSigmoidFunction
-     */
-    Variant getMax();
+    /*! Return the maximum value of ScaledSigmoidFunction */
+    double getMax();
 
-    /*! Implement the updating method
-     */
+    /*! Implement the updating method */
     virtual void apply( RealVec& inputs, RealVec& outputs );
 
     /*! return the approximation commonly used in backpropagation learning: x(1-x) */
     virtual void derivate( const RealVec& x, const RealVec& y, RealVec& d ) const;
 
-    /*! Clone this object
-     */
+    /*! Clone this object */
     virtual ScaledSigmoidFunction* clone() const;
 
     //@}
@@ -373,15 +286,6 @@ public:
  * </pre>
  * Further Details coming soon ;-)
  *
- *   <table class="proptable">
- *   <tr><td class="prophead" colspan="5">Properties</td></tr>
- *   <tr><th>Name</th> <th>Type [isVector]</th> <th>Access mode</th> <th>Description</th> <th>Class</th></tr>
- *   <tr><td>typename</td> <td>string</td> <td>read-only</td> <td> Class's type </td> <td>Propertized</td> </tr>
- *   <tr><td>minX</td> <td>double</td> <td>read/write</td> <td> function's X minimun value </td> <td>this</td> </tr>
- *   <tr><td>maxX</td> <td>double</td> <td>read/write</td> <td> function's X maximun value </td> <td>this</td> </tr>
- *   <tr><td>minY</td> <td>double</td> <td>read/write</td> <td> function's Y minimun value </td> <td>this</td> </tr>
- *   <tr><td>maxY</td> <td>double</td> <td>read/write</td> <td> function's Y maximun value </td> <td>this</td> </tr>
- *   </table>
  */
 class NNFW_API RampFunction : public DerivableOutputFunction {
 public:
@@ -390,10 +294,6 @@ public:
 	
 	/*! Construct a linear updater */
 	RampFunction( double minX, double maxX, double minY = -1, double maxY = +1 );
-	
-	/*! Construct */
-	RampFunction( PropertySettings& prop );
-	
 	/*! Destructor */
 	virtual ~RampFunction() { /* Nothing to do */ };
 	
@@ -402,31 +302,30 @@ public:
 	//@{
 	
 	/*! Set the minimum value of Xs RampFunction */
-	bool setMinX( const Variant& v );
+	bool setMinX( double v );
 	
 	/*! Return the minimum value of Xs RampFunction */
-	Variant minX();
+	double minX();
 	
 	/*! Set the maximum value of Xs RampFunction */
-	bool setMaxX( const Variant& v );
+	bool setMaxX( double v );
 	
 	/*! Return the maximum value of Xs RampFunction */
-	Variant maxX();
+	double maxX();
 	
 	/*! Set the minimum value of Ys RampFunction */
-	bool setMinY( const Variant& v );
+	bool setMinY( double v );
 	
 	/*! Return the minimum value of Ys RampFunction */
-	Variant minY();
+	double minY();
 	
 	/*! Set the maximum value of Ys RampFunction */
-	bool setMaxY( const Variant& v );
+	bool setMaxY( double v );
 	
 	/*! Return the maximum value of Ys RampFunction */
-	Variant maxY();
+	double maxY();
 	
-	/*! Implement the updating method
-		*/
+	/*! Implement the updating method */
 	virtual void apply( RealVec& inputs, RealVec& outputs );
 	
 	/*! return the m coefficient if x is in [minX, maxX] and x(1-x) otherwise */
@@ -454,13 +353,6 @@ public:
  *
  *  Implements a linear equation y = m*x + b
  *
- *   <table class="proptable">
- *   <tr><td class="prophead" colspan="5">Properties</td></tr>
- *   <tr><th>Name</th> <th>Type [isVector]</th> <th>Access mode</th> <th>Description</th> <th>Class</th></tr>
- *   <tr><td>typename</td> <td>string</td> <td>read-only</td> <td> Class's type </td> <td>Propertized</td> </tr>
- *   <tr><td>m</td> <td>double</td> <td>read/write</td> <td> m coefficient </td> <td>this</td> </tr>
- *   <tr><td>b</td> <td>double</td> <td>read/write</td> <td> b coefficient </td> <td>this</td> </tr>
- *   </table>
  */
 class NNFW_API LinearFunction : public DerivableOutputFunction {
 public:
@@ -469,10 +361,6 @@ public:
 	
 	/*! Construct a linear updater */
 	LinearFunction( double m, double b );
-	
-	/*! Construct */
-	LinearFunction( PropertySettings& prop );
-	
 	/*! Destructor */
 	virtual ~LinearFunction() { /* Nothing to do */ };
 	
@@ -481,16 +369,16 @@ public:
 	//@{
 	
 	/*! Set the m coeffiecient of LinearFunction */
-	bool setM( const Variant& v );
+	bool setM( double v );
 	
 	/*! Return the m coeffiecient of LinearFunction */
-	Variant m();
+	double m();
 	
 	/*! Set the b coeffiecient of LinearFunction */
-	bool setB( const Variant& v );
+	bool setB( double v );
 	
 	/*! Return the b coeffiecient of Linear Function */
-	Variant b();
+	double b();
 	
 	/*! Implement the updating method */
 	virtual void apply( RealVec& inputs, RealVec& outputs );
@@ -513,14 +401,6 @@ public:
  *
  * Further Details coming soon ;-)
  *
- *   <table class="proptable">
- *   <tr><td class="prophead" colspan="5">Properties</td></tr>
- *   <tr><th>Name</th> <th>Type [isVector]</th> <th>Access mode</th> <th>Description</th> <th>Class</th></tr>
- *   <tr><td>typename</td> <td>string</td> <td>read-only</td> <td> Class's type </td> <td>Propertized</td> </tr>
- *   <tr><td>min</td> <td>double</td> <td>read/write</td> <td> function's minimun value </td> <td>this</td> </tr>
- *   <tr><td>max</td> <td>double</td> <td>read/write</td> <td> function's maximun value </td> <td>this</td> </tr>
- *   <tr><td>threshold</td> <td>double</td> <td>read/write</td> <td> X position of step</td> <td>this</td> </tr>
- *   </table>
  */
 class NNFW_API StepFunction : public DerivableOutputFunction {
 public:
@@ -529,10 +409,6 @@ public:
 
     /*! Construct a step updater */
     StepFunction( double min = 0.0f, double max = 1.0f, double threshold = 0.0f );
-
-    /*! Construct */
-    StepFunction( PropertySettings& prop );
-
     /*! Destructor */
     virtual ~StepFunction() { /* Nothing to do */ };
 
@@ -540,39 +416,31 @@ public:
     /*! \name Interface */
     //@{
 
-    /*! Set the minimum value of StepFunction
-     */
-    bool setMin( const Variant& v );
+    /*! Set the minimum value of StepFunction */
+    bool setMin( double v );
 
-    /*! Return the minimum value of StepFunction
-     */
-    Variant getMin();
+    /*! Return the minimum value of StepFunction */
+    double getMin();
 
-    /*! Set the maximum value of StepFunction
-     */
-    bool setMax( const Variant& v );
+    /*! Set the maximum value of StepFunction */
+    bool setMax( double v );
 
-    /*! Return the maximum value of StepFunction
-     */
-    Variant getMax();
+    /*! Return the maximum value of StepFunction */
+    double getMax();
 
-    /*! Set the threshold of StepFunction
-     */
-    bool setThreshold( const Variant& v );
+    /*! Set the threshold of StepFunction */
+    bool setThreshold( double v );
 
-    /*! Return the threshold of StepFunction
-     */
-    Variant getThreshold();
+    /*! Return the threshold of StepFunction */
+    double getThreshold();
 
-    /*! Implement the updating method
-     */
+    /*! Implement the updating method */
     virtual void apply( RealVec& inputs, RealVec& outputs );
 
     /*! Using the derivate of the sigmoid function!!!  */
     virtual void derivate( const RealVec& x, const RealVec& y, RealVec& d ) const;
 
-    /*! Clone this object
-     */
+    /*! Clone this object */
     virtual StepFunction* clone() const;
 
     //@}
@@ -587,14 +455,6 @@ public:
 
 /*! \brief LeakyIntegrator Function !! 
  *
- * Details..
- *
- *   <table class="proptable">
- *   <tr><td class="prophead" colspan="5">Properties</td></tr>
- *   <tr><th>Name</th> <th>Type [isVector]</th> <th>Access mode</th> <th>Description</th> <th>Class</th></tr>
- *   <tr><td>typename</td> <td>string</td> <td>read-only</td> <td> Class's type </td> <td>Propertized</td> </tr>
- *   <tr><td>delta</td> <td>RealVec</td> <td>read/write</td> <td> leak rates </td> <td>this</td> </tr>
- *   </table>
  */
 class NNFW_API LeakyIntegratorFunction : public OutputFunction {
 public:
@@ -603,10 +463,6 @@ public:
 
     /*! Construct a LeakyIntegrator with deltas specified */
     LeakyIntegratorFunction( const RealVec& d );
-
-    /*! Construct from PropertySettings */
-    LeakyIntegratorFunction( PropertySettings& prop );
-
     /*! Destructor */
     virtual ~LeakyIntegratorFunction() { /* Nothing to do */ };
 
@@ -623,12 +479,6 @@ public:
     void setDelta( const RealVec& v ) {
 		delta.assign( v );
 	};
-
-    /*! Return the i-th Delta setted (Variant version) */
-    Variant getDeltaV();
-
-    /*! Set the i-th element (Variant version) */
-    bool setDeltaV( const Variant& v );
 
     /*! Zeroing the status */
 	void zeroingStatus();
@@ -659,13 +509,6 @@ public:
  *     y = \frac{x}{ 1+Ax+B }
  *  \f]
  *
- *   <table class="proptable">
- *   <tr><td class="prophead" colspan="5">Properties</td></tr>
- *   <tr><th>Name</th> <th>Type [isVector]</th> <th>Access mode</th> <th>Description</th> <th>Class</th></tr>
- *   <tr><td>typename</td> <td>string</td> <td>read-only</td> <td> Class's type </td> <td>Propertized</td> </tr>
- *   <tr><td>A</td> <td>double</td> <td>read/write</td> <td> A coefficient </td> <td>this</td> </tr>
- *   <tr><td>B</td> <td>double</td> <td>read/write</td> <td> B coefficient </td> <td>this</td> </tr>
- *   </table>
  */
 class NNFW_API LogLikeFunction : public OutputFunction {
 public:
@@ -674,10 +517,6 @@ public:
 
     /*! Construct a LogLike with deltas specified */
     LogLikeFunction( double A=1.0, double B=5.0 );
-
-    /*! Construct from PropertySettings */
-    LogLikeFunction( PropertySettings& prop );
-
     /*! Destructor */
     virtual ~LogLikeFunction() { /* Nothing to do */ };
 
@@ -695,12 +534,6 @@ public:
 		a = na;
 	};
 
-    /*! Return the A coeffiecient setted (Variant version) */
-    Variant getAV();
-
-    /*! Set the A coefficient (Variant version) */
-    bool setAV( const Variant& v );
-
     /*! Return the B coefficient setted */
     double B() {
 		return b;
@@ -710,12 +543,6 @@ public:
     void setB( double nb ) {
 		b = nb;
 	};
-
-    /*! Return the B coeffiecient setted (Variant version) */
-    Variant getBV();
-
-    /*! Set the B coefficient (Variant version) */
-    bool setBV( const Variant& v );
 
     /*! Implement the updating method */
     virtual void apply( RealVec& inputs, RealVec& outputs );
@@ -738,107 +565,59 @@ private:
  *  \par Warnings
  *  The dimension of PoolFunction must be at least one.
  *
- *   <table class="proptable">
- *   <tr><td class="prophead" colspan="5">Properties</td></tr>
- *   <tr><th>Name</th> <th>Type [isVector]</th> <th>Access mode</th> <th>Description</th> <th>Class</th></tr>
- *   <tr><td>typename</td> <td>string</td> <td>read-only</td> <td> Class's type </td> <td>Propertized</td> </tr>
- *   <tr><td>size</td> <td>unsigned int</td> <td>read-only</td> <td>this's dimesion </td> <td>this</td> </tr>
- *   <tr><td>functions</td> <td>OutputFunction [V]</td> <td>read/write</td> <td>OutputFunction vector</td> <td>this</td> </tr>
- *   </table>
  */
 class NNFW_API PoolFunction : public OutputFunction {
 public:
     /*! \name Constructors */
     //@{
 
-    /*! Construct a PoolFunction contains dim elements all equal to prototype passed
-     */
+    /*! Construct a PoolFunction contains dim elements all equal to prototype passed */
     PoolFunction( const OutputFunction& prototype, unsigned int dim );
-
-    /*! Construct */
-    PoolFunction( PropertySettings& prop );
-
-    /*! Construct a PoolFunction with dimension dim, but with <b>unintialized</b> OutputFunction
-     */
+    /*! Construct a PoolFunction with dimension dim, but with <b>unintialized</b> OutputFunction */
     PoolFunction( unsigned int dim = 1 );
-
-    /*! \brief Destructor
-     */
+    /*! Destructor */
     ~PoolFunction();
 
     //@}
     /*! \name Interface */
     //@{
 
-    /*! Return the i-th OutputFunction setted
-     */
+    /*! Return the i-th OutputFunction setted */
     OutputFunction* getOutputFunction( unsigned int i );
 
-    /*! Set the i-th element of this Pool to a OutputFunction of type prototype
-     */
+    /*! Set the i-th element of this Pool to a OutputFunction of type prototype */
     void setOutputFunction( unsigned int i, const OutputFunction& prototype );
 
-    /*! Return the i-th OutputFunction setted (Variant version)
-     */
-    Variant getOutputFunctionV( unsigned int i );
-
-    /*! Set the i-th element (Variant version)
-     */
-    bool setOutputFunction( unsigned int i, const Variant& prototype );
-
-    /*! Return the dimension
-     */
+    /*! Return the dimension */
     unsigned int size();
-
-    /*! Return the dimension (Variant version)
-     */
-    Variant sizeV();
 
     /*! Implement the updating method <br>
      *  Apply OutputFunctions setted by setOutputFunction to elements of RealVec inputs
      */
     virtual void apply( RealVec& inputs, RealVec& outputs );
 
-    /*! Clone this object
-     */
+    /*! Clone this object */
     virtual PoolFunction* clone() const;
 
-    /*! when it's inserted into a Cluster, it will be resized to fit the size of Cluster
-     */
+    /*! when it's inserted into a Cluster, it will be resized to fit the size of Cluster */
     virtual void setCluster( Cluster* );
 
     //@}
 
 private:
     /*! Vector of OutputFunction */
-    VectorData<OutputFunction*> ups;
+    QVector<OutputFunction*> ups;
 };
-
-
 
 /*! \brief Composite Function !! 
  *
- * Details..
- *
- *   <table class="proptable">
- *   <tr><td class="prophead" colspan="5">Properties</td></tr>
- *   <tr><th>Name</th> <th>Type [isVector]</th> <th>Access mode</th> <th>Description</th> <th>Class</th></tr>
- *   <tr><td>typename</td> <td>string</td> <td>read-only</td> <td> Class's type </td> <td>Propertized</td> </tr>
- *   <tr><td>first</td> <td>OutputFunction</td> <td>read/write</td> <td> first function </td> <td>this</td> </tr>
- *   <tr><td>second</td> <td>OutputFunction</td> <td>read/write</td> <td> second function </td> <td>this</td> </tr>
- *   </table>
  */
 class NNFW_API CompositeFunction : public OutputFunction {
 public:
     /*! \name Constructors */
     //@{
-
     /*! Construct a Composite */
     CompositeFunction( const OutputFunction& f, const OutputFunction& g );
-
-    /*! Construct from PropertySettings */
-    CompositeFunction( PropertySettings& prop );
-
     /*! Destructor */
     virtual ~CompositeFunction();
 
@@ -847,16 +626,16 @@ public:
     //@{
 
     /*! Set the first function of CompositeFunction */
-    bool setFirstFunction( const Variant& v );
+    bool setFirstFunction( const OutputFunction& f );
 
     /*! Return the first function of CompositeFunction */
-    Variant getFirstFunction();
+    OutputFunction* getFirstFunction();
 
     /*! Set the second function of CompositeFunction */
-    bool setSecondFunction( const Variant& v );
+    bool setSecondFunction( const OutputFunction& g );
 
     /*! Return the second function of CompositeFunction */
-    Variant getSecondFunction();
+    OutputFunction* getSecondFunction();
 
     /*! Implement the updating method <br>
      * it computes: y(t) <- second( first( input, mid ), outputs ) <br>
@@ -883,17 +662,6 @@ public:
 
 /*! \brief Linear Combination of Two Function !! 
  *
- * Details..
- *
- *   <table class="proptable">
- *   <tr><td class="prophead" colspan="5">Properties</td></tr>
- *   <tr><th>Name</th> <th>Type [isVector]</th> <th>Access mode</th> <th>Description</th> <th>Class</th></tr>
- *   <tr><td>typename</td> <td>string</td> <td>read-only</td> <td> Class's type </td> <td>Propertized</td> </tr>
- *   <tr><td>first</td> <td>OutputFunction</td> <td>read/write</td> <td> first function </td> <td>this</td> </tr>
- *   <tr><td>second</td> <td>OutputFunction</td> <td>read/write</td> <td> second function </td> <td>this</td> </tr>
- *   <tr><td>w1</td> <td>double</td> <td>read/write</td> <td> first weight </td> <td>this</td> </tr>
- *   <tr><td>w2</td> <td>double</td> <td>read/write</td> <td> second weight </td> <td>this</td> </tr>
- *   </table>
  */
 class NNFW_API LinearComboFunction : public OutputFunction {
 public:
@@ -902,10 +670,6 @@ public:
 
     /*! Construct a Linear Combination of two functions */
     LinearComboFunction( double w1, const OutputFunction& f, double w2, const OutputFunction& g );
-
-    /*! Construct from PropertySettings */
-    LinearComboFunction( PropertySettings& prop );
-
     /*! Destructor */
     virtual ~LinearComboFunction();
 
@@ -914,22 +678,22 @@ public:
     //@{
 
     /*! Set the first function of LinearComboFunction */
-    bool setFirstFunction( const Variant& v );
+    bool setFirstFunction( const OutputFunction& f );
     /*! Return the first function of LinearComboFunction */
-    Variant getFirstFunction();
+    OutputFunction* getFirstFunction();
     /*! Set the first weight of LinearComboFunction */
-    bool setFirstWeight( const Variant& v );
+    bool setFirstWeight( double v );
     /*! Return the first weight of LinearComboFunction */
-    Variant getFirstWeight();
+    double getFirstWeight();
 
     /*! Set the second function of CompositeFunction */
-    bool setSecondFunction( const Variant& v );
+    bool setSecondFunction( const OutputFunction& g );
     /*! Return the second function of CompositeFunction */
-    Variant getSecondFunction();
+    OutputFunction* getSecondFunction();
     /*! Set the second weight of LinearComboFunction */
-    bool setSecondWeight( const Variant& v );
+    bool setSecondWeight( double v );
     /*! Return the second weight of LinearComboFunction */
-    Variant getSecondWeight();
+    double getSecondWeight();
 
     /*! Implement the updating method <br>
      * it computes: y(t) <- w1*first(input,output) + w2*second(input,outputs)
@@ -957,5 +721,3 @@ public:
 }
 
 #endif
-
-

@@ -30,19 +30,10 @@
 #include "outputfunction.h"
 #include "derivableoutputfunction.h"
 
-
 namespace nnfw {
 
 /*! \brief GaussFunction
  *
- *   <table class="proptable">
- *   <tr><td class="prophead" colspan="5">Properties</td></tr>
- *   <tr><th>Name</th> <th>Type [isVector]</th> <th>Access mode</th> <th>Description</th> <th>Class</th></tr>
- *   <tr><td>typename</td> <td>string</td> <td>read-only</td> <td> Class's type </td> <td>Propertized</td> </tr>
- *   <tr><td>centre</td> <td>double</td> <td>read/write</td> <td> Gaussian centre </td> <td>this</td> </tr>
- *   <tr><td>variance</td> <td>double</td> <td>read/write</td> <td> Gaussian variance (sigma) </td> <td>this</td> </tr>
- *   <tr><td>max</td> <td>double</td> <td>read/write</td> <td>function's maximum value</td> <td>this</td> </tr>
- *   </table>
  */
 class NNFW_API GaussFunction : public DerivableOutputFunction {
 public:
@@ -51,10 +42,6 @@ public:
 
     /*! Construct */
     GaussFunction( double centre = 0.0, double variance = 1.0, double maxvaule = 1.0 );
-
-    /*! Construct */
-    GaussFunction( PropertySettings& prop );
-
     /*! Destructor */
     virtual ~GaussFunction() { /* Nothing to do */ };
 
@@ -63,19 +50,19 @@ public:
     //@{
 
     /*! Set the centre */
-    bool setCentre( const Variant& v );
+    bool setCentre( double v );
     /*! Return the centre */
-    Variant getCentre();
+    double getCentre();
 
     /*! Set the Variance */
-    bool setVariance( const Variant& v );
+    bool setVariance( double v );
     /*! Return the variance */
-    Variant getVariance();
+    double getVariance();
 
     /*! Set the Max value */
-    bool setMax( const Variant& v );
+    bool setMax( double v );
     /*! Return the Max */
-    Variant getMax();
+    double getMax();
 
     /*! Implement the Gaussian function */
     virtual void apply( RealVec& inputs, RealVec& outputs );

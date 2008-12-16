@@ -39,67 +39,47 @@ public:
     /*! \name Constructors */
     //@{
 
-    /*! Connect clusters with complete connections
-     */
-    SparseMatrixLinker( Cluster* from, Cluster* to, const char* name = "unnamed" );
-
-    /*! Connect neurons of Clusters with a random connections with the passed probability.
-     */
-	SparseMatrixLinker( double prob, Cluster* from, Cluster* to, const char* name = "unnamed" );
-
+    /*! Connect clusters with complete connections */
+    SparseMatrixLinker( Cluster* from, Cluster* to, QString name = "unnamed" );
     /*! Connect neurons of Clusters with a random connections with the passed probability.<br>
 	 * With this contructor you must also specify whether the diagonal of the matrix is made of zeros
      * and whether the matrix is symmetrical
      * \warning You can use this constructor only with square matrices, otherwise it will generate a memory error!!!
 	 */
-	SparseMatrixLinker( Cluster* from, Cluster* to, double prob, bool zeroDiagonal = false, bool symmetricMask = false, const char* name = "unnamed" );
+	SparseMatrixLinker( Cluster* from, Cluster* to, double prob, bool zeroDiagonal = false, bool symmetricMask = false, QString name = "unnamed" );
 
-    /*! Construct by PropertySettings
-     */
-    SparseMatrixLinker( PropertySettings& prop );
-
-    /*! Destructor
-     */
+    /*! Destructor */
     virtual ~SparseMatrixLinker();
 
     //@}
     /*! \name Interface */
     //@{
 
-    /*! Set the weight of the connection specified
-     */
+    /*! Set the weight of the connection specified */
     virtual void setWeight( unsigned int from, unsigned int to, double weight );
 
-    /*! Randomize the weights of the SparseMatrixLinker
-     */
+    /*! Randomize the weights of the SparseMatrixLinker */
     virtual void randomize( double min, double max );
 
-    /*! Performs the dot-product calculation where the non-connection are considered as zero
-     */
+    /*! Performs the dot-product calculation where the non-connection are considered as zero */
     void update();
 
-    /*! Connect two neurons
-     */
+    /*! Connect two neurons */
     void connect( unsigned int from, unsigned int to );
 
-    /*! Connects randomly according to the given probability
-     */
+    /*! Connects randomly according to the given probability */
     void connectRandom( double prob );
 
-    /*! Connect all couples of neurons
-     */
+    /*! Connect all couples of neurons */
     void connectAll();
 
-    /*! Disconnect the two neurons
-     */
+    /*! Disconnect the two neurons */
     void disconnect( unsigned int from, unsigned int to );
 
-    /*! Disconnects randomly according to the given probability
-     */
+    /*! Disconnects randomly according to the given probability */
     void disconnectRandom( double prob );
 
-    /*! Disonnect all couples of neurons
-     */
+    /*! Disonnect all couples of neurons */
     void disconnectAll();
 
     /*! Get the mask 
@@ -114,16 +94,8 @@ public:
 		return maskm;
 	};
 
-    /*!  Return the mask matrix (Variant ver) */
-    Variant maskP() {
-        return Variant( &maskm );
-    };
-
     /*!  Set the whole mask matrix */
     void setMask( const MatrixData<bool>& mask );
-
-    /*!  Set the whole mask matrix (Variant ver) */
-    bool setMask( const Variant& v );
 
 	/*! Clone this SparseMatrixLinker */
 	virtual SparseMatrixLinker* clone() const;

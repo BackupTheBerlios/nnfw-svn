@@ -59,16 +59,13 @@ public:
 	/*! \name Constructors */
 	//@{
 
-    /*! Constructor
-     */
-    CopyLinker( Cluster* from, Cluster* to, CopyMode mode, const char* name = "unnamed" );
+    /*! Constructor */
+    CopyLinker( Cluster* from, Cluster* to, CopyMode mode, QString name = "unnamed" );
 
-    /*! Construct by PropertySettings
-     */
+    /*! Construct by PropertySettings */
     CopyLinker( PropertySettings& prop );
 
-    /*! Destructor
-     */
+    /*! Destructor */
     virtual ~CopyLinker();
 
 	//@}
@@ -80,12 +77,6 @@ public:
 
     /*! Return the Modality of Data Copying */
     CopyMode getMode() const;
-
-    /*! Change the Modality of Data Copying (Variant version) */
-    bool setMode( const Variant& v );
-    
-    /*! Return the Modality of Data Copying (Variant version) */
-    Variant getModeP();
 
     /*! Update the linker */
     void update();

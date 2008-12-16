@@ -33,14 +33,6 @@ namespace nnfw {
 
 /*! \brief PeriodicFunction
  *
- *   <table class="proptable">
- *   <tr><td class="prophead" colspan="5">Properties</td></tr>
- *   <tr><th>Name</th> <th>Type [isVector]</th> <th>Access mode</th> <th>Description</th> <th>Class</th></tr>
- *   <tr><td>typename</td> <td>string</td> <td>read-only</td> <td> Class's type </td> <td>Propertized</td> </tr>
- *   <tr><td>phase</td> <td>double</td> <td>read/write</td> <td> X offset of the centre </td> <td>this</td> </tr>
- *   <tr><td>span</td> <td>double</td> <td>read/write</td> <td> distance between peaks</td> <td>this</td> </tr>
- *   <tr><td>amplitude</td> <td>double</td> <td>read/write</td> <td>nonnegative value of the wave's magnitude</td> <td>this</td> </tr>
- *   </table>
  */
 class NNFW_API PeriodicFunction : public OutputFunction {
 public:
@@ -49,10 +41,6 @@ public:
 	
 	/*! Construct */
 	PeriodicFunction( double phase = 0.0, double span = 1.0, double amplitude = 1.0 );
-	
-	/*! Construct */
-	PeriodicFunction( PropertySettings& prop );
-	
 	/*! Destructor */
 	virtual ~PeriodicFunction() { /* Nothing to do */ };
 	
@@ -61,21 +49,21 @@ public:
 	//@{
 	
 	/*! Set the phase */
-	bool setPhase( const Variant& v );
+	bool setPhase( double v );
 	/*! Return the phase */
-	Variant phase();
+	double phase();
 	
 	/*! Set the span */
-	bool setSpan( const Variant& v );
+	bool setSpan( double v );
 	/*! Return the variance */
-	Variant span();
+	double span();
 	
 	/*! Set the Amplitude */
-	bool setAmplitude( const Variant& v );
+	bool setAmplitude( double v );
 	/*! Return the Max */
-	Variant amplitude();
+	double amplitude();
 	
-	/*! Implement the Sawtooth function */
+	/*! Implement the Periodic function */
 	virtual void apply( RealVec& inputs, RealVec& outputs ) = 0;
 
 	/*! Clone this object */
@@ -91,14 +79,6 @@ protected:
 
 /*! \brief SawtoothFunction
  *
- *   <table class="proptable">
- *   <tr><td class="prophead" colspan="5">Properties</td></tr>
- *   <tr><th>Name</th> <th>Type [isVector]</th> <th>Access mode</th> <th>Description</th> <th>Class</th></tr>
- *   <tr><td>typename</td> <td>string</td> <td>read-only</td> <td> Class's type </td> <td>Propertized</td> </tr>
- *   <tr><td>phase</td> <td>double</td> <td>read/write</td> <td> X offset of the centre </td> <td>PeriodicFunction</td> </tr>
- *   <tr><td>span</td> <td>double</td> <td>read/write</td> <td> distance between peaks</td> <td>PeriodicFunction</td> </tr>
- *   <tr><td>amplitude</td> <td>double</td> <td>read/write</td> <td>nonnegative value of the wave's magnitude</td> <td>PeriodiFunction</td> </tr>
- *   </table>
  */
 class NNFW_API SawtoothFunction : public PeriodicFunction {
 public:
@@ -107,10 +87,6 @@ public:
 	
 	/*! Construct */
 	SawtoothFunction( double phase = 0.0, double span = 1.0, double amplitude = 1.0 );
-	
-	/*! Construct */
-	SawtoothFunction( PropertySettings& prop );
-	
 	/*! Destructor */
 	virtual ~SawtoothFunction() { /* Nothing to do */ };
 	
@@ -129,14 +105,6 @@ public:
 
 /*! \brief TriangleFunction
  *
- *   <table class="proptable">
- *   <tr><td class="prophead" colspan="5">Properties</td></tr>
- *   <tr><th>Name</th> <th>Type [isVector]</th> <th>Access mode</th> <th>Description</th> <th>Class</th></tr>
- *   <tr><td>typename</td> <td>string</td> <td>read-only</td> <td> Class's type </td> <td>Propertized</td> </tr>
- *   <tr><td>phase</td> <td>double</td> <td>read/write</td> <td> X offset of the centre </td> <td>PeriodicFunction</td> </tr>
- *   <tr><td>span</td> <td>double</td> <td>read/write</td> <td> distance between peaks</td> <td>PeriodicFunction</td> </tr>
- *   <tr><td>amplitude</td> <td>double</td> <td>read/write</td> <td>nonnegative value of the wave's magnitude</td> <td>PeriodicFunction</td> </tr>
- *   </table>
  */
 class NNFW_API TriangleFunction : public PeriodicFunction {
 public:
@@ -145,10 +113,6 @@ public:
 	
 	/*! Construct */
 	TriangleFunction( double phase = 0.0, double span = 1.0, double amplitude = 1.0 );
-	
-	/*! Construct */
-	TriangleFunction( PropertySettings& prop );
-	
 	/*! Destructor */
 	virtual ~TriangleFunction() { /* Nothing to do */ };
 	
@@ -168,14 +132,6 @@ public:
 
 /*! \brief SinFunction
  *
- *   <table class="proptable">
- *   <tr><td class="prophead" colspan="5">Properties</td></tr>
- *   <tr><th>Name</th> <th>Type [isVector]</th> <th>Access mode</th> <th>Description</th> <th>Class</th></tr>
- *   <tr><td>typename</td> <td>string</td> <td>read-only</td> <td> Class's type </td> <td>Propertized</td> </tr>
- *   <tr><td>phase</td> <td>double</td> <td>read/write</td> <td> X offset of the centre </td> <td>PeriodicFunction</td> </tr>
- *   <tr><td>span</td> <td>double</td> <td>read/write</td> <td>distance between peaks; see frequency</td> <td>PeriodicFunction</td> </tr>
- *   <tr><td>amplitude</td> <td>double</td> <td>read/write</td> <td>nonnegative value of the wave's magnitude</td> <td>PeriodicFunction</td> </tr>
- *   </table>
  */
 class NNFW_API SinFunction : public PeriodicFunction {
 public:
@@ -184,10 +140,6 @@ public:
 	
 	/*! Construct */
 	SinFunction( double phase = 0.0, double span = 1.0, double amplitude = 1.0 );
-
-	/*! Construct */
-	SinFunction( PropertySettings& prop );
-	
 	/*! Destructor */
 	virtual ~SinFunction() { /* Nothing to do */ };
 	
@@ -211,14 +163,6 @@ public:
 
 /*! \brief PseudoGaussFunction
  *
- *   <table class="proptable">
- *   <tr><td class="prophead" colspan="5">Properties</td></tr>
- *   <tr><th>Name</th> <th>Type [isVector]</th> <th>Access mode</th> <th>Description</th> <th>Class</th></tr>
- *   <tr><td>typename</td> <td>string</td> <td>read-only</td> <td> Class's type </td> <td>Propertized</td> </tr>
- *   <tr><td>phase</td> <td>double</td> <td>read/write</td> <td> X offset of the centre </td> <td>PeriodicFunction</td> </tr>
- *   <tr><td>span</td> <td>double</td> <td>read/write</td> <td> distance between peaks</td> <td>PeriodicFunction</td> </tr>
- *   <tr><td>amplitude</td> <td>double</td> <td>read/write</td> <td>nonnegative value of the wave's magnitude</td> <td>PeriodicFunction</td> </tr>
- *   </table>
  */
 class NNFW_API PseudoGaussFunction : public PeriodicFunction {
 public:
@@ -227,10 +171,6 @@ public:
 	
 	/*! Construct */
 	PseudoGaussFunction( double phase = 0.0, double span = 1.0, double amplitude = 1.0 );
-	
-	/*! Construct */
-	PseudoGaussFunction( PropertySettings& prop );
-	
 	/*! Destructor */
 	virtual ~PseudoGaussFunction() { /* Nothing to do */ };
 	

@@ -36,21 +36,6 @@
 
 namespace nnfw {
 
-class BaseNeuralNet;
-class LearningNetwork;
-
-/*! Function to quickly construct a FeedForward Neural Network<br>
- *  Return a BaseNeuralNetwork that represent a feedforwar neural net.<br>
- *  The neural network returned is composed by Cluster of clusterType speficied.
- *  The number of neurons of each Cluster is taken from layers vector.
- *  Also, the first Cluster is setted as input of BaseNeuralNet and the last one as output.<br>
- *  The Linker created will link each Cluster to its successive.
- *  \param layers an integer vector contains the number of neurons of each Cluster
- *  \param clusterType the Typename of Cluster to create (it must be a Typename registered to Factory)
- *  \param linkerType the Typename of Linker to create (it must be a Typename registered to Factory)
- */
-NNFW_API BaseNeuralNet* feedForwardNet( U_IntVec layers, const char* clusterType = "BiasedCluster", const char* linkerType = "MatrixLinker" );
-
 /*! \brief SimpleTimer object
  *
  *  \par Motivation
