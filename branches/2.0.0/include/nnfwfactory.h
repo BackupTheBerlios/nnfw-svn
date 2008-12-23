@@ -78,6 +78,8 @@ public:
 	/*! Register a new Modifier for type passed */
 	static bool registerModifier( const AbstractModifier& m, const char* type );
 
+    /*! Initialization of static data \internal */
+    static void initFactory();
 	//@}
 
 private:
@@ -86,9 +88,6 @@ private:
     Factory() {
         // You can't instantiate this class
     };
-
-    /*! Initialization of static data */
-    static void initFactory();
 
     /*! is Init ?? */
     static bool isInit;

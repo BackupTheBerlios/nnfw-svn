@@ -1,0 +1,45 @@
+
+PROJECT( EXAMPLES )
+cmake_minimum_required(VERSION 2.4)
+
+### configure CMake to link against Qt4
+FIND_PACKAGE( Qt4 REQUIRED )
+SET( QT_USE_QTXML TRUE )
+INCLUDE(${QT_USE_FILE})
+
+### Search package NNFW
+SET( NNFW_DIR "/usr/local/nnfw-2.0.0/nnfw.framework/Resources" )
+FIND_PACKAGE( NNFW NO_MODULE )
+
+EXEC_PROGRAM( echo ARGS "${EXAMPLES_SOURCE_DIR}/*" OUTPUT_VARIABLE EXDIRS )
+SEPARATE_ARGUMENTS( EXDIRS ) 
+
+FOREACH( I ${EXDIRS} )
+IF( NOT "${I}" MATCHES ".*/bin|.*/build" )
+	IF( IS_DIRECTORY "${I}" )
+		MESSAGE( "--- Creating Target for ${I}" )
+		FILE( GLOB SRCS "${I}/*.cpp" )
+		MESSAGE( " sources: ${SRCS} " )
+		STRING( REGEX REPLACE "${EXAMPLES_SOURCE_DIR}/" "" NAME "${I}" )
+		MESSAGE( " exename: ${NAME} " )
+		ADD_EXECUTABLE( "${NAME}" "${SRCS}" )
+		INSTALL( TARGETS "${NAME}" RUNTIME DESTINATION "${EXAMPLES_SOURCE_DIR}/bin" )
+		STRING( SUBSTRING "${NAME}" 0 2 CP )
+		IF ( CP MATCHES "c_" )
+			TARGET_USE_CNNFW( "${NAME}" )
+		ELSE ( CP MATCHES "c_" )
+			TARGET_USE_NNFW( "${NAME}" )
+		ENDIF ( CP MATCHES "c_" )
+	ENDIF( IS_DIRECTORY "${I}" )
+ENDIF( NOT "${I}" MATCHES ".*/bin|.*/build" )
+ENDFOREACH ( I )
+
+IF (UNIX)
+    MESSAGE( "-- Setting compiler for Linux" )
+    SET( CMAKE_CXX_COMPILER "g++" )    
+    SET( CMAKE_CXX_FLAGS "-pipe -fPIC -Wall -W" )
+    SET( CMAKE_CXX_FLAGS_DEBUG "-g -O0" )
+    SET( CMAKE_CXX_FLAGS_RELEASE "-O3 -funroll-loops" )
+    SET( CMAKE_CXX_FLAGS_RELWITHDEBINFO "-g -O2" )
+    SET( CMAKE_CXX_FLAGS_MINSIZEREL "-O2 -Os" )
+ENDIF (UNIX)

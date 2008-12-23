@@ -42,7 +42,7 @@ public:
     /*! Connect clusters with complete connections */
     SparseMatrixLinker( Cluster* from, Cluster* to, QString name = "unnamed" );
 	/*! Constructor */
-	SparseMatrixLinker::SparseMatrixLinker( double prob, Cluster* from, Cluster* to, QString name );
+	SparseMatrixLinker::SparseMatrixLinker( double prob, Cluster* from, Cluster* to, QString name = "unnamed" );
     /*! Connect neurons of Clusters with a random connections with the passed probability.<br>
 	 * With this contructor you must also specify whether the diagonal of the matrix is made of zeros
      * and whether the matrix is symmetrical

@@ -99,7 +99,7 @@ unsigned int Random::flatInt( unsigned int x ) {
 int Random::flatInt( int min, int max ) {
 #ifdef NNFW_DEBUG
 	if ( min == max ) {
-		nFatal() << "You cannot specify identical min and max values in Random::flatInt" ;
+		qFatal( "You cannot specify identical min and max values in Random::flatInt" );
 		return min;
 	}
 #endif

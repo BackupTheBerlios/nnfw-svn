@@ -55,6 +55,7 @@
 
 #define NNFW_VERSION 20000
 
+#include <QList>
 #include <QVector>
 #include <QMap>
 #include <QString>

@@ -78,6 +78,11 @@ public:
 	/*! Clone this BiasedCluster */
 	virtual BiasedCluster* clone() const;
 
+	/*! Return its typename */
+	virtual QString typeName() {
+		return "BiasedCluster";
+	};
+
     //@}
 
 private:
