@@ -54,11 +54,11 @@ public:
 	
     /*! Return a RealVec with all the values randomized in the range [min,max)
      */
-    static RealVec& flatDoubleVec( RealVec& vec, double min, double max );
+    static RealVec& flatRealVec( RealVec& vec, double min, double max );
 	
     /*! Return a RealMat with all the values randomized in the range [min,max)
      */
-    static RealMat& flatDoubleMat( RealMat& mat, double min, double max );
+    static RealMat& flatRealMat( RealMat& mat, double min, double max );
 
     /*! Return a random boolean value; True value appear with probability specified as paramater
      */

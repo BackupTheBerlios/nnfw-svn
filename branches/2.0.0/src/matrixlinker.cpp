@@ -40,7 +40,7 @@ unsigned int MatrixLinker::size() const {
 void MatrixLinker::randomize( double min, double max ) {
     for ( unsigned int i = 0; i<nrows; i++ ) {
         for ( unsigned int j = 0; j<ncols; j++ ) {
-            w[i][j] = Random::flatdouble( min, max );
+            w[i][j] = Random::flatDouble( min, max );
         }
     }
 }
@@ -75,11 +75,6 @@ double MatrixLinker::getWeight( unsigned int from, unsigned int to ) {
 
 void MatrixLinker::setMatrix( const RealMat& mat ) {
     w.assign( mat );
-}
-
-bool MatrixLinker::setMatrix( const Variant& v ) {
-    w.assign( *( v.getRealMat() ) );
-    return true;
 }
 
 }

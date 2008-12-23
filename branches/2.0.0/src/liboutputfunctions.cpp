@@ -611,7 +611,7 @@ bool CompositeFunction::setSecondFunction( const OutputFunction& g ) {
     return true;
 }
 
-OutputFunction CompositeFunction::getSecondFunction() {
+OutputFunction* CompositeFunction::getSecondFunction() {
     return second;
 }
 
@@ -632,13 +632,6 @@ LinearComboFunction::LinearComboFunction( double w1, const OutputFunction& f, do
 	second = g.clone();
 	this->w1 = w1;
 	this->w2 = w2;
-}
-
-LinearComboFunction::LinearComboFunction( PropertySettings& prop )
-    : OutputFunction(), mid() {
-	first = new IdentityFunction();
-	second = new IdentityFunction();
-	w1 = w2 = 1.0;
 }
 
 LinearComboFunction::~LinearComboFunction() {

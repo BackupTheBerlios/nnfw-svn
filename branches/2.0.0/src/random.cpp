@@ -58,7 +58,7 @@ double Random::flatDouble( double min, double max ) {
 
 RealVec& Random::flatRealVec( RealVec& vec, double min, double max ) {
 	for( unsigned int i=0; i<vec.size(); i++ ) {
-		vec[i] = flatdouble( min, max );
+		vec[i] = flatDouble( min, max );
 	}
 	return vec;
 }
@@ -66,7 +66,7 @@ RealVec& Random::flatRealVec( RealVec& vec, double min, double max ) {
 RealMat& Random::flatRealMat( RealMat& mat, double min, double max ) {
 	for( unsigned int row_nr=0; row_nr<mat.rows(); row_nr++ ) {
 		for( unsigned int col_nr=0; col_nr<mat.cols(); col_nr++ ) {
-			mat[row_nr][col_nr] = flatdouble( min, max );
+			mat[row_nr][col_nr] = flatDouble( min, max );
 		}
 	}
 	return mat;

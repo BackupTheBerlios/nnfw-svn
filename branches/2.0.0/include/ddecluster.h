@@ -50,9 +50,6 @@ public:
     /*! Construct a DDECluster setting coefficients as specified */
     DDECluster( const RealVec& coeff, unsigned int numNeurons, QString name = "unnamed" );
 
-    /*! Construct by PropertySettings */
-    DDECluster( PropertySettings& prop );
-
     /*! Destructor */
     virtual ~DDECluster();
 
@@ -76,6 +73,10 @@ public:
 
 	/*! Clone this DDECluster */
 	virtual DDECluster* clone() const;
+	/*! Return its typename */
+	virtual QString typeName() {
+		return "DDECluster";
+	};
 
 	//@}
 

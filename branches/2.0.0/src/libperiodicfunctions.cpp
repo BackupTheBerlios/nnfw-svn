@@ -93,10 +93,6 @@ SinFunction::SinFunction( double phase, double span, double amplitude )
     : PeriodicFunction(phase,span,amplitude) {
 }
 
-SinFunction::SinFunction( PropertySettings& prop )
-    : PeriodicFunction(prop) {
-}
-
 double SinFunction::frequency() {
 	return 2.0*PI_GRECO/spanv;
 }
@@ -113,10 +109,6 @@ SinFunction* SinFunction::clone() const {
 
 PseudoGaussFunction::PseudoGaussFunction( double phase, double span, double amplitude )
     : PeriodicFunction(phase,span,amplitude) {
-}
-
-PseudoGaussFunction::PseudoGaussFunction( PropertySettings& prop )
-    : PeriodicFunction(prop) {
 }
 
 void PseudoGaussFunction::apply( RealVec& inputs, RealVec& outputs ) {

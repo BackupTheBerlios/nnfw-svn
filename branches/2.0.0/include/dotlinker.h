@@ -51,6 +51,10 @@ public:
 
 	/*! Clone this DotLinker */
 	virtual DotLinker* clone() const;
+	/*! Return its typename */
+	virtual QString typeName() {
+		return "DotLinker";
+	};
 
     //@}
 };

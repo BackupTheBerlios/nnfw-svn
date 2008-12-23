@@ -140,8 +140,8 @@ private:
 
 AbstractModifier* Factory::createModifierFor( Updatable* objectToLearn ) {
 	if ( !isInit ) { initFactory(); };
-	QString key( objectToLearn->getTypename().getString() );
-	if ( modtypes.count( key ) ) {
+	QString key = objectToLearn->typeName();
+	if ( modtypes.contains( key ) ) {
 		AbstractModifier* ret = modtypes[key]->clone();
 		ret->setUpdatable( objectToLearn );
 		return ret;

@@ -90,6 +90,10 @@ public:
 
     /*!  Set the whole weight matrix */
     void setMatrix( const RealMat& mat );
+	/*! Return its typename */
+	virtual QString typeName() {
+		return "MatrixLinker";
+	};
 
     //@}
 

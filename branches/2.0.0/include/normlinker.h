@@ -30,31 +30,16 @@ namespace nnfw {
 
 /*! \brief NormLinker Class
  *
- *   <table class="proptable">
- *   <tr><td class="prophead" colspan="5">Properties</td></tr>
- *   <tr><th>Name</th> <th>Type [isVector]</th> <th>Access mode</th> <th>Description</th> <th>Class</th></tr>
- *   <tr><td>typename</td> <td>string</td> <td>read-only</td> <td> Class's type </td> <td>Propertized</td> </tr>
- *   <tr><td>name</td> <td>string</td> <td>read/write</td> <td> name of the object </td> <td>Updatable</td> </tr>
- *   <tr><td>from</td> <td>Cluster</td> <td>read-only</td> <td> incoming Cluster </td> <td>Linker</td> </tr>
- *   <tr><td>to</td> <td>Cluster</td> <td>read-only</td> <td> outgoing Cluster </td> <td>Linker</td> </tr>
- *   <tr><td>weights</td> <td>RealMat</td> <td>read/write</td> <td> connections' weights </td> <td>MatrixLinker</td> </tr>
- *   </table>
  */
 class NNFW_API NormLinker : public MatrixLinker {
 public:
     /*! \name Constructors */
     //@{
 
-    /*! Connect clusters with a complete connections
-     */
-    NormLinker( Cluster* from, Cluster* to, const char* name = "unnamed" );
+    /*! Connect clusters with a complete connections */
+    NormLinker( Cluster* from, Cluster* to, QString name = "unnamed" );
 
-    /*! Construct by PropertySettings
-     */
-    NormLinker( PropertySettings& prop );
-
-    /*! Destructor
-     */
+    /*! Destructor */
     virtual ~NormLinker();
 
     //@}
@@ -67,6 +52,10 @@ public:
 
 	/*! Clone this NormLinker */
 	virtual NormLinker* clone() const;
+	/*! Return its typename */
+	virtual QString typeName() {
+		return "NormLinker";
+	};
 
     //@}
 

@@ -43,10 +43,10 @@ public:
 	/*! Constructor
 	 *
 	 *  \param neural_network the BaseNeuralNet neural network to train
-	 *  \param update_order the UpdatableVec for the backpropagation sequence
+	 *  \param update_order the UpdatableList for the backpropagation sequence
 	 *  \param learn_rate the double learning rate factor
 	 */
-	BackPropagationAlgo( BaseNeuralNet *n_n, UpdatableVec update_order, double l_r = 0.1 );
+	BackPropagationAlgo( BaseNeuralNet *n_n, UpdatableList update_order, double l_r = 0.1 );
 
 	//! Destructor
 	~BackPropagationAlgo( );
@@ -128,7 +128,7 @@ private:
 	//! bool switch for enable/disable momentum
 	double useMomentum;
 	//! The update order
-	UpdatableVec update_order;
+	UpdatableList update_order;
 
 	//! The struct of Clusters and Deltas
 	class NNFW_API cluster_deltas {
@@ -139,7 +139,7 @@ private:
 		RealVec deltas_outputs;
 		RealVec deltas_inputs;
 		RealVec last_deltas_inputs;
-		LinkerVec incoming_linkers_vec;
+		LinkerList incoming_linkers_vec;
 		QVector<AbstractModifier*> incoming_modlinkers;
 		QVector<RealVec> incoming_last_outputs;
 	};

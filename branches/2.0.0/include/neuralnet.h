@@ -93,16 +93,16 @@ public:
 	bool isIsolated( Cluster* c ) const;
 
 	/*! Returns the vector of Clusters contained */
-	const ClusterVec& clusters() const;
+	const ClusterList& clusters() const;
 
 	/*! Returns the vector of Input Clusters contained */
-	const ClusterVec& inputClusters() const;
+	const ClusterList& inputClusters() const;
 
 	/*! Returns the vector of Output Clusters contained */
-	const ClusterVec& outputClusters() const;
+	const ClusterList& outputClusters() const;
 
 	/*! Returns the vector of Hidden Clusters contained (i.e. UnMarked Clusters) */
-	const ClusterVec& hiddenClusters() const;
+	const ClusterList& hiddenClusters() const;
 
 	/*! Add Linker */
 	void addLinker( Linker* l );
@@ -111,19 +111,19 @@ public:
 	bool removeLinker( Linker* );
 
 	/*! Returns the array of Linkers contained */
-	const LinkerVec& linkers() const;
+	const LinkerList& linkers() const;
 
 	/*! If out is true, return the Linkers outgoing from Cluster c, otherwise return incoming Linkers */
-	const LinkerVec& linkers( Cluster* c, bool out = false ) const;
+	const LinkerList& linkers( Cluster* c, bool out = false ) const;
 
 	/*! Set the order */
 	void setOrder( Updatable* updatables[], unsigned int dim );
 
 	/*! Set the order */
-	void setOrder( const UpdatableVec& );
+	void setOrder( const UpdatableList& );
 
 	/*! Return the order */
-	const UpdatableVec& order() const {
+	const UpdatableList& order() const {
 		return ups;
 	};
 
@@ -160,7 +160,7 @@ public:
 	 *  \endcode
 	 */
 	template<class PointerTo>
-	PointerTo byName( const char* aName, PointerTo& aPointer ) {
+	PointerTo byName( QString aName, PointerTo& aPointer ) {
 		aPointer = dynamic_cast<PointerTo>( getByName(aName) );
 		return aPointer;
 	};
@@ -170,7 +170,7 @@ public:
      *  \warning return the first that finds. If you have named different Updatables with same name
      *   there no way to retrieve all of them with this methods... call them with unique name ;-)
      */
-    Updatable* getByName( const char* );
+    Updatable* getByName( QString );
 
     /*! Return true if the Cluster is in this net
      */
@@ -191,30 +191,21 @@ public:
 
 protected:
     /*! Clusters */
-    ClusterVec clustersv;
+    ClusterList clustersv;
     /*! Input Clusters */
-    ClusterVec inclusters;
+    ClusterList inclusters;
     /*! Output Clusters */
-    ClusterVec outclusters;
+    ClusterList outclusters;
 	/*! unmarked Clusters */
-	ClusterVec hidclusters;
+	ClusterList hidclusters;
     /*! Linkers */
-    LinkerVec  linkersv;
+    LinkerList  linkersv;
 
 	typedef QMap<QString, Cluster*> ClustersMap;
 	/*! map name -> Cluster* */
 	ClustersMap clsMap;
-	class ids4t {
-	public:
-		int& operator[]( int i ) { return ids[i]; };
-		int ids[4];
-	};
-	//typedef int ids4t [4];
-	typedef QMap<Cluster*, ids4t> IdsMap;
-	/*! map Cluster* -> indexes where it is into vectors */
-	IdsMap clsIdsMap;
 
-    typedef QMap<Cluster*, LinkerVec> LinkVecMap;
+    typedef QMap<Cluster*, LinkerList> LinkVecMap;
     /*! mappa dei linkers entranti (cluster -> vettore linkers entranti) */
     LinkVecMap inLinks;
     /*! map of outgoing linkers (cluster -> vettore linkers uscenti) */
@@ -223,11 +214,9 @@ protected:
 	typedef QMap<QString, Linker*> LinkersMap;
 	/*! map name -> Cluster* */
 	LinkersMap lksMap;
-	typedef QMap<Linker*, ids4t> IdsMapL;
-	IdsMapL lksIdsMap;
 
     /*! Array of Updateables ordered as specified */
-    UpdatableVec ups;
+    UpdatableList ups;
     unsigned int dimUps;
 };
 

@@ -54,6 +54,10 @@ public:
 
 	/*! Clone this SimpleCluster */
 	virtual SimpleCluster* clone() const;
+	/*! Return its typename */
+	virtual QString typeName() {
+		return "SimpleCluster";
+	};
 
     //@}
 };

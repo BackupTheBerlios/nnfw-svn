@@ -68,6 +68,10 @@ public:
 
 	/*! Clone this FakeCluster */
 	virtual FakeCluster* clone() const;
+	/*! Return its typename */
+	virtual QString typeName() {
+		return "FakeCluster";
+	};
 
     //@}
 

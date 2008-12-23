@@ -41,23 +41,21 @@
 #include "libradialfunctions.h"
 #include "learningalgorithm.h"
 #include "backpropagationalgo.h"
-#include "nnfwfactory.h"
 #include <cstdarg>
-#include <map>
+#include <QMap>
 
 namespace nnfw {
 	//--- for accessing RealVec data from C interface implementation
-	NNFW_INTERNAL Real* getRawData( RealVec& vec ) {
+	NNFW_INTERNAL double* getRawData( RealVec& vec ) {
 		return vec.rawdata();
 	}
 	//--- for accessing from C interface implementation
-	NNFW_INTERNAL Real* getRawData( RealMat& mat ) {
+	NNFW_INTERNAL double* getRawData( RealMat& mat ) {
 		return getRawData( mat.rawdata() );
 	}
 }
 
 using namespace nnfw;
-using namespace std;
 
 #ifdef __cplusplus
 extern "C" {
@@ -89,9 +87,9 @@ typedef struct NnfwLinker {
 
 //--- this need to be converted in object design
 typedef struct NnfwIterator {
-	const ClusterVec* clvec;
-	const LinkerVec* linkvec;
-	const UpdatableVec* upvec;
+	const ClusterList* clvec;
+	const LinkerList* linkvec;
+	const UpdatableList* upvec;
 	//--- 0 -> ClusterVec
 	//--- 1 -> LinkerVec
 	//--- 2 -> UpdatableVec
@@ -115,23 +113,22 @@ typedef struct NnfwPatternSet {
 #endif
 
 //--- maps used for avoid redunant allocation memory when using NnfwIterator
-std::map<Cluster*, NnfwCluster*> clmap;
-std::map<Linker*, NnfwLinker*> linkmap;
+QMap<Cluster*, NnfwCluster*> clmap;
+QMap<Linker*, NnfwLinker*> linkmap;
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+/* *** TODO: re-implement when the Factory will come back
 C_NNFW_API NnfwCluster* NnfwClusterCreate( const char* type, unsigned int numNeurons ) {
 	NnfwCluster* cl = new NnfwCluster();
-	PropertySettings param;
-	param["numNeurons"] = numNeurons;
-	cl->cluster = Factory::createCluster( type, param );
 	cl->myup = cl->cluster;
 	cl->func = new NnfwOutputFunction();
 	cl->func->func = cl->cluster->getFunction();
 	return cl;
 }
+*** */
 
 C_NNFW_API void NnfwClusterUpdate( NnfwCluster* cl ) {
 	cl->cluster->update();
@@ -149,41 +146,41 @@ C_NNFW_API int NnfwClusterIsAccumulate( NnfwCluster* cl ) {
 	return cl->cluster->isAccumulate();
 }
 
-C_NNFW_API void NnfwClusterRandomize( NnfwCluster* cl, Real min, Real max ) {
+C_NNFW_API void NnfwClusterRandomize( NnfwCluster* cl, double min, double max ) {
 	cl->cluster->randomize( min, max );
 }
 
-C_NNFW_API void NnfwClusterSetInputs( NnfwCluster* cl, Real* ins ) {
+C_NNFW_API void NnfwClusterSetInputs( NnfwCluster* cl, double* ins ) {
 	RealVec insr( ins, cl->cluster->numNeurons() );
 	cl->cluster->setInputs( insr );
 }
 
-C_NNFW_API void NnfwClusterSetInput( NnfwCluster* cl, unsigned int neuron, Real value ) {
+C_NNFW_API void NnfwClusterSetInput( NnfwCluster* cl, unsigned int neuron, double value ) {
 	cl->cluster->setInput( neuron, value );
 }
 
-C_NNFW_API Real* NnfwClusterInputs( NnfwCluster* cl ) {
+C_NNFW_API double* NnfwClusterInputs( NnfwCluster* cl ) {
 	return getRawData( cl->cluster->inputs() );
 }
 
-C_NNFW_API Real NnfwClusterInput( NnfwCluster* cl, unsigned int neuron ) {
+C_NNFW_API double NnfwClusterInput( NnfwCluster* cl, unsigned int neuron ) {
 	return cl->cluster->getInput( neuron );
 }
 
-C_NNFW_API void NnfwClusterSetOutputs( NnfwCluster* cl, Real* outs ) {
+C_NNFW_API void NnfwClusterSetOutputs( NnfwCluster* cl, double* outs ) {
 	RealVec outsr( outs, cl->cluster->numNeurons() );
 	cl->cluster->setOutputs( outsr );
 }
 
-C_NNFW_API void NnfwClusterSetOutput( NnfwCluster* cl, unsigned int neuron, Real value ) {
+C_NNFW_API void NnfwClusterSetOutput( NnfwCluster* cl, unsigned int neuron, double value ) {
 	cl->cluster->setOutput( neuron, value );
 }
 
-C_NNFW_API Real* NnfwClusterOutputs( NnfwCluster* cl ) {
+C_NNFW_API double* NnfwClusterOutputs( NnfwCluster* cl ) {
 	return getRawData( cl->cluster->outputs() );
 }
 
-C_NNFW_API Real NnfwClusterOutput( NnfwCluster* cl, unsigned int neuron ) {
+C_NNFW_API double NnfwClusterOutput( NnfwCluster* cl, unsigned int neuron ) {
 	return cl->cluster->getOutput( neuron );
 }
 
@@ -223,20 +220,20 @@ C_NNFW_API NnfwCluster* NnfwClusterCreateBiased( unsigned int numNeurons ) {
 	return cl;
 }
 
-C_NNFW_API void NnfwBiasedClusterSetBiases( NnfwCluster* cl, Real* b ) {
+C_NNFW_API void NnfwBiasedClusterSetBiases( NnfwCluster* cl, double* b ) {
 	RealVec br( b, cl->cluster->numNeurons() );
 	((BiasedCluster*)cl->cluster)->setBiases( br );
 }
 
-C_NNFW_API void NnfwBiasedClusterSetBias( NnfwCluster* cl, unsigned int neuron, Real value ) {
+C_NNFW_API void NnfwBiasedClusterSetBias( NnfwCluster* cl, unsigned int neuron, double value ) {
 	((BiasedCluster*)cl->cluster)->setBias( neuron, value );
 }
 
-C_NNFW_API Real* NnfwBiasedClusterBiases( NnfwCluster* cl ) {
+C_NNFW_API double* NnfwBiasedClusterBiases( NnfwCluster* cl ) {
 	return getRawData( ((BiasedCluster*)cl->cluster)->biases() );
 }
 
-C_NNFW_API Real NnfwBiasedClusterBias( NnfwCluster* cl, unsigned int neuron ) {
+C_NNFW_API double NnfwBiasedClusterBias( NnfwCluster* cl, unsigned int neuron ) {
 	return ((BiasedCluster*)cl->cluster)->getBias( neuron );
 }
 
@@ -249,6 +246,7 @@ C_NNFW_API NnfwCluster* NnfwClusterCreateFake( unsigned int numNeurons ) {
 	return cl;
 }
 
+/* ** TODO: re-implement when the Factory will come back
 C_NNFW_API NnfwLinker* NnfwLinkerCreate( const char* type, NnfwCluster* from, NnfwCluster* to ) {
 	NnfwLinker* link = new NnfwLinker();
 	PropertySettings param;
@@ -260,6 +258,7 @@ C_NNFW_API NnfwLinker* NnfwLinkerCreate( const char* type, NnfwCluster* from, Nn
 	link->to = to;
 	return link;
 }
+** */
 
 C_NNFW_API NnfwCluster* NnfwLinkerFrom( NnfwLinker* link ) {
 	return link->from;
@@ -277,7 +276,7 @@ C_NNFW_API unsigned int NnfwLinkerSize( NnfwLinker* link ) {
 	return link->linker->size();
 }
 
-C_NNFW_API void NnfwLinkerRandomize( NnfwLinker* link, Real min, Real max ) {
+C_NNFW_API void NnfwLinkerRandomize( NnfwLinker* link, double min, double max ) {
 	link->linker->randomize( min, max );
 }
 
@@ -299,7 +298,7 @@ C_NNFW_API NnfwLinker* NnfwLinkerCreateDot( NnfwCluster* from, NnfwCluster* to )
 	return link;
 }
 
-C_NNFW_API void NnfwDotLinkerSetWeights( NnfwLinker* link, Real* matrix ) {
+C_NNFW_API void NnfwDotLinkerSetWeights( NnfwLinker* link, double* matrix ) {
 	RealMat& mat = ((DotLinker*)link->linker)->matrix();
 	int row = mat.rows();
 	int col = mat.cols();
@@ -311,15 +310,15 @@ C_NNFW_API void NnfwDotLinkerSetWeights( NnfwLinker* link, Real* matrix ) {
 	}
 }
 
-C_NNFW_API void NnfwDotLinkerSetWeight( NnfwLinker* link, unsigned int from, unsigned int to, Real w ) {
+C_NNFW_API void NnfwDotLinkerSetWeight( NnfwLinker* link, unsigned int from, unsigned int to, double w ) {
 	((DotLinker*)link->linker)->setWeight( from, to, w );
 }
 
-C_NNFW_API Real* NnfwDotLinkerWeights( NnfwLinker* link ) {
+C_NNFW_API double* NnfwDotLinkerWeights( NnfwLinker* link ) {
 	return getRawData( ((DotLinker*)link->linker)->matrix() );
 }
 
-C_NNFW_API Real NnfwDotLinkerWeight( NnfwLinker* link, unsigned int from, unsigned int to ) {
+C_NNFW_API double NnfwDotLinkerWeight( NnfwLinker* link, unsigned int from, unsigned int to ) {
 	return ((DotLinker*)link->linker)->getWeight( from, to );
 }
 
@@ -339,7 +338,7 @@ C_NNFW_API NnfwLinker* NnfwLinkerCreateNorm( NnfwCluster* from, NnfwCluster* to 
 	return link;
 }
 
-C_NNFW_API void NnfwNormLinkerSetWeights( NnfwLinker* link, Real* matrix ) {
+C_NNFW_API void NnfwNormLinkerSetWeights( NnfwLinker* link, double* matrix ) {
 	RealMat& mat = ((NormLinker*)link->linker)->matrix();
 	int row = mat.rows();
 	int col = mat.cols();
@@ -351,15 +350,15 @@ C_NNFW_API void NnfwNormLinkerSetWeights( NnfwLinker* link, Real* matrix ) {
 	}
 }
 
-C_NNFW_API void NnfwNormLinkerSetWeight( NnfwLinker* link, unsigned int from, unsigned int to, Real w ) {
+C_NNFW_API void NnfwNormLinkerSetWeight( NnfwLinker* link, unsigned int from, unsigned int to, double w ) {
 	((NormLinker*)link->linker)->setWeight( from, to, w );
 }
 
-C_NNFW_API Real* NnfwNormLinkerWeights( NnfwLinker* link ) {
+C_NNFW_API double* NnfwNormLinkerWeights( NnfwLinker* link ) {
 	return getRawData( ((NormLinker*)link->linker)->matrix() );
 }
 
-C_NNFW_API Real NnfwNormLinkerWeight( NnfwLinker* link, unsigned int from, unsigned int to ) {
+C_NNFW_API double NnfwNormLinkerWeight( NnfwLinker* link, unsigned int from, unsigned int to ) {
 	return ((NormLinker*)link->linker)->getWeight( from, to );
 }
 
@@ -380,7 +379,7 @@ C_NNFW_API NnfwLinker* NnfwLinkerCreateSparse( NnfwCluster* from, NnfwCluster* t
 	return link;
 }
 
-C_NNFW_API void NnfwSparseLinkerSetWeights( NnfwLinker* link, Real* matrix ) {
+C_NNFW_API void NnfwSparseLinkerSetWeights( NnfwLinker* link, double* matrix ) {
 	RealMat& mat = ((SparseMatrixLinker*)link->linker)->matrix();
 	int row = mat.rows();
 	int col = mat.cols();
@@ -393,15 +392,15 @@ C_NNFW_API void NnfwSparseLinkerSetWeights( NnfwLinker* link, Real* matrix ) {
 	mat.cover( ((SparseMatrixLinker*)link->linker)->mask() );
 }
 
-C_NNFW_API void NnfwSparseLinkerSetWeight( NnfwLinker* link, unsigned int from, unsigned int to, Real w ) {
+C_NNFW_API void NnfwSparseLinkerSetWeight( NnfwLinker* link, unsigned int from, unsigned int to, double w ) {
 	((SparseMatrixLinker*)link->linker)->setWeight( from, to, w );
 }
 
-C_NNFW_API Real* NnfwSparseLinkerWeights( NnfwLinker* link ) {
+C_NNFW_API double* NnfwSparseLinkerWeights( NnfwLinker* link ) {
 	return getRawData( ((SparseMatrixLinker*)link->linker)->matrix() );
 }
 
-C_NNFW_API Real NnfwSparseLinkerWeight( NnfwLinker* link, unsigned int from, unsigned int to ) {
+C_NNFW_API double NnfwSparseLinkerWeight( NnfwLinker* link, unsigned int from, unsigned int to ) {
 	return ((SparseMatrixLinker*)link->linker)->getWeight( from, to );
 }
 
@@ -421,7 +420,7 @@ C_NNFW_API void NnfwSparseLinkerConnectAll( NnfwLinker* link ) {
 	((SparseMatrixLinker*)link->linker)->connectAll();
 }
 
-C_NNFW_API void NnfwSparseLinkerConnectRandom( NnfwLinker* link, Real prob ) {
+C_NNFW_API void NnfwSparseLinkerConnectRandom( NnfwLinker* link, double prob ) {
 	((SparseMatrixLinker*)link->linker)->connectRandom( prob );
 }
 
@@ -433,7 +432,7 @@ C_NNFW_API void NnfwSparseLinkerDisconnectAll( NnfwLinker* link ) {
 	((SparseMatrixLinker*)link->linker)->disconnectAll();
 }
 
-C_NNFW_API void NnfwSparseLinkerDisconnectRandom( NnfwLinker* link, Real prob ) {
+C_NNFW_API void NnfwSparseLinkerDisconnectRandom( NnfwLinker* link, double prob ) {
 	((SparseMatrixLinker*)link->linker)->disconnectRandom( prob );
 }
 
@@ -475,12 +474,14 @@ C_NNFW_API NnfwCopyLinkerModes NnfwCopyLinkerMode( NnfwLinker* link ) {
 	return link->copymode;
 }
 
+/* ** TODO: re-implement when the Factory will come back
 C_NNFW_API NnfwOutputFunction* NnfwOutputFunctionCreate( const char* type ) {
 	NnfwOutputFunction* fun = new NnfwOutputFunction();
 	PropertySettings param;
 	fun->func = Factory::createOutputFunction( type, param );
 	return fun;
 }
+** */
 
 C_NNFW_API NnfwOutputFunction* NnfwOutputFunctionCreateIdentity() {
 	NnfwOutputFunction* fun = new NnfwOutputFunction();
@@ -488,43 +489,43 @@ C_NNFW_API NnfwOutputFunction* NnfwOutputFunctionCreateIdentity() {
 	return fun;	
 }
 
-C_NNFW_API NnfwOutputFunction* NnfwOutputFunctionCreateLinear( Real m, Real b ) {
+C_NNFW_API NnfwOutputFunction* NnfwOutputFunctionCreateLinear( double m, double b ) {
 	NnfwOutputFunction* fun = new NnfwOutputFunction();
 	fun->func = new LinearFunction( m, b );
 	return fun;	
 }
 
-C_NNFW_API NnfwOutputFunction* NnfwOutputFunctionCreateRamp( Real minX, Real maxX, Real minY, Real maxY ) {
+C_NNFW_API NnfwOutputFunction* NnfwOutputFunctionCreateRamp( double minX, double maxX, double minY, double maxY ) {
 	NnfwOutputFunction* fun = new NnfwOutputFunction();
 	fun->func = new RampFunction( minX, maxX, minY, maxY );
 	return fun;	
 }
 
-C_NNFW_API NnfwOutputFunction* NnfwOutputFunctionCreateStep( Real min, Real max, Real threshold ) {
+C_NNFW_API NnfwOutputFunction* NnfwOutputFunctionCreateStep( double min, double max, double threshold ) {
 	NnfwOutputFunction* fun = new NnfwOutputFunction();
 	fun->func = new StepFunction( min, max, threshold );
 	return fun;	
 }
 
-C_NNFW_API NnfwOutputFunction* NnfwOutputFunctionCreateSigmoid( Real l ) {
+C_NNFW_API NnfwOutputFunction* NnfwOutputFunctionCreateSigmoid( double l ) {
 	NnfwOutputFunction* fun = new NnfwOutputFunction();
 	fun->func = new SigmoidFunction( l );
 	return fun;	
 }
 
-C_NNFW_API NnfwOutputFunction* NnfwOutputFunctionCreateFakeSigmoid( Real l ) {
+C_NNFW_API NnfwOutputFunction* NnfwOutputFunctionCreateFakeSigmoid( double l ) {
 	NnfwOutputFunction* fun = new NnfwOutputFunction();
 	fun->func = new FakeSigmoidFunction( l );
 	return fun;	
 }
 
-C_NNFW_API NnfwOutputFunction* NnfwOutputFunctionCreateScaledSigmoid( Real l, Real min, Real max ) {
+C_NNFW_API NnfwOutputFunction* NnfwOutputFunctionCreateScaledSigmoid( double l, double min, double max ) {
 	NnfwOutputFunction* fun = new NnfwOutputFunction();
 	fun->func = new ScaledSigmoidFunction( l, min, max );
 	return fun;	
 }
 
-C_NNFW_API NnfwOutputFunction* NnfwOutputFunctionCreateGaussian( Real centre, Real var, Real max ) {
+C_NNFW_API NnfwOutputFunction* NnfwOutputFunctionCreateGaussian( double centre, double var, double max ) {
 	NnfwOutputFunction* fun = new NnfwOutputFunction();
 	fun->func = new GaussFunction( centre, var, max );
 	return fun;	
@@ -624,19 +625,19 @@ C_NNFW_API NnfwIterator* NnfwBaseNeuralNetIncomingLinkers( NnfwBaseNeuralNet* ne
 C_NNFW_API void NnfwBaseNeuralNetSetOrder( NnfwBaseNeuralNet* net, int n, ... ) {
 	va_list ap;
 	va_start( ap, n );
-	UpdatableVec ord;
+	UpdatableList ord;
 	//bool end = false;
 	for( int i=0; i<n; i++ ) {
 	//while( !end ) {
 		void* ptr = va_arg( ap, void* );
 		NnfwCluster* trycl = (NnfwCluster*)(ptr);
 		if ( dynamic_cast<Cluster*>(trycl->myup) ) {
-			ord << trycl->cluster;
+			ord.append( trycl->cluster );
 			continue;
 		}
 		NnfwLinker* trylink = (NnfwLinker*)(ptr);
 		if ( dynamic_cast<Linker*>(trylink->myup) ) {
-			ord << trylink->linker;
+			ord.append( trylink->linker );
 			continue;
 		}
 	}
@@ -655,7 +656,7 @@ C_NNFW_API void NnfwBaseNeuralNetStep( NnfwBaseNeuralNet* net ) {
 	net->net->step();
 }
 
-C_NNFW_API void NnfwBaseNeuralNetRandomize( NnfwBaseNeuralNet* net, Real min, Real max ) {
+C_NNFW_API void NnfwBaseNeuralNetRandomize( NnfwBaseNeuralNet* net, double min, double max ) {
 	net->net->randomize( min, max );
 }
 
@@ -802,29 +803,29 @@ C_NNFW_API int NnfwPatternSetSize( NnfwPatternSet* set ) {
 	return set->pset->size();
 }
 
-C_NNFW_API void NnfwPatternSetSetInputsOf( NnfwPatternSet* pset, int i, NnfwCluster* cl, Real* inputs ) {
+C_NNFW_API void NnfwPatternSetSetInputsOf( NnfwPatternSet* pset, int i, NnfwCluster* cl, double* inputs ) {
 	RealVec rv( inputs, cl->cluster->numNeurons() );
-	pset->pset->at(i).setInputsOf( cl->cluster, rv );
+	pset->pset->value(i).setInputsOf( cl->cluster, rv );
 }
 
-C_NNFW_API void NnfwPatternSetSetOutputsOf( NnfwPatternSet* pset, int i, NnfwCluster* cl, Real* outputs ) {
+C_NNFW_API void NnfwPatternSetSetOutputsOf( NnfwPatternSet* pset, int i, NnfwCluster* cl, double* outputs ) {
 	RealVec rv( outputs, cl->cluster->numNeurons() );
-	pset->pset->at(i).setOutputsOf( cl->cluster, rv );
+	pset->pset->value(i).setOutputsOf( cl->cluster, rv );
 }
 
-C_NNFW_API Real* NnfwPatternSetGetInputsOf( NnfwPatternSet* pset, int i, NnfwCluster* cl ) {
+C_NNFW_API double* NnfwPatternSetGetInputsOf( NnfwPatternSet* pset, int i, NnfwCluster* cl ) {
 	return getRawData( (RealVec&)(pset->pset->at(i).inputsOf( cl->cluster )) );
 }
 
-C_NNFW_API Real* NnfwPatternSetGetOutputsOf( NnfwPatternSet* pset, int i, NnfwCluster* cl ) {
+C_NNFW_API double* NnfwPatternSetGetOutputsOf( NnfwPatternSet* pset, int i, NnfwCluster* cl ) {
 	return getRawData( (RealVec&)(pset->pset->at(i).outputsOf( cl->cluster )) );
 }
 
 
-C_NNFW_API NnfwLearningAlgorithm* NnfwBackPropagationCreate( NnfwBaseNeuralNet* net, Real learn_rate, int n, ... ) {
+C_NNFW_API NnfwLearningAlgorithm* NnfwBackPropagationCreate( NnfwBaseNeuralNet* net, double learn_rate, int n, ... ) {
 	va_list ap;
 	va_start( ap, n );
-	UpdatableVec ord;
+	UpdatableList ord;
 	//bool end = false;
 	for( int i=0; i<n; i++ ) {
 	//while( !end ) {
@@ -854,19 +855,19 @@ C_NNFW_API void NnfwBackPropagationEnableMomentum( NnfwLearningAlgorithm* bp, in
 	}
 }
 
-C_NNFW_API void NnfwBackPropagationSetLearnRate( NnfwLearningAlgorithm* bp, Real rate ) {
+C_NNFW_API void NnfwBackPropagationSetLearnRate( NnfwLearningAlgorithm* bp, double rate ) {
 	((BackPropagationAlgo*)bp->learn)->setRate( rate );
 }
 
-C_NNFW_API void NnfwBackPropagationSetMomentum( NnfwLearningAlgorithm* bp, Real mom ) {
+C_NNFW_API void NnfwBackPropagationSetMomentum( NnfwLearningAlgorithm* bp, double mom ) {
 	((BackPropagationAlgo*)bp->learn)->setMomentum( mom );
 }
 
-C_NNFW_API Real NnfwBackPropagationLearnRate( NnfwLearningAlgorithm* bp ) {
+C_NNFW_API double NnfwBackPropagationLearnRate( NnfwLearningAlgorithm* bp ) {
 	return ((BackPropagationAlgo*)bp->learn)->rate();
 }
 
-C_NNFW_API Real NnfwBackPropagationMomentum( NnfwLearningAlgorithm* bp ) {
+C_NNFW_API double NnfwBackPropagationMomentum( NnfwLearningAlgorithm* bp ) {
 	return ((BackPropagationAlgo*)bp->learn)->momentum();
 }
 
@@ -874,10 +875,11 @@ C_NNFW_API void NnfwBackPropagationLearn( NnfwLearningAlgorithm* bp, NnfwPattern
 	bp->learn->learnOnSet( *(pset->pset) );
 }
 
-C_NNFW_API Real NnfwBackPropagationCalcMSE( NnfwLearningAlgorithm* bp, NnfwPatternSet* pset ) {
+C_NNFW_API double NnfwBackPropagationCalcMSE( NnfwLearningAlgorithm* bp, NnfwPatternSet* pset ) {
 	return bp->learn->calculateMSEOnSet( *(pset->pset) );
 }
 
+/* ** TODO: re-implement when the load/save facilities will come back
 C_NNFW_API NnfwBaseNeuralNet* NnfwLoadXML( const char* filename ) {
 	NnfwBaseNeuralNet* net = new NnfwBaseNeuralNet();
 	BaseNeuralNet* nn = loadXML( filename );
@@ -889,6 +891,7 @@ C_NNFW_API void NnfwSaveXML( const char* filename, NnfwBaseNeuralNet* net, int p
 	saveXML( filename, net->net, precision, skipList );
 	return;
 }
+** */
 
 #ifdef __cplusplus
 };

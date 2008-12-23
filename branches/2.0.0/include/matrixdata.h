@@ -420,7 +420,7 @@ private:
                 nrows = 0;
                 ncols = 0;
                 tsize = 0;
-                rowView.clear();
+                rowView.resize(0);
             } else {
                 tsize = ncols*nrows;
                 // --- Adjust the view of rows
@@ -438,7 +438,7 @@ private:
             nrows = 0;
             ncols = 0;
             tsize = 0;
-            rowView.clear();
+            rowView.resize(0);
             break;
         default:
             break;

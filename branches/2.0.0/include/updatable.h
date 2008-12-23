@@ -51,6 +51,8 @@ public:
     void setName( QString newname );
 	/*! Return its name */
 	QString name() const;
+	/*! Return its typename */
+	virtual QString typeName() = 0;
 
     //@}
 

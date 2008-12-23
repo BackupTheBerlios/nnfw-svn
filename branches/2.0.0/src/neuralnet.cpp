@@ -47,21 +47,15 @@ void BaseNeuralNet::addCluster( Cluster* c, bool isInput, bool isOutput ) {
 #endif
         return;
     }
-	ids4t& ids = clsIdsMap[c];
-	ids[0] = clustersv.size();
-	ids[1] = ids[2] = ids[3] = -1;
-    clustersv.push_back( c );
+    clustersv.append( c );
     if ( isInput ) {
-		ids[1] = inclusters.size();
-        inclusters.push_back( c );
+        inclusters.append( c );
     }
     if ( isOutput ) {
-		ids[2] = outclusters.size();
-        outclusters.push_back( c );
+        outclusters.append( c );
     }
 	if ( !isInput && !isOutput ) {
-		ids[3] = hidclusters.size();
-        hidclusters.push_back( c );
+        hidclusters.append( c );
 	}
 	clsMap[c->name()] = c;
     return;
@@ -77,13 +71,11 @@ bool BaseNeuralNet::removeCluster( Cluster* c ) {
     if ( !find( c ) ) {
         return false;
     }
-	ids4t& ids = clsIdsMap[c];
-	clustersv.erase( ids[0] );
-	inclusters.erase( ids[1] );
-	outclusters.erase( ids[2] );
-	hidclusters.erase( ids[3] );
-	clsMap.erase( c->name() );
-	clsIdsMap.erase( c );
+	clustersv.removeOne( c );
+	inclusters.removeOne( c );
+	outclusters.removeOne( c );
+	hidclusters.removeOne( c );
+	clsMap.remove( c->name() );
     return true;
 }
 
@@ -101,11 +93,10 @@ void BaseNeuralNet::markAsInput( Cluster* c ) {
 #endif
         return;
     }
-	if ( clsIdsMap[c][1] != -1 ) {
+	if ( inclusters.contains( c ) ) {
 		return;
 	}
-	clsIdsMap[c][1] = inclusters.size();
-    inclusters.push_back( c );
+    inclusters.append( c );
 }
 
 void BaseNeuralNet::markAsOutput( Cluster* c ) {
@@ -122,11 +113,10 @@ void BaseNeuralNet::markAsOutput( Cluster* c ) {
 #endif
         return;
     }
-	if ( clsIdsMap[c][2] != -1 ) {
+	if ( outclusters.contains( c ) ) {
 		return;
 	}
-	clsIdsMap[c][2] = outclusters.size();
-	outclusters.push_back( c );
+	outclusters.append( c );
 }
 
 void BaseNeuralNet::unmark( Cluster* c ) {
@@ -140,33 +130,16 @@ void BaseNeuralNet::unmark( Cluster* c ) {
     if ( !find( c ) ) {
 		return;
 	}
-	ids4t& ids = clsIdsMap[c];
-	if ( ids[1] != -1 ) {
-		inclusters.erase( ids[1] );
-		ids[1] = -1;
-	}
-	if ( ids[2] != -1 ) {
-		outclusters.erase( ids[2] );
-		ids[2] = -1;
-	}
-	if ( ids[3] == -1 ) {
-		ids[3] = hidclusters.size();
-		hidclusters.push_back( c );
-	}
+	inclusters.removeOne( c );
+	outclusters.removeOne( c );
+	hidclusters.append( c );
     return;
 }
 
 void BaseNeuralNet::unmarkAll( ) {
-	// --- it could be more efficient !!
     inclusters.clear();
     outclusters.clear();
 	hidclusters = clustersv;
-	IdsMap::iterator it;
-	for( it = clsIdsMap.begin(); it!=clsIdsMap.end(); it++ ) {
-		ids4t& ids = (*it).second;
-		ids[1] = ids[2] = -1;
-		ids[3] = ids[0];
-	}
     return;
 }
 
@@ -180,19 +153,19 @@ bool BaseNeuralNet::isIsolated( Cluster* c ) const {
     return ( inLinks.count( c ) == 0 && outLinks.count( c ) == 0 );
 }
 
-const ClusterVec& BaseNeuralNet::clusters() const {
+const ClusterList& BaseNeuralNet::clusters() const {
     return clustersv;
 }
 
-const ClusterVec& BaseNeuralNet::inputClusters() const {
+const ClusterList& BaseNeuralNet::inputClusters() const {
     return inclusters;
 }
 
-const ClusterVec& BaseNeuralNet::outputClusters() const {
+const ClusterList& BaseNeuralNet::outputClusters() const {
     return outclusters;
 }
 
-const ClusterVec& BaseNeuralNet::hiddenClusters() const {
+const ClusterList& BaseNeuralNet::hiddenClusters() const {
     return hidclusters;
 }
 
@@ -212,26 +185,22 @@ void BaseNeuralNet::addLinker( Linker* l ) {
     }
 #ifdef NNFW_DEBUG
     // --- Check: Are There in this net the Clusters that linker l connects ???
-    if ( ! find( l->getFrom() ) ) {
+    if ( ! find( l->from() ) ) {
         qWarning() << "The linker that you want add links clusters that doesn't exist in this net! \
                                   This operation will be ignored" ;
         return;
     }
-    if ( ! find( l->getTo() ) ) {
+    if ( ! find( l->to() ) ) {
         qWarning() << "The linker that you want add links clusters that doesn't exist in this net! \
                                   This operation will be ignored" ;
         return;
     }
 #endif
-	ids4t& ids = lksIdsMap[l];
-	ids[0] = linkersv.size();
-    linkersv.push_back( l );
+    linkersv.append( l );
     // Adding information in outLinks map
-	ids[1] = outLinks[ l->getFrom() ].size();
-    outLinks[ l->getFrom() ].push_back( l );
+    outLinks[ l->from() ].append( l );
     // Adding information in inLinks map
-	ids[2] = outLinks[ l->getTo() ].size();
-    inLinks[ l->getTo() ].push_back( l );
+    inLinks[ l->to() ].append( l );
 
 	lksMap[l->name()] = l;
     return;
@@ -247,57 +216,55 @@ bool BaseNeuralNet::removeLinker( Linker* l ) {
 	if ( !find(l) ) {
 		return false;
 	}
-	ids4t& ids = lksIdsMap[l];
-	linkersv.erase( ids[0] );
-	outLinks[ l->getFrom() ].erase( ids[1] );
-	inLinks[ l->getTo() ].erase( ids[2] );
-	lksMap.erase( l->name() );
-	lksIdsMap.erase( l );
+	linkersv.removeOne( l );
+	outLinks[ l->from() ].removeOne( l );
+	inLinks[ l->to() ].removeOne( l );
+	lksMap.remove( l->name() );
     return true;
 }
 
-const LinkerVec& BaseNeuralNet::linkers() const {
+const LinkerList& BaseNeuralNet::linkers() const {
     return linkersv;
 }
 
-const LinkerVec& BaseNeuralNet::linkers( Cluster* c, bool out ) const {
+const LinkerList& BaseNeuralNet::linkers( Cluster* c, bool out ) const {
 #ifdef NNFW_DEBUG
     if ( !c ) {
         qWarning() << "Null Pointer passed to linkers! This operation will return an empty LinkerGroup" ;
-        return emptyLinkerVec;
+        return emptyLinkerList;
     }
 #endif
     if ( out ) {
         // Return outgoing linkers
-        if ( outLinks.count( c ) > 0 ) {
-            return outLinks.find( c )->second;
+        if ( outLinks.contains( c ) ) {
+            return outLinks[c];
         }
     } else {
         // Return incoming linkers
-        if ( inLinks.count( c ) > 0 ) {
-            return inLinks.find( c )->second;
+        if ( inLinks.contains( c ) ) {
+            return inLinks[c];
         }
     }
-    return emptyLinkerVec;
+    return emptyLinkerList;
 }
 
 void BaseNeuralNet::setOrder( Updatable* u[], unsigned int dim ) {
     ups.clear();
     for( unsigned int i = 0; i<dim; i++ ) {
         if ( find( u[i] ) ) {
-            ups.push_back( u[i] );
+            ups.append( u[i] );
         }
     }
     dimUps = ups.size();
     return;
 }
 
-void BaseNeuralNet::setOrder( const UpdatableVec& u ) {
+void BaseNeuralNet::setOrder( const UpdatableList& u ) {
     ups.clear();
     unsigned int dim = u.size();
     for( unsigned int i = 0; i<dim; i++ ) {
         if ( find( u[i] ) ) {
-            ups.push_back( u[i] );
+            ups.append( u[i] );
         }
     }
     dimUps = ups.size();
@@ -315,8 +282,8 @@ void BaseNeuralNet::randomize( double min, double max ) {
 	}
 }
 
-Updatable* BaseNeuralNet::getByName( const char* name ) {
-	if ( clsMap.find( name ) != clsMap.end() ) {
+Updatable* BaseNeuralNet::getByName( QString name ) {
+	if ( clsMap.contains( name ) ) {
 		return clsMap[name];
 	}
 	if ( lksMap.find( name ) != lksMap.end() ) {
@@ -329,17 +296,17 @@ Updatable* BaseNeuralNet::getByName( const char* name ) {
 }
 
 bool BaseNeuralNet::find( const Cluster* cl ) const {
-	return ( clsIdsMap.count( (Cluster*)cl ) > 0 );
+	return clustersv.contains( (Cluster*)cl );
 }
 
 bool BaseNeuralNet::find( const Linker* l ) const {
-	return ( lksIdsMap.count( (Linker*)l ) > 0 );
+	return linkersv.contains( (Linker*)l );
 }
 
 bool BaseNeuralNet::find( const Updatable* u ) const {
 	return (
-		( clsIdsMap.count( (Cluster*)u ) > 0 ) ||
-		( lksIdsMap.count( (Linker*)u ) > 0 )
+		clustersv.contains( (Cluster*)u ) ||
+		linkersv.contains( (Linker*)u )
 	);
 }
 
@@ -364,7 +331,7 @@ BaseNeuralNet* BaseNeuralNet::clone() const {
 		//clone->addLinker( lk->clone );
 	}
 	// --- copy the order -- not-efficient
-	UpdatableVec ord;
+	UpdatableList ord;
 	for( int i=0; i<(int)order().size(); i++ ) {
 		ord << clone->getByName( order()[i]->name() );
 	}

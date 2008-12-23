@@ -192,6 +192,11 @@ public:
 	/*! Clone this Cluster */
 	virtual Cluster* clone() const;
 
+	/*! Return its typename */
+	virtual QString typeName() {
+		return "Cluster";
+	};
+
     //@}
 
 protected:

@@ -26,12 +26,12 @@
 
 namespace nnfw {
 
-BackPropagationAlgo::BackPropagationAlgo( BaseNeuralNet *n_n, UpdatableVec up_order, double l_r )
+BackPropagationAlgo::BackPropagationAlgo( BaseNeuralNet *n_n, UpdatableList up_order, double l_r )
 	: LearningAlgorithm(n_n), learn_rate(l_r), update_order(up_order) {
 
 	Cluster *cluster_temp;
 	// pushing the info for output cluster
-	const ClusterVec& outs = n_n->outputClusters();
+	const ClusterList& outs = n_n->outputClusters();
 	for( int i=0; i<(int)outs.size(); i++ ) {
 		addCluster( outs[i], true );
 	}
@@ -153,14 +153,14 @@ void BackPropagationAlgo::learn() {
 
 void BackPropagationAlgo::learn( const Pattern& pat ) {
 	// --- set the inputs of the net
-	const ClusterVec& clins = net()->inputClusters();
+	const ClusterList& clins = net()->inputClusters();
 	for( unsigned int i=0; i<clins.size(); i++ ) {
 		clins[i]->inputs().assign( pat.inputsOf( clins[i] ) );
 	}
 	// --- spread the net
 	net()->step();
 	// --- set the teaching input
-	const ClusterVec& clout = net()->outputClusters();
+	const ClusterList& clout = net()->outputClusters();
 	for( unsigned int i=0; i<clout.size(); i++ ) {
 		setTeachingInput( clout[i], pat.outputsOf( clout[i] ) );
 	}
@@ -169,14 +169,14 @@ void BackPropagationAlgo::learn( const Pattern& pat ) {
 
 double BackPropagationAlgo::calculateMSE( const Pattern& pat ) {
 	// --- set the inputs of the net
-	const ClusterVec& clins = net()->inputClusters();
+	const ClusterList& clins = net()->inputClusters();
 	for( unsigned int i=0; i<clins.size(); i++ ) {
 		clins[i]->inputs().assign( pat.inputsOf( clins[i] ) );
 	}
 	// --- spread the net
 	net()->step();
 	// --- calculate the MSE
-	const ClusterVec& clout = net()->outputClusters();
+	const ClusterList& clout = net()->outputClusters();
 	double mseacc = 0.0;
 	int dim = (int)clout.size();
 	for( int i=0; i<dim; i++ ) {

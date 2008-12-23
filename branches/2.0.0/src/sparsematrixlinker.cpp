@@ -95,7 +95,7 @@ void SparseMatrixLinker::randomize( double min, double max ) {
     for ( unsigned int i = 0; i<rows(); i++ ) {
         for ( unsigned int j = 0; j<cols(); j++ ) {
             if ( maskm[i][j] ) {
-                matrix()[i][j] = Random::flatdouble( min, max );
+                matrix()[i][j] = Random::flatDouble( min, max );
             } else {
                 matrix()[i][j] = 0.0;
             }
@@ -127,7 +127,7 @@ void SparseMatrixLinker::connect( unsigned int from, unsigned int to ) {
 void SparseMatrixLinker::connectRandom( double prob ) {
     for ( unsigned int r = 0; r < rows(); r++ ) {
         for ( unsigned int c = 0; c < cols(); c++ ) {
-            maskm[r][c] = ! ( Random::flatdouble() < prob );
+            maskm[r][c] = ! ( Random::flatDouble() < prob );
         }
     }
 }
@@ -160,7 +160,7 @@ void SparseMatrixLinker::disconnectAll() {
 void SparseMatrixLinker::disconnectRandom( double prob ) {
     for ( unsigned int r = 0; r < rows(); r++ ) {
         for ( unsigned int c = 0; c < cols(); c++ ) {
-            maskm[r][c] = ! ( Random::flatdouble() < prob );
+            maskm[r][c] = ! ( Random::flatDouble() < prob );
         }
     }
 }

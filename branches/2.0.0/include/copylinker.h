@@ -62,9 +62,6 @@ public:
     /*! Constructor */
     CopyLinker( Cluster* from, Cluster* to, CopyMode mode, QString name = "unnamed" );
 
-    /*! Construct by PropertySettings */
-    CopyLinker( PropertySettings& prop );
-
     /*! Destructor */
     virtual ~CopyLinker();
 
@@ -91,6 +88,10 @@ public:
 
 	/*! Clone this CopyLinker */
 	virtual CopyLinker* clone() const;
+	/*! Return its typename */
+	virtual QString typeName() {
+		return "CopyLinker";
+	};
 
 	//@}
 

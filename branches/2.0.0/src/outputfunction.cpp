@@ -22,7 +22,7 @@
 namespace nnfw {
 
 OutputFunction::OutputFunction()
-    : Propertized(), tmp1(1), tmp2(1) {
+    : tmp1(1), tmp2(1) {
 }
 
 OutputFunction::~OutputFunction() {

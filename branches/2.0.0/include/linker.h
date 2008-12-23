@@ -68,6 +68,10 @@ public:
 
 	/*! Clone this Linker */
 	virtual Linker* clone() const;
+	/*! Return its typename */
+	virtual QString typeName() {
+		return "Linker";
+	};
 
     //@}
 

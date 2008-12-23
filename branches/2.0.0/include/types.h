@@ -84,21 +84,21 @@ typedef VectorData<unsigned int> U_IntVec;
 
 class Updatable;
 /*! Array of Updatable */
-typedef QVector<Updatable*> UpdatableVec;
+typedef QList<Updatable*> UpdatableList;
 
 class Cluster;
 /*! Array of Clusters */
-typedef QVector<Cluster*> ClusterVec;
+typedef QList<Cluster*> ClusterList;
 
 class Linker;
 /*! Array of Linkers */
-typedef QVector<Linker*> LinkerVec;
+typedef QList<Linker*> LinkerList;
 
-/*! Empty LinkerVec constant */
-extern NNFW_API const LinkerVec emptyLinkerVec;
+/*! Empty LinkerList constant */
+extern NNFW_API const LinkerList emptyLinkerList;
 
-/*! Empty ClusterVec constant */
-extern NNFW_API const ClusterVec emptyClusterVec;
+/*! Empty ClusterList constant */
+extern NNFW_API const ClusterList emptyClusterList;
 
 }
 

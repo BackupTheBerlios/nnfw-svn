@@ -22,8 +22,8 @@
 
 namespace nnfw {
 
-const LinkerVec emptyLinkerVec;
+const LinkerList emptyLinkerList;
 
-const ClusterVec emptyClusterVec;
+const ClusterList emptyClusterList;
 
 }
