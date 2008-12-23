@@ -22,7 +22,7 @@ IF ( APPLE )
 	### If true use FRAMEWORKS
 	SET( USE_FRAMEWORKS ON CACHE BOOL "If ON will generate an Apple framework" )
 ELSE ( APPLE )
-	SET( USE_FRAMEWORKS OFF CACHE INTERNAL )
+	SET( USE_FRAMEWORKS OFF INTERNAL )
 ENDIF ( APPLE )
 
 ### configure CMake to link against Qt4

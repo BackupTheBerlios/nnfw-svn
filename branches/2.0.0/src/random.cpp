@@ -25,7 +25,6 @@
 #include "gsl/gsl_randist.h"
 #endif
 
-
 namespace nnfw {
 
 #ifdef NNFW_USE_GSL
@@ -41,7 +40,7 @@ void Random::setSeed( long int seed ) {
     return;
 }
 
-double Random::flatdouble( ) {
+double Random::flatDouble( ) {
 #ifdef NNFW_USE_GSL
     return (double)( gsl_rng_uniform( rnd ) );
 #else
@@ -49,7 +48,7 @@ double Random::flatdouble( ) {
 #endif
 }
 
-double Random::flatdouble( double min, double max ) {
+double Random::flatDouble( double min, double max ) {
 #ifdef NNFW_USE_GSL
     return (double)( gsl_ran_flat( rnd, (double)min, (double)max ) );
 #else

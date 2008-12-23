@@ -36,14 +36,14 @@ BaseNeuralNet::~BaseNeuralNet() {
 void BaseNeuralNet::addCluster( Cluster* c, bool isInput, bool isOutput ) {
 #ifdef NNFW_DEBUG
     if ( !c ) {
-        nError() << "Null Pointer passed to addCluster! This operation will be ignored" ;
+        qWarning() << "Null Pointer passed to addCluster! This operation will be ignored" ;
         return;
     }
 #endif
     // Check if the Cluster is already added
     if ( find( c ) ) {
 #ifdef NNFW_DEBUG
-        nError() << "Cluster already added! addCluster will be ignored" ;
+        qWarning() << "Cluster already added! addCluster will be ignored" ;
 #endif
         return;
     }
@@ -70,7 +70,7 @@ void BaseNeuralNet::addCluster( Cluster* c, bool isInput, bool isOutput ) {
 bool BaseNeuralNet::removeCluster( Cluster* c ) {
 #ifdef NNFW_DEBUG
     if ( !c ) {
-        nError() << "Null Pointer passed to removeCluster! This operation will return false" ;
+        qWarning() << "Null Pointer passed to removeCluster! This operation will return false" ;
         return false;
     }
 #endif
@@ -90,14 +90,14 @@ bool BaseNeuralNet::removeCluster( Cluster* c ) {
 void BaseNeuralNet::markAsInput( Cluster* c ) {
 #ifdef NNFW_DEBUG
     if ( !c ) {
-        nError() << "Null Pointer passed to addCluster! This operation will be ignored" ;
+        qWarning() << "Null Pointer passed to addCluster! This operation will be ignored" ;
         return;
     }
 #endif
     // Check if the Cluster exists
     if ( !find( c ) ) {
 #ifdef NNFW_DEBUG
-        nError() << "attempt to mark a Cluster not present in this net!" ;
+        qWarning() << "attempt to mark a Cluster not present in this net!" ;
 #endif
         return;
     }
@@ -111,14 +111,14 @@ void BaseNeuralNet::markAsInput( Cluster* c ) {
 void BaseNeuralNet::markAsOutput( Cluster* c ) {
 #ifdef NNFW_DEBUG
     if ( !c ) {
-        nError() << "Null Pointer passed to addCluster! This operation will be ignored" ;
+        qWarning() << "Null Pointer passed to addCluster! This operation will be ignored" ;
         return;
     }
 #endif
     // Check if the Cluster exists
     if ( !find( c ) ) {
 #ifdef NNFW_DEBUG
-        nError() << "attempt to mark a Cluster not present in this net!" ;
+        qWarning() << "attempt to mark a Cluster not present in this net!" ;
 #endif
         return;
     }
@@ -132,7 +132,7 @@ void BaseNeuralNet::markAsOutput( Cluster* c ) {
 void BaseNeuralNet::unmark( Cluster* c ) {
 #ifdef NNFW_DEBUG
     if ( !c ) {
-        nError() << "Null Pointer passed to addCluster! This operation will be ignored" ;
+        qWarning() << "Null Pointer passed to addCluster! This operation will be ignored" ;
         return;
     }
 #endif
@@ -173,7 +173,7 @@ void BaseNeuralNet::unmarkAll( ) {
 bool BaseNeuralNet::isIsolated( Cluster* c ) const {
 #ifdef NNFW_DEBUG
     if ( !c ) {
-        nError() << "Null Pointer passed to isIsolato! This operation will return false" ;
+        qWarning() << "Null Pointer passed to isIsolato! This operation will return false" ;
         return false;
     }
 #endif
@@ -199,26 +199,26 @@ const ClusterVec& BaseNeuralNet::hiddenClusters() const {
 void BaseNeuralNet::addLinker( Linker* l ) {
 #ifdef NNFW_DEBUG
     if ( !l ) {
-        nError() << "Null Pointer passed to addLinker! This operation will be ignored" ;
+        qWarning() << "Null Pointer passed to addLinker! This operation will be ignored" ;
         return;
     }
 #endif
     // Check if the Linker is already added
     if ( find( l ) ) {
 #ifdef NNFW_DEBUG
-        nError() << "Linker already added! addLinker will be ignored" ;
+        qWarning() << "Linker already added! addLinker will be ignored" ;
 #endif
         return;
     }
 #ifdef NNFW_DEBUG
     // --- Check: Are There in this net the Clusters that linker l connects ???
     if ( ! find( l->getFrom() ) ) {
-        nError() << "The linker that you want add links clusters that doesn't exist in this net! \
+        qWarning() << "The linker that you want add links clusters that doesn't exist in this net! \
                                   This operation will be ignored" ;
         return;
     }
     if ( ! find( l->getTo() ) ) {
-        nError() << "The linker that you want add links clusters that doesn't exist in this net! \
+        qWarning() << "The linker that you want add links clusters that doesn't exist in this net! \
                                   This operation will be ignored" ;
         return;
     }
@@ -240,7 +240,7 @@ void BaseNeuralNet::addLinker( Linker* l ) {
 bool BaseNeuralNet::removeLinker( Linker* l ) {
 #ifdef NNFW_DEBUG
     if ( !l ) {
-        nError() << "Null Pointer passed to removeLinker! This operation will return false" ;
+        qWarning() << "Null Pointer passed to removeLinker! This operation will return false" ;
         return false;
     }
 #endif
@@ -263,7 +263,7 @@ const LinkerVec& BaseNeuralNet::linkers() const {
 const LinkerVec& BaseNeuralNet::linkers( Cluster* c, bool out ) const {
 #ifdef NNFW_DEBUG
     if ( !c ) {
-        nError() << "Null Pointer passed to linkers! This operation will return an empty LinkerGroup" ;
+        qWarning() << "Null Pointer passed to linkers! This operation will return an empty LinkerGroup" ;
         return emptyLinkerVec;
     }
 #endif
@@ -323,7 +323,7 @@ Updatable* BaseNeuralNet::getByName( const char* name ) {
 		return lksMap[name];
 	}
 #ifdef NNFW_DEBUG
-    nWarning() << "Updatable not present in BaseNeuralNet!!!";
+    qWarning() << "Updatable not present in BaseNeuralNet!!!";
 #endif
     return NULL;
 }
@@ -360,16 +360,8 @@ BaseNeuralNet* BaseNeuralNet::clone() const {
 	// --- putting linkers
 	for( int i=0; i<(int)linkers().size(); i++ ) {
 		Linker* lk = linkers()[i];
-		PropertySettings prop;
-		lk->propertySettings( prop );
-		// --- change the neural network of belong
-		prop["baseneuralnet"] = Variant( clone );
-		// --- set from and to using the string version
-		prop["from"] = lk->from()->name();
-		prop["to"] = lk->to()->name();
-		// --- create a new clone according to PropertySettings retrieved
-		Linker* nl = Factory::createLinker( lk->getTypename().getString(), prop );
-		clone->addLinker( nl );
+		//--- FIXME: need re-implementation without PropertySettings
+		//clone->addLinker( lk->clone );
 	}
 	// --- copy the order -- not-efficient
 	UpdatableVec ord;

@@ -19,34 +19,15 @@
 
 #include "ddecluster.h"
 
-
 namespace nnfw {
 
-DDECluster::DDECluster( const RealVec& c, unsigned int numNeurons, const char* name )
+DDECluster::DDECluster( const RealVec& c, unsigned int numNeurons, QString name )
     : Cluster( numNeurons, name ), tmpdata(numNeurons), tmpdata2(numNeurons) {
     setCoeff( c );
-    propdefs();
-    setTypename( "DDECluster" );
-}
-
-DDECluster::DDECluster( PropertySettings& prop )
-    : Cluster( prop ), tmpdata( numNeurons() ), tmpdata2( numNeurons() ) {
-    Variant& v = prop["coeff"];
-    if ( v.isNull() ) {
-        setCoeff( RealVec() );
-    } else {
-        setCoeff( v );
-    }
-    propdefs();
-    setTypename( "DDECluster" );
 }
 
 DDECluster::~DDECluster() {
     /* Nothing to do */
-}
-
-void DDECluster::propdefs() {
-    addProperty( "coeff", Variant::t_realvec, this, &DDECluster::getCoeffP, &DDECluster::setCoeff );
 }
 
 void DDECluster::setCoeff( const RealVec& c ) {
@@ -57,15 +38,6 @@ void DDECluster::setCoeff( const RealVec& c ) {
         ds[i].resize( numNeurons() );
         ds[i].zeroing();
     }
-}
-
-bool DDECluster::setCoeff( const Variant& v ) {
-    setCoeff( *(v.getRealVec()) );
-    return true;
-}
-
-Variant DDECluster::getCoeffP() {
-    return Variant( &coeff );
 }
 
 void DDECluster::update() {

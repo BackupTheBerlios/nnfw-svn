@@ -20,24 +20,11 @@
 #include "simplecluster.h"
 #include "liboutputfunctions.h"
 #include "random.h"
-#include <cstdio>
-#include <cstring>
-
 
 namespace nnfw {
 
-/**********************************************
- *  Implementation of SimpleCluster Class     *
- **********************************************/
-
-SimpleCluster::SimpleCluster( unsigned int numNeurons, const char* name )
+SimpleCluster::SimpleCluster( unsigned int numNeurons, QString name )
     : Cluster( numNeurons, name) {
-    setTypename( "SimpleCluster" );
-}
-
-SimpleCluster::SimpleCluster( PropertySettings& prop )
-    : Cluster( prop ) {
-    setTypename( "SimpleCluster" );
 }
 
 SimpleCluster::~SimpleCluster() {

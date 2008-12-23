@@ -138,85 +138,6 @@ private:
 	SparseMatrixLinker* sml;
 };
 
-Cluster* Factory::createCluster( const char* type, PropertySettings& p ) {
-    if ( !isInit ) { initFactory(); };
-    QString key(type);
-    if ( clustertypes.count( key ) ) {
-        return (Cluster*)( clustertypes[key]->create( p ) );
-    }
-    return 0;
-}
-
-Linker* Factory::createLinker( const char* type, PropertySettings& p ) {
-    if ( !isInit ) { initFactory(); };
-    QString key(type);
-    if( linkertypes.count( key ) ) {
-        return (Linker*)( linkertypes[key]->create( p ) );
-    }
-    return 0;
-}
-
-OutputFunction* Factory::createOutputFunction( const char* type, PropertySettings& p ) {
-    if ( !isInit ) { initFactory(); };
-    QString key(type);
-    if( outfuntypes.count( key ) ) {
-        return (OutputFunction*)( outfuntypes[key]->create( p ) );
-    }
-    return 0;
-}
-
-Propertized* Factory::createPropertized( const char* type, PropertySettings& p ) {
-    if ( !isInit ) { initFactory(); };
-    QString key(type);
-    if( proptypes.count( key ) ) {
-        return ( proptypes[key]->create( p ) );
-    }
-    return 0;
-}
-
-bool Factory::registerCluster( const AbstractCreator& c, const char* type ) {
-    if ( !isInit ) { initFactory(); };
-    QString key(type);
-    if ( clustertypes.count( key ) == 0 ) {
-        clustertypes[key] = c.clone();
-		proptypes[key] = clustertypes[key];
-        return true;
-    }
-    return false;
-}
-
-bool Factory::registerLinker( const AbstractCreator& c, const char* type ) {
-    if ( !isInit ) { initFactory(); };
-    QString key(type);
-    if ( linkertypes.count( key ) == 0 ) {
-        linkertypes[key] = c.clone();
-		proptypes[key] = linkertypes[key];
-        return true;
-    }
-    return false;
-}
-
-bool Factory::registerOutputFunction( const AbstractCreator& c, const char* type ) {
-    if ( !isInit ) { initFactory(); };
-    QString key(type);
-    if ( outfuntypes.count( key ) == 0 ) {
-        outfuntypes[key] = c.clone();
-		proptypes[key] = outfuntypes[key];
-        return true;
-    }
-    return false;
-}
-
-bool Factory::registerPropertized( const AbstractCreator& c, const char* type ) {
-    if ( !isInit ) { initFactory(); };
-    QString key(type);
-    if ( proptypes.count( key ) == 0 ) {
-        proptypes[key] = c.clone();
-        return true;
-    }
-    return false;
-}
-
 AbstractModifier* Factory::createModifierFor( Updatable* objectToLearn ) {
 	if ( !isInit ) { initFactory(); };
 	QString key( objectToLearn->getTypename().getString() );
@@ -239,51 +160,6 @@ bool Factory::registerModifier( const AbstractModifier& m, const char* type ) {
 }
 
 void Factory::initFactory() {
-	clustertypes["SimpleCluster"] = new Creator<SimpleCluster>();
-	clustertypes["BiasedCluster"] = new Creator<BiasedCluster>();
-	clustertypes["DDECluster"] = new Creator<DDECluster>();
-	clustertypes["FakeCluster"] = new Creator<FakeCluster>();
-	
-	linkertypes["SparseMatrixLinker"] = new Creator<SparseMatrixLinker>();
-	linkertypes["CopyLinker"] = new Creator<CopyLinker>();
-	linkertypes["DotLinker"] = new Creator<DotLinker>();
-	linkertypes["NormLinker"] = new Creator<NormLinker>();
-	//--- for backward compatibility
-	linkertypes["MatrixLinker"] = new Creator<DotLinker>();
-	
-	outfuntypes["FakeSigmoidFunction"] = new Creator<FakeSigmoidFunction>();
-	outfuntypes["IdentityFunction"] = new Creator<IdentityFunction>();
-	outfuntypes["GainFunction"] = new Creator<GainFunction>();
-	outfuntypes["LinearFunction"] = new Creator<LinearFunction>();
-	outfuntypes["RampFunction"] = new Creator<RampFunction>();
-	outfuntypes["ScaleFunction"] = new Creator<ScaleFunction>();
-	outfuntypes["ScaledSigmoidFunction"] = new Creator<ScaledSigmoidFunction>();
-	outfuntypes["SigmoidFunction"] = new Creator<SigmoidFunction>();
-	outfuntypes["StepFunction"] = new Creator<StepFunction>();
-	outfuntypes["LeakyIntegratorFunction"] = new Creator<LeakyIntegratorFunction>();
-	outfuntypes["LogLikeFunction"] = new Creator<LogLikeFunction>();
-	outfuntypes["PoolFunction"] = new Creator<PoolFunction>();
-	outfuntypes["CompositeFunction"] = new Creator<CompositeFunction>();
-	outfuntypes["LinearComboFunction"] = new Creator<LinearComboFunction>();
-	outfuntypes["GaussFunction"] = new Creator<GaussFunction>();
-	outfuntypes["PseudoGaussFunction"] = new Creator<PseudoGaussFunction>();
-	outfuntypes["SawtoothFunction"] = new Creator<SawtoothFunction>();
-	outfuntypes["SinFunction"] = new Creator<SinFunction>();
-	outfuntypes["TriangleFunction"] = new Creator<TriangleFunction>();
-	outfuntypes["WinnerTakeAllFunction"] = new Creator<WinnerTakeAllFunction>();
-
-	// Replicate all data above in generic Propertized
-	QMap<QString, AbstractCreator*>::iterator it;
-	for( it = clustertypes.begin(); it!=clustertypes.end(); it++ ) {
-		proptypes[ (*it).first ] = (*it).second;
-	}
-	for( it = linkertypes.begin(); it!=linkertypes.end(); it++ ) {
-		proptypes[ (*it).first ] = (*it).second;
-	}
-	for( it = outfuntypes.begin(); it!=outfuntypes.end(); it++ ) {
-		proptypes[ (*it).first ] = (*it).second;
-	}
-
 	// --- Standard Modifiers
 	modtypes["SimpleCluster"] = new DummyModifier();
 	modtypes["BiasedCluster"] = new BiasedClusterModifier();
@@ -299,10 +175,6 @@ void Factory::initFactory() {
 }
 
 bool Factory::isInit = false;
-QMap<QString, AbstractCreator*> Factory::clustertypes;
-QMap<QString, AbstractCreator*> Factory::linkertypes;
-QMap<QString, AbstractCreator*> Factory::outfuntypes;
-QMap<QString, AbstractCreator*> Factory::proptypes;
 QMap<QString, AbstractModifier*> Factory::modtypes;
 
 }

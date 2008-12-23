@@ -132,7 +132,7 @@ void RealVec::createAllBinaries( RealVec* v, unsigned long int pats, unsigned in
 		totPat *= 2;
 #ifdef NNFW_DEBUG
 	if ( totPat != pats ) {
-		nError() << "Error in createAllBinaries: total patterns are not how many you think they are" ;
+		qWarning() << "Error in createAllBinaries: total patterns are not how many you think they are" ;
 		return;
 	}
 #endif	
@@ -158,7 +158,7 @@ void RealVec::createAllBinaries( RealVec* v, unsigned long int pats, unsigned in
 double RealVec::mse( const RealVec& target, const RealVec& actual ) {
 #ifdef NNFW_DEBUG
 	if ( target.size() != actual.size() ) {
-		nError() << "Error in mse: target and actual vectors have different size" ;
+		qWarning() << "Error in mse: target and actual vectors have different size" ;
 		return 0.0;
 	}
 #endif
@@ -168,7 +168,6 @@ double RealVec::mse( const RealVec& target, const RealVec& actual ) {
 	error.square();
 	return error.mean();
 };
-
 
 }
 

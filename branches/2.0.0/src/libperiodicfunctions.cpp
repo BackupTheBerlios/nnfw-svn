@@ -27,60 +27,37 @@ PeriodicFunction::PeriodicFunction( double phase, double span, double amplitude 
 	phasev = phase;
 	spanv = span;
 	amplitudev = amplitude;
-	
-	addProperty( "phase", Variant::t_real, this, &SawtoothFunction::phase, &SawtoothFunction::setPhase );
-	addProperty( "span", Variant::t_real, this, &SawtoothFunction::span, &SawtoothFunction::setSpan );
-	addProperty( "amplitude", Variant::t_real, this, &SawtoothFunction::amplitude, &SawtoothFunction::setAmplitude );
-	//setTypename( "PeriodicFunction" ); // is abstract
 }
 
-PeriodicFunction::PeriodicFunction( PropertySettings& prop )
-    : OutputFunction() {
-	phasev = 0.0;
-	spanv = 1.0;
-	amplitudev = 1.0;
-	addProperty( "phase", Variant::t_real, this, &SawtoothFunction::phase, &SawtoothFunction::setPhase );
-	addProperty( "span", Variant::t_real, this, &SawtoothFunction::span, &SawtoothFunction::setSpan );
-	addProperty( "amplitude", Variant::t_real, this, &SawtoothFunction::amplitude, &SawtoothFunction::setAmplitude );
-	setProperties( prop );
-	//setTypename( "PeriodicFunction" ); // is abstract
-}
-
-bool PeriodicFunction::setPhase( const Variant& v ) {
-	phasev = v.getdouble();
+bool PeriodicFunction::setPhase( double v ) {
+	phasev = v;
 	return true;
 }
 
-Variant PeriodicFunction::phase() {
+double PeriodicFunction::phase() {
 	return phasev;
 }
 
-bool PeriodicFunction::setSpan( const Variant& v ) {
-	spanv = v.getdouble();
+bool PeriodicFunction::setSpan( double v ) {
+	spanv = v;
 	return true;
 }
 
-Variant PeriodicFunction::span() {
+double PeriodicFunction::span() {
 	return spanv;
 }
 
-bool PeriodicFunction::setAmplitude( const Variant& v ) {
-	amplitudev = v.getdouble();
+bool PeriodicFunction::setAmplitude( double v ) {
+	amplitudev = v;
 	return true;
 }
 
-Variant PeriodicFunction::amplitude() {
+double PeriodicFunction::amplitude() {
 	return amplitudev;
 }
 
 SawtoothFunction::SawtoothFunction( double phase, double span, double amplitude )
     : PeriodicFunction(phase,span,amplitude) {
-	setTypename( "SawtoothFunction" );
-}
-
-SawtoothFunction::SawtoothFunction( PropertySettings& prop )
-    : PeriodicFunction(prop) {
-	setTypename( "SawtoothFunction" );
 }
 
 void SawtoothFunction::apply( RealVec& inputs, RealVec& outputs ) {
@@ -96,12 +73,6 @@ SawtoothFunction* SawtoothFunction::clone() const {
 
 TriangleFunction::TriangleFunction( double phase, double span, double amplitude )
     : PeriodicFunction(phase,span,amplitude) {
-	setTypename( "TriangleFunction" );
-}
-
-TriangleFunction::TriangleFunction( PropertySettings& prop )
-    : PeriodicFunction(prop) {
-	setTypename( "TriangleFunction" );
 }
 
 void TriangleFunction::apply( RealVec& inputs, RealVec& outputs ) {
@@ -120,12 +91,10 @@ TriangleFunction* TriangleFunction::clone() const {
 
 SinFunction::SinFunction( double phase, double span, double amplitude )
     : PeriodicFunction(phase,span,amplitude) {
-	setTypename( "SinFunction" );
 }
 
 SinFunction::SinFunction( PropertySettings& prop )
     : PeriodicFunction(prop) {
-	setTypename( "SinFunction" );
 }
 
 double SinFunction::frequency() {
@@ -144,12 +113,10 @@ SinFunction* SinFunction::clone() const {
 
 PseudoGaussFunction::PseudoGaussFunction( double phase, double span, double amplitude )
     : PeriodicFunction(phase,span,amplitude) {
-	setTypename( "PseudoGaussFunction" );
 }
 
 PseudoGaussFunction::PseudoGaussFunction( PropertySettings& prop )
     : PeriodicFunction(prop) {
-	setTypename( "PseudoGaussFunction" );
 }
 
 void PseudoGaussFunction::apply( RealVec& inputs, RealVec& outputs ) {

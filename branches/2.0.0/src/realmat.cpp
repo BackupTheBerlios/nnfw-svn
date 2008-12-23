@@ -26,7 +26,6 @@
 #include <mkl_cblas.h>
 #endif
 
-
 namespace nnfw {
 
 RealMat::RealMat( unsigned int rows, unsigned int cols )

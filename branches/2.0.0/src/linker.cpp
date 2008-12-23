@@ -22,59 +22,14 @@
 
 namespace nnfw {
 
-Linker::Linker( Cluster* from, Cluster* to, const char* name )
+Linker::Linker( Cluster* from, Cluster* to, QString name )
     : Updatable(name) {
     this->fromc = from;
     this->toc = to;
-    addProperty( "from", Variant::t_cluster, this, &Linker::fromP );
-    addProperty( "to", Variant::t_cluster, this, &Linker::toP );
-    // setTypename( "Linker" ); --- it's no instanciable
-}
-
-Linker::Linker( PropertySettings& prop )
-    : Updatable( prop ) {
-	Variant& v = prop["baseneuralnet"];
-	if ( v.isNull() ) {
-		//--- suppose you pass directly Cluster pointers into "from" and "to"
-		fromc = prop["from"].getCluster();
-		toc = prop["to"].getCluster();
-		addProperty( "from", Variant::t_cluster, this, &Linker::fromP );
-		addProperty( "to", Variant::t_cluster, this, &Linker::toP );
-		// setTypename( "Linker" ); --- it's no instanciable
-		return;
-	}
-	BaseNeuralNet* net = v.getDataPtr<BaseNeuralNet>();
-	//--- suppose you pass the name of Clusters "from" and "to"
-	//--- it will check if they exists on the "baseneuralnet" passed
-	v = prop["from"];
-    if ( v.isNull() ) {
-        nFatal() << "You can't construct a Linker wihout specifying a Cluster From";
-		exit(1);
-    } else {
-		fromc = (Cluster*)( net->getByName( v.getString() ) );
-    	if ( !fromc ) {
-        	nFatal() << "the 'from' Cluster doesn't exist; impossible create linker " << name();
-        	exit(1);
-		}
-    }
-    v = prop["to"];
-    if ( v.isNull() ) {
-        nFatal() << "You can't construct a Linker wihout specifying a Cluster To" ;
-		exit(1);
-    } else {
-		toc = (Cluster*)( net->getByName( v.getString() ) );
-    	if ( !toc ) {
-        	nFatal() << "the 'to' Cluster doesn't exist; impossible create linker " << name();
-        	exit(1);
-		}
-    }
-    addProperty( "from", Variant::t_cluster, this, &Linker::fromP );
-    addProperty( "to", Variant::t_cluster, this, &Linker::toP );
-    // setTypename( "Linker" ); --- it's no instanciable
 }
 
 Linker* Linker::clone() const {
-	nError() << "The clone() method has to implemented by subclasses";
+	qWarning() << "The clone() method has to implemented by subclasses";
 	return 0;
 }
 

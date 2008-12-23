@@ -27,7 +27,7 @@ namespace nnfw {
  *  Implementation of Cluster Class     *
  **********************************************/
 
-Cluster::Cluster( unsigned int numNeurons, const char* name )
+Cluster::Cluster( unsigned int numNeurons, QString name )
     : Updatable(name), inputdata(numNeurons), outputdata(numNeurons) {
     this->numneurons = numNeurons;
     outputdata.zeroing();
@@ -37,51 +37,6 @@ Cluster::Cluster( unsigned int numNeurons, const char* name )
 
     //! SigmoidFunction as Default
     updater = new SigmoidFunction( 1.0 );
-
-    //! Properties definition
-    propdefs();
-    // setTypename( "Cluster" ); --- it's no instianciable
-}
-
-Cluster::Cluster( PropertySettings& prop )
-    : Updatable(prop), inputdata(0), outputdata(0) {
-    // --- Configuring Name
-    Variant& v = prop["name"];
-    if ( !v.isNull() ) {
-        setName( prop["name"].getString() );
-    } else {
-		nFatal() << "the property name of Cluster is mandatory";
-		exit(1);
-	}
-    // --- Configuring Dimension
-	v = prop["numNeurons"];
-	if ( !v.isNull() ) {
-    	this->numneurons =
-			convertStringTo( prop["numNeurons"], Variant::t_uint ).getUInt();
-	} else {
-		nFatal() << "the dimension of Cluster is mandatory";
-		exit(1);
-	}
-    inputdata.resize( numneurons );
-    outputdata.resize( numneurons );
-    // --- Configuring Accumulate modality
-    v = prop["accumulate"];
-    if ( v.isNull() ) {
-        accOff = true;
-    } else {
-        accOff = !( prop["accumulate"].getBool() );
-    }
-    setNeedReset( false );
-    // --- Configuring OutputFunction
-    v = prop["outfunction"];
-    if ( v.isNull() ) {
-        updater = new SigmoidFunction( 1.0 );
-    } else {
-        updater = v.getOutputFunction()->clone();
-    }
-    //! Properties definition
-    propdefs();
-    // setTypename( "Cluster" ); --- it's no instianciable
 }
 
 Cluster::~Cluster() {
@@ -97,7 +52,7 @@ void Cluster::setFunction( const OutputFunction& up ) {
 void Cluster::setInput( unsigned int neuron, double value ) {
 #ifdef NNFW_DEBUG
     if ( neuron >= numneurons ) {
-		nError() << "The neuron " << neuron << " doesn't exists! The operation setInput will be ignored";
+		qWarning() << "The neuron " << neuron << " doesn't exists! The operation setInput will be ignored";
         return;
     }
 #endif
@@ -121,7 +76,7 @@ void Cluster::resetInputs() {
 double Cluster::getInput( unsigned int neuron ) const {
 #ifdef NNFW_DEBUG
     if ( neuron >= numneurons ) {
-        nError() << "The neuron " << neuron << " doesn't exists! The operation getInput will return 0.0";
+        qWarning() << "The neuron " << neuron << " doesn't exists! The operation getInput will return 0.0";
         return 0.0;
     }
 #endif
@@ -131,7 +86,7 @@ double Cluster::getInput( unsigned int neuron ) const {
 void Cluster::setOutput( unsigned int neuron, double value ) {
 #ifdef NNFW_DEBUG
     if ( neuron >= numneurons ) {
-        nError() << "The neuron " << neuron << " doesn't exists! The operation setOutput will be ignored";
+        qWarning() << "The neuron " << neuron << " doesn't exists! The operation setOutput will be ignored";
         return;
     }
 #endif
@@ -145,7 +100,7 @@ void Cluster::setOutputs( const RealVec& outputs ) {
 double Cluster::getOutput( unsigned int neuron ) const {
 #ifdef NNFW_DEBUG
     if ( neuron >= numneurons ) {
-        nError() << "The neuron " << neuron << " doesn't exists! The operation getOutput will return 0.0";
+        qWarning() << "The neuron " << neuron << " doesn't exists! The operation getOutput will return 0.0";
         return 0.0;
     }
 #endif
@@ -153,16 +108,8 @@ double Cluster::getOutput( unsigned int neuron ) const {
 }
 
 Cluster* Cluster::clone() const {
-	nError() << "The clone() method has to implemented by subclasses";
+	qWarning() << "The clone() method has to implemented by subclasses";
 	return 0;
-}
-
-void Cluster::propdefs() {
-    addProperty( "numNeurons", Variant::t_uint, this, &Cluster::numNeuronsP );
-    addProperty( "accumulate", Variant::t_bool, this, &Cluster::accumP, &Cluster::setAccumP );
-    addProperty( "inputs", Variant::t_realvec, this, &Cluster::inputsP, &Cluster::setInputsP );
-    addProperty( "outputs", Variant::t_realvec, this, &Cluster::outputsP, &Cluster::setOutputsP );
-    addProperty( "outfunction", Variant::t_outfunction, this, &Cluster::getFunctionP, &Cluster::setFunction );
 }
 
 }

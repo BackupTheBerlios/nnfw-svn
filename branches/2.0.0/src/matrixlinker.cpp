@@ -24,23 +24,10 @@
 #include <mkl_cblas.h>
 #endif
 
-
 namespace nnfw {
 
-MatrixLinker::MatrixLinker( Cluster* from, Cluster* to, const char* name )
+MatrixLinker::MatrixLinker( Cluster* from, Cluster* to, QString name )
     : Linker(from, to, name), nrows(from->numNeurons()), ncols(to->numNeurons()), w(nrows, ncols) {
-    addProperty( "weights", Variant::t_realmat, this, &MatrixLinker::matrixP, &MatrixLinker::setMatrix );
-    setTypename( "MatrixLinker" );
-}
-
-MatrixLinker::MatrixLinker( PropertySettings& prop )
-    : Linker( prop ), nrows( from()->numNeurons() ), ncols( to()->numNeurons() ), w(nrows, ncols) {
-    Variant& v = prop["weights"];
-    if ( ! v.isNull() ) {
-        setMatrix( v );
-    }
-    addProperty( "weights", Variant::t_realmat, this, &MatrixLinker::matrixP, &MatrixLinker::setMatrix );
-    setTypename( "MatrixLinker" );
 }
 
 MatrixLinker::~MatrixLinker() {
@@ -61,11 +48,11 @@ void MatrixLinker::randomize( double min, double max ) {
 void MatrixLinker::setWeight( unsigned int from, unsigned int to, double weight ) {
 #ifdef NNFW_DEBUG
     if ( from >= nrows ) {
-        nError() << "Accessing out of Rows Boundary" ;
+        qWarning() << "Accessing out of Rows Boundary" ;
         return;
     }
     if ( to >= ncols ) {
-        nError() << "Accessing out of Columns Boundary" ;
+		qWarning() << "Accessing out of Columns Boundary" ;
         return;
     }
 #endif
@@ -75,11 +62,11 @@ void MatrixLinker::setWeight( unsigned int from, unsigned int to, double weight 
 double MatrixLinker::getWeight( unsigned int from, unsigned int to ) {
 #ifdef NNFW_DEBUG
     if ( from >= nrows ) {
-        nError() << "Accessing out of Rows Boundary" ;
+        qWarning() << "Accessing out of Rows Boundary" ;
         return 0.0;
     }
     if ( to >= ncols ) {
-        nError() << "Accessing out of Columns Boundary" ;
+        qWarning() << "Accessing out of Columns Boundary" ;
         return 0.0;
     }
 #endif

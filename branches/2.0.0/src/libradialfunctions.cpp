@@ -27,50 +27,33 @@ GaussFunction::GaussFunction( double centre, double variance, double maxvalue )
     this->variance = variance;
     msqrvar = -( variance*variance );
     this->max = maxvalue;
-    addProperty( "centre", Variant::t_real, this, &GaussFunction::getCentre, &GaussFunction::setCentre );
-    addProperty( "variance", Variant::t_real, this, &GaussFunction::getVariance, &GaussFunction::setVariance );
-    addProperty( "max", Variant::t_real, this, &GaussFunction::getMax, &GaussFunction::setMax );
-    setTypename( "GaussFunction" );
 }
 
-GaussFunction::GaussFunction( PropertySettings& prop )
-    : DerivableOutputFunction() {
-    centre = 0.0;
-    variance = 1.0;
-	max = 1.0;
-    addProperty( "centre", Variant::t_real, this, &GaussFunction::getCentre, &GaussFunction::setCentre );
-    addProperty( "variance", Variant::t_real, this, &GaussFunction::getVariance, &GaussFunction::setVariance );
-    addProperty( "max", Variant::t_real, this, &GaussFunction::getMax, &GaussFunction::setMax );
-    setProperties( prop );
-    setTypename( "GaussFunction" );
-    msqrvar = -( variance*variance );
-}
-
-bool GaussFunction::setCentre( const Variant& v ) {
-    centre = v.getdouble();
+bool GaussFunction::setCentre( double v ) {
+    centre = v;
     return true;
 }
 
-Variant GaussFunction::getCentre() {
+double GaussFunction::getCentre() {
     return centre;
 }
 
-bool GaussFunction::setVariance( const Variant& v ) {
-    variance = v.getdouble();
+bool GaussFunction::setVariance( double v ) {
+    variance = v;
     msqrvar = -( variance*variance );
     return true;
 }
 
-Variant GaussFunction::getVariance() {
+double GaussFunction::getVariance() {
     return variance;
 }
 
-bool GaussFunction::setMax( const Variant& v ) {
-    max = v.getdouble();
+bool GaussFunction::setMax( double v ) {
+    max = v;
     return true;
 }
 
-Variant GaussFunction::getMax() {
+double GaussFunction::getMax() {
     return max;
 }
 

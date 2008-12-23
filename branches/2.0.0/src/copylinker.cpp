@@ -26,7 +26,7 @@ namespace nnfw {
  *  Implementation of CopyLinker Class        *
  **********************************************/
 
-CopyLinker::CopyLinker( Cluster* from, Cluster* to, CopyMode mode, const char* name )
+CopyLinker::CopyLinker( Cluster* from, Cluster* to, CopyMode mode, QString name )
     : Linker(from, to, name), dataFrom(), dataTo() {
     if ( from->numNeurons() < to->numNeurons() ) {
         dimData = from->numNeurons();
@@ -37,27 +37,6 @@ CopyLinker::CopyLinker( Cluster* from, Cluster* to, CopyMode mode, const char* n
     // initialization may results in unpredictable behaviour
     this->mode = (CopyMode)-1;
     setMode( mode );
-
-    addProperty( "mode", Variant::t_string, this, &CopyLinker::getModeP, &CopyLinker::setMode );
-    setTypename( "CopyLinker" );
-}
-
-CopyLinker::CopyLinker( PropertySettings& prop )
-    : Linker( prop ) {
-    Variant& v = prop["mode"];
-    if ( from()->numNeurons() < to()->numNeurons() ) {
-        dimData = from()->numNeurons();
-    } else {
-        dimData = to()->numNeurons();
-    }
-    this->mode = (CopyMode)-1;
-    if ( v.isNull() ) {
-        setMode( Out2In );
-    } else {
-        setMode( v );
-    };
-    addProperty( "mode", Variant::t_string, this, &CopyLinker::getModeP, &CopyLinker::setMode );
-    setTypename( "CopyLinker" );
 }
 
 CopyLinker::~CopyLinker() {
@@ -88,43 +67,8 @@ void CopyLinker::setMode( CopyMode cm ) {
     return;
 }
 
-bool CopyLinker::setMode( const Variant& v ) {
-	nnfwString str = v.getString();
-	if ( str == "In2In" ) {
-		setMode( In2In );
-	} else if ( str == "In2Out" ) {
-		setMode( In2Out );
-	} else if ( str == "Out2In" ) {
-		setMode( Out2In );
-	} else if ( str == "Out2Out" ) {
-		setMode( Out2Out );
-	} else {
-		nWarning() << "mode accept exactly only one of 'In2In', 'In2Out', 'Out2In', 'Out2Out'";
-		setMode( Out2In );
-	}
-    return true;
-}
-
 CopyLinker::CopyMode CopyLinker::getMode() const {
     return mode;
-}
-
-Variant CopyLinker::getModeP() {
-    switch( mode ) {
-    case In2In:
-		return Variant( "In2In" );
-        break;
-    case In2Out:
-		return Variant( "In2Out" );
-        break;
-    case Out2In:
-		return Variant( "Out2In" );
-        break;
-    case Out2Out:
-		return Variant( "Out2Out" );
-        break;
-    }
-    return Variant( "In2In" );
 }
 
 void CopyLinker::update() {

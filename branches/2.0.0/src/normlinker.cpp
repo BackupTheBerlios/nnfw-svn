@@ -27,14 +27,8 @@
 
 namespace nnfw {
 
-NormLinker::NormLinker( Cluster* from, Cluster* to, const char* name )
+NormLinker::NormLinker( Cluster* from, Cluster* to, QString name )
     : MatrixLinker(from, to, name), temp( to->numNeurons() ) {
-    setTypename( "NormLinker" );
-}
-
-NormLinker::NormLinker( PropertySettings& prop )
-    : MatrixLinker( prop ), temp( to()->numNeurons() ) {
-    setTypename( "NormLinker" );
 }
 
 NormLinker::~NormLinker() {

@@ -26,14 +26,8 @@
 
 namespace nnfw {
 
-DotLinker::DotLinker( Cluster* from, Cluster* to, const char* name )
+DotLinker::DotLinker( Cluster* from, Cluster* to, QString name )
     : MatrixLinker(from, to, name) {
-    setTypename( "DotLinker" );
-}
-
-DotLinker::DotLinker( PropertySettings& prop )
-    : MatrixLinker( prop ) {
-    setTypename( "DotLinker" );
 }
 
 DotLinker::~DotLinker() {

@@ -23,20 +23,11 @@
 
 namespace nnfw {
 
-FakeCluster::FakeCluster( unsigned int size, const char* name )
+FakeCluster::FakeCluster( unsigned int size, QString name )
     : Cluster( size, name) {
     // Set the outputs as a View of inputs
     outputs().convertToView( inputs(), 0, numNeurons() );
-    setTypename( "FakeCluster" );
 }
-
-FakeCluster::FakeCluster( PropertySettings& prop )
-    : Cluster( prop ) {
-    // Set the outputs as a View of inputs
-    outputs().convertToView( inputs(), 0, numNeurons() );
-    setTypename( "FakeCluster" );
-}
-    
 
 FakeCluster::~FakeCluster() {
 }

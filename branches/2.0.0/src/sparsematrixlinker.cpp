@@ -20,10 +20,9 @@
 #include "sparsematrixlinker.h"
 #include "random.h"
 
-
 namespace nnfw {
 
-SparseMatrixLinker::SparseMatrixLinker( Cluster* from, Cluster* to, const char* name )
+SparseMatrixLinker::SparseMatrixLinker( Cluster* from, Cluster* to, QString name )
     : MatrixLinker( from, to, name ), maskm(rows(), cols()) {
     // --- Init data
     for( unsigned int i=0; i<rows(); i++ ) {
@@ -31,11 +30,9 @@ SparseMatrixLinker::SparseMatrixLinker( Cluster* from, Cluster* to, const char* 
             maskm[i][j] = true;
         }
     }
-    addProperty( "mask", Variant::t_realmat, this, &SparseMatrixLinker::maskP, &SparseMatrixLinker::setMask );
-    setTypename( "SparseMatrixLinker" );
 }
 
-SparseMatrixLinker::SparseMatrixLinker( double prob, Cluster* from, Cluster* to, const char* name )
+SparseMatrixLinker::SparseMatrixLinker( double prob, Cluster* from, Cluster* to, QString name )
     : MatrixLinker( from, to, name ), maskm(rows(), cols()) {
     // --- Init data
     for( unsigned int i=0; i<rows(); i++ ) {
@@ -43,16 +40,14 @@ SparseMatrixLinker::SparseMatrixLinker( double prob, Cluster* from, Cluster* to,
             maskm[i][j] = Random::boolean( prob );
         }
     }
-    addProperty( "mask", Variant::t_realmat, this, &SparseMatrixLinker::maskP, &SparseMatrixLinker::setMask );
-    setTypename( "SparseMatrixLinker" );
 }
 
 SparseMatrixLinker::SparseMatrixLinker( Cluster* from, Cluster* to, double prob, bool zeroDiagonal,
-                                        bool symmetricMask, const char* name )
+                                        bool symmetricMask, QString name )
     : MatrixLinker( from, to, name ), maskm(rows(), cols()) {
 #ifdef NNFW_DEBUG
     if( rows() != cols() ) {
-        nError() << "SparseMatrixLinker constructor which assumes square matrix used with a non square matrix!";
+        qWarning() << "SparseMatrixLinker constructor which assumes square matrix used with a non square matrix!";
         return;
     }
 #endif
@@ -75,20 +70,7 @@ SparseMatrixLinker::SparseMatrixLinker( Cluster* from, Cluster* to, double prob,
             }
         }
     }
-    addProperty( "mask", Variant::t_realmat, this, &SparseMatrixLinker::maskP, &SparseMatrixLinker::setMask );
-    setTypename( "SparseMatrixLinker" );
 }
-
-SparseMatrixLinker::SparseMatrixLinker( PropertySettings& prop )
-    : MatrixLinker( prop ), maskm(rows(), cols()) {
-    Variant& v = prop["mask"];
-    if ( ! v.isNull() ) {
-        setMask( v );
-    }
-    addProperty( "mask", Variant::t_realmat, this, &SparseMatrixLinker::maskP, &SparseMatrixLinker::setMask );
-    setTypename( "SparseMatrixLinker" );
-}
-
 
 SparseMatrixLinker::~SparseMatrixLinker() {
 }
@@ -186,12 +168,6 @@ void SparseMatrixLinker::disconnectRandom( double prob ) {
 void SparseMatrixLinker::setMask( const MatrixData<bool>& m ) {
 	maskm.assign( m );
 	matrix().cover( maskm );
-}
-
-bool SparseMatrixLinker::setMask( const Variant& v ) {
-	maskm.assign( *( v.getDataPtr< MatrixData<bool> >() ) );
-	matrix().cover( maskm );
-	return true;
 }
 
 SparseMatrixLinker* SparseMatrixLinker::clone() const {

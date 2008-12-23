@@ -23,24 +23,10 @@
 
 namespace nnfw {
 
-BiasedCluster::BiasedCluster( unsigned int numNeurons, const char* name )
+BiasedCluster::BiasedCluster( unsigned int numNeurons, QString name )
     : Cluster( numNeurons, name), biasesdata(numNeurons), tempdata(numNeurons) {
     biasesdata.zeroing();
     tempdata.zeroing();
-    propdefs();
-    setTypename( "BiasedCluster" );
-}
-
-BiasedCluster::BiasedCluster( PropertySettings& prop )
-    : Cluster( prop ), biasesdata( numNeurons() ), tempdata( numNeurons() ) {
-    Variant& v = prop["biases"];
-    if ( v.isNull() ) {
-        biasesdata.zeroing();
-    } else {
-        setBiases( v );
-    }
-    propdefs();
-    setTypename( "BiasedCluster" );
 }
 
 BiasedCluster::~BiasedCluster() {
@@ -55,7 +41,7 @@ void BiasedCluster::update() {
 void BiasedCluster::setBias( unsigned int neuron, double bias ) {
 #ifdef NNFW_DEBUG
     if ( neuron >= numNeurons() ) {
-		nError() << "The neuron " << neuron << " doesn't exists! The operation setBias will be ignored";
+		qWarning() << "The neuron " << neuron << " doesn't exists! The operation setBias will be ignored";
         return;
     }
 #endif
@@ -73,7 +59,7 @@ void BiasedCluster::setBiases( const RealVec& bias ) {
 double BiasedCluster::getBias( unsigned int neuron ) {
 #ifdef NNFW_DEBUG
     if ( neuron >= numNeurons() ) {
-		nError() << "The neuron " << neuron << "doesn't exists! The operation getBias will return 0.0";
+		qWarning() << "The neuron " << neuron << "doesn't exists! The operation getBias will return 0.0";
         return 0.0;
     }
 #endif
@@ -82,7 +68,7 @@ double BiasedCluster::getBias( unsigned int neuron ) {
 
 void BiasedCluster::randomize( double min, double max ) {
     for ( unsigned int i = 0; i < numNeurons(); i++ ) {
-        biasesdata[i] = Random::flatdouble( min, max );
+        biasesdata[i] = Random::flatDouble( min, max );
     }
 }
 
@@ -94,10 +80,6 @@ BiasedCluster* BiasedCluster::clone() const {
 	newclone->setBiases( this->biasesdata );
 	newclone->setFunction( *(this->getFunction()) );
 	return newclone;
-}
-
-void BiasedCluster::propdefs() {
-    addProperty( "biases", Variant::t_realvec, this, &BiasedCluster::getBiases, &BiasedCluster::setBiases );
 }
 
 }

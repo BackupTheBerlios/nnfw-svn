@@ -111,28 +111,23 @@ public:
     /*! Add a new Observer watching the event i-th
      */
     void addObserver( Observer* ob ) {
-        QList<Observer*>::iterator it = std::find( observers.begin(), observers.end(), ob );
-        if ( it != observers.end() ) return;
-        observers.push_back( ob );
+		if ( !observers.contains( ob ) ) {
+			observers.push_back( ob );
+		}
     };
 
     /*! Remove the Observer watching the event i-th
      */
     void delObserver( Observer* ob ) {
-        QList<Observer*>::iterator it = std::find( observers.begin(), observers.end(), ob );
-        if ( it == observers.end() ) return;
-        observers.erase( it );
+        observers.removeAll( ob );
     };
 
     /*! Notify the event i-th
      */
     void notifyAll( const NotifyEvent& event = NotifyEvent() ) {
-        QList<Observer*>::iterator it = observers.begin();
-        QList<Observer*>::iterator end = observers.end();
-        while( it != end ) {
-            (*it)->notify( event );
-            it++;
-        }
+		foreach( Observer* ob, observers ) {
+			ob->notify( event );
+		}
     };
 
 	//@}

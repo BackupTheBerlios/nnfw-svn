@@ -66,7 +66,7 @@ void BackPropagationAlgo::setTeachingInput( Cluster* output, const RealVec& ti )
 
 const RealVec& BackPropagationAlgo::getError( Cluster* cl ) {
 	if ( mapIndex.count( cl ) == 0 ) {
-		nWarning() << "Cluster not present in BackPropagationAlgo";
+		qWarning() << "Cluster not present in BackPropagationAlgo";
 		return RealVec();
 	}
 		
@@ -94,7 +94,7 @@ void BackPropagationAlgo::propagDeltas() {
 		const DerivableOutputFunction* diff_output_function = dynamic_cast<const DerivableOutputFunction*>( cluster_deltas_vec[i].cluster->getFunction( ) );
 		if ( diff_output_function == 0 ) {
 #ifdef NNFW_DEBUG
-			nWarning() << "No derivative for the activation function is defined!" ;
+			qWarning() << "No derivative for the activation function is defined!" ;
 #endif
 			cluster_deltas_vec[i].deltas_inputs.assign( cluster_deltas_vec[i].deltas_outputs );
 		} else {

@@ -19,13 +19,10 @@
 
 #include "outputfunction.h"
 
-
 namespace nnfw {
 
 OutputFunction::OutputFunction()
     : Propertized(), tmp1(1), tmp2(1) {
-    /* Nothing else to do */
-    setTypename( "OutputFunction" );
 }
 
 OutputFunction::~OutputFunction() {

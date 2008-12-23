@@ -19,53 +19,21 @@
 
 #include "updatable.h"
 
-
 namespace nnfw {
 
-Updatable::Updatable( const char* name )
-    : Propertized() {
-    this->namev = 0;
+Updatable::Updatable( QString name ) {
     setName( name );
-    addProperty( "name", Variant::t_string, this, &Updatable::getNameV, &Updatable::setName );
-    // setTypename( "Updatable" ); --- it's no instanciable
-}
-
-Updatable::Updatable( PropertySettings& prop )
-    : Propertized() {
-    this->namev = 0;
-	if ( prop["name"].isNull() ) {
-		setName( "unnamed" );
-	} else {
-    	setName( prop["name"].getString() );
-	}
-    addProperty( "name", Variant::t_string, this, &Updatable::getNameV, &Updatable::setName );
-    // setTypename( "Updatable" ); --- it's no instanciable
 }
 
 Updatable::~Updatable() {
-    delete []namev;
 }
 
-void Updatable::setName( const char* newname ) {
-    if (namev) {
-        delete []namev;
-    }
-    unsigned int size = strlen(newname);
-    namev = new char[size+1];
-    strcpy( namev, newname );
+void Updatable::setName( QString newname ) {
+	namev = newname;
 }
 
-bool Updatable::setName( const Variant& nv ) {
-    setName( nv.getString() );
-    return true;
-}
-
-const char* Updatable::name() const {
+QString Updatable::name() const {
     return namev;
-}
-
-Variant Updatable::getNameV() {
-    return Variant( namev );
 }
 
 }

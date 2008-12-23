@@ -21,7 +21,6 @@
 #define NNFWFACTORY_H
 
 #include "types.h"
-#include "propertized.h"
 #include "clonable.h"
 #include <QMap>
 #include <QString>
@@ -35,40 +34,6 @@
 
 
 namespace nnfw {
-
-/*! \brief Abstract Creator of Propertized objects
- */
-class NNFW_API AbstractCreator : public Clonable {
-public:
-	/*! \name Interface */
-	//@{
-
-	/*! create an instance of Propertized from PropertySettings specified */
-	virtual Propertized* create( PropertySettings& param ) const = 0;
-
-	/*! Virtual Copy-Constructor */
-	virtual AbstractCreator* clone() const = 0;
-	//@}
-};
-
-/*! \brief Template facility to create Creator specialization
- */
-template<class T>
-class NNFW_TEMPLATE Creator : public AbstractCreator {
-	/*! \name Interface */
-	//@{
-
-	/*! create a new Propertized Object */
-	virtual Propertized* create( PropertySettings& param ) const {
-		return ( new T(param) );
-	};
-
-	/*! Virtual Copy-Constructor */
-	virtual Creator* clone() const {
-		return new Creator();
-	};
-	//@}
-};
 
 /*! \brief Abstract Modifier for Updatable objects
  */
@@ -107,45 +72,6 @@ public:
 	/*! \name Static Interface */
 	//@{
 
-	/*! Create a Cluster of class type */
-	static Cluster* createCluster( const char* type, PropertySettings& param );
-
-	/*! Create a Linker of class type */
-	static Linker* createLinker( const char* type, PropertySettings& param );
-
-	/*! Create a OutputFunction of class type */
-	static OutputFunction* createOutputFunction( const char* type, PropertySettings& param );
-
-	/*! Create a Propertized object different from Cluster, Linker and OutputFunction type */
-	static Propertized* createPropertized( const char* type, PropertySettings& param );
-
-	/*! Register a new Cluster type<br>
-	 *  Return true on successuful insertion<br>
-	 *  It use the clone() method for copying the ClusterCreator
-	 */
-	static bool registerCluster( const AbstractCreator& c, const char* type );
-
-	/*! Register a new Linker type<br>
-	 *  Return true on successuful insertion<br>
-	 *  It use the clone() method for copying the LinkerCreator
-	 */
-	static bool registerLinker( const AbstractCreator& c, const char* type );
-
-	/*! Register a new OutputFunction type<br>
-	 *  Return true on successuful insertion<br>
-	 *  It use the clone() method for copying the OutputFunctionCreator
-	 */
-	static bool registerOutputFunction( const AbstractCreator& c, const char* type );
-
-	/*! Register a new Propertized type<br>
-	 *  Return true on successuful insertion<br>
-	 *  It use the clone() method for copying the OutputFunctionCreator
-	 * \warning Never use this method for registering Cluster, Linker or OutputFunction subclasses;
-	 *  These hierarchy has own special methods in factory:
-	 *  registerCluster, registerLinker and registerOutputFunction
-	 */
-	static bool registerPropertized( const AbstractCreator& c, const char* type );
-
 	/*! Return a Modifier for Updatable object passed */
 	static AbstractModifier* createModifierFor( Updatable* objectToLearn );
 
@@ -166,15 +92,6 @@ private:
 
     /*! is Init ?? */
     static bool isInit;
-
-    /*! Map of registered Cluster types */
-    static QMap<QString, AbstractCreator*> clustertypes;
-    /*! Map of registered Linker types */
-    static QMap<QString, AbstractCreator*> linkertypes;
-    /*! Map of registered OutputFunction types */
-    static QMap<QString, AbstractCreator*> outfuntypes;
-    /*! Map of registered Propertized types */
-    static QMap<QString, AbstractCreator*> proptypes;
 
 	/*! Map of registered Modifiers */
 	static QMap<QString, AbstractModifier*> modtypes;

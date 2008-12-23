@@ -25,25 +25,14 @@ namespace nnfw {
 WinnerTakeAllFunction::WinnerTakeAllFunction( double value )
     : OutputFunction() {
 	valuev = value;
-	
-	addProperty( "value", Variant::t_real, this, &WinnerTakeAllFunction::value, &WinnerTakeAllFunction::setValue );
-	setTypename( "WinnerTakeAllFunction" );
 }
 
-WinnerTakeAllFunction::WinnerTakeAllFunction( PropertySettings& prop )
-    : OutputFunction() {
-	valuev = 1.0;
-	addProperty( "value", Variant::t_real, this, &WinnerTakeAllFunction::value, &WinnerTakeAllFunction::setValue );
-	setProperties( prop );
-	setTypename( "WinnerTakeAllFunction" );
-}
-
-bool WinnerTakeAllFunction::setValue( const Variant& v ) {
-	valuev = v.getdouble();
+bool WinnerTakeAllFunction::setValue( double v ) {
+	valuev = v;
 	return true;
 }
 
-Variant WinnerTakeAllFunction::value() {
+double WinnerTakeAllFunction::value() {
 	return valuev;
 }
 

@@ -27,8 +27,6 @@
 
 #include "types.h"
 #include "clonable.h"
-#include "propertized.h"
-
 
 namespace nnfw {
 
@@ -36,7 +34,7 @@ namespace nnfw {
  *
  *  Details...
  */
-class NNFW_API OutputFunction : public Propertized {
+class NNFW_API OutputFunction {
 public:
     /*! \name Constructors */
     //@{

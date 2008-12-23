@@ -185,7 +185,7 @@ public:
 
     /*! Get the Output function
      */
-    OutputFunction* const getFunction() const {
+    OutputFunction* getFunction() const {
         return updater;
     };
 
