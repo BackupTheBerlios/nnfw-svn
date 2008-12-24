@@ -1,6 +1,7 @@
 
 PROJECT( EXAMPLES )
 cmake_minimum_required(VERSION 2.4)
+cmake_policy( SET CMP0004 OLD )
 
 ### configure CMake to link against Qt4
 FIND_PACKAGE( Qt4 REQUIRED )
@@ -8,8 +9,7 @@ SET( QT_USE_QTXML TRUE )
 INCLUDE(${QT_USE_FILE})
 
 ### Search package NNFW
-SET( NNFW_DIR "/usr/local/nnfw-2.0.0/nnfw.framework/Resources" )
-FIND_PACKAGE( NNFW NO_MODULE )
+FIND_PACKAGE( NNFW 2.0.0 REQUIRED NO_MODULE PATHS "/usr/local/nnfw-2.0.0" )
 
 EXEC_PROGRAM( echo ARGS "${EXAMPLES_SOURCE_DIR}/*" OUTPUT_VARIABLE EXDIRS )
 SEPARATE_ARGUMENTS( EXDIRS ) 

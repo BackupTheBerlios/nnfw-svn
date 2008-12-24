@@ -1,6 +1,6 @@
 
 #include <stdio.h>
-#include "cnnfw.h"
+#include "nnfw/cnnfw.h"
 
 //-------- Neural Network Structures
 NnfwCluster *in, *hid, *out;
@@ -24,8 +24,8 @@ int main( int , char*  ) {
 	NnfwClusterSetFunction( out, sig1 );
 
     // --- Create the Matrix connection among layers
-    l1 = NnfwLinkerCreate( "DotLinker", in, hid );
-    l2 = NnfwLinkerCreate( "DotLinker", hid, out );
+    l1 = NnfwLinkerCreateDot( in, hid );
+    l2 = NnfwLinkerCreateDot( hid, out );
 
     // --- Add all in the BaseNeuralNet class
 	NnfwBaseNeuralNetAddInputCluster( net, in );
@@ -43,7 +43,7 @@ int main( int , char*  ) {
 
     // --- The learning Set 
 	NnfwPatternSet* set = NnfwPatternSetCreate( 4 );
-	Real buf[2];
+	double buf[2];
 	// --- Input <0,0> -> Output <0>
 	buf[0] = 0.0; buf[1] = 0.0;
 	NnfwPatternSetSetInputsOf( set, 0, in, buf );

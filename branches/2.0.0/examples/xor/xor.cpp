@@ -1,10 +1,10 @@
 
-#include "nnfw.h"
-#include "biasedcluster.h"
-#include "dotlinker.h"
-#include "liboutputfunctions.h"
-#include "backpropagationalgo.h"
-#include "random.h"
+#include "nnfw/nnfw.h"
+#include "nnfw/biasedcluster.h"
+#include "nnfw/dotlinker.h"
+#include "nnfw/liboutputfunctions.h"
+#include "nnfw/backpropagationalgo.h"
+#include "nnfw/random.h"
 
 using namespace nnfw;
 

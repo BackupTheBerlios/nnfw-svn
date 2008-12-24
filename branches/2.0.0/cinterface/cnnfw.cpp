@@ -805,12 +805,12 @@ C_NNFW_API int NnfwPatternSetSize( NnfwPatternSet* set ) {
 
 C_NNFW_API void NnfwPatternSetSetInputsOf( NnfwPatternSet* pset, int i, NnfwCluster* cl, double* inputs ) {
 	RealVec rv( inputs, cl->cluster->numNeurons() );
-	pset->pset->value(i).setInputsOf( cl->cluster, rv );
+	(*(pset->pset))[i].setInputsOf( cl->cluster, rv );
 }
 
 C_NNFW_API void NnfwPatternSetSetOutputsOf( NnfwPatternSet* pset, int i, NnfwCluster* cl, double* outputs ) {
 	RealVec rv( outputs, cl->cluster->numNeurons() );
-	pset->pset->value(i).setOutputsOf( cl->cluster, rv );
+	(*(pset->pset))[i].setOutputsOf( cl->cluster, rv );
 }
 
 C_NNFW_API double* NnfwPatternSetGetInputsOf( NnfwPatternSet* pset, int i, NnfwCluster* cl ) {
