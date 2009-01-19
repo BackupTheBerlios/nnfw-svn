@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2008 Gianluca Massera <emmegian@yahoo.it>                *
+ *  Copyright (C) 2005-2009 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -33,30 +33,24 @@ namespace nnfw {
  */
 class NNFW_API DotLinker : public MatrixLinker {
 public:
-    /*! \name Constructors */
-    //@{
-
-    /*!  Connect clusters with a complete connections */
-    DotLinker( Cluster* from, Cluster* to, QString name = "unnamed" );
-
-    /*!  Destructor */
-    virtual ~DotLinker();
-
-    //@}
-    /*! \name Interface */
-    //@{
-
-    /*! Performs the dot-product calculation */
-    void update();
-
+	/*! \name Constructors */
+	//@{
+	/*! Create fully connected links between clusters */
+	DotLinker( Cluster* from, Cluster* to, QString name = "unnamed" );
+	/*!  Destructor */
+	virtual ~DotLinker();
+	//@}
+	/*! \name Interface */
+	//@{
+	/*! Performs the dot-product calculation */
+	void update();
 	/*! Clone this DotLinker */
 	virtual DotLinker* clone() const;
 	/*! Return its typename */
 	virtual QString typeName() {
 		return "DotLinker";
 	};
-
-    //@}
+	//@}
 };
 
 }

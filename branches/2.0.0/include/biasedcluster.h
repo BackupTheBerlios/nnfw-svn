@@ -1,6 +1,6 @@
 /******************************************************************************
  *  Neural Network Framework.                                                 *
- *  Copyright (C) 2005-2008 Gianluca Massera <emmegian@yahoo.it>              *
+ *  Copyright (C) 2005-2009 Gianluca Massera <emmegian@yahoo.it>              *
  *                                                                            *
  *  This program is free software; you can redistribute it and/or modify      *
  *  it under the terms of the GNU General Public License as published by      *
@@ -32,62 +32,55 @@
 
 namespace nnfw {
 
-/*! \brief In this cluster a neuron have an input, an output and a bias value.
+/*! \brief In a BiasedCluster each neuron has an input, an output and a bias value.
+ *
+ *  \par Motivation
+ *  \par Description
+ *   All neurons in the Cluster have the same transfer function which
+ *   is given to the constructor by the outfunction property (see API doc).
+ *  \par Warnings
  *
  */
 class NNFW_API BiasedCluster : public Cluster {
 public:
-    /*! \name Constructors */
-    //@{
-
-    /*! Construct a Cluster that contains numNeurons neuron */
-    BiasedCluster( unsigned int numNeurons, QString name = "unnamed" );
-
-    /*! Destructor */
-    virtual ~BiasedCluster();
-
-    //@}
-    /*! \name Interface */
-    //@{
-
-    /*! Update the outputs of neurons */
-    void update();
-
-    /*! Set the bias of the neuron */
-    void setBias( unsigned int neuron, double bias );
-
-    /*! Set all biases with the same value */
-    void setAllBiases( double bias );
-
-    /*! Set the biases from the vector given */
-    void setBiases( const RealVec& biases );
-
-    /*! Get bias of the neuron */
-    double getBias( unsigned int neuron );
-
-	/*! Get the array of biases
-     *  Return the array of biases, not a copy of biases; Then you can change biases by the pointer returned !!!
-     */
-    RealVec& biases() {
-        return biasesdata;
-    };
-
-    /*! Randomize the biases of BiasedCluster */
-    void randomize( double min, double max );
-
+	/*! \name Constructors */
+	//@{
+	/*! Construct a Cluster that contains numNeurons neurons */
+	BiasedCluster( unsigned int numNeurons, QString name = "unnamed" );
+	/*! Destructor */
+	virtual ~BiasedCluster();
+	//@}
+	/*! \name Interface */
+	//@{
+	/*! Update the outputs of neurons */
+	void update();
+	/*! Set the bias of the neuron */
+	void setBias( unsigned int neuron, double bias );
+	/*! Set all biases with the same value */
+	void setAllBiases( double bias );
+	/*! Set the biases from the vector given */
+	void setBiases( const RealVec& biases );
+	/*! Get bias of the neuron */
+	double getBias( unsigned int neuron );
+	/*! Get the array of biases, this returns the actual array not a copy.
+	 *  This allows you to change the biases using the pointer returned!
+	 */
+	RealVec& biases() {
+		return biasesdata;
+	};
+	/*! Randomize the biases of BiasedCluster */
+	void randomize( double min, double max );
 	/*! Clone this BiasedCluster */
 	virtual BiasedCluster* clone() const;
-
 	/*! Return its typename */
 	virtual QString typeName() {
 		return "BiasedCluster";
 	};
-
-    //@}
+	//@}
 
 private:
-    RealVec biasesdata;
-    RealVec tempdata;
+	RealVec biasesdata;
+	RealVec tempdata;
 };
 
 }

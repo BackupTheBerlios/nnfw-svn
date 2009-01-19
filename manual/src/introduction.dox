@@ -21,7 +21,7 @@
 \section introduction_1 Why another Neural Network library ?
 'Why not?' might be a possible answer.
 
-In the beginning of 2005 I was searching for a neural network library easy to use, flexible and easily customized and extensible. After a few months I realized that there wasn't such a library (or at least I didn't find it). Despise the great number of project available on the Internet, there isn't a library developed with following aims:
+In the beginning of 2005 I was searching for a neural network library easy to use, flexible and easily customized and extensible. After a few months I realized that there wasn't such a library (or at least I didn't find it). Despite the great number of projects available on the Internet, there isn't a library developed with following aims:
 <ol>
 	<li>easy to use and understand;</li>
 	<li>flexibility in all aspects of neural networks;</li>
@@ -85,9 +85,8 @@ Choose them that better fits with your needs:
 </ul>
 
 \subsection introduction_44 Configuring the NNFW
-In order to configure the different aspect of NNFW, you have to sets the NNFW_CONFIG variable from CMake configuration interface.
-The CMake configurator is different depending on the platform on wich you run it, see the platform specific instruction
-for some details about it.
+In order to re-configure an aspect of NNFW, you must set the NNFW_CONFIG variable from CMake configuration interface.
+The CMake configurator is different depending on the platform on wich you run it, see the platform specific documentation for more details (Linux command: $man cmake).
 The NNFW_CONFIG variable is a string (empty is allowable) can contains the following keys separated by a space:
 <ul>
     <li> double : the library will be compiled using the double precision real numbers (default is single precision) </li>
@@ -95,18 +94,18 @@ The NNFW_CONFIG variable is a string (empty is allowable) can contains the follo
     <li> gsl : the library will use the GSL interface (default is not) </li>
     <li> shared: a dynamic library will be created instead of the static one</li>
 </ul>
-For instance, if NNFW_CONFIG is setted to "mkl double" then the library will be compiled with double precision and linked against Math Kernel Library.
+For instance, if NNFW_CONFIG is set to "mkl double" then the library will be compiled with double precision and linked against the Math Kernel Library.
 
-In addition, the standard variable CMAKE_BUILD_TYPE of CMake is also useful to sets how library will be compiled. The possibile options of CMAKE_BUILD_TYPE are Debug, Release, RelWithDebInfo and MinSizeRel. See CMake documentation.
+In addition, the standard variable CMAKE_BUILD_TYPE of CMake is also useful to set how library will be compiled. The possibile options of CMAKE_BUILD_TYPE are Debug, Release, RelWithDebInfo and MinSizeRel. See CMake documentation.
 
 \subsection introduction_45 Compiling NNFW on Linux
 <ol>
-    <li> Download the source package and unpack it where you want; </li>
+    <li> Download the source package and unpack it wherever you want; </li>
     <li> Open your preferred console and move to the directory where NNFW has been unpacked; </li>
 </ol>
 \par Quick procedure
 <ol>
-    <li> Launch follow commands: </li>
+    <li> Type the following commands: </li>
 <code><br>
  $> cmake . <br>
  $> make <br>

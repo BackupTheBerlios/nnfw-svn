@@ -42,15 +42,16 @@ namespace nnfw {
  *  It is a simple timer for performance checks
  *
  *  \par Description
- *  SimpleTimer counts microseconds elapsed between tac() calls
+ *  SimpleTimer counts microseconds elapsed since the last tic() calls
  *
  *  \par Warnings
  *
  */
 class SimpleTimer {
 public:
+	/*! Construct the timer */
 	SimpleTimer() {
-#ifdef WIN32
+#ifdef NNFW_WIN
 		QueryPerformanceFrequency( &frequency );
 		QueryPerformanceCounter( &baseCount );
 #else
@@ -59,12 +60,28 @@ public:
 		lastTime = tv.tv_sec*1000000 + tv.tv_usec;
 #endif
 	};
+	/*! return microsecond elapsed from last tic() call */
 	int tac() {
-#ifdef WIN32
+#ifdef NNFW_WIN
 		unsigned ticks;
 		QueryPerformanceCounter( &count );
 		count.QuadPart -= baseCount.QuadPart;
 		ticks = unsigned( count.QuadPart * LONGLONG (1000000) / frequency.QuadPart );
+		return ticks;
+#else
+		struct timeval tv;
+		gettimeofday( &tv, NULL );
+		return (tv.tv_sec*1000000 + tv.tv_usec) - lastTime;
+#endif
+	};
+	/*! return microsecond elapsed from last tic() call */
+	int tic() {
+#ifdef NNFW_WIN
+		unsigned ticks;
+		QueryPerformanceCounter( &count );
+		count.QuadPart -= baseCount.QuadPart;
+		ticks = unsigned( count.QuadPart * LONGLONG (1000000) / frequency.QuadPart );
+		baseCount = count;
 		return ticks;
 #else
 		struct timeval tv;
@@ -75,7 +92,7 @@ public:
 #endif
 	};
 private:
-#ifdef WIN32
+#ifdef NNFW_WIN
 	LARGE_INTEGER count;
 	LARGE_INTEGER frequency;
 	LARGE_INTEGER baseCount;

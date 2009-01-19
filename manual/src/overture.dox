@@ -16,7 +16,75 @@
 
 \section overture_1 The XOR problem
 
-It's a classic in neural network field.
+The XOR problem is classic in the neural network field.  This is because
+it is of historical interest, networks of perceptrons were rejected by
+many as inadequate since it was shown that they could not model the XOR
+function.  I was later shown that by adding a bias to the neurons and
+using hidden layers, the XOR and every possible logic function could be
+modelled provided there are sufficient hidden neurons. Confidence in
+neural networks as universal function approximators was restored,
+hooray!
+
+A function is a mapping from inputs to outputs.  XOR is a logic function
+which maps a pair of (boolean) input bits into a single output bit (a
+bit is a fundamental unit of information, it can take the value true or
+false).  The XOR function follows the rule; if both are the same then
+false, if both are different then true.  When representing the boolean
+true or false values as numbers, it is traditional to take true=1 and
+false=0 or false=-1.
+
+Logic functions like the XOR function are represented by truth tables
+(specification of all possible inputs and their associated outputs).
+The truth table for XOR is as follows:
+<pre>
+ T T --> F
+ T F --> T
+ F T --> T
+ F F --> F
+</pre>
+Numerically this would be as follows:
+<pre>
+ 1 1 --> 0
+ 1 0 --> 1
+ 0 1 --> 1
+ 0 0 --> 0
+</pre>
+If a neural network learns to represent the same mapping of values, then
+it has learned how to model the XOR function.  It is appropriate to use
+supervised learning, where correct examples of inputs and corresponding
+outputs are provided.  For any given input, the difference between the
+network output and the required outputs is used to calculate an error
+(which is then back-propagated to try and correct the connections
+responsible for the error).
+
+If there are sufficient hidden neurons (and connections) to model the
+function defined by the training data and the momentum is sufficient to
+overcome local minima in the error surface, then the network will adjust
+its weights until it models the function (in this case XOR).
+
+In order to model different functions, just provide the network with
+different training data.  Here are the truth tables for AND and OR:
+<pre>
+ AND:
+ T T --> T
+ T F --> F
+ F T --> F
+ F F --> F
+</pre>
+<pre>
+ OR:
+ T T --> T
+ T F --> T
+ F T --> T
+ F F --> F
+</pre>
+Try constructing the training data sets and teaching a network how to
+model these functions.
+
+Neural networks can be used to represent more than just boolean logic,
+they are general non-linear function approximators and can therefore
+learn the mapping represented by any non-random data set (the trick is
+tuning the network topology and parameters to make it happen).
 
 \section overture_2 The Implementation with NNFW
 

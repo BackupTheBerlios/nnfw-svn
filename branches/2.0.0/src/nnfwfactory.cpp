@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2008 Gianluca Massera <emmegian@yahoo.it>                *
+ *  Copyright (C) 2005-2009 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -43,97 +43,83 @@ namespace nnfw {
  */
 class NNFW_INTERNAL DummyModifier : public AbstractModifier {
 public:
-    /*! \name Interface */
-    //@{
-
-    /*! apply the rule changing the Updatable object */
-    virtual void rule( double, const RealVec&, const RealVec& ) const { /* nothing to do */ };
-
-    /*! Virtual Copy-Constructor */
-    virtual DummyModifier* clone() const {
+	/*! \name Interface */
+	//@{
+	/*! apply the rule changing the Updatable object */
+	virtual void rule( double, const RealVec&, const RealVec& ) const { /* nothing to do */ };
+	/*! Virtual Copy-Constructor */
+	virtual DummyModifier* clone() const {
 		return new DummyModifier();
 	};
-    //@}
+	//@}
 };
 
-/*! \brief BiasedClusterModifier
- */
+/*! \brief BiasedClusterModifier */
 class NNFW_INTERNAL BiasedClusterModifier : public AbstractModifier {
 public:
-    /*! \name Interface */
-    //@{
-
+	/*! \name Interface */
+	//@{
 	/*! set the learnable object */
 	virtual void setUpdatable( Updatable* tolearn ) {
 		learnable = tolearn;
 		cl = (BiasedCluster*)tolearn;
 	};
-
-    /*! apply the rule changing the Updatable object */
-    virtual void rule( double learn_rate, const RealVec& x, const RealVec& y ) const {
+	/*! apply the rule changing the Updatable object */
+	virtual void rule( double learn_rate, const RealVec& x, const RealVec& y ) const {
 		cl->biases().deltarule( learn_rate, x, y );
 	};
-
-    /*! Virtual Copy-Constructor */
-    virtual BiasedClusterModifier* clone() const {
+	/*! Virtual Copy-Constructor */
+	virtual BiasedClusterModifier* clone() const {
 		return new BiasedClusterModifier();
 	};
-    //@}
+	//@}
 private:
 	BiasedCluster* cl;
 };
 
-/*! \brief MatrixLinkerModifier
- */
+/*! \brief MatrixLinkerModifier */
 class NNFW_INTERNAL MatrixLinkerModifier : public AbstractModifier {
 public:
-    /*! \name Interface */
-    //@{
-
+	/*! \name Interface */
+	//@{
 	/*! set the learnable object */
 	virtual void setUpdatable( Updatable* tolearn ) {
 		learnable = tolearn;
 		ml = (MatrixLinker*)tolearn;
 	};
-
-    /*! apply the rule changing the Updatable object */
-    virtual void rule( double learn_rate, const RealVec& x, const RealVec& y ) const {
+	/*! apply the rule changing the Updatable object */
+	virtual void rule( double learn_rate, const RealVec& x, const RealVec& y ) const {
 		ml->matrix().deltarule( learn_rate, x, y );
 	};
-
-    /*! Virtual Copy-Constructor */
-    virtual MatrixLinkerModifier* clone() const {
+	/*! Virtual Copy-Constructor */
+	virtual MatrixLinkerModifier* clone() const {
 		return new MatrixLinkerModifier();
 	};
-    //@}
+	//@}
 private:
 	MatrixLinker* ml;
 };
 
-/*! \brief SparseMatrixLinkerModifier
- */
+/*! \brief SparseMatrixLinkerModifier */
 class NNFW_INTERNAL SparseMatrixLinkerModifier : public AbstractModifier {
 public:
-    /*! \name Interface */
-    //@{
-
+	/*! \name Interface */
+	//@{
 	/*! set the learnable object */
 	virtual void setUpdatable( Updatable* tolearn ) {
 		learnable = tolearn;
 		sml = (SparseMatrixLinker*)tolearn;
 	};
-
-    /*! apply the rule changing the Updatable object */
-    virtual void rule( double learn_rate, const RealVec& x, const RealVec& y ) const {
+	/*! apply the rule changing the Updatable object */
+	virtual void rule( double learn_rate, const RealVec& x, const RealVec& y ) const {
 		sml->matrix().deltarule( learn_rate, x, y );
-		sml->matrix().cover( sml->getMask() );
+		sml->matrix().cover( sml->mask() );
 	};
-
-    /*! Virtual Copy-Constructor */
-    virtual SparseMatrixLinkerModifier* clone() const {
+	/*! Virtual Copy-Constructor */
+	virtual SparseMatrixLinkerModifier* clone() const {
 		return new SparseMatrixLinkerModifier();
 	};
-    //@}
+	//@}
 private:
 	SparseMatrixLinker* sml;
 };
@@ -171,7 +157,7 @@ void Factory::initFactory() {
 	modtypes["NormLinker"] = new MatrixLinkerModifier();
 	modtypes["MatrixLinker"] = new MatrixLinkerModifier();
 
-    isInit = true;
+	isInit = true;
 }
 
 bool Factory::isInit = false;

@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2008 Gianluca Massera <emmegian@yahoo.it>                     *
+ *  Copyright (C) 2005-2009 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -36,81 +36,58 @@ namespace nnfw {
  */
 class NNFW_API SparseMatrixLinker : public MatrixLinker {
 public:
-    /*! \name Constructors */
-    //@{
-
-    /*! Connect clusters with complete connections */
-    SparseMatrixLinker( Cluster* from, Cluster* to, QString name = "unnamed" );
+	/*! \name Constructors */
+	//@{
+	/*! Connect clusters with complete connections */
+	SparseMatrixLinker( Cluster* from, Cluster* to, QString name = "unnamed" );
 	/*! Constructor */
-	SparseMatrixLinker::SparseMatrixLinker( double prob, Cluster* from, Cluster* to, QString name = "unnamed" );
-    /*! Connect neurons of Clusters with a random connections with the passed probability.<br>
+	SparseMatrixLinker( double prob, Cluster* from, Cluster* to, QString name = "unnamed" );
+	/*! Connect neurons of Clusters with a random connections with the passed probability.<br>
 	 * With this contructor you must also specify whether the diagonal of the matrix is made of zeros
-     * and whether the matrix is symmetrical
-     * \warning You can use this constructor only with square matrices, otherwise it will generate a memory error!!!
+	 * and whether the matrix is symmetrical
+	 * \warning You can use this constructor only with square matrices, otherwise it will generate a memory error!!!
 	 */
 	SparseMatrixLinker( Cluster* from, Cluster* to, double prob, bool zeroDiagonal = false, bool symmetricMask = false, QString name = "unnamed" );
-
-    /*! Destructor */
-    virtual ~SparseMatrixLinker();
-
-    //@}
-    /*! \name Interface */
-    //@{
-
-    /*! Set the weight of the connection specified */
-    virtual void setWeight( unsigned int from, unsigned int to, double weight );
-
-    /*! Randomize the weights of the SparseMatrixLinker */
-    virtual void randomize( double min, double max );
-
-    /*! Performs the dot-product calculation where the non-connection are considered as zero */
-    void update();
-
-    /*! Connect two neurons */
-    void connect( unsigned int from, unsigned int to );
-
-    /*! Connects randomly according to the given probability */
-    void connectRandom( double prob );
-
-    /*! Connect all couples of neurons */
-    void connectAll();
-
-    /*! Disconnect the two neurons */
-    void disconnect( unsigned int from, unsigned int to );
-
-    /*! Disconnects randomly according to the given probability */
-    void disconnectRandom( double prob );
-
-    /*! Disonnect all couples of neurons */
-    void disconnectAll();
-
-    /*! Get the mask 
-	 *  \deprecated use mask() instead
-	 */
-    MatrixData<bool>& getMask() {
+	/*! Destructor */
+	virtual ~SparseMatrixLinker();
+	//@}
+	/*! \name Interface */
+	//@{
+	/*! Set the weight of the connection specified */
+	virtual void setWeight( unsigned int from, unsigned int to, double weight );
+	/*! Randomize the weights of the SparseMatrixLinker */
+	virtual void randomize( double min, double max );
+	/*! Performs the dot-product calculation where the non-connection are considered as zero */
+	void update();
+	/*! Connect two neurons */
+	void connect( unsigned int from, unsigned int to );
+	/*! Connects randomly according to the given probability */
+	void connectRandom( double prob );
+	/*! Connect all couples of neurons */
+	void connectAll();
+	/*! Disconnect the two neurons */
+	void disconnect( unsigned int from, unsigned int to );
+	/*! Disconnects randomly according to the given probability */
+	void disconnectRandom( double prob );
+	/*! Disonnect all couples of neurons */
+	void disconnectAll();
+	/*! Return the mask */
+	MatrixData<bool>& mask() {
 		return maskm;
 	};
-
-    /*! Return the mask */
-    MatrixData<bool>& mask() {
-		return maskm;
-	};
-
-    /*!  Set the whole mask matrix */
-    void setMask( const MatrixData<bool>& mask );
-
+	/*!  Set the whole mask matrix */
+	void setMask( const MatrixData<bool>& mask );
 	/*! Clone this SparseMatrixLinker */
 	virtual SparseMatrixLinker* clone() const;
 	/*! Return its typename */
 	virtual QString typeName() {
 		return "SparseMatrixLinker";
 	};
-
-    //@}
+	//@}
 
 private:
-    /*! Mask Matrix */
-    MatrixData<bool> maskm;
+	/*! Mask Matrix */
+	MatrixData<bool> maskm;
 };
 
 }
