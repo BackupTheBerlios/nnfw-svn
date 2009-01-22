@@ -95,12 +95,6 @@ class Linker;
 /*! Array of Linkers */
 typedef QList<Linker*> LinkerList;
 
-/*! Empty LinkerList constant */
-extern NNFW_API const LinkerList emptyLinkerList;
-
-/*! Empty ClusterList constant */
-extern NNFW_API const ClusterList emptyClusterList;
-
 }
 
 #endif

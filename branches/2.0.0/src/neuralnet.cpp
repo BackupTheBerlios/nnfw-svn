@@ -231,7 +231,7 @@ const LinkerList& BaseNeuralNet::linkers( Cluster* c, bool out ) const {
 #ifdef NNFW_DEBUG
     if ( !c ) {
         qWarning() << "Null Pointer passed to linkers! This operation will return an empty LinkerGroup" ;
-        return emptyLinkerList;
+        return LinkerList();
     }
 #endif
     if ( out ) {
@@ -245,7 +245,7 @@ const LinkerList& BaseNeuralNet::linkers( Cluster* c, bool out ) const {
             return inLinks[c];
         }
     }
-    return emptyLinkerList;
+    return LinkerList();
 }
 
 void BaseNeuralNet::setOrder( Updatable* u[], unsigned int dim ) {
