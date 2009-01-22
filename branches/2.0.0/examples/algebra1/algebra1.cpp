@@ -2,9 +2,12 @@
 #include "nnfw/nnfw.h"
 #include "nnfw/types.h"
 #include "nnfw/vectors.h"
+#include "nnfw/matrices.h"
 #include "nnfw/utils.h"
-
 using namespace nnfw;
+
+#include <iostream>
+using namespace std;
 
 int main( int , char** ) {
 	SimpleTimer timer;
@@ -42,6 +45,24 @@ int main( int , char** ) {
 	qDebug() << "------------" << timer.tic();
 	qDebug() << A[0] << A[1] << A[2] << A[3] << A[4] ;
 	qDebug() << C[0] << C[1] << C[2] << C[3] << C[4] ;
+
+	qDebug() << "------------";
+	int row = 2;
+	int col = 3;
+	DoubleMatrix m1( row, col );
+	for( int i=0; i<row; i++ ) {
+		for( int j=0; j<col; j++ ) {
+			m1[i][j] = i+j;
+		}
+	}
+	DoubleMatrix m2 = m1 + m1;
+	m1.steady( 1, 1 );
+	for( int i=0; i<row; i++ ) {
+		for( int j=0; j<col; j++ ) {
+			cout << m2[i][j] << " ";
+		}
+		cout << endl;
+	}
 
 	return 0;
 }
