@@ -50,16 +50,43 @@ int main( int , char** ) {
 	int row = 2;
 	int col = 3;
 	DoubleMatrix m1( row, col );
+	RealMat M1( row, col );
 	for( int i=0; i<row; i++ ) {
 		for( int j=0; j<col; j++ ) {
 			m1[i][j] = i+j;
+			M1[i][j] = i+j;
 		}
 	}
+	for( int i=0; i<row; i++ ) {
+		for( int j=0; j<col; j++ ) {
+			cout << m1[i][j] << " ";
+		}
+		cout << endl;
+	}
+	timer.tic();
 	DoubleMatrix m2 = m1 + m1;
-	m1.steady( 1, 1 );
+	m1.steady( row-1, col-1 );
+	m1 *= m2;
+	qDebug() << "------------" << timer.tic();
+
+	timer.tic();
+	RealMat M2( row, col );
+	M2 += M1;
+	M2 += M1;
+	M1 *= M2;
+	qDebug() << "------------" << timer.tic();
+
+
 	for( int i=0; i<row; i++ ) {
 		for( int j=0; j<col; j++ ) {
 			cout << m2[i][j] << " ";
+		}
+		cout << endl;
+	}
+	qDebug() << "------------";
+	for( int i=0; i<row; i++ ) {
+		for( int j=0; j<col; j++ ) {
+			cout << m1[i][j] << " ";
 		}
 		cout << endl;
 	}

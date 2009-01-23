@@ -275,6 +275,7 @@ public:
 		}
 #endif
 		shData->rowdata[i].steady(j);
+		shData->coldata[j].steady(i);
 		return (*this);
 	};
 	/*! Reallow the modification of [i][j]-th value
@@ -288,6 +289,7 @@ public:
 		}
 #endif
 		shData->rowdata[i].unsteady(j);
+		shData->coldata[j].unsteady(i);
 		return (*this);
 	};
 	/*! Set all values to value
