@@ -66,7 +66,7 @@ int main( int , char** ) {
 	timer.tic();
 	DoubleMatrix m2 = m1 + m1;
 	m1.steady( row-1, col-1 );
-	m1 *= m2;
+	m1 %= m2;
 	qDebug() << "------------" << timer.tic();
 
 	timer.tic();

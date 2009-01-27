@@ -56,9 +56,9 @@ public:
 	//@{
 
 	/*! Set the teaching input for Cluster passed
-	 *  \param teach_input the RealVec teaching input
+	 *  \param teach_input the DoubleVector teaching input
 	 */
-	void setTeachingInput( Cluster* output, const RealVec& ti );
+	void setTeachingInput( Cluster* output, const DoubleVector& ti );
 
 	virtual void learn();
 
@@ -102,7 +102,7 @@ public:
 	 *  They are also useful to calculate the network performance, but for that it must be used outside
 	 *  the <em>learning cycle</em> (a full learning iteration, that corresponds to present the network
 	 *  with all the patterns of the train data set). For that you must call
-	 *  getError( Cluster * anyOutputCluster ) for each line of your training set (you'll get a RealVec
+	 *  getError( Cluster * anyOutputCluster ) for each line of your training set (you'll get a DoubleVector
 	 *  with the deltas for each unit of the cluster considered).<br>
 	 *  Then you can use those values to calculate your desired performance measure.<br>
 	 *  For instance: if you use it to calculate the Mean Square Error (MSE) of the network
@@ -113,11 +113,11 @@ public:
 	 *  trivial (you just need to calculate the square root of the MSE).
 	 *
 	 *  \warning The data returned by getError( Cluster * ) is computed every time you set a new output target,
-	 *  which means every time you call the setTeachingInput( Cluster * anyOutputCluster, const RealVec &
+	 *  which means every time you call the setTeachingInput( Cluster * anyOutputCluster, const DoubleVector &
 	 *  teaching_input ) method. If your network has more than one output layer you have to call
 	 *  setTeachingInput() for all the output clusters before calling getError() for any of the clusters.
 	 */
-	const RealVec& getError( Cluster* );
+	const DoubleVector getError( Cluster* );
 	//@}
 
 private:
@@ -136,12 +136,12 @@ private:
 		Cluster* cluster;
 		AbstractModifier* modcluster;
 		bool isOutput;
-		RealVec deltas_outputs;
-		RealVec deltas_inputs;
-		RealVec last_deltas_inputs;
+		DoubleVector deltas_outputs;
+		DoubleVector deltas_inputs;
+		DoubleVector last_deltas_inputs;
 		LinkerList incoming_linkers_vec;
 		QVector<AbstractModifier*> incoming_modlinkers;
-		QVector<RealVec> incoming_last_outputs;
+		QVector<DoubleVector> incoming_last_outputs;
 	};
 	//! map to help looking for cluster_deltas info
 	QMap<Cluster*, int> mapIndex;

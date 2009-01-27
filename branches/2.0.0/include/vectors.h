@@ -248,6 +248,10 @@ public:
 		}
 		return (*this);
 	};
+	/*! It behaves exactly as copy method and not as operator= */
+	DoubleVector& assignData( const DoubleVector& src ) {
+		return copy( src );
+	};
 	/*! If the current data is shared by other objects, this method will create a new copy of the data
 	 *  not shared by other objects.
 	 */

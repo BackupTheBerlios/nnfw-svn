@@ -61,19 +61,9 @@
 #include <QString>
 #include <QDebug>
 
-#define TYPES_INCLUDES
-
-#include "observ.h"
-#include "vectordata.h"
-#include "matrixdata.h"
-
-namespace nnfw {
-    class RealMat;
-}
-#include "realvec.h"
-#include "realmat.h"
-
-#undef TYPES_INCLUDES
+#include "vectors.h"
+#include "matrices.h"
+#include "algebra.h"
 
 namespace nnfw {
 

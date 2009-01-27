@@ -180,6 +180,10 @@ public:
 		}
 		return (*this);
 	};
+	/*! It behaves exactly as copy method and not as operator= */
+	DoubleMatrix& assignData( const DoubleMatrix& src ) {
+		return copy( src );
+	};
 	/*! If the current data is shared by other objects, this method will create a new copy of the data
 	 *  not shared by other objects.
 	 */
@@ -263,6 +267,46 @@ public:
 #endif
 		return shData->rowdata[row];
     };
+	/*! Return the i-th row of the Matrix (this behaves like operator[]) */
+	DoubleVector& row( unsigned int r ) {
+#ifdef NNFW_DEBUG
+		if( row >= shData->nrows ) {
+			qCritical() << "Accessing elements outside boundary" ;
+			return shData->rowdata[0];
+		}
+#endif
+		return shData->rowdata[r];
+	};
+	/*! Return the i-th row of the Matrix (Const version) (this behaves like operator[]) */
+	const DoubleVector& row( unsigned int r ) const {
+#ifdef NNFW_DEBUG
+		if( row >= shData->nrows ) {
+			qCritical() << "Accessing elements outside boundary" ;
+			return shData->rowdata[0];
+		}
+#endif
+		return shData->rowdata[r];
+	};
+	/*! Return the i-th column of the Matrix */
+	DoubleVector& column( unsigned int c ) {
+#ifdef NNFW_DEBUG
+		if( row >= shData->ncols ) {
+			qCritical() << "Accessing elements outside boundary" ;
+			return shData->coldata[0];
+		}
+#endif
+		return shData->coldata[c];
+	};
+	/*! Return the i-th column of the Matrix (Const version) */
+	const DoubleVector& column( unsigned int c ) const {
+#ifdef NNFW_DEBUG
+		if( row >= shData->ncols ) {
+			qCritical() << "Accessing elements outside boundary" ;
+			return shData->coldata[0];
+		}
+#endif
+		return shData->coldata[c];
+	};
 	/*! Fix the [i][j]-th value, hence the [i][j]-th value will never change anymore
 	 *  until unsteady is called
 	 *  \warning Boundary check activated only when DEBUG if defined
@@ -334,7 +378,7 @@ public:
 	DoubleMatrix operator+( const DoubleMatrix& right ) const {
 #ifdef NNFW_DEBUG
 		if ( shData->tsize != right.shData->tsize || shData->nrows != right.shData->nrows || shData->ncols != right.shData->ncols ) {
-			qCritical() << "Incompatibles Matrices in copy method (dimension must be equals)";
+			qCritical() << "Incompatibles Matrices in operator + (dimension must be equals)";
 			return (*this);
 		}
 #endif
@@ -363,7 +407,7 @@ public:
 	DoubleMatrix operator-( const DoubleMatrix& right ) const {
 #ifdef NNFW_DEBUG
 		if ( shData->tsize != right.shData->tsize || shData->nrows != right.shData->nrows || shData->ncols != right.shData->ncols ) {
-			qCritical() << "Incompatibles Matrices in copy method (dimension must be equals)";
+			qCritical() << "Incompatibles Matrices in operator - (dimension must be equals)";
 			return (*this);
 		}
 #endif
@@ -386,31 +430,54 @@ public:
 			return ret;
 		}
 	};
-	/*! operator * (element-by-element)
+	/*! operator * (matrix multiplication)
 	 *  \warning Dimensionality check activated only when DEBUG is defined
+	 *  \warning It always allocate a new matrix on memory
 	 */
 	DoubleMatrix operator*( const DoubleMatrix& right ) const {
 #ifdef NNFW_DEBUG
+		if ( shData->ncols != right.shData->nrows ) {
+			qCritical() << "Incompatibles Matrices in operator * ";
+			return (*this);
+		}
+#endif
+		DoubleMatrix ret( shData->nrows, right.shData->ncols );
+		ret.shData->temporary = true;
+		ret.zeroing();
+		for( unsigned int i=0; i<ret.shData->nrows; i++ ) {
+			for( unsigned int j=0; j<ret.shData->ncols; j++ ) {
+				for( unsigned int r=0; r<shData->ncols; r++ ) {
+					ret[i][j] += shData->rowdata[i][r] * right[r][j];
+				}
+			}
+		}
+		return ret;
+	};
+	/*! operator % (element-by-element multiplication)
+	 *  \warning Dimensionality check activated only when DEBUG is defined
+	 */
+	DoubleMatrix operator%( const DoubleMatrix& right ) const {
+#ifdef NNFW_DEBUG
 		if ( shData->tsize != right.shData->tsize || shData->nrows != right.shData->nrows || shData->ncols != right.shData->ncols ) {
-			qCritical() << "Incompatibles Matrices in copy method (dimension must be equals)";
+			qCritical() << "Incompatibles Matrices in operator % (dimension must be equals)";
 			return (*this);
 		}
 #endif
 		if ( right.shData->temporary ) {
 			for( unsigned int i=0; i<shData->tsize; i++ ) {
-				right.shData->alldata[i] = shData->alldata[i] * right.shData->alldata[i];
+					right.shData->alldata[i] = shData->alldata[i] * right.shData->alldata[i];
 			}
 			return right;
 		} else if ( shData->temporary ) {
 			for( unsigned int i=0; i<shData->tsize; i++ ) {
-				shData->alldata[i] = shData->alldata[i] * right.shData->alldata[i];
+					shData->alldata[i] = shData->alldata[i] * right.shData->alldata[i];
 			}
 			return (*this);
 		} else {
 			DoubleMatrix ret( shData->nrows, shData->ncols );
 			ret.shData->temporary = true;
 			for( unsigned int i=0; i<shData->tsize; i++ ) {
-				ret.shData->alldata[i] = shData->alldata[i] * right.shData->alldata[i];
+					ret.shData->alldata[i] = shData->alldata[i] * right.shData->alldata[i];
 			}
 			return ret;
 		}
@@ -421,7 +488,7 @@ public:
 	DoubleMatrix operator/( const DoubleMatrix& right ) const {
 #ifdef NNFW_DEBUG
 		if ( shData->tsize != right.shData->tsize || shData->nrows != right.shData->nrows || shData->ncols != right.shData->ncols ) {
-			qCritical() << "Incompatibles Matrices in copy method (dimension must be equals)";
+			qCritical() << "Incompatibles Matrices in operator / (dimension must be equals)";
 			return (*this);
 		}
 #endif
@@ -450,7 +517,7 @@ public:
 	DoubleMatrix& operator+=( const DoubleMatrix& right ) {
 #ifdef NNFW_DEBUG
 		if ( shData->tsize != right.shData->tsize || shData->nrows != right.shData->nrows || shData->ncols != right.shData->ncols ) {
-			qCritical() << "Incompatibles Matrices in copy method (dimension must be equals)";
+			qCritical() << "Incompatibles Matrices in operator += (dimension must be equals)";
 			return (*this);
 		}
 #endif
@@ -467,7 +534,7 @@ public:
 	DoubleMatrix& operator-=( const DoubleMatrix& right ) {
 #ifdef NNFW_DEBUG
 		if ( shData->tsize != right.shData->tsize || shData->nrows != right.shData->nrows || shData->ncols != right.shData->ncols ) {
-			qCritical() << "Incompatibles Matrices in copy method (dimension must be equals)";
+			qCritical() << "Incompatibles Matrices in operator -= (dimension must be equals)";
 			return (*this);
 		}
 #endif
@@ -478,13 +545,37 @@ public:
 		}
 		return (*this);
 	};
-	/*! operator *= (element-by-element)
+	/*! operator *= (matrix multiplication)
+	 *  \warning this method resize this matrix and all informations about steady values will be lost.
 	 *  \warning Dimensionality check activated only when DEBUG is defined
 	 */
 	DoubleMatrix& operator*=( const DoubleMatrix& right ) {
 #ifdef NNFW_DEBUG
+		if ( shData->ncols != right.shData->nrows ) {
+			qCritical() << "Incompatibles Matrices in operator *= ";
+			return (*this);
+		}
+#endif
+		DoubleMatrix ret( shData->nrows, right.shData->ncols );
+		ret.shData->temporary = true;
+		ret.zeroing();
+		for( unsigned int i=0; i<ret.shData->nrows; i++ ) {
+			for( unsigned int j=0; j<ret.shData->ncols; j++ ) {
+				for( unsigned int r=0; r<shData->ncols; r++ ) {
+					ret[i][j] += shData->rowdata[i][r] * right[r][j];
+				}
+			}
+		}
+		(*this) = ret;
+		return *this;
+	};
+	/*! operator %= (element-by-element multiplication)
+	 *  \warning Dimensionality check activated only when DEBUG is defined
+	 */
+	DoubleMatrix& operator%=( const DoubleMatrix& right ) {
+#ifdef NNFW_DEBUG
 		if ( shData->tsize != right.shData->tsize || shData->nrows != right.shData->nrows || shData->ncols != right.shData->ncols ) {
-			qCritical() << "Incompatibles Matrices in copy method (dimension must be equals)";
+			qCritical() << "Incompatibles Matrices in operator %= (dimension must be equals)";
 			return (*this);
 		}
 #endif
@@ -501,7 +592,7 @@ public:
 	DoubleMatrix& operator/=( const DoubleMatrix& right ) {
 #ifdef NNFW_DEBUG
 		if ( shData->tsize != right.shData->tsize || shData->nrows != right.shData->nrows || shData->ncols != right.shData->ncols ) {
-			qCritical() << "Incompatibles Matrices in copy method (dimension must be equals)";
+			qCritical() << "Incompatibles Matrices in operator /= (dimension must be equals)";
 			return (*this);
 		}
 #endif

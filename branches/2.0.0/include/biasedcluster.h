@@ -59,13 +59,13 @@ public:
 	/*! Set all biases with the same value */
 	void setAllBiases( double bias );
 	/*! Set the biases from the vector given */
-	void setBiases( const RealVec& biases );
+	void setBiases( const DoubleVector& biases );
 	/*! Get bias of the neuron */
 	double getBias( unsigned int neuron );
 	/*! Get the array of biases, this returns the actual array not a copy.
 	 *  This allows you to change the biases using the pointer returned!
 	 */
-	RealVec& biases() {
+	DoubleVector& biases() {
 		return biasesdata;
 	};
 	/*! Randomize the biases of BiasedCluster */
@@ -79,8 +79,8 @@ public:
 	//@}
 
 private:
-	RealVec biasesdata;
-	RealVec tempdata;
+	DoubleVector biasesdata;
+	DoubleVector tempdata;
 };
 
 }

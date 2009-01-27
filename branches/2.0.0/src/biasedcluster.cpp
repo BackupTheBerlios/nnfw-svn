@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2008 Gianluca Massera <emmegian@yahoo.it>                *
+ *  Copyright (C) 2005-2009 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -24,59 +24,59 @@
 namespace nnfw {
 
 BiasedCluster::BiasedCluster( unsigned int numNeurons, QString name )
-    : Cluster( numNeurons, name), biasesdata(numNeurons), tempdata(numNeurons) {
-    biasesdata.zeroing();
-    tempdata.zeroing();
+	: Cluster( numNeurons, name), biasesdata(numNeurons), tempdata(numNeurons) {
+	biasesdata.zeroing();
 }
 
 BiasedCluster::~BiasedCluster() {
 }
 
 void BiasedCluster::update() {
-    tempdata.assign_xminusy( inputs(), biases() );
-    getFunction()->apply( tempdata, outputs() );
-    setNeedReset( true );
+	//--- in order to avoid to create a temporary vector at each call
+	//--- it use the tempdata and the minus function of algebra.h
+	getFunction()->apply( minus( tempdata, inputs(), biases() ), outputs() );
+	setNeedReset( true );
 }
 
 void BiasedCluster::setBias( unsigned int neuron, double bias ) {
 #ifdef NNFW_DEBUG
-    if ( neuron >= numNeurons() ) {
+	if ( neuron >= numNeurons() ) {
 		qWarning() << "The neuron " << neuron << " doesn't exists! The operation setBias will be ignored";
-        return;
-    }
+		return;
+	}
 #endif
-    biasesdata[neuron] = bias;
+	biasesdata[neuron] = bias;
 }
 
 void BiasedCluster::setAllBiases( double bias ) {
-    biases().assign( numNeurons(), bias );
+	biases().setAll( bias );
 }
 
-void BiasedCluster::setBiases( const RealVec& bias ) {
-    biases().assign( bias );
+void BiasedCluster::setBiases( const DoubleVector& bias ) {
+	biases().copy( bias );
 }
 
 double BiasedCluster::getBias( unsigned int neuron ) {
 #ifdef NNFW_DEBUG
-    if ( neuron >= numNeurons() ) {
+	if ( neuron >= numNeurons() ) {
 		qWarning() << "The neuron " << neuron << "doesn't exists! The operation getBias will return 0.0";
-        return 0.0;
-    }
+		return 0.0;
+	}
 #endif
-    return biasesdata[neuron];
+	return biasesdata[neuron];
 }
 
 void BiasedCluster::randomize( double min, double max ) {
-    for ( unsigned int i = 0; i < numNeurons(); i++ ) {
-        biasesdata[i] = Random::flatDouble( min, max );
-    }
+	for ( unsigned int i = 0; i < numNeurons(); i++ ) {
+		biasesdata[i] = Random::flatDouble( min, max );
+	}
 }
 
 BiasedCluster* BiasedCluster::clone() const {
 	BiasedCluster* newclone = new BiasedCluster( numNeurons(), name() );
 	newclone->setAccumulate( this->isAccumulate() );
-	newclone->inputs().assign( this->inputs() );
-	newclone->outputs().assign( this->outputs() );
+	newclone->inputs().copy( this->inputs() );
+	newclone->outputs().copy( this->outputs() );
 	newclone->setBiases( this->biasesdata );
 	newclone->setFunction( *(this->getFunction()) );
 	return newclone;
