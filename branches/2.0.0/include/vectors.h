@@ -191,6 +191,10 @@ public:
 	unsigned int size() const {
 		return shData->vsize;
 	};
+	/*! Return True if the DoubleVector doesn't contain any data (i.e.: size==0 ) */
+	bool isNull() const {
+		return (shData->vsize==0);
+	};
 	/*! Equal Operator */
 	bool operator==( const DoubleVector& b ) {
 		if ( shData == b.shData ) return true;
@@ -453,6 +457,34 @@ public:
 #endif
 		for( unsigned int i=0; i<shData->vsize; i++ ) {
 			shData->dataref[i] = shData->dataref[i] / right[i];
+		}
+		return (*this);
+	};
+	/*! operator += with a scalar */
+	DoubleVector& operator+=( const double& right ) {
+		for( unsigned int i=0; i<shData->vsize; i++ ) {
+			shData->dataref[i] = shData->dataref[i] + right;
+		}
+		return (*this);
+	};
+	/*! operator -= with a scalar */
+	DoubleVector& operator-=( const double& right ) {
+		for( unsigned int i=0; i<shData->vsize; i++ ) {
+			shData->dataref[i] = shData->dataref[i] - right;
+		}
+		return (*this);
+	};
+	/*! operator *= with a scalar */
+	DoubleVector& operator+=( const double& right ) {
+		for( unsigned int i=0; i<shData->vsize; i++ ) {
+			shData->dataref[i] = shData->dataref[i] * right;
+		}
+		return (*this);
+	};
+	/*! operator /= with a scalar */
+	DoubleVector& operator/=( const double& right ) {
+		for( unsigned int i=0; i<shData->vsize; i++ ) {
+			shData->dataref[i] = shData->dataref[i] / right;
 		}
 		return (*this);
 	};

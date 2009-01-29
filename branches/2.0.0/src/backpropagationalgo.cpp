@@ -90,17 +90,12 @@ void BackPropagationAlgo::propagDeltas() {
 	for( int i=0; i<(int)cluster_deltas_vec.size(); i++ ) {
 		cluster_deltas_vec[i].incoming_linkers_vec;
 		// --- propagate DeltaOutput to DeltaInputs
+		cluster_deltas_vec[i].deltas_inputs.copy( cluster_deltas_vec[i].deltas_outputs );
+		Cluster* cl = cluster_deltas_vec[i].cluster;
+		OutputFunction* func = cl->getFunction();
 		diff_vec.resize( cluster_deltas_vec[i].deltas_inputs.size() );
-		const DerivableOutputFunction* diff_output_function = dynamic_cast<const DerivableOutputFunction*>( cluster_deltas_vec[i].cluster->getFunction( ) );
-		if ( diff_output_function == 0 ) {
-#ifdef NNFW_DEBUG
-			qWarning() << "No derivative for the activation function is defined!" ;
-#endif
-			cluster_deltas_vec[i].deltas_inputs.copy( cluster_deltas_vec[i].deltas_outputs );
-		} else {
-			Cluster* cl = cluster_deltas_vec[i].cluster;
-			diff_output_function->derivate( cl->inputs(), cl->outputs(), diff_vec );
-			cluster_deltas_vec[i].deltas_inputs = cluster_deltas_vec[i].deltas_outputs * diff_vec;
+		if ( func->derivate( cl->inputs(), cl->outputs(), diff_vec ) ) {
+			cluster_deltas_vec[i].deltas_inputs *= diff_vec;
 		}
 		// --- propagate DeltaInputs to DeltaOutput through MatrixLinker
 		for( unsigned int k=0; k<cluster_deltas_vec[i].incoming_linkers_vec.size( ); ++k ) {

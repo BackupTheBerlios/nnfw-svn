@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2008 Gianluca Massera <emmegian@yahoo.it>                *
+ *  Copyright (C) 2005-2009 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -71,158 +71,116 @@ namespace nnfw {
  */
 class NNFW_API Cluster : public Updatable {
 public:
-    /*! \name Constructors */
-    //@{
-    /*! Construct a Cluster */
-    Cluster( unsigned int numNeurons, QString name = "unnamed" );
-    /*! Destructor */
-    virtual ~Cluster();
-
-    //@}
-    /*! \name Methods affecting whole Cluster */
-    //@{
-
-    /*! Return the number of neurons (the length of input and output arrays) */
-    unsigned int numNeurons() const {
-        return numneurons;
-    };
-
-    /*! Return true if inputs needs a reset */
-    bool needReset() {
-        return needRst;
-    };
-
-    /*! Enable/Disable accumulation mode<br>
-     *  If accumulation is enabled (true) then linkers attached to this Cluster will never resetInput and accumulates data,
-     *  otherwise the inputs will be resetted at each step of neural network
-     */
-    void setAccumulate( bool mode ) {
-        accOff = !mode;
-    };
-
-    /*! return true if the Cluster will accumulates inputs */
-    bool isAccumulate() const {
-        return !accOff;
-    };
-
-    /*! Randomize the parameters of the Cluster<br>
-     *  The parameters randomized by this method will be specified by sub-classes
-     */
-    virtual void randomize( double min, double max ) = 0;
-
-    //@}
-    /*! \name Operations on Input's vector */
-    //@{
-
-    /*! Set the input of neuron
-     * Details...
-     */
-    virtual void setInput( unsigned int neuron, double value );
-
-    /*! Set the inputs from the vector given */
-    virtual void setInputs( const RealVec& inputs );
-
-    /*! Set all the inputs with the same value
-     * Details...
-     */
-    virtual void setAllInputs( double value );
-
-    /*! Reset the inputs of this cluster, typically this means that the inputs will be set to zero.
-     * Details...
-     */
-    virtual void resetInputs();
-
-    /*! Get the input of neuron
-     */
-    virtual double getInput( unsigned int neuron ) const;
-
-    /*! Get the array of inputs<br>
-     *  Return the array of inputs, not a copy of inputs; Then you can change inputs by the pointer returned !!!
-     */
-    RealVec& inputs() {
-        return inputdata;
-    };
-
-	/*! const version of inputs() */
-    const RealVec& inputs() const {
-        return inputdata;
-    };
-
-    //@}
-    /*! \name Operations on Output's vector */
-    //@{
-
-    /*! Force the output of the neuron at value specified */
-    virtual void setOutput( unsigned int neuron, double value );
-
-    /*! Set the outputs from the vector given */
-    virtual void setOutputs( const RealVec& outputs );
-
-    /*! Get the output of neuron */
-    virtual double getOutput( unsigned int neuron ) const;
-
-    /*! Get the array of outputs<br>
-     *  Return the array of outputs, not a copy of outputs; Then you can change outputs by the pointer returned !!!
-     */
-    RealVec& outputs() {
-		return outputdata;
-    };
-
-	/*! const version of outputs() */
-	const RealVec& outputs() const {
+	/*! \name Constructors */
+	//@{
+	/*! Construct a Cluster */
+	Cluster( unsigned int numNeurons, QString name = "unnamed" );
+	/*! Destructor */
+	virtual ~Cluster();
+	//@}
+	/*! \name Methods affecting whole Cluster */
+	//@{
+	/*! Return the number of neurons (the length of input and output arrays) */
+	unsigned int numNeurons() const {
+		return numneurons;
+	};
+	/*! Return true if inputs needs a reset */
+	bool needReset() {
+		return needRst;
+	};
+	/*! Enable/Disable accumulation mode<br>
+	 *  If accumulation is enabled (true) then linkers attached to this Cluster will never resetInput and accumulates data,
+	 *  otherwise the inputs will be resetted at each step of neural network
+	*/
+	void setAccumulate( bool mode ) {
+		accOff = !mode;
+	};
+	/*! return true if the Cluster will accumulates inputs */
+	bool isAccumulate() const {
+		return !accOff;
+	};
+	/*! Randomize the parameters of the Cluster<br>
+	 *  The parameters randomized by this method will be specified by sub-classes
+	 */
+	virtual void randomize( double min, double max ) = 0;
+	//@}
+	/*! \name Operations on Input's vector */
+	//@{
+	/*! Set the input of neuron
+	 * Details...
+	 */
+	virtual void setInput( unsigned int neuron, double value );
+	/*! Set the inputs from the vector given */
+	virtual void setInputs( const DoubleVector& inputs );
+	/*! Set all the inputs with the same value
+	 * Details...
+	 */
+	virtual void setAllInputs( double value );
+	/*! Reset the inputs of this cluster, typically this means that the inputs will be set to zero.
+	 * Details...
+	 */
+	virtual void resetInputs();
+	/*! Get the input of neuron
+	 */
+	virtual double getInput( unsigned int neuron ) const;
+	/*! Get the array of inputs */
+	DoubleVector inputs() {
+		return inputdata;
+	};
+	//@}
+	/*! \name Operations on Output's vector */
+	//@{
+	/*! Force the output of the neuron at value specified */
+	virtual void setOutput( unsigned int neuron, double value );
+	/*! Set the outputs from the vector given */
+	virtual void setOutputs( const DoubleVector& outputs );
+	/*! Get the output of neuron */
+	virtual double getOutput( unsigned int neuron ) const;
+	/*! Get the array of outputs */
+	DoubleVector outputs() {
 		return outputdata;
 	};
-
-    //@}
-    /*! \name Operations on OutputFunction */
-    //@{
-
-    /*! Set the output function for all neurons contained<br>
-     *  This method create an internal copy of the OutputFunction passed <br>
-     *  \warning This function delete the previous updater class registered !!! <br>
-     */
-    void setFunction( const OutputFunction& up );
-
-    /*! Get the Output function
-     */
-    OutputFunction* getFunction() const {
-        return updater;
-    };
-
+	//@}
+	/*! \name Operations on OutputFunction */
+	//@{
+	/*! Set the output function for all neurons contained<br>
+	 *  This method create an internal copy of the OutputFunction passed <br>
+	 *  \warning This function delete the previous updater class registered !!! <br>
+	 */
+	void setFunction( const OutputFunction& up );
+	/*! Get the Output function */
+	OutputFunction* getFunction() const {
+		return updater;
+	};
 	/*! Clone this Cluster */
 	virtual Cluster* clone() const;
-
 	/*! Return its typename */
 	virtual QString typeName() {
 		return "Cluster";
 	};
-
-    //@}
+	//@}
 
 protected:
-    /*! Set the state of 'needReset'<br>
-     *  Used by subclassed into update implementation
-     */
-    void setNeedReset( bool b ) {
-        needRst = accOff && b;
-    };
-
-private:
-    /*! Number of neurons */
-    unsigned int numneurons;
-    /*! Input of neurons */
-    RealVec inputdata;
-    /*! Output of neurons */
-    RealVec outputdata;
-    /*! OutputFunction Object */
-    OutputFunction* updater;
-
-    /*! True if the inputs needs a reset */
-    bool needRst;
-    /*! In Accumulated mode the needRst is always false, and then linkers attached to this will never resetInputs
-     *  --- Warns for developers --- accOff == true means NO-ACCUMULATION
-     */
-    bool accOff;
+	/*! Set the state of 'needReset'<br>
+	 *  Used by subclassed into update implementation
+	 */
+	void setNeedReset( bool b ) {
+		needRst = accOff && b;
+	};
+	/*! Number of neurons */
+	unsigned int numneurons;
+	/*! Input of neurons */
+	DoubleVector inputdata;
+	/*! Output of neurons */
+	DoubleVector outputdata;
+	/*! OutputFunction Object */
+	OutputFunction* updater;
+	/*! True if the inputs needs a reset */
+	bool needRst;
+	/*! In Accumulated mode the needRst is always false, and then linkers attached to this will never resetInputs
+	 *  --- Warns for developers --- accOff == true means NO-ACCUMULATION
+	 */
+	bool accOff;
 };
 
 }

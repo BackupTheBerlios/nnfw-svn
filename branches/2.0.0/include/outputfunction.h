@@ -59,6 +59,15 @@ public:
         apply( tmp1, tmp2 );
         return tmp2[0];
     };
+	/*! Compute the derivate of the function represent<br>
+	 *  Given the input of neurons and the corresponding output of neurons, it calculate
+	 *  the derivate.
+	 *  \return if it return false, then the OutputFunction is not derivable, and the derivates
+	 *  DoubleVector can contains trash data.
+	 */
+	virtual bool derivate( const RealVec& inputs, const RealVec&, RealVec& derivates ) const {
+		return false;
+	};
 
     /*! Set the Cluster which it is inserted<br>
      *  This method it's not necessary for simple OutputFunction like SigmoidFunction, LinearFunction, etc...

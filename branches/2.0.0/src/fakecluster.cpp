@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2008 Gianluca Massera <emmegian@yahoo.it>                *
+ *  Copyright (C) 2005-2009 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -19,33 +19,32 @@
 
 #include "fakecluster.h"
 #include "liboutputfunctions.h"
-#include "random.h"
 
 namespace nnfw {
 
 FakeCluster::FakeCluster( unsigned int size, QString name )
-    : Cluster( size, name) {
-    // Set the outputs as a View of inputs
-    outputs().convertToView( inputs(), 0, numNeurons() );
+	: Cluster( size, name) {
+	// Outputs will share data of Inputs
+	outputdata = inputdata;
 }
 
 FakeCluster::~FakeCluster() {
 }
 
 void FakeCluster::update() {
-    setNeedReset( true );
-    return;
+	setNeedReset( true );
+	return;
 }
 
 void FakeCluster::randomize( double , double ) {
-    return;
+	return;
 }
 
 FakeCluster* FakeCluster::clone() const {
 	FakeCluster* newclone = new FakeCluster( numNeurons(), name() );
 	newclone->setAccumulate( this->isAccumulate() );
-	newclone->inputs().assign( this->inputs() );
-	newclone->outputs().assign( this->outputs() );
+	newclone->inputs().copy( this->inputs() );
+	//newclone->outputs().copy( this->outputs() ); <-- is not necessary
 	newclone->setFunction( *(this->getFunction()) );
 	return newclone;
 }

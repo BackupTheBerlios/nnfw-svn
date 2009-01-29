@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2008 Gianluca Massera <emmegian@yahoo.it>                *
+ *  Copyright (C) 2005-2009 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -35,9 +35,9 @@ namespace nnfw {
  *  \par Description
  *    This Cluster calculate the outputs accordlying with follow equation:<br>
  *    y(t) <- a0 + a1*f(x) + a2*x(t) + a3*y(t-1) + a4*y'(t-1) + a5*y''(t-1) + a6*y'''(t-1) + ... <br>
- *    Note: L'attivazione delta alla 'Stefano' e' possibile ottenerla configurando i coefficienti nel seguente modo:<br>
+ *    NOTE: A simply leaky-integrator is possible by settings coefficients in the following way:<br>
  *    a0 <- 0.0 ; a1 <- delta ; a2 <- 0.0 ; a3 <- 1.0-delta <br>
- *    ottenendo: <br>
+ *    getting:: <br>
  *    y(t) <- (delta)*f(x) + (1.0-delta)*y(t-1)
  *  \par Warnings
  *
@@ -46,54 +46,45 @@ class NNFW_API DDECluster : public Cluster {
 public:
 	/*! \name Constructors */
 	//@{
-
-    /*! Construct a DDECluster setting coefficients as specified */
-    DDECluster( const RealVec& coeff, unsigned int numNeurons, QString name = "unnamed" );
-
-    /*! Destructor */
-    virtual ~DDECluster();
-
+	/*! Construct a DDECluster setting coefficients as specified */
+	DDECluster( const DoubleVector& coeff, unsigned int numNeurons, QString name = "unnamed" );
+	/*! Destructor */
+	virtual ~DDECluster();
 	//@}
 	/*! \name Interface */
 	//@{
-
-    /*! Set the coeffiecients */
-    void setCoeff( const RealVec& coef );
-
-    /*! Return coeffiecients */
-    const RealVec& getCoeff() {
-        return coeff;
-    };
-
-    /*! Update the outputs of neurons */
-    void update();
-
-    /*! Randomize Nothing ;-) */
-    void randomize( double, double ) { /* Nothing To Do */ };
-
+	/*! Set the coeffiecients */
+	void setCoeff( const DoubleVector& coef );
+	/*! Return coeffiecients */
+	const DoubleVector getCoeff() {
+		return coeff;
+	};
+	/*! Update the outputs of neurons */
+	void update();
+	/*! Randomize Nothing ;-) */
+	void randomize( double, double ) { /* Nothing To Do */ };
 	/*! Clone this DDECluster */
 	virtual DDECluster* clone() const;
 	/*! Return its typename */
 	virtual QString typeName() {
 		return "DDECluster";
 	};
-
 	//@}
 
 private:
-    /*! Coefficient of equation */
-    RealVec coeff;
-    /*! Derivates of output */
-    QVector< RealVec > ds;
-    /*! temporary data for calculation */
-    RealVec tmpdata;
-    /*! temporary data for calculation */
-    RealVec tmpdata2;
+	/*! Coefficient of equation */
+	DoubleVector coeff;
+	/*! Derivates of output */
+	QVector< DoubleVector > ds;
+	/*! temporary data for calculation */
+	DoubleVector tmpdata;
+	/*! temporary data for calculation */
+	DoubleVector tmpdata2;
 
-    /*! Update the derivates of output */
-    void updateDs();
-    /*! Break the update calculates */
-    void breakUpdate();
+	/*! Update the derivates of output */
+	void updateDs();
+	/*! Break the update calculates */
+	void breakUpdate();
 };
 
 }

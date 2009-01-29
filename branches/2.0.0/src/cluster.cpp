@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2008 Gianluca Massera <emmegian@yahoo.it>                *
+ *  Copyright (C) 2005-2009 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -23,88 +23,83 @@
 
 namespace nnfw {
 
-/**********************************************
- *  Implementation of Cluster Class     *
- **********************************************/
-
 Cluster::Cluster( unsigned int numNeurons, QString name )
-    : Updatable(name), inputdata(numNeurons), outputdata(numNeurons) {
-    this->numneurons = numNeurons;
-    outputdata.zeroing();
-    inputdata.zeroing();
-    accOff = true;
-    setNeedReset( false );
-
-    //! SigmoidFunction as Default
-    updater = new SigmoidFunction( 1.0 );
+	: Updatable(name), inputdata(numNeurons), outputdata(numNeurons) {
+	this->numneurons = numNeurons;
+	outputdata.zeroing();
+	inputdata.zeroing();
+	accOff = true;
+	setNeedReset( false );
+	//! SigmoidFunction as Default
+	updater = new SigmoidFunction( 1.0 );
 }
 
 Cluster::~Cluster() {
-    delete updater;
+	delete updater;
 }
 
 void Cluster::setFunction( const OutputFunction& up ) {
-    delete updater;
-    updater = up.clone();
-    updater->setCluster( this );
+	delete updater;
+	updater = up.clone();
+	updater->setCluster( this );
 }
 
 void Cluster::setInput( unsigned int neuron, double value ) {
 #ifdef NNFW_DEBUG
-    if ( neuron >= numneurons ) {
+	if ( neuron >= numneurons ) {
 		qWarning() << "The neuron " << neuron << " doesn't exists! The operation setInput will be ignored";
-        return;
-    }
+		return;
+	}
 #endif
-    inputdata[neuron] = value;
+	inputdata[neuron] = value;
 }
 
 void Cluster::setInputs( const RealVec& inputs ) {
-	inputdata.assign( inputs );
+	inputdata.copy( inputs );
 }
 
 void Cluster::setAllInputs( double value ) {
-    inputdata.assign( numneurons, value );
-    setNeedReset( false );
+	inputdata.setAll( value );
+	setNeedReset( false );
 }
 
 void Cluster::resetInputs() {
-    inputdata.zeroing();
-    setNeedReset( false );
+	inputdata.zeroing();
+	setNeedReset( false );
 }
 
 double Cluster::getInput( unsigned int neuron ) const {
 #ifdef NNFW_DEBUG
-    if ( neuron >= numneurons ) {
-        qWarning() << "The neuron " << neuron << " doesn't exists! The operation getInput will return 0.0";
-        return 0.0;
-    }
+	if ( neuron >= numneurons ) {
+		qWarning() << "The neuron " << neuron << " doesn't exists! The operation getInput will return 0.0";
+		return 0.0;
+	}
 #endif
-    return inputdata[neuron];
+	return inputdata[neuron];
 }
 
 void Cluster::setOutput( unsigned int neuron, double value ) {
 #ifdef NNFW_DEBUG
-    if ( neuron >= numneurons ) {
-        qWarning() << "The neuron " << neuron << " doesn't exists! The operation setOutput will be ignored";
-        return;
-    }
+	if ( neuron >= numneurons ) {
+		qWarning() << "The neuron " << neuron << " doesn't exists! The operation setOutput will be ignored";
+		return;
+	}
 #endif
-    outputdata[neuron] = value;
+	outputdata[neuron] = value;
 }
 
 void Cluster::setOutputs( const RealVec& outputs ) {
-	outputdata.assign( outputs );
+	outputdata.copy( outputs );
 }
 
 double Cluster::getOutput( unsigned int neuron ) const {
 #ifdef NNFW_DEBUG
-    if ( neuron >= numneurons ) {
-        qWarning() << "The neuron " << neuron << " doesn't exists! The operation getOutput will return 0.0";
-        return 0.0;
-    }
+	if ( neuron >= numneurons ) {
+		qWarning() << "The neuron " << neuron << " doesn't exists! The operation getOutput will return 0.0";
+		return 0.0;
+	}
 #endif
-    return outputdata[neuron];
+	return outputdata[neuron];
 }
 
 Cluster* Cluster::clone() const {

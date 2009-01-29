@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2008 Gianluca Massera <emmegian@yahoo.it>                *
+ *  Copyright (C) 2005-2009 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -33,17 +33,16 @@ namespace nnfw {
  */
 class NNFW_API Clonable {
 public:
-    /*! \name Virtual Destrucor */
-    //@{
-    /*! Destructor */
-    virtual ~Clonable() { /* Nothing to do */ };
-    //@}
-
-    /*! \name Interface */
-    //@{
-    /*! Clone method returns a new allocated clone of this object */
-    virtual Clonable* clone() const = 0;
-    //@}
+	/*! \name Virtual Destrucor */
+	//@{
+	/*! Destructor */
+	virtual ~Clonable() { /* Nothing to do */ };
+	//@}
+	/*! \name Interface */
+	//@{
+	/*! Clone method returns a new allocated clone of this object */
+	virtual Clonable* clone() const = 0;
+	//@}
 };
 
 }

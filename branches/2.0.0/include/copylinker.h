@@ -95,11 +95,11 @@ public:
 	//@}
 
 private:
-	/*! View of source RealVec of copying */
-	RealVec dataFrom;
-	/*! View of destination RealVec of copying */
-	RealVec dataTo;
-	/*! True if RealVec views are been initialized */
+	/*! Source of copying */
+	DoubleVector dataFrom;
+	/*! Destination of copying */
+	DoubleVector dataTo;
+	/*! True if DoubleVector views are been initialized */
 	bool viewsIsInit;
 	/*! Length of data to be copied */
 	unsigned int dimData;

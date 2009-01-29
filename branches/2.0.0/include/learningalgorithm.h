@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2008 Gianluca Massera <emmegian@yahoo.it>                *
+ *  Copyright (C) 2005-2009 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -58,9 +58,8 @@ class BaseNeuralNet;
  *  \endcode
  *
  *  \par Warnings
- *  Pay attention when you use operator[] because it silently add new data. Like std::map::operator[]
+ *  Pay attention when you use operator[] because it silently add new data. Like QMap::operator[]
  *
- *  \todo Supports for storing all properties of Cluster... storing Linkers info ?!?!
  */
 class NNFW_API Pattern {
 public:
@@ -68,8 +67,8 @@ public:
 	//@{
 	class PatternInfo {
 	public:
-		RealVec inputs;
-		RealVec outputs;
+		DoubleVector inputs;
+		DoubleVector outputs;
 	};
 	//@}
 	/*! \name Constructors */
@@ -78,62 +77,35 @@ public:
 	Pattern() : pinfo(), empty() { /*nothing to do*/ };
 	/*! Destructor */
 	~Pattern() { /*nothing to do*/ };
-
 	//@}
 	/*! \name Interface */
 	//@{
 	/*! set the inputs associated with Cluster passed */
-	void setInputsOf( Cluster*, const RealVec& );
+	void setInputsOf( Cluster*, const DoubleVector& );
 	/*! set the outputs associated with Cluster passed */
-	void setOutputsOf( Cluster*, const RealVec& );
+	void setOutputsOf( Cluster*, const DoubleVector& );
 	/*! set the both inputs and outputs associated with Cluster passed */
-	void setInputsOutputsOf( Cluster*, const RealVec& inputs, const RealVec& outputs );
-
+	void setInputsOutputsOf( Cluster*, const DoubleVector& inputs, const DoubleVector& outputs );
 	/*! return stored information if exists, otherwise it return a zero vector */
-	const RealVec& inputsOf( Cluster* ) const;
+	const DoubleVector inputsOf( Cluster* ) const;
 	/*! return stored information if exists, otherwise it return a zero vector */
-	const RealVec& outputsOf( Cluster* ) const;
-
+	const DoubleVector outputsOf( Cluster* ) const;
 	/*! return the stored information
 	 *  \warning it silently create a new one if the Cluster passed is not present */
 	PatternInfo& operator[]( Cluster* );
-
 	//@}
 private:
 	mutable QMap<Cluster*, PatternInfo> pinfo;
-	RealVec empty;
 };
 
-/*! \brief PatternSet object
- *
+/*! \brief PatternSet type
  *  \par Motivation
  *  It represent a collection of Pattern object. It could be a Learning Set or a Training Set
- *
  *  \par Description
- *  PatternSet simply inherit from a VectorData<Pattern>
- *
+ *  PatternSet is simply a QVector<Pattern>
  *  \par Warnings
- *
  */
-class NNFW_API PatternSet : public QVector<Pattern> {
-public:
-    /*! \name Constructors */
-    //@{
-
-    /*! Default Constructor */
-    PatternSet() : QVector<Pattern>() { };
-
-    /*! Construct a vector of dimension size setting all values to defaul constructor of T */
-    PatternSet( unsigned int size ) : QVector<Pattern>( size ) { };
-
-    /*! The Copy-Constructor always allocate new memory and copies the data, 
-	 *  even if the source VectorData is a view.
-	 *  Hence, a copy of a VectorData view is not a view but a new copy of data viewed by source.
-	 *  \param src the VectorData to be copied
-     */
-    PatternSet( const PatternSet& src ) : QVector<Pattern>( src ) { };
-	//@}
-};
+typedef QVector<Pattern> PatternSet;
 
 /*! \brief LearningAlgorithm object
  *
@@ -143,37 +115,29 @@ class NNFW_API LearningAlgorithm {
 public:
 	/*! \name Constructors */
 	//@{
-
-    /*! Constructor */
-    LearningAlgorithm( BaseNeuralNet* net );
-    /*! Destructor */
-    virtual ~LearningAlgorithm();
-
+	/*! Constructor */
+	LearningAlgorithm( BaseNeuralNet* net );
+	/*! Destructor */
+	virtual ~LearningAlgorithm();
 	//@}
 	/*! \name Interface */
 	//@{
-
 	/*! Return the BaseNeuralNet setted */
 	BaseNeuralNet* net() {
 		return netp;
 	};
-
 	/*! a single step of learning algorithm */
 	virtual void learn() = 0;
-
-    /*! Modify the object tring to learn the pattern passed */
-    virtual void learn( const Pattern& ) = 0;
-
-    /*! Modify the object tring to learn all patterns present into PatternSet passed */
-    virtual void learnOnSet( const PatternSet& set ) {
+	/*! Modify the object tring to learn the pattern passed */
+	virtual void learn( const Pattern& ) = 0;
+	/*! Modify the object tring to learn all patterns present into PatternSet passed */
+	virtual void learnOnSet( const PatternSet& set ) {
 		for( int i=0; i<(int)set.size(); i++ ) {
 			learn( set[i] );
 		}
 	};
-
 	/*! Calculate the Mean Square Error respect to Pattern passed */
 	virtual double calculateMSE( const Pattern& ) = 0;
-	
 	/*! Calculate the Mean Square Error respect to all Patterns passed */
 	virtual double calculateMSEOnSet( const PatternSet& set ) {
 		double mseacc = 0.0;
@@ -183,17 +147,14 @@ public:
 		}
 		return mseacc/dim;
 	};
-
 	/*! Calculate the Root Mean Square Deviation, i.e. the square root of MSE */
 	double calculateRMSD( const Pattern& p ) {
 		return sqrt( calculateMSE( p ) );
 	};
-
 	/*! Calculate the Root Mean Square Deviation, i.e. the square root of MSE */
 	double calculateRMSDOnSet( const PatternSet& p ) {
 		return sqrt( calculateMSEOnSet( p ) );
 	};
-
 	//@}
 
 private:

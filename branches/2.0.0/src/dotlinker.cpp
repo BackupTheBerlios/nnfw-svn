@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2008 Gianluca Massera <emmegian@yahoo.it>                *
+ *  Copyright (C) 2005-2009 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -18,28 +18,23 @@
  ********************************************************************************/
 
 #include "dotlinker.h"
-#include "random.h"
-
-#ifdef NNFW_USE_MKL
-#include <mkl_cblas.h>
-#endif
 
 namespace nnfw {
 
 DotLinker::DotLinker( Cluster* from, Cluster* to, QString name )
-    : MatrixLinker(from, to, name) {
+	: MatrixLinker(from, to, name) {
 }
 
 DotLinker::~DotLinker() {
 }
 
 void DotLinker::update() {
-    // check if cluster 'To' needs a reset
-    if ( to()->needReset() ) {
-        to()->resetInputs();
-    }
-    RealMat::mul( to()->inputs(), from()->outputs(), matrix() );
-    return;
+	// check if cluster 'To' needs a reset
+	if ( to()->needReset() ) {
+		to()->resetInputs();
+	}
+	mul( to()->inputs(), from()->outputs(), matrix() );
+	return;
 }
 
 DotLinker* DotLinker::clone() const {

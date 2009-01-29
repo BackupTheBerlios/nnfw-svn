@@ -32,9 +32,17 @@
 #include "matrices.h"
 
 namespace nnfw {
-
 	/*! \name Vector Operation */
 	//@{
+	/*! Fill up the dest vector with all available elements from source until
+	 *  the end of dest or source is reached
+	 */
+	DoubleVector& fillup( DoubleVector& dest, const DoubleVector& source ) {
+		unsigned int size = qMin( dest.size(), source.size() );
+		for( unsigned int i=0; i<size; i++ ) {
+			dest[i] = source[i];
+		}
+	};
 	/*! Calculate the square of each element */
 	DoubleVector& square( DoubleVector& data ) {
 		for( unsigned int i=0; i<data.size(); i++ ) {

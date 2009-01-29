@@ -65,7 +65,7 @@ public:
 	/*! Get the array of biases, this returns the actual array not a copy.
 	 *  This allows you to change the biases using the pointer returned!
 	 */
-	DoubleVector& biases() {
+	DoubleVector biases() {
 		return biasesdata;
 	};
 	/*! Randomize the biases of BiasedCluster */

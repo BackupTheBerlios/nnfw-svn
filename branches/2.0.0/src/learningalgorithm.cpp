@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2008 Gianluca Massera <emmegian@yahoo.it>                *
+ *  Copyright (C) 2005-2009 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -22,32 +22,32 @@
 
 namespace nnfw {
 
-void Pattern::setInputsOf( Cluster* cl, const RealVec& ins ) {
+void Pattern::setInputsOf( Cluster* cl, const DoubleVector& ins ) {
 	pinfo[cl].inputs = ins;
 };
 
-void Pattern::setOutputsOf( Cluster* cl, const RealVec& ous ) {
+void Pattern::setOutputsOf( Cluster* cl, const DoubleVector& ous ) {
 	pinfo[cl].outputs = ous;
 };
 
-void Pattern::setInputsOutputsOf( Cluster* cl, const RealVec& ins, const RealVec& ous ) {
+void Pattern::setInputsOutputsOf( Cluster* cl, const DoubleVector& ins, const DoubleVector& ous ) {
 	pinfo[cl].inputs = ins;
 	pinfo[cl].outputs= ous;
 };
 
-const RealVec& Pattern::inputsOf( Cluster* cl ) const {
+const DoubleVector Pattern::inputsOf( Cluster* cl ) const {
 	if ( pinfo.count(cl) != 0 ) {
 		return pinfo[cl].inputs;
 	} else {
-		return empty;
+		return DoubleVector();
 	}
 };
 
-const RealVec& Pattern::outputsOf( Cluster* cl ) const {
+const DoubleVector Pattern::outputsOf( Cluster* cl ) const {
 	if ( pinfo.count(cl) != 0 ) {
 		return pinfo[cl].outputs;
 	} else {
-		return empty;
+		return DoubleVector();
 	}
 };
 

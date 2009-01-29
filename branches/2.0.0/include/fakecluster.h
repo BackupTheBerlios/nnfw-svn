@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2008 Gianluca Massera <emmegian@yahoo.it>                *
+ *  Copyright (C) 2005-2009 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -47,33 +47,26 @@ namespace nnfw {
  */
 class NNFW_API FakeCluster : public Cluster {
 public:
-    /*! \name Constructors */
-    //@{
-
-    /*! Construct a FakeCluster */
-    FakeCluster( unsigned int size, QString name = "unnamed" );
-
-    /*! Destructor */
-    virtual ~FakeCluster();
-
-    //@}
-    /*! \name Interface */
-    //@{
-
-    /*! Update ;-) It's do nothing !! */
-    void update();
-
-    /*! Randomize ?!?! it do nothings */
-    void randomize( double min, double max );
-
+	/*! \name Constructors */
+	//@{
+	/*! Construct a FakeCluster */
+	FakeCluster( unsigned int size, QString name = "unnamed" );
+	/*! Destructor */
+	virtual ~FakeCluster();
+	//@}
+	/*! \name Interface */
+	//@{
+	/*! Update ;-) It's do nothing !! */
+	void update();
+	/*! Randomize ?!?! it do nothings */
+	void randomize( double min, double max );
 	/*! Clone this FakeCluster */
 	virtual FakeCluster* clone() const;
 	/*! Return its typename */
 	virtual QString typeName() {
 		return "FakeCluster";
 	};
-
-    //@}
+	//@}
 
 };
 
