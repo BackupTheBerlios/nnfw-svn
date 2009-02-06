@@ -45,7 +45,7 @@ FakeCluster* FakeCluster::clone() const {
 	newclone->setAccumulate( this->isAccumulate() );
 	newclone->inputs().copy( this->inputs() );
 	//newclone->outputs().copy( this->outputs() ); <-- is not necessary
-	newclone->setFunction( *(this->getFunction()) );
+	newclone->setFunction( *(this->function()) );
 	return newclone;
 }
 

@@ -46,9 +46,10 @@ public:
 	/*! \name Interface */
 	//@{
 	/*! Calculate the outputs of neurons by the net inputs given */
-	virtual void apply( const DoubleVector& inputs, const DoubleVector& outputs ) {
+	virtual void apply( DoubleVector& inputs, DoubleVector& outputs ) {
 		Q_UNUSED( inputs );
 		Q_UNUSED( outputs );
+		qDebug() << "NOOOOOOOOOOOOOOO";
 		/* nothing to do */
 	};
 	/*! Calculate the outputs of a single neuron */

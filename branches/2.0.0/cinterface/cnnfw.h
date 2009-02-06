@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2008 Gianluca Massera <emmegian@yahoo.it>                *
+ *  Copyright (C) 2005-2009 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -42,7 +42,7 @@
 	#define C_NNFW_API
 #endif
 
-#define NNFW_VERSION 10400
+#define NNFW_VERSION 20000
 
 #ifdef __cplusplus
 extern "C" {

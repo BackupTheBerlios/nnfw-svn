@@ -157,7 +157,7 @@ public:
 	 */
 	void setFunction( const OutputFunction& up );
 	/*! Get the Output function */
-	OutputFunction* getFunction() const {
+	OutputFunction* function() const {
 		return updater;
 	};
 	/*! Clone this Cluster */

@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2008 Gianluca Massera <emmegian@yahoo.it>                *
+ *  Copyright (C) 2005-2009 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -34,7 +34,6 @@
 #include "fakecluster.h"
 #include "dotlinker.h"
 #include "normlinker.h"
-#include "sparsematrixlinker.h"
 #include "copylinker.h"
 #include "outputfunction.h"
 #include "liboutputfunctions.h"
@@ -45,13 +44,13 @@
 #include <QMap>
 
 namespace nnfw {
-	//--- for accessing RealVec data from C interface implementation
-	NNFW_INTERNAL double* getRawData( RealVec& vec ) {
-		return vec.rawdata();
+	//--- for accessing DoubleVector data from C interface implementation
+	NNFW_INTERNAL double* getRawData( DoubleVector& vec ) {
+		return vec.shData->data;
 	}
 	//--- for accessing from C interface implementation
-	NNFW_INTERNAL double* getRawData( RealMat& mat ) {
-		return getRawData( mat.rawdata() );
+	NNFW_INTERNAL double* getRawData( DoubleMatrix& mat ) {
+		return mat.shData->alldata;
 	}
 }
 
@@ -125,7 +124,7 @@ C_NNFW_API NnfwCluster* NnfwClusterCreate( const char* type, unsigned int numNeu
 	NnfwCluster* cl = new NnfwCluster();
 	cl->myup = cl->cluster;
 	cl->func = new NnfwOutputFunction();
-	cl->func->func = cl->cluster->getFunction();
+	cl->func->func = cl->cluster->function();
 	return cl;
 }
 *** */
@@ -151,7 +150,7 @@ C_NNFW_API void NnfwClusterRandomize( NnfwCluster* cl, double min, double max ) 
 }
 
 C_NNFW_API void NnfwClusterSetInputs( NnfwCluster* cl, double* ins ) {
-	RealVec insr( ins, cl->cluster->numNeurons() );
+	DoubleVector insr( ins, cl->cluster->numNeurons() );
 	cl->cluster->setInputs( insr );
 }
 
@@ -168,7 +167,7 @@ C_NNFW_API double NnfwClusterInput( NnfwCluster* cl, unsigned int neuron ) {
 }
 
 C_NNFW_API void NnfwClusterSetOutputs( NnfwCluster* cl, double* outs ) {
-	RealVec outsr( outs, cl->cluster->numNeurons() );
+	DoubleVector outsr( outs, cl->cluster->numNeurons() );
 	cl->cluster->setOutputs( outsr );
 }
 
@@ -186,7 +185,7 @@ C_NNFW_API double NnfwClusterOutput( NnfwCluster* cl, unsigned int neuron ) {
 
 C_NNFW_API void NnfwClusterSetFunction( NnfwCluster* cl, NnfwOutputFunction* f ) {
 	cl->cluster->setFunction( *(f->func) );
-	cl->func->func = cl->cluster->getFunction();
+	cl->func->func = cl->cluster->function();
 }
 
 C_NNFW_API NnfwOutputFunction* NnfwClusterFunction( NnfwCluster* cl ) {
@@ -198,7 +197,7 @@ C_NNFW_API NnfwCluster* NnfwClusterClone( NnfwCluster* cl ) {
 	cln->cluster = cl->cluster->clone();
 	cln->myup = cln->cluster;
 	cln->func = new NnfwOutputFunction();
-	cln->func->func = cln->cluster->getFunction();
+	cln->func->func = cln->cluster->function();
 	return cln;
 }
 
@@ -207,7 +206,7 @@ C_NNFW_API NnfwCluster* NnfwClusterCreateSimple( unsigned int numNeurons ) {
 	cl->cluster = new SimpleCluster( numNeurons );
 	cl->myup = cl->cluster;
 	cl->func = new NnfwOutputFunction();
-	cl->func->func = cl->cluster->getFunction();
+	cl->func->func = cl->cluster->function();
 	return cl;
 }
 
@@ -216,12 +215,12 @@ C_NNFW_API NnfwCluster* NnfwClusterCreateBiased( unsigned int numNeurons ) {
 	cl->cluster = new BiasedCluster( numNeurons );
 	cl->myup = cl->cluster;
 	cl->func = new NnfwOutputFunction();
-	cl->func->func = cl->cluster->getFunction();
+	cl->func->func = cl->cluster->function();
 	return cl;
 }
 
 C_NNFW_API void NnfwBiasedClusterSetBiases( NnfwCluster* cl, double* b ) {
-	RealVec br( b, cl->cluster->numNeurons() );
+	DoubleVector br( b, cl->cluster->numNeurons() );
 	((BiasedCluster*)cl->cluster)->setBiases( br );
 }
 
@@ -242,7 +241,7 @@ C_NNFW_API NnfwCluster* NnfwClusterCreateFake( unsigned int numNeurons ) {
 	cl->cluster = new FakeCluster( numNeurons );
 	cl->myup = cl->cluster;
 	cl->func = new NnfwOutputFunction();
-	cl->func->func = cl->cluster->getFunction();
+	cl->func->func = cl->cluster->function();
 	return cl;
 }
 
@@ -299,7 +298,7 @@ C_NNFW_API NnfwLinker* NnfwLinkerCreateDot( NnfwCluster* from, NnfwCluster* to )
 }
 
 C_NNFW_API void NnfwDotLinkerSetWeights( NnfwLinker* link, double* matrix ) {
-	RealMat& mat = ((DotLinker*)link->linker)->matrix();
+	DoubleMatrix& mat = ((DotLinker*)link->linker)->matrix();
 	int row = mat.rows();
 	int col = mat.cols();
 	for( int j=0; j<col; j++ ) {
@@ -319,7 +318,7 @@ C_NNFW_API double* NnfwDotLinkerWeights( NnfwLinker* link ) {
 }
 
 C_NNFW_API double NnfwDotLinkerWeight( NnfwLinker* link, unsigned int from, unsigned int to ) {
-	return ((DotLinker*)link->linker)->getWeight( from, to );
+	return ((DotLinker*)link->linker)->weight( from, to );
 }
 
 C_NNFW_API int NnfwDotLinkerRows( NnfwLinker* link ) {
@@ -339,7 +338,7 @@ C_NNFW_API NnfwLinker* NnfwLinkerCreateNorm( NnfwCluster* from, NnfwCluster* to 
 }
 
 C_NNFW_API void NnfwNormLinkerSetWeights( NnfwLinker* link, double* matrix ) {
-	RealMat& mat = ((NormLinker*)link->linker)->matrix();
+	DoubleMatrix& mat = ((NormLinker*)link->linker)->matrix();
 	int row = mat.rows();
 	int col = mat.cols();
 	for( int j=0; j<col; j++ ) {
@@ -359,7 +358,7 @@ C_NNFW_API double* NnfwNormLinkerWeights( NnfwLinker* link ) {
 }
 
 C_NNFW_API double NnfwNormLinkerWeight( NnfwLinker* link, unsigned int from, unsigned int to ) {
-	return ((NormLinker*)link->linker)->getWeight( from, to );
+	return ((NormLinker*)link->linker)->weight( from, to );
 }
 
 C_NNFW_API int NnfwNormLinkerRows( NnfwLinker* link ) {
@@ -368,76 +367,6 @@ C_NNFW_API int NnfwNormLinkerRows( NnfwLinker* link ) {
 
 C_NNFW_API int NnfwNormLinkerCols( NnfwLinker* link ) {
 	return ((NormLinker*)link->linker)->cols();
-}
-
-C_NNFW_API NnfwLinker* NnfwLinkerCreateSparse( NnfwCluster* from, NnfwCluster* to ) {
-	NnfwLinker* link = new NnfwLinker();
-	link->linker = new SparseMatrixLinker( from->cluster, to->cluster );
-	link->myup = link->linker;
-	link->from = from;
-	link->to = to;
-	return link;
-}
-
-C_NNFW_API void NnfwSparseLinkerSetWeights( NnfwLinker* link, double* matrix ) {
-	RealMat& mat = ((SparseMatrixLinker*)link->linker)->matrix();
-	int row = mat.rows();
-	int col = mat.cols();
-	for( int j=0; j<col; j++ ) {
-		int toSkip = row*j;
-		for( int i=0; i<row; i++ ) {
-			mat[i][j] = matrix[i + toSkip];
-		}
-	}
-	mat.cover( ((SparseMatrixLinker*)link->linker)->mask() );
-}
-
-C_NNFW_API void NnfwSparseLinkerSetWeight( NnfwLinker* link, unsigned int from, unsigned int to, double w ) {
-	((SparseMatrixLinker*)link->linker)->setWeight( from, to, w );
-}
-
-C_NNFW_API double* NnfwSparseLinkerWeights( NnfwLinker* link ) {
-	return getRawData( ((SparseMatrixLinker*)link->linker)->matrix() );
-}
-
-C_NNFW_API double NnfwSparseLinkerWeight( NnfwLinker* link, unsigned int from, unsigned int to ) {
-	return ((SparseMatrixLinker*)link->linker)->getWeight( from, to );
-}
-
-C_NNFW_API int NnfwSparseLinkerRows( NnfwLinker* link ) {
-	return ((SparseMatrixLinker*)link->linker)->rows();
-}
-
-C_NNFW_API int NnfwSparseLinkerCols( NnfwLinker* link ) {
-	return ((SparseMatrixLinker*)link->linker)->cols();
-}
-
-C_NNFW_API void NnfwSparseLinkerConnect( NnfwLinker* link, unsigned int from, unsigned int to ) {
-	((SparseMatrixLinker*)link->linker)->connect( from, to );
-}
-
-C_NNFW_API void NnfwSparseLinkerConnectAll( NnfwLinker* link ) {
-	((SparseMatrixLinker*)link->linker)->connectAll();
-}
-
-C_NNFW_API void NnfwSparseLinkerConnectRandom( NnfwLinker* link, double prob ) {
-	((SparseMatrixLinker*)link->linker)->connectRandom( prob );
-}
-
-C_NNFW_API void NnfwSparseLinkerDisconnect( NnfwLinker* link, unsigned int from, unsigned int to ) {
-	((SparseMatrixLinker*)link->linker)->disconnect( from, to );
-}
-
-C_NNFW_API void NnfwSparseLinkerDisconnectAll( NnfwLinker* link ) {
-	((SparseMatrixLinker*)link->linker)->disconnectAll();
-}
-
-C_NNFW_API void NnfwSparseLinkerDisconnectRandom( NnfwLinker* link, double prob ) {
-	((SparseMatrixLinker*)link->linker)->disconnectRandom( prob );
-}
-
-C_NNFW_API int NnfwSparseLinkerConnectionAt( NnfwLinker* link, unsigned int from, unsigned int to ) {
-	return ((SparseMatrixLinker*)link->linker)->mask()[from][to];
 }
 
 C_NNFW_API NnfwLinker* NnfwLinkerCreateCopy( NnfwCluster* from, NnfwCluster* to ) {
@@ -740,7 +669,7 @@ C_NNFW_API NnfwCluster* NnfwIteratorGetCluster( NnfwIterator* itera, int i ) {
 		ncl->cluster = cl;
 		ncl->myup = ncl->cluster;
 		ncl->func = new NnfwOutputFunction();
-		ncl->func->func = cl->getFunction();
+		ncl->func->func = cl->function();
 		clmap[cl] = ncl;
 	}
 	return clmap[cl];
@@ -774,7 +703,7 @@ C_NNFW_API NnfwLinker* NnfwIteratorGetLinker( NnfwIterator* itera, int i ) {
 			ncl->cluster = cl;
 			ncl->myup = ncl->cluster;
 			ncl->func = new NnfwOutputFunction();
-			ncl->func->func = cl->getFunction();
+			ncl->func->func = cl->function();
 			clmap[cl] = ncl;
 		}
 		nln->from = clmap[cl];
@@ -784,7 +713,7 @@ C_NNFW_API NnfwLinker* NnfwIteratorGetLinker( NnfwIterator* itera, int i ) {
 			ncl->cluster = cl;
 			ncl->myup = ncl->cluster;
 			ncl->func = new NnfwOutputFunction();
-			ncl->func->func = cl->getFunction();
+			ncl->func->func = cl->function();
 			clmap[cl] = ncl;
 		}
 		nln->to = clmap[cl];
@@ -804,21 +733,21 @@ C_NNFW_API int NnfwPatternSetSize( NnfwPatternSet* set ) {
 }
 
 C_NNFW_API void NnfwPatternSetSetInputsOf( NnfwPatternSet* pset, int i, NnfwCluster* cl, double* inputs ) {
-	RealVec rv( inputs, cl->cluster->numNeurons() );
+	DoubleVector rv( inputs, cl->cluster->numNeurons() );
 	(*(pset->pset))[i].setInputsOf( cl->cluster, rv );
 }
 
 C_NNFW_API void NnfwPatternSetSetOutputsOf( NnfwPatternSet* pset, int i, NnfwCluster* cl, double* outputs ) {
-	RealVec rv( outputs, cl->cluster->numNeurons() );
+	DoubleVector rv( outputs, cl->cluster->numNeurons() );
 	(*(pset->pset))[i].setOutputsOf( cl->cluster, rv );
 }
 
 C_NNFW_API double* NnfwPatternSetGetInputsOf( NnfwPatternSet* pset, int i, NnfwCluster* cl ) {
-	return getRawData( (RealVec&)(pset->pset->at(i).inputsOf( cl->cluster )) );
+	return getRawData( (DoubleVector&)(pset->pset->at(i).inputsOf( cl->cluster )) );
 }
 
 C_NNFW_API double* NnfwPatternSetGetOutputsOf( NnfwPatternSet* pset, int i, NnfwCluster* cl ) {
-	return getRawData( (RealVec&)(pset->pset->at(i).outputsOf( cl->cluster )) );
+	return getRawData( (DoubleVector&)(pset->pset->at(i).outputsOf( cl->cluster )) );
 }
 
 

@@ -50,17 +50,17 @@ int main( int , char** ) {
 	// --- The learning Set
 	PatternSet learningSet(4);
 	// --- Input <0,0> -> Output <0>
-	learningSet[0].setInputsOf( in, RealVec() << 0.0 << 0.0 );
-	learningSet[0].setOutputsOf( out, RealVec() << 0.0 );
+	learningSet[0].setInputsOf( in, DoubleVector() << 0.0 << 0.0 );
+	learningSet[0].setOutputsOf( out, DoubleVector() << 0.0 );
 	// --- Input <0,1> -> Output <1>
-	learningSet[1].setInputsOf( in, RealVec() << 0.0 << 1.0 );
-	learningSet[1].setOutputsOf( out, RealVec() << 1.0 );
+	learningSet[1].setInputsOf( in, DoubleVector() << 0.0 << 1.0 );
+	learningSet[1].setOutputsOf( out, DoubleVector() << 1.0 );
 	// --- Input <1,0> -> Output <1>
-	learningSet[2].setInputsOf( in, RealVec() << 1.0 << 0.0 );
-	learningSet[2].setOutputsOf( out, RealVec() << 1.0 );
+	learningSet[2].setInputsOf( in, DoubleVector() << 1.0 << 0.0 );
+	learningSet[2].setOutputsOf( out, DoubleVector() << 1.0 );
 	// --- Input <1,1> -> Output <0>
-	learningSet[3].setInputsOf( in, RealVec() << 1.0 << 1.0 );
-	learningSet[3].setOutputsOf( out, RealVec() << 0.0 );
+	learningSet[3].setInputsOf( in, DoubleVector() << 1.0 << 1.0 );
+	learningSet[3].setOutputsOf( out, DoubleVector() << 0.0 );
 
 	// --- Main loop for learning the network
 	int i;
@@ -74,11 +74,11 @@ int main( int , char** ) {
 	qDebug() << "Iterations: " << i << "\tError:" << bp->calculateMSEOnSet( learningSet );
 	// --- compare the outputs with learning set
 	for( int i = 0; i<4; i++ ) {
-		in->inputs() = learningSet[i].inputsOf( in );
+		in->inputs().copy( learningSet[i].inputsOf( in ) );
 		net->step();
 		double out1 = out->getOutput(0);
 		double out2 = learningSet[i].outputsOf( out )[0];
-		qDebug() << "Target: " << out2 << "\tRete: " << out1;
+		qDebug() << "Inputs: " << in->inputs()[0] << in->inputs()[1] << "Target: " << out2 << "\tRete: " << out1;
 	}
 
 	return 0;

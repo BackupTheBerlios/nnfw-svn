@@ -69,6 +69,11 @@ void GainFunction::apply( DoubleVector& inputs, DoubleVector& outputs ) {
 	outputs += gainv;
 }
 
+bool GainFunction::derivate( const DoubleVector&, const DoubleVector&, DoubleVector& derivates ) const {
+    derivates.setAll( 1.0 );
+	return true;
+}
+
 GainFunction* GainFunction::clone() const {
 	return new GainFunction( gainv );
 }

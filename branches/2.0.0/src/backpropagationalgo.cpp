@@ -59,7 +59,7 @@ void BackPropagationAlgo::setTeachingInput( Cluster* output, const DoubleVector&
 		return;
 	}
 	int index = mapIndex[ output ];
-	cluster_deltas_vec[index].deltas_outputs = output->outputs() - ti;
+	minus( cluster_deltas_vec[index].deltas_outputs, output->outputs(), ti );
 	return;
 }
 
@@ -91,7 +91,7 @@ void BackPropagationAlgo::propagDeltas() {
 		// --- propagate DeltaOutput to DeltaInputs
 		cluster_deltas_vec[i].deltas_inputs.copy( cluster_deltas_vec[i].deltas_outputs );
 		Cluster* cl = cluster_deltas_vec[i].cluster;
-		OutputFunction* func = cl->getFunction();
+		OutputFunction* func = cl->function();
 		diff_vec.resize( cluster_deltas_vec[i].deltas_inputs.size() );
 		if ( func->derivate( cl->inputs(), cl->outputs(), diff_vec ) ) {
 			cluster_deltas_vec[i].deltas_inputs *= diff_vec;

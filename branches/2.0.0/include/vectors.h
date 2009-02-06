@@ -590,10 +590,10 @@ public:
 		if ( newsize > shData->vsize ) {
 			double* newdata = new double[newsize];
 			memoryCopy( newdata, shData->data, shData->vsize );
-			shData->data = newdata;
-			shData->vsize = newsize;
 			delete [](shData->data);
 			delete [](shData->dataref);
+			shData->data = newdata;
+			shData->vsize = newsize;
 			shData->dataref = new doubleRef[ newsize ];
 			for( unsigned int i=0; i<shData->vsize; i++ ) {
 				shData->dataref[i].setRef( shData->data + i );
@@ -654,6 +654,11 @@ private:
 		shData->nodata = true;
 		isprotected = true;
 	};
+
+#ifdef C_NNFW_API
+	//--- for accessing from C interface implementation
+	friend double* getRawData( DoubleVector& );
+#endif
 };
 
 }

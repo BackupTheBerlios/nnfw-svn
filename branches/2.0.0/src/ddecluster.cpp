@@ -55,7 +55,7 @@ void DDECluster::update() {
 		return;
 	}
 	// --- tmp <- a0 + a1*f(x)
-	getFunction()->apply( inputs(), tmpdata2 );
+	function()->apply( inputs(), tmpdata2 );
 	tmpdata2 *= coeff[1];
 	tmpdata += tmpdata2;
 	if ( csize == 2 ) {
@@ -122,7 +122,7 @@ DDECluster* DDECluster::clone() const {
 	newclone->setAccumulate( this->isAccumulate() );
 	newclone->inputs().copy( this->inputs() );
 	newclone->outputs().copy( this->outputs() );
-	newclone->setFunction( *(this->getFunction()) );
+	newclone->setFunction( *(this->function()) );
 	return newclone;
 }
 

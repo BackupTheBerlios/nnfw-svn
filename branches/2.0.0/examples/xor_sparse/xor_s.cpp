@@ -1,7 +1,7 @@
 
 #include "nnfw/nnfw.h"
 #include "nnfw/biasedcluster.h"
-#include "nnfw/sparsematrixlinker.h"
+#include "nnfw/dotlinker.h"
 #include "nnfw/liboutputfunctions.h"
 #include "nnfw/backpropagationalgo.h"
 #include "nnfw/random.h"
@@ -11,7 +11,7 @@ using namespace nnfw;
 
 //-------- Neural Network Structures
 BiasedCluster *in, *hid, *out;
-SparseMatrixLinker *l1, *l2;
+DotLinker *l1, *l2;
 BaseNeuralNet* net;
 
 int main( int , char** ) {
@@ -22,14 +22,16 @@ int main( int , char** ) {
 	// --- Create the Layers of network
 	in = new BiasedCluster( 2 );
 	in->setFunction( SigmoidFunction( 1.0f ) );
-	hid = new BiasedCluster( 12 );
+	hid = new BiasedCluster( 4 );
 	hid->setFunction( SigmoidFunction( 1.0f ) );
 	out = new BiasedCluster( 1 );
 	out->setFunction( SigmoidFunction( 1.0f ) );
 
 	// --- Create the Matrix connection among layers
-	l1 = new SparseMatrixLinker( 0.7, in, hid );
-	l2 = new SparseMatrixLinker( 0.7, hid, out );
+	l1 = new DotLinker( in, hid );
+	l1->connectRandom( 0.7 );
+	l2 = new DotLinker( hid, out );
+	l2->connectRandom( 0.7 );
 
 	// --- Add all in the BaseNeuralNet class
 	net->addCluster( in, true );
@@ -51,17 +53,17 @@ int main( int , char** ) {
 	// --- The learning Set
 	PatternSet learningSet(4);
 	// --- Input <0,0> -> Output <0>
-	learningSet[0].setInputsOf( in, RealVec() << 0.0 << 0.0 );
-	learningSet[0].setOutputsOf( out, RealVec() << 0.0 );
+	learningSet[0].setInputsOf( in, DoubleVector() << 0.0 << 0.0 );
+	learningSet[0].setOutputsOf( out, DoubleVector() << 0.0 );
 	// --- Input <0,1> -> Output <1>
-	learningSet[1].setInputsOf( in, RealVec() << 0.0 << 1.0 );
-	learningSet[1].setOutputsOf( out, RealVec() << 1.0 );
+	learningSet[1].setInputsOf( in, DoubleVector() << 0.0 << 1.0 );
+	learningSet[1].setOutputsOf( out, DoubleVector() << 1.0 );
 	// --- Input <1,0> -> Output <1>
-	learningSet[2].setInputsOf( in, RealVec() << 1.0 << 0.0 );
-	learningSet[2].setOutputsOf( out, RealVec() << 1.0 );
+	learningSet[2].setInputsOf( in, DoubleVector() << 1.0 << 0.0 );
+	learningSet[2].setOutputsOf( out, DoubleVector() << 1.0 );
 	// --- Input <1,1> -> Output <0>
-	learningSet[3].setInputsOf( in, RealVec() << 1.0 << 1.0 );
-	learningSet[3].setOutputsOf( out, RealVec() << 0.0 );
+	learningSet[3].setInputsOf( in, DoubleVector() << 1.0 << 1.0 );
+	learningSet[3].setOutputsOf( out, DoubleVector() << 0.0 );
 
 	// --- Main loop for learning the network
 	int i;
@@ -75,7 +77,7 @@ int main( int , char** ) {
 	qDebug() << "Iterations: " << i << "\tError:" << bp->calculateMSEOnSet( learningSet );
 	// --- compare the outputs with learning set
 	for( int i = 0; i<4; i++ ) {
-		in->inputs() = learningSet[i].inputsOf( in );
+		in->inputs().copy( learningSet[i].inputsOf( in ) );
 		net->step();
 		double out1 = out->getOutput(0);
 		double out2 = learningSet[i].outputsOf( out )[0];
@@ -85,8 +87,8 @@ int main( int , char** ) {
 	// Print out Weights
 	for( int i=0; i<(int)l1->rows(); i++ ) {
 		for( int j=0; j<(int)l1->cols(); j++ ) {
-			double w = l1->getWeight( i, j );
-			if ( w == 0 ) {
+			double w = l1->weight( i, j );
+			if ( w==0 && l1->matrix().isSteady(i,j) ) {
 				qDebug() << "FALSE, ";
 			} else {
 				qDebug() << w << ", ";
@@ -96,8 +98,8 @@ int main( int , char** ) {
 	qDebug() << "-----------";
 	for( int i=0; i<(int)l2->rows(); i++ ) {
 		for( int j=0; j<(int)l2->cols(); j++ ) {
-			double w = l2->getWeight( i, j );
-			if ( w == 0 ) {
+			double w = l2->weight( i, j );
+			if ( w == 0 && l2->matrix().isSteady(i,j) ) {
 				qDebug() << "FALSE, ";
 			} else {
 				qDebug() << w << ", ";

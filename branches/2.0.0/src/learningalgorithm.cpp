@@ -23,16 +23,20 @@
 namespace nnfw {
 
 void Pattern::setInputsOf( Cluster* cl, const DoubleVector& ins ) {
-	pinfo[cl].inputs = ins;
+	pinfo[cl].inputs.resize( ins.size() );
+	pinfo[cl].inputs.copy( ins );
 };
 
 void Pattern::setOutputsOf( Cluster* cl, const DoubleVector& ous ) {
-	pinfo[cl].outputs = ous;
+	pinfo[cl].outputs.resize( ous.size() );
+	pinfo[cl].outputs.copy( ous );
 };
 
 void Pattern::setInputsOutputsOf( Cluster* cl, const DoubleVector& ins, const DoubleVector& ous ) {
-	pinfo[cl].inputs = ins;
-	pinfo[cl].outputs= ous;
+	pinfo[cl].inputs.resize( ins.size() );
+	pinfo[cl].inputs.copy( ins );
+	pinfo[cl].outputs.resize( ous.size() );
+	pinfo[cl].outputs.copy( ous );
 };
 
 const DoubleVector Pattern::inputsOf( Cluster* cl ) const {

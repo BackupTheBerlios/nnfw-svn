@@ -30,7 +30,7 @@ SimpleCluster::~SimpleCluster() {
 }
 
 void SimpleCluster::update() {
-	getFunction()->apply( inputs(), outputs() );
+	function()->apply( inputs(), outputs() );
 	setNeedReset( true );
 }
 
@@ -39,7 +39,7 @@ SimpleCluster* SimpleCluster::clone() const {
 	newclone->setAccumulate( this->isAccumulate() );
 	newclone->inputs().copy( this->inputs() );
 	newclone->outputs().copy( this->outputs() );
-	newclone->setFunction( *(this->getFunction()) );
+	newclone->setFunction( *(this->function()) );
 	return newclone;
 }
 

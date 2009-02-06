@@ -648,6 +648,11 @@ private:
 	/*! if the vector is protected means that assignment operator= is not allowed */
 	bool isprotected;
 
+#ifdef C_NNFW_API
+	//--- for accessing from C interface implementation
+	friend double* getRawData( DoubleMatrix& );
+#endif
+
 };
 
 }

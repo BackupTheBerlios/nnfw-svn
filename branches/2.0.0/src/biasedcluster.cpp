@@ -34,7 +34,7 @@ BiasedCluster::~BiasedCluster() {
 void BiasedCluster::update() {
 	//--- in order to avoid to create a temporary vector at each call
 	//--- it use the tempdata and the minus function of algebra.h
-	getFunction()->apply( minus( tempdata, inputs(), biases() ), outputs() );
+	function()->apply( minus( tempdata, inputs(), biases() ), outputs() );
 	setNeedReset( true );
 }
 
@@ -78,7 +78,7 @@ BiasedCluster* BiasedCluster::clone() const {
 	newclone->inputs().copy( this->inputs() );
 	newclone->outputs().copy( this->outputs() );
 	newclone->setBiases( this->biasesdata );
-	newclone->setFunction( *(this->getFunction()) );
+	newclone->setFunction( *(this->function()) );
 	return newclone;
 }
 
