@@ -24,7 +24,7 @@
 namespace nnfw {
 
 BiasedCluster::BiasedCluster( unsigned int numNeurons, QString name )
-	: Cluster( numNeurons, name), biasesdata(numNeurons), tempdata(numNeurons) {
+	: Cluster( numNeurons, name), biasesdata(numNeurons, true), tempdata(numNeurons) {
 	biasesdata.zeroing();
 }
 

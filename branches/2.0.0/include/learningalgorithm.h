@@ -74,7 +74,7 @@ public:
 	/*! \name Constructors */
 	//@{
 	/*! Construct an empty Pattern */
-	Pattern() : pinfo(), empty() { /*nothing to do*/ };
+	Pattern() : pinfo() { /*nothing to do*/ };
 	/*! Destructor */
 	~Pattern() { /*nothing to do*/ };
 	//@}

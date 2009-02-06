@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2008 Gianluca Massera <emmegian@yahoo.it>                *
+ *  Copyright (C) 2005-2009 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -38,27 +38,21 @@ class NNFW_API WinnerTakeAllFunction : public OutputFunction {
 public:
 	/*! \name Constructors */
 	//@{
-	
 	/*! Construct */
 	WinnerTakeAllFunction( double value = 1.0 );
 	/*! Destructor */
 	virtual ~WinnerTakeAllFunction() { /* Nothing to do */ };
-	
 	//@}
 	/*! \name Interface */
 	//@{
-	
 	/*! Set the value */
 	bool setValue( double v );
 	/*! Return the value */
 	double value();
-	
 	/*! Implement the Sawtooth function */
-	virtual void apply( RealVec& inputs, RealVec& outputs );
-
+	virtual void apply( DoubleVector& inputs, DoubleVector& outputs );
 	/*! Clone this object */
 	virtual WinnerTakeAllFunction* clone() const;
-	
 	//@}
 
 private:

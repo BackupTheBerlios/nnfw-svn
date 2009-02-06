@@ -34,7 +34,7 @@ void DDECluster::setCoeff( const DoubleVector& c ) {
 	coeff.resize( c.size() );
 	coeff.copy( c );
 	ds.resize( (c.size()>3) ? c.size()-3 : 0 );
-	for( unsigned int i=0; i<ds.size(); i++ ) {
+	for( int i=0; i<ds.size(); i++ ) {
 		ds[i].resize( numNeurons() );
 		ds[i].zeroing();
 	}
@@ -71,7 +71,7 @@ void DDECluster::update() {
 		return;
 	}
 	// --- tmp <- a0 + a1*f(x) + a2*x + a3*y ... aN*y^(n-3)
-	for( unsigned int i=0; i<ds.size(); i++ ) {
+	for( int i=0; i<ds.size(); i++ ) {
 		tmpdata2.copy( ds[i] );
 		tmpdata2 *= coeff[i+3];
 		tmpdata += tmpdata2;
@@ -101,10 +101,10 @@ void DDECluster::updateDs() {
 		// ----- Problemi di questo tipo di calcolo:
 		// *** calcola, cmq, anche la derivata ds.size()+1... l'ultimo tmpdata calcolato prima di uscire.
 		tmpdata.copy( outputs() );
-		for( unsigned int i=0; i<ds.size(); i++ ) {
+		for( int i=0; i<ds.size(); i++ ) {
 			if ( i%2 == 0 ) {
 				// calcola la derivata i+1 per il ciclo successivo
-				minus( tmpdata2, tempdata, ds[1] );
+				minus( tmpdata2, tmpdata, ds[1] );
 				// memorizza il valore della derivata i calcolata al ciclo precedente i-1
 				ds[i].copy( tmpdata );
 			} else {

@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2008 Gianluca Massera <emmegian@yahoo.it>                *
+ *  Copyright (C) 2005-2009 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -22,60 +22,39 @@
 namespace nnfw {
 
 GaussFunction::GaussFunction( double centre, double variance, double maxvalue )
-    : DerivableOutputFunction() {
-    this->centre = centre;
-    this->variance = variance;
-    msqrvar = -( variance*variance );
-    this->max = maxvalue;
-}
-
-bool GaussFunction::setCentre( double v ) {
-    centre = v;
-    return true;
-}
-
-double GaussFunction::getCentre() {
-    return centre;
+	: OutputFunction() {
+	this->centre = centre;
+	this->variancev = variance;
+	msqrvar = -( variancev*variancev );
+	this->max = maxvalue;
 }
 
 bool GaussFunction::setVariance( double v ) {
-    variance = v;
-    msqrvar = -( variance*variance );
-    return true;
+	variancev = v;
+	msqrvar = -( variancev*variancev );
+	return true;
 }
 
-double GaussFunction::getVariance() {
-    return variance;
+double GaussFunction::variance() {
+	return variancev;
 }
 
-bool GaussFunction::setMax( double v ) {
-    max = v;
-    return true;
+void GaussFunction::apply( DoubleVector& inputs, DoubleVector& outputs ) {
+	// --- out <- max * exp( (centre-inputs)^2 / -(variance^2) )
+	square( minus( outputs, centre, inputs ) );
+	exp( outputs /= msqrvar ) *= max;
 }
 
-double GaussFunction::getMax() {
-    return max;
-}
-
-void GaussFunction::apply( RealVec& inputs, RealVec& outputs ) {
-    // --- out <- max * exp( (centre-inputs)^2 / -(variance^2) )
-    outputs.assign_aminusx( centre, inputs );
-    outputs.square();
-    outputs /= msqrvar;
-    outputs.exp();
-    outputs *= max;
-}
-
-void GaussFunction::derivate( const RealVec& x, const RealVec& y, RealVec& d ) const {
+bool GaussFunction::derivate( const DoubleVector& x, const DoubleVector& y, DoubleVector& d ) const {
     // --- d <- ( 2.0*(centre-x) / variance^2 ) * y
-    d.assign_aminusx( centre, x );
-    d *= 2.0;
-    d /= -msqrvar;
-    d *= y;
+	minus( d, centre, x ) *= 2.0;
+	d /= -msqrvar;
+	d *= y;
+	return true;
 }
 
 GaussFunction* GaussFunction::clone() const {
-    return (new GaussFunction( centre, variance, max ) );
+	return (new GaussFunction( centre, variancev, max ) );
 }
 
 }

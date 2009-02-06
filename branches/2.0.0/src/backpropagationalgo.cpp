@@ -20,7 +20,6 @@
 #include "neuralnet.h"
 #include "matrixlinker.h"
 #include "biasedcluster.h"
-#include "derivableoutputfunction.h"
 #include "backpropagationalgo.h"
 #include "nnfwfactory.h"
 
@@ -75,8 +74,8 @@ const DoubleVector BackPropagationAlgo::getError( Cluster* cl ) {
 }
 
 void BackPropagationAlgo::enableMomentum() {
-	for ( unsigned int i=0; i<cluster_deltas_vec.size(); ++i ) {
-		for ( unsigned int j=0;  j<cluster_deltas_vec[i].incoming_linkers_vec.size(); ++j ) {
+	for ( int i=0; i<cluster_deltas_vec.size(); ++i ) {
+		for ( int j=0;  j<cluster_deltas_vec[i].incoming_linkers_vec.size(); ++j ) {
 			// --- zeroing data
 			cluster_deltas_vec[i].incoming_last_outputs[j].zeroing();
 			cluster_deltas_vec[i].last_deltas_inputs.zeroing();
@@ -98,14 +97,14 @@ void BackPropagationAlgo::propagDeltas() {
 			cluster_deltas_vec[i].deltas_inputs *= diff_vec;
 		}
 		// --- propagate DeltaInputs to DeltaOutput through MatrixLinker
-		for( unsigned int k=0; k<cluster_deltas_vec[i].incoming_linkers_vec.size( ); ++k ) {
+		for( int k=0; k<cluster_deltas_vec[i].incoming_linkers_vec.size( ); ++k ) {
 			MatrixLinker* link = dynamic_cast<MatrixLinker*>(cluster_deltas_vec[i].incoming_linkers_vec[k]);
 			if ( mapIndex.count(link->from()) == 0 ) {
 				// --- the from() cluster is not in Learning
 				continue;
 			}
 			int from_index = mapIndex[ link->from() ];
-			mul( cluster_deltas_vec[from_index].deltas_outputs, link->matrix(), cluster_deltas_vec[i].deltas_inputs );
+			amul( cluster_deltas_vec[from_index].deltas_outputs, link->matrix(), cluster_deltas_vec[i].deltas_inputs );
 		}
 	}
 	return;
@@ -113,18 +112,18 @@ void BackPropagationAlgo::propagDeltas() {
 
 void BackPropagationAlgo::learn() {
 	// --- zeroing previous step delta information
-	for ( unsigned int i=0; i<cluster_deltas_vec.size(); ++i ) {
+	for ( int i=0; i<cluster_deltas_vec.size(); ++i ) {
 		if ( cluster_deltas_vec[i].isOutput ) continue;
 		cluster_deltas_vec[i].deltas_outputs.zeroing();
 	}
 	// --- propagating the error through the net
 	propagDeltas();
 	// --- make the learn !!
-	for ( unsigned int i=0; i<cluster_deltas_vec.size(); ++i ) {
+	for ( int i=0; i<cluster_deltas_vec.size(); ++i ) {
 		DoubleVector minus_ones( cluster_deltas_vec[i].cluster->outputs().size( ), -1.0f );
 		cluster_deltas_vec[i].modcluster->rule( -learn_rate, minus_ones, cluster_deltas_vec[i].deltas_inputs );
 
-		for ( unsigned int j=0;  j<cluster_deltas_vec[i].incoming_linkers_vec.size(); ++j ) {
+		for ( int j=0;  j<cluster_deltas_vec[i].incoming_linkers_vec.size(); ++j ) {
 			cluster_deltas_vec[i].incoming_modlinkers[j]->rule(
 				-learn_rate,
 				cluster_deltas_vec[i].incoming_linkers_vec[j]->from()->outputs(),
@@ -148,14 +147,14 @@ void BackPropagationAlgo::learn() {
 void BackPropagationAlgo::learn( const Pattern& pat ) {
 	// --- set the inputs of the net
 	const ClusterList& clins = net()->inputClusters();
-	for( unsigned int i=0; i<clins.size(); i++ ) {
+	for( int i=0; i<clins.size(); i++ ) {
 		clins[i]->inputs().copy( pat.inputsOf( clins[i] ) );
 	}
 	// --- spread the net
 	net()->step();
 	// --- set the teaching input
 	const ClusterList& clout = net()->outputClusters();
-	for( unsigned int i=0; i<clout.size(); i++ ) {
+	for( int i=0; i<clout.size(); i++ ) {
 		setTeachingInput( clout[i], pat.outputsOf( clout[i] ) );
 	}
 	learn();
@@ -164,7 +163,7 @@ void BackPropagationAlgo::learn( const Pattern& pat ) {
 double BackPropagationAlgo::calculateMSE( const Pattern& pat ) {
 	// --- set the inputs of the net
 	const ClusterList& clins = net()->inputClusters();
-	for( unsigned int i=0; i<clins.size(); i++ ) {
+	for( int i=0; i<clins.size(); i++ ) {
 		clins[i]->inputs().copy( pat.inputsOf( clins[i] ) );
 	}
 	// --- spread the net

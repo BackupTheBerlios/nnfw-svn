@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2008 Gianluca Massera <emmegian@yahoo.it>                *
+ *  Copyright (C) 2005-2009 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -36,58 +36,57 @@ namespace nnfw {
  */
 class NNFW_API OutputFunction {
 public:
-    /*! \name Constructors */
-    //@{
-    /*! Constructor */
-    OutputFunction();
-
-    /*! Destructor */
-    virtual ~OutputFunction();
-
-    //@}
-    /*! \name Interface */
-    //@{
-
-    /*! Calculate the outputs of neurons by the net inputs given
-     */
-    virtual void apply( RealVec& inputs, RealVec& outputs );
-
-    /*! Calculate the outputs of a single neuron
-     */
-    double apply( double input ) {
-        tmp1[0] = input;
-        apply( tmp1, tmp2 );
-        return tmp2[0];
-    };
+	/*! \name Constructors */
+	//@{
+	/*! Constructor */
+	OutputFunction() : tmp1(1), tmp2(1) { /*nothing to do*/ };
+	/*! Destructor */
+	virtual ~OutputFunction() { /*nothing to do*/ };
+	//@}
+	/*! \name Interface */
+	//@{
+	/*! Calculate the outputs of neurons by the net inputs given */
+	virtual void apply( const DoubleVector& inputs, const DoubleVector& outputs ) {
+		Q_UNUSED( inputs );
+		Q_UNUSED( outputs );
+		/* nothing to do */
+	};
+	/*! Calculate the outputs of a single neuron */
+	double apply( double input ) {
+		tmp1[0] = input;
+		apply( tmp1, tmp2 );
+		return tmp2[0];
+	};
 	/*! Compute the derivate of the function represent<br>
 	 *  Given the input of neurons and the corresponding output of neurons, it calculate
 	 *  the derivate.
 	 *  \return if it return false, then the OutputFunction is not derivable, and the derivates
 	 *  DoubleVector can contains trash data.
 	 */
-	virtual bool derivate( const RealVec& inputs, const RealVec&, RealVec& derivates ) const {
+	virtual bool derivate( const DoubleVector& inputs, const DoubleVector& outputs, DoubleVector& derivates ) const {
+		Q_UNUSED( inputs );
+		Q_UNUSED( outputs );
+		Q_UNUSED( derivates );
 		return false;
 	};
-
-    /*! Set the Cluster which it is inserted<br>
-     *  This method it's not necessary for simple OutputFunction like SigmoidFunction, LinearFunction, etc...
-     *  but can be very helpfull for some particular and advanced function that requires to access the data
-     *  of the Cluster in which it is inserted into. (like PoolFunction)<br>
-     *  If you don't have to access to the Cluster data ignore it, but if you needs then reimplement for
-     *  know the the function is inserted into a Cluster.
-     */
-    virtual void setCluster( Cluster* ) { /* nothing to do */ };
-
-    /*! Clone this object */
-    virtual OutputFunction* clone() const;
-
-    //@}
-
+	/*! Set the Cluster which it is inserted<br>
+	 *  This method it's not necessary for simple OutputFunction like SigmoidFunction, LinearFunction, etc...
+	 *  but can be very helpfull for some particular and advanced function that requires to access the data
+	 *  of the Cluster in which it is inserted into. (like PoolFunction)<br>
+	 *  If you don't have to access to the Cluster data ignore it, but if you needs then reimplement for
+	 *  know the the function is inserted into a Cluster.
+	 */
+	virtual void setCluster( Cluster* ) { /* nothing to do */ };
+	/*! Clone this object */
+	virtual OutputFunction* clone() const {
+		return new OutputFunction();
+	};
+	//@}
 private:
-    /*! temporary RealVec for speed-up apply with a single value */
-    RealVec tmp1;
-    /*! temporary RealVec for speed-up apply with a single value */
-    RealVec tmp2;
+	/*! temporary RealVec for speed-up apply with a single value */
+	DoubleVector tmp1;
+	/*! temporary RealVec for speed-up apply with a single value */
+	DoubleVector tmp2;
 };
 
 }

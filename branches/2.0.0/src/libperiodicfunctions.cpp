@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2008 Gianluca Massera <emmegian@yahoo.it>                *
+ *  Copyright (C) 2005-2009 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -23,102 +23,73 @@
 namespace nnfw {
 
 PeriodicFunction::PeriodicFunction( double phase, double span, double amplitude )
-    : OutputFunction() {
-	phasev = phase;
-	spanv = span;
-	amplitudev = amplitude;
-}
-
-bool PeriodicFunction::setPhase( double v ) {
-	phasev = v;
-	return true;
-}
-
-double PeriodicFunction::phase() {
-	return phasev;
-}
-
-bool PeriodicFunction::setSpan( double v ) {
-	spanv = v;
-	return true;
-}
-
-double PeriodicFunction::span() {
-	return spanv;
-}
-
-bool PeriodicFunction::setAmplitude( double v ) {
-	amplitudev = v;
-	return true;
-}
-
-double PeriodicFunction::amplitude() {
-	return amplitudev;
+	: OutputFunction() {
+	this->phase = phase;
+	this->span = span;
+	this->amplitude = amplitude;
 }
 
 SawtoothFunction::SawtoothFunction( double phase, double span, double amplitude )
-    : PeriodicFunction(phase,span,amplitude) {
+	: PeriodicFunction(phase,span,amplitude) {
 }
 
-void SawtoothFunction::apply( RealVec& inputs, RealVec& outputs ) {
-    // --- out <- 2.0*( (x-c)/a-floor((x-c)/a+0.5) )
+void SawtoothFunction::apply( DoubleVector& inputs, DoubleVector& outputs ) {
+	// --- out <- 2.0*( (x-c)/a-floor((x-c)/a+0.5) )
 	for( int i=0; i<(int)inputs.size(); i++ ) {
-		outputs[i] = amplitudev*( (inputs[i]-phasev)/spanv-floor((inputs[i]-phasev)/spanv+0.5) );
+		outputs[i] = amplitude*( (inputs[i]-phase)/span-floor((inputs[i]-phase)/span+0.5) );
 	}
 }
 
 SawtoothFunction* SawtoothFunction::clone() const {
-	return (new SawtoothFunction( phasev, spanv, amplitudev ) );
+	return (new SawtoothFunction( phase, span, amplitude ) );
 }
 
 TriangleFunction::TriangleFunction( double phase, double span, double amplitude )
-    : PeriodicFunction(phase,span,amplitude) {
+	: PeriodicFunction(phase,span,amplitude) {
 }
 
-void TriangleFunction::apply( RealVec& inputs, RealVec& outputs ) {
-    // --- out <- 2.0*( (x-c)/a-floor((x-c)/a+0.5) )
-	for( int i=0; i<(int)inputs.size(); i++ ) {
-		double sawtooth = (inputs[i]-phasev)/spanv-floor((inputs[i]-phasev)/spanv+0.5);
-		outputs[i] = amplitudev*( 1.0 - fabs( sawtooth ) );
+void TriangleFunction::apply( DoubleVector& inputs, DoubleVector& outputs ) {
+	// --- out <- 2.0*( (x-c)/a-floor((x-c)/a+0.5) )
+	for( unsigned int i=0; i<inputs.size(); i++ ) {
+		double sawtooth = (inputs[i]-phase)/span-floor((inputs[i]-phase)/span+0.5);
+		outputs[i] = amplitude*( 1.0 - fabs( sawtooth ) );
 	}
 }
 
 TriangleFunction* TriangleFunction::clone() const {
-	return (new TriangleFunction( phasev, spanv, amplitudev ) );
+	return (new TriangleFunction( phase, span, amplitude ) );
 }
 
-#define PI_GRECO 3.14159265358979323846
-
 SinFunction::SinFunction( double phase, double span, double amplitude )
-    : PeriodicFunction(phase,span,amplitude) {
+	: PeriodicFunction(phase,span,amplitude) {
 }
 
 double SinFunction::frequency() {
-	return 2.0*PI_GRECO/spanv;
+	return 2.0*PI_GRECO/span;
 }
 
-void SinFunction::apply( RealVec& inputs, RealVec& outputs ) {
+void SinFunction::apply( DoubleVector& inputs, DoubleVector& outputs ) {
 	for( int i=0; i<(int)inputs.size(); i++ ) {
-		outputs[i] = amplitudev*sin(2.0*PI_GRECO*(inputs[i]/spanv)-PI_GRECO*phasev);
+		outputs[i] = amplitude*sin(2.0*PI_GRECO*(inputs[i]/span)-PI_GRECO*phase);
 	}
 }
 
 SinFunction* SinFunction::clone() const {
-	return (new SinFunction( phasev, spanv, amplitudev ) );
+	return (new SinFunction( phase, span, amplitude ) );
 }
 
 PseudoGaussFunction::PseudoGaussFunction( double phase, double span, double amplitude )
-    : PeriodicFunction(phase,span,amplitude) {
+	: PeriodicFunction(phase,span,amplitude) {
 }
 
-void PseudoGaussFunction::apply( RealVec& inputs, RealVec& outputs ) {
-	for( int i=0; i<(int)inputs.size(); i++ ) {
-		outputs[i] = 0.5*amplitudev*( sin( 2.0*PI_GRECO*((inputs[i]-phasev)/spanv+0.25) ) + 1.0 );
+void PseudoGaussFunction::apply( DoubleVector& inputs, DoubleVector& outputs ) {
+	for( unsigned int i=0; i<inputs.size(); i++ ) {
+		outputs[i] = 0.5*amplitude*( sin( 2.0*PI_GRECO*((inputs[i]-phase)/span+0.25) ) + 1.0 );
 	}
 }
 
 PseudoGaussFunction* PseudoGaussFunction::clone() const {
-	return (new PseudoGaussFunction( phasev, spanv, amplitudev ) );
+	return (new PseudoGaussFunction( phase, span, amplitude ) );
 }
 
 }

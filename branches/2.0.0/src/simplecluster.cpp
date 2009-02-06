@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2008 Gianluca Massera <emmegian@yahoo.it>                *
+ *  Copyright (C) 2005-2009 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -18,28 +18,27 @@
  ********************************************************************************/
 
 #include "simplecluster.h"
-#include "liboutputfunctions.h"
-#include "random.h"
+#include "outputfunction.h"
 
 namespace nnfw {
 
 SimpleCluster::SimpleCluster( unsigned int numNeurons, QString name )
-    : Cluster( numNeurons, name) {
+	: Cluster( numNeurons, name) {
 }
 
 SimpleCluster::~SimpleCluster() {
 }
 
 void SimpleCluster::update() {
-    getFunction()->apply( inputs(), outputs() );
-    setNeedReset( true );
+	getFunction()->apply( inputs(), outputs() );
+	setNeedReset( true );
 }
 
 SimpleCluster* SimpleCluster::clone() const {
 	SimpleCluster* newclone = new SimpleCluster( numNeurons(), name() );
 	newclone->setAccumulate( this->isAccumulate() );
-	newclone->inputs().assign( this->inputs() );
-	newclone->outputs().assign( this->outputs() );
+	newclone->inputs().copy( this->inputs() );
+	newclone->outputs().copy( this->outputs() );
 	newclone->setFunction( *(this->getFunction()) );
 	return newclone;
 }

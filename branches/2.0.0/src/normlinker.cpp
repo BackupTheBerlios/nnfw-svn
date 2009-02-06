@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2008 Gianluca Massera <emmegian@yahoo.it>                *
+ *  Copyright (C) 2005-2009 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -21,39 +21,37 @@
 #include "random.h"
 #include <cmath>
 
-#ifdef NNFW_USE_MKL
-#include <mkl_cblas.h>
-#endif
-
 namespace nnfw {
 
 NormLinker::NormLinker( Cluster* from, Cluster* to, QString name )
-    : MatrixLinker(from, to, name), temp( to->numNeurons() ) {
+	: MatrixLinker(from, to, name), temp( to->numNeurons() ) {
 }
 
 NormLinker::~NormLinker() {
 }
 
 void NormLinker::update() {
-    // check if cluster 'To' needs a reset
-    if ( to()->needReset() ) {
-        to()->resetInputs();
-    }
-    temp.zeroing();
-    for( unsigned int j=0; j<cols(); j++ ) {
-        for( unsigned int i=0; i<rows(); i++ ) {
-            double d = from()->outputs()[i] - matrix()[i][j];
-            temp[j] += d*d;
-        }
-        temp[j] = std::sqrt( temp[j] );
-    }
-    to()->inputs() += temp;
-    return;
+	// check if cluster 'To' needs a reset
+	if ( to()->needReset() ) {
+		to()->resetInputs();
+	}
+	temp.zeroing();
+	DoubleVector outs = from()->outputs();
+	DoubleMatrix mat = matrix();
+	for( unsigned int j=0; j<cols(); j++ ) {
+		for( unsigned int i=0; i<rows(); i++ ) {
+			double d = outs[i] - mat[i][j];
+			temp[j] += d*d;
+		}
+		temp[j] = sqrt( temp[j] );
+	}
+	to()->inputs() += temp;
+	return;
 }
 
 NormLinker* NormLinker::clone() const {
 	NormLinker* newclone = new NormLinker( this->from(), this->to(), name() );
-	newclone->setMatrix( this->matrix() );
+	newclone->matrix().copy( this->matrix() );
 	return newclone;
 }
 

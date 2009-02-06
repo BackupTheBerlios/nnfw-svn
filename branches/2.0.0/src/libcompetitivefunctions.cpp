@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2008 Gianluca Massera <emmegian@yahoo.it>                *
+ *  Copyright (C) 2005-2009 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -23,7 +23,7 @@
 namespace nnfw {
 
 WinnerTakeAllFunction::WinnerTakeAllFunction( double value )
-    : OutputFunction() {
+	: OutputFunction() {
 	valuev = value;
 }
 
@@ -36,9 +36,9 @@ double WinnerTakeAllFunction::value() {
 	return valuev;
 }
 
-void WinnerTakeAllFunction::apply( RealVec& inputs, RealVec& outputs ) {
+void WinnerTakeAllFunction::apply( DoubleVector& inputs, DoubleVector& outputs ) {
 	outputs.zeroing();
-	outputs[ inputs.maxIndex() ] = valuev;
+	outputs[ maxIndex( inputs ) ] = valuev;
 }
 
 WinnerTakeAllFunction* WinnerTakeAllFunction::clone() const {

@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2008 Gianluca Massera <emmegian@yahoo.it>                *
+ *  Copyright (C) 2005-2009 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -66,12 +66,6 @@
 #include "algebra.h"
 
 namespace nnfw {
-
-/*! Array of Boolean */
-typedef VectorData<bool> BoolVec;
-
-/*! Array of Unsigned Integer */
-typedef VectorData<unsigned int> U_IntVec;
 
 class Updatable;
 /*! Array of Updatable */

@@ -124,7 +124,11 @@ public:
 	 */
 	virtual double getInput( unsigned int neuron ) const;
 	/*! Get the array of inputs */
-	DoubleVector inputs() {
+	DoubleVector& inputs() {
+		return inputdata;
+	};
+	/*! Get the array of inputs */
+	const DoubleVector& inputs() const {
 		return inputdata;
 	};
 	//@}
@@ -137,7 +141,11 @@ public:
 	/*! Get the output of neuron */
 	virtual double getOutput( unsigned int neuron ) const;
 	/*! Get the array of outputs */
-	DoubleVector outputs() {
+	DoubleVector& outputs() {
+		return outputdata;
+	};
+	/*! Get the array of outputs */
+	const DoubleVector& outputs() const {
 		return outputdata;
 	};
 	//@}

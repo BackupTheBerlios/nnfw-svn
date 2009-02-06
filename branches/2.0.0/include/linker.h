@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2008 Gianluca Massera <emmegian@yahoo.it>                *
+ *  Copyright (C) 2005-2009 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -36,50 +36,41 @@ namespace nnfw {
  */
 class NNFW_API Linker : public Updatable {
 public:
-    /*! \name Constructors */
-    //@{
-
-    /*! Construct */
-    Linker( Cluster* from, Cluster* to, QString name = "unnamed" );
-
-    //@}
-    /*! \name Interface */
-    //@{
-
-    /*! Return the Cluster From */
-    Cluster* from() const {
-        return fromc;
-    };
-
-    /*! Return the Cluster to */
-    Cluster* to() const {
-        return toc;
-    };
-
-    /*! Returns the 'size' of the linker<br>
-     * The actual means of 'size' will be specified by sub-classes that implementes concrete linkers
-     */
-    virtual unsigned int size() const = 0;
-
-    /*! Randomize the parameters of the Linker<br>
-     * The parameters randomized by this method will be specified by sub-classes
-     */
-    virtual void randomize( double min, double max ) = 0;
-
+	/*! \name Constructors */
+	//@{
+	/*! Construct */
+	Linker( Cluster* from, Cluster* to, QString name = "unnamed" );
+	//@}
+	/*! \name Interface */
+	//@{
+	/*! Return the Cluster From */
+	Cluster* from() const {
+		return fromc;
+	};
+	/*! Return the Cluster to */
+	Cluster* to() const {
+		return toc;
+	};
+	/*! Returns the 'size' of the linker<br>
+	 * The actual means of 'size' will be specified by sub-classes that implementes concrete linkers
+	 */
+	virtual unsigned int size() const = 0;
+	/*! Randomize the parameters of the Linker<br>
+	 * The parameters randomized by this method will be specified by sub-classes
+	 */
+	virtual void randomize( double min, double max ) = 0;
 	/*! Clone this Linker */
 	virtual Linker* clone() const;
 	/*! Return its typename */
 	virtual QString typeName() {
 		return "Linker";
 	};
-
-    //@}
-
+	//@}
 private:
-    /*! incoming Cluster */
-    Cluster* fromc;
-    /*! outgoing Cluster */
-    Cluster* toc;
+	/*! incoming Cluster */
+	Cluster* fromc;
+	/*! outgoing Cluster */
+	Cluster* toc;
 };
 
 }

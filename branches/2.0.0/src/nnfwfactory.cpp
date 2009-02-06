@@ -23,7 +23,6 @@
 #include "ddecluster.h"
 #include "fakecluster.h"
 #include "matrixlinker.h"
-#include "sparsematrixlinker.h"
 #include "dotlinker.h"
 #include "normlinker.h"
 #include "copylinker.h"
@@ -46,7 +45,7 @@ public:
 	/*! \name Interface */
 	//@{
 	/*! apply the rule changing the Updatable object */
-	virtual void rule( double, const RealVec&, const RealVec& ) const { /* nothing to do */ };
+	virtual void rule( double, const DoubleVector&, const DoubleVector& ) const { /* nothing to do */ };
 	/*! Virtual Copy-Constructor */
 	virtual DummyModifier* clone() const {
 		return new DummyModifier();
@@ -65,8 +64,8 @@ public:
 		cl = (BiasedCluster*)tolearn;
 	};
 	/*! apply the rule changing the Updatable object */
-	virtual void rule( double learn_rate, const RealVec& x, const RealVec& y ) const {
-		cl->biases().deltarule( learn_rate, x, y );
+	virtual void rule( double learn_rate, const DoubleVector& x, const DoubleVector& y ) const {
+		deltarule( cl->biases(), learn_rate, x, y );
 	};
 	/*! Virtual Copy-Constructor */
 	virtual BiasedClusterModifier* clone() const {
@@ -88,8 +87,8 @@ public:
 		ml = (MatrixLinker*)tolearn;
 	};
 	/*! apply the rule changing the Updatable object */
-	virtual void rule( double learn_rate, const RealVec& x, const RealVec& y ) const {
-		ml->matrix().deltarule( learn_rate, x, y );
+	virtual void rule( double learn_rate, const DoubleVector& x, const DoubleVector& y ) const {
+		deltarule( ml->matrix(), learn_rate, x, y );
 	};
 	/*! Virtual Copy-Constructor */
 	virtual MatrixLinkerModifier* clone() const {
@@ -98,30 +97,6 @@ public:
 	//@}
 private:
 	MatrixLinker* ml;
-};
-
-/*! \brief SparseMatrixLinkerModifier */
-class NNFW_INTERNAL SparseMatrixLinkerModifier : public AbstractModifier {
-public:
-	/*! \name Interface */
-	//@{
-	/*! set the learnable object */
-	virtual void setUpdatable( Updatable* tolearn ) {
-		learnable = tolearn;
-		sml = (SparseMatrixLinker*)tolearn;
-	};
-	/*! apply the rule changing the Updatable object */
-	virtual void rule( double learn_rate, const RealVec& x, const RealVec& y ) const {
-		sml->matrix().deltarule( learn_rate, x, y );
-		sml->matrix().cover( sml->mask() );
-	};
-	/*! Virtual Copy-Constructor */
-	virtual SparseMatrixLinkerModifier* clone() const {
-		return new SparseMatrixLinkerModifier();
-	};
-	//@}
-private:
-	SparseMatrixLinker* sml;
 };
 
 AbstractModifier* Factory::createModifierFor( Updatable* objectToLearn ) {
@@ -151,7 +126,6 @@ void Factory::initFactory() {
 	modtypes["BiasedCluster"] = new BiasedClusterModifier();
 	modtypes["DDECluster"] = new DummyModifier();
 	modtypes["FakeCluster"] = new DummyModifier();
-	modtypes["SparseMatrixLinker"] = new SparseMatrixLinkerModifier();
 	modtypes["CopyLinker"] = new DummyModifier();
 	modtypes["DotLinker"] = new MatrixLinkerModifier();
 	modtypes["NormLinker"] = new MatrixLinkerModifier();

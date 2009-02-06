@@ -21,4 +21,6 @@
 
 namespace nnfw {
 
+double doubleRef::dummy = 0.0;
+
 }

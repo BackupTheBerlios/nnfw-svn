@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2008 Gianluca Massera <emmegian@yahoo.it>                *
+ *  Copyright (C) 2005-2009 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -31,77 +31,86 @@ namespace nnfw {
 /*! \brief MatrixLinker Class define a full connection between two cluster.
  *
  * \par Motivation
- * This class rapresent a full-connection between neuron's 'from' Cluster and neuron's 'to' Cluster.
+ * This class rapresent connections between neuron's 'from' Cluster and neuron's 'to' Cluster with a matrix.
+ * It allow sparse connections as full connections amogns neurons.
  * The connections has a weight and are stored in a matrix which the rows are the neuron's 'from' and
  * the columns the neuron's 'to'. <br>
  *
  * \par Description
  * Every connection is weighted, and the weight is memorized into a weight-matrix. <br>
  * The effective computation of inputs' 'to' is done in the subclasses (DotLinker, NormLinker, etc).
+ * The disconnection / connection of neurons are implemented fixating/unfixating the weight to zero into
+ * the underlying matrix using DoubleMatrix::steady and DoubleMatrix::unsteady methods
  *
  * \par Warning
  *
+ * \todo Adding a boolean matrix for return the mask of connections of neurons
  */
 class NNFW_API MatrixLinker : public Linker {
 public:
-    /*! \name Constructors */
-    //@{
-
-    /*!  Connect clusters with a complete connections */
-    MatrixLinker( Cluster* from, Cluster* to, QString name = "unnamed" );
-    /*!  Destructor */
-    virtual ~MatrixLinker();
-
-    //@}
-    /*! \name Interface */
-    //@{
-
-    /*!  Get the number of rows */
-    unsigned int rows() {
-        return nrows;
-    };
-
-    /*!  Get the number of cols */
-    unsigned int cols() {
-        return ncols;
-    };
-
-    /*!  Returns the total number of the links: rows*cols */
-    unsigned int size() const;
-
-    /*!  Randomize the weights of the MatrixLinker */
-    virtual void randomize( double min, double max );
-
-    /*!  Set the weight of the connection specified */
-    virtual void setWeight( unsigned int from, unsigned int to, double weight );
-
-    /*!  Get the weight of the connection specified */
-    virtual double getWeight( unsigned int from, unsigned int to );
-
-    /*!  Return the weight matrix */
-	RealMat& matrix() {
+	/*! \name Constructors */
+	//@{
+	/*!  Connect clusters with a complete connections
+	 *   By default it create a fully-connected matrix, use one of the following methods for
+	 *   choose a different way: connect, connectRandom, disconnect, disconnectRandom
+	 */
+	MatrixLinker( Cluster* from, Cluster* to, QString name = "unnamed" );
+	/*!  Destructor */
+	virtual ~MatrixLinker();
+	//@}
+	/*! \name Interface */
+	//@{
+	/*!  Get the number of rows */
+	unsigned int rows() {
+		return nrows;
+	};
+	/*!  Get the number of cols */
+	unsigned int cols() {
+		return ncols;
+	};
+	/*!  Returns the total number of the links: rows*cols */
+	unsigned int size() const;
+	/*!  Randomize the weights of the MatrixLinker */
+	virtual void randomize( double min, double max );
+	/*!  Set the weight of the connection specified */
+	virtual void setWeight( unsigned int from, unsigned int to, double weight );
+	/*!  Get the weight of the connection specified */
+	virtual double weight( unsigned int from, unsigned int to );
+	/*!  Return the weight matrix */
+	DoubleMatrix& matrix() {
 		return w;
 	};
-
 	/*! const version of matrix() method */
-	const RealMat& matrix() const {
+	const DoubleMatrix& matrix() const {
 		return w;
 	};
-
-    /*!  Set the whole weight matrix */
-    void setMatrix( const RealMat& mat );
+	/*! Connect two neurons */
+	void connect( unsigned int from, unsigned int to );
+	/*! Connect neurons of Clusters with a random connections with the passed probability.<br>
+	 *  And disconnect neurons with probability (1.0-prob).
+	 *  \param prob is the probability to have a connection between two neurons
+	 *  \param zeroDiagonal if it is true the matrix diagonal is always disconnected
+	 *  \param symmetric if it is true the connections are symmetric
+	 *  \warning The parameter symmetric requires a square matrix (i.e. the Cluster from and to must be
+	 *     of the same size
+	 */
+	void connectRandom( double prob, bool zeroDiagonal = false, bool symmetric = false );
+	/*! Connect all couples of neurons */
+	void connectAll();
+	/*! Disconnect the two neurons */
+	void disconnect( unsigned int from, unsigned int to );
+	/*! Disonnect all couples of neurons */
+	void disconnectAll();
 	/*! Return its typename */
 	virtual QString typeName() {
 		return "MatrixLinker";
 	};
-
-    //@}
-
+	//@}
 private:
-    /*! Registers the dimensions of the matrix */
-    unsigned int nrows, ncols;
-    /*! Weight Matrix */
-    RealMat w;
+	/*! Registers the dimensions of the matrix */
+	unsigned int nrows, ncols;
+	/*! Weight Matrix */
+	DoubleMatrix w;
 };
 
 }

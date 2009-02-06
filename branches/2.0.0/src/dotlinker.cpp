@@ -33,13 +33,13 @@ void DotLinker::update() {
 	if ( to()->needReset() ) {
 		to()->resetInputs();
 	}
-	mul( to()->inputs(), from()->outputs(), matrix() );
+	amul( to()->inputs(), from()->outputs(), matrix() );
 	return;
 }
 
 DotLinker* DotLinker::clone() const {
 	DotLinker* newclone = new DotLinker( this->from(), this->to(), name() );
-	newclone->setMatrix( this->matrix() );
+	newclone->matrix().copy( this->matrix() );
 	return newclone;
 }
 

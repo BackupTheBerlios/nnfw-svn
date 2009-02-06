@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2008 Gianluca Massera <emmegian@yahoo.it>                     *
+ *  Copyright (C) 2005-2009 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -33,29 +33,24 @@ namespace nnfw {
  */
 class NNFW_API Updatable {
 public:
-    /*! \name Constructors */
-    //@{
-
-    /*! Constructor */
-    Updatable( QString name = "unnamed" );
-    /*! Destructor */
-    virtual ~Updatable();
-
-    //@}
-    /*! \name Interface */
-    //@{
-
-    /*! Update the object */
-    virtual void update() = 0;
-    /*! Set the name of Updatable */
-    void setName( QString newname );
+	/*! \name Constructors */
+	//@{
+	/*! Constructor */
+	Updatable( QString name = "unnamed" );
+	/*! Destructor */
+	virtual ~Updatable();
+	//@}
+	/*! \name Interface */
+	//@{
+	/*! Update the object */
+	virtual void update() = 0;
+	/*! Set the name of Updatable */
+	void setName( QString newname );
 	/*! Return its name */
 	QString name() const;
 	/*! Return its typename */
 	virtual QString typeName() = 0;
-
-    //@}
-
+	//@}
 protected:
 	QString namev;
 };

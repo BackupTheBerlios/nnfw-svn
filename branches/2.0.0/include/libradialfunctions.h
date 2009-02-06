@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2008 Gianluca Massera <emmegian@yahoo.it>                *
+ *  Copyright (C) 2005-2009 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -28,60 +28,46 @@
  */
 
 #include "outputfunction.h"
-#include "derivableoutputfunction.h"
 
 namespace nnfw {
 
 /*! \brief GaussFunction
  *
  */
-class NNFW_API GaussFunction : public DerivableOutputFunction {
+class NNFW_API GaussFunction : public OutputFunction {
 public:
-    /*! \name Constructors */
-    //@{
-
-    /*! Construct */
-    GaussFunction( double centre = 0.0, double variance = 1.0, double maxvaule = 1.0 );
-    /*! Destructor */
-    virtual ~GaussFunction() { /* Nothing to do */ };
-
-    //@}
-    /*! \name Interface */
-    //@{
-
-    /*! Set the centre */
-    bool setCentre( double v );
-    /*! Return the centre */
-    double getCentre();
-
-    /*! Set the Variance */
-    bool setVariance( double v );
-    /*! Return the variance */
-    double getVariance();
-
-    /*! Set the Max value */
-    bool setMax( double v );
-    /*! Return the Max */
-    double getMax();
-
-    /*! Implement the Gaussian function */
-    virtual void apply( RealVec& inputs, RealVec& outputs );
-    /*! derivate of Gauss function */
-    virtual void derivate( const RealVec& x, const RealVec& y, RealVec& d ) const;
-    /*! Clone this object */
-    virtual GaussFunction* clone() const;
-
-    //@}
-
+	/*! \name Constructors */
+	//@{
+	/*! Construct */
+	GaussFunction( double centre = 0.0, double variance = 1.0, double maxvaule = 1.0 );
+	/*! Destructor */
+	virtual ~GaussFunction() { /* Nothing to do */ };
+	//@}
+	/*! \name Interface */
+	//@{
+	/*! Set the Variance */
+	bool setVariance( double v );
+	/*! Return the variance */
+	double variance();
+	/*! Implement the Gaussian function */
+	virtual void apply( DoubleVector& inputs, DoubleVector& outputs );
+	/*! derivate of Gauss function */
+	virtual bool derivate( const DoubleVector& x, const DoubleVector& y, DoubleVector& d ) const;
+	/*! Clone this object */
+	virtual GaussFunction* clone() const;
+	//@}
+	/*! \name Parameters */
+	//@{
+	/*! Centre of GaussFunction */
+	double centre;
+	/*! Maximum value of GaussFunction */
+	double max;
+	//@}
 private:
-    // centre
-    double centre;
-    // variance
-    double variance;
-    // minus squared-variance
-    double msqrvar;
-    // max value
-    double max;
+	// variance
+	double variancev;
+	// minus squared-variance
+	double msqrvar;
 };
 
 }

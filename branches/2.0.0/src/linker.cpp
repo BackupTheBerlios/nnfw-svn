@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2008 Gianluca Massera <emmegian@yahoo.it>                *
+ *  Copyright (C) 2005-2009 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -23,13 +23,13 @@
 namespace nnfw {
 
 Linker::Linker( Cluster* from, Cluster* to, QString name )
-    : Updatable(name) {
-    this->fromc = from;
-    this->toc = to;
+	: Updatable(name) {
+	this->fromc = from;
+	this->toc = to;
 }
 
 Linker* Linker::clone() const {
-	qWarning() << "The clone() method has to implemented by subclasses";
+	qWarning() << "The Linker::clone() method has to implemented by subclasses";
 	return 0;
 }
 

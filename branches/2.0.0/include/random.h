@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2008 Gianluca Massera <emmegian@yahoo.it>                *
+ *  Copyright (C) 2005-2009 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -28,7 +28,6 @@
 
 #include "types.h"
 
-
 namespace nnfw {
 
 /*! \brief Random class define some static method for accessing the random number generator
@@ -39,45 +38,25 @@ class NNFW_API Random {
 public:
 	/*! \name Static Interface */
 	//@{
-
-    /*! Set the seed of the random number generator
-     */
-    static void setSeed( long int seed );
-
-	/*! Return a double number in [0;1)
-     */
-    static double flatDouble( );
-
-    /*! Return a double number in range [min,max)
-     */
-    static double flatDouble( double min, double max );
-	
-    /*! Return a RealVec with all the values randomized in the range [min,max)
-     */
-    static RealVec& flatRealVec( RealVec& vec, double min, double max );
-	
-    /*! Return a RealMat with all the values randomized in the range [min,max)
-     */
-    static RealMat& flatRealMat( RealMat& mat, double min, double max );
-
-    /*! Return a random boolean value; True value appear with probability specified as paramater
-     */
-    static bool boolean( double trueProb );
-
-    /*! Return a random boolean value; True and False values are the same probability
-     */
-    static bool boolean( );
-
-    /*! Return a random integer value in between 0 and x-1
-     */
-    static unsigned int flatInt( unsigned int x );
-
-    /*! Return a random integer value in between x and y-1
-     */
-    static int flatInt( int x, int y );
-
-    /*! Return a random double value with a gaussian distribution
-     */
+	/*! Set the seed of the random number generator */
+	static void setSeed( long int seed );
+	/*! Return a double number in [0;1) */
+	static double flatDouble( );
+	/*! Return a double number in range [min,max) */
+	static double flatDouble( double min, double max );
+	/*! Return a vector with all the values randomized in the range [min,max) */
+	static DoubleVector& flatVector( DoubleVector& vec, double min, double max );
+	/*! Return a RealMat with all the values randomized in the range [min,max) */
+	static DoubleMatrix& flatMatrix( DoubleMatrix& mat, double min, double max );
+	/*! Return a random boolean value; True value appear with probability specified as paramater */
+	static bool boolean( double trueProb );
+	/*! Return a random boolean value; True and False values are the same probability */
+	static bool boolean( );
+	/*! Return a random integer value in between 0 and x-1 */
+	static unsigned int flatInt( unsigned int x );
+	/*! Return a random integer value in between x and y-1 */
+	static int flatInt( int x, int y );
+	/*! Return a random double value with a gaussian distribution */
 	static double gauss( double mean, double stdev );
 };
 

@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2008 Gianluca Massera <emmegian@yahoo.it>                *
+ *  Copyright (C) 2005-2009 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -41,15 +41,12 @@ class NNFW_API AbstractModifier : public Clonable {
 public:
 	/*! \name Interface */
 	//@{
-
 	/*! set the learnable object */
 	virtual void setUpdatable( Updatable* tolearn ) {
 		learnable = tolearn;
 	};
-
 	/*! apply the rule changing the Updatable object */
-	virtual void rule( double r, const RealVec& x, const RealVec& y ) const = 0;
-
+	virtual void rule( double r, const DoubleVector& x, const DoubleVector& y ) const = 0;
 	/*! Virtual Copy-Constructor */
 	virtual AbstractModifier* clone() const = 0;
 	//@}
@@ -71,27 +68,20 @@ class NNFW_API Factory {
 public:
 	/*! \name Static Interface */
 	//@{
-
 	/*! Return a Modifier for Updatable object passed */
 	static AbstractModifier* createModifierFor( Updatable* objectToLearn );
-
 	/*! Register a new Modifier for type passed */
 	static bool registerModifier( const AbstractModifier& m, const char* type );
-
-    /*! Initialization of static data \internal */
-    static void initFactory();
+	/*! Initialization of static data \internal */
+	static void initFactory();
 	//@}
-
 private:
-    /*! The constructor is private, because there is no reason to instantiate this class
-     */
-    Factory() {
-        // You can't instantiate this class
-    };
-
-    /*! is Init ?? */
-    static bool isInit;
-
+	/*! The constructor is private, because there is no reason to instantiate this class */
+	Factory() {
+		// You can't instantiate this class
+	};
+	/*! is Init ?? */
+	static bool isInit;
 	/*! Map of registered Modifiers */
 	static QMap<QString, AbstractModifier*> modtypes;
 };

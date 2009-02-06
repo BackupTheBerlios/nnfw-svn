@@ -20,6 +20,8 @@
 #ifndef VECTORS_H
 #define VECTORS_H
 
+#pragma GCC diagnostic warning "-Wformat"
+
 /*! \file
  *  \brief This file contains definitions of Vectors used for algebra
  *
@@ -88,6 +90,10 @@ public:
 	void setSteady() {
 		ref2 = &dummy;
 	};
+	/*! return true if is steady value */
+	bool isSteady() {
+		return ref != ref2;
+	};
 private:
 	//--- How it works:
 	//--- ref is always returned when the data is retrieved,
@@ -100,7 +106,6 @@ private:
 	double* ref2;
 	static double dummy;
 };
-double doubleRef::dummy = 0.0;
 
 /*! \brief DoubleVector Class
  *  \par Motivation
@@ -120,9 +125,12 @@ public:
 		shData->refcounts = 1;
 		shData->temporary = false;
 		shData->nodata = false;
+		this->isprotected = false;
 	};
-	/*! Construct a vector of dimension size setting all values to zero */
-	DoubleVector( unsigned int size ) {
+	/*! Construct a vector of dimension size setting all values to zero
+	 *  \param isprotected if the parameter is true, then the operator= is disable (not allowed);
+	 */
+	DoubleVector( unsigned int size, bool isprotected = false ) {
 		shData = new sharedData();
 		shData->vsize = size;
 		shData->data = new double[size];
@@ -134,9 +142,10 @@ public:
 		for( unsigned int i=0; i<shData->vsize; i++ ) {
 			shData->dataref[i].setRef( shData->data + i );
 		}
+		this->isprotected = isprotected;
 	};
 	/*! Construct a vector of dimension size setting all the values as specified */
-	DoubleVector( unsigned int size, double value ) {
+	DoubleVector( unsigned int size, double value, bool isprotected = false ) {
 		shData = new sharedData();
 		shData->vsize = size;
 		shData->data = new double[size];
@@ -148,9 +157,10 @@ public:
 			shData->data[i] = value;
 			shData->dataref[i].setRef( shData->data + i );
 		}
+		this->isprotected = isprotected;
 	};
 	/*! Construct by copying data from const T* vector */
-	DoubleVector( const double* r, unsigned int dim ) {
+	DoubleVector( const double* r, unsigned int dim, bool isprotected = false ) {
 		shData = new sharedData();
 		shData->vsize = dim;
 		shData->data = new double[dim];
@@ -162,6 +172,7 @@ public:
 			shData->data[i] = r[i];
 			shData->dataref[i].setRef( shData->data + i );
 		}
+		this->isprotected = isprotected;
 	};
 	/*! The Copy-Constructor */
 	DoubleVector( const DoubleVector& src ) {
@@ -169,6 +180,7 @@ public:
 		shData->refcounts += 1;
 		//--- is not a temporary anymore !
 		shData->temporary = false;
+		isprotected = false;
 	};
 	/*! Destructor */
 	~DoubleVector() {
@@ -209,14 +221,17 @@ public:
 		return !( *this == b );
 	};
 	//@}
-	/*! \name Operations on VectorData */
+	/*! \name Operations on DoubleVector */
 	//@{
 	/*! Behaves as a CopyConstructor: this do a completely substitution of underlying data
 	 *  so, it does not honor fixed elements, hence it substitute all
 	 *  informations taking also the new information about fixed element in src.<br/>
 	 *  If you want only copying DoubleVector's values use copy method
+	 *  \warning when constructed with isprotected to true, then this method is not allowed
 	 */
 	DoubleVector& operator=( const DoubleVector& src ) {
+		if ( isprotected ) return (*this);
+		if ( src.shData == shData ) return (*this);
 		//--- eliminate the previous data
 		shData->refcounts -= 1;
 		if ( shData->refcounts == 0 ) {
@@ -475,7 +490,7 @@ public:
 		return (*this);
 	};
 	/*! operator *= with a scalar */
-	DoubleVector& operator+=( const double& right ) {
+	DoubleVector& operator*=( const double& right ) {
 		for( unsigned int i=0; i<shData->vsize; i++ ) {
 			shData->dataref[i] = shData->dataref[i] * right;
 		}
@@ -514,6 +529,16 @@ public:
 #endif
 		shData->dataref[i].setNoSteady();
 		return (*this);
+	};
+	/*! Return true if the i-th value is a steady value */
+	bool isSteady( unsigned int i ) {
+#ifdef NNFW_DEBUG
+		if( i >= shData->vsize ) {
+			qCritical() << "Accessing elements outside boundary" ;
+			return false;
+		}
+#endif
+		return shData->dataref[i].isSteady();
 	};
 	/*! Set all values to zero
 	 *  This method honor the steady values... hence that values will remain at the same values
@@ -592,7 +617,8 @@ public:
 	//@}
 
 private:
-	class NNFW_INTERNAL sharedData {
+	// putting this NNFW_INTERNAL GCC comply with a warning
+	class sharedData {
 	public:
 		/*! The actual size of VectorData */
 		unsigned int vsize;
@@ -609,6 +635,8 @@ private:
 	};
 	/*! shared data among DoubleVector istances */
 	sharedData* shData;
+	/*! if the vector is protected means that assignment operator= is not allowed */
+	bool isprotected;
 
 	friend class DoubleMatrix;
 	/*! Private method used by Matrix for setting DoubleVector for row-view and col-view. <br/>
@@ -624,6 +652,7 @@ private:
 		shData->vsize = newsize;
 		shData->dataref = new doubleRef[ newsize ];
 		shData->nodata = true;
+		isprotected = true;
 	};
 };
 

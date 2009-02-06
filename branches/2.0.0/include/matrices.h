@@ -39,7 +39,7 @@ public:
 	/*! \name Constructors */
 	//@{
 	/*! Construct an empty matrix of dimension size */
-	DoubleMatrix( unsigned int rows, unsigned int cols ) {
+	DoubleMatrix( unsigned int rows, unsigned int cols, bool isprotected = false ) {
 		shData = new sharedData();
 		shData->refcounts = 1;
 		shData->nrows = rows;
@@ -61,6 +61,7 @@ public:
 			shData->rowdata[r].shData->dataref[c].setRef( shData->alldata + t );
 			shData->coldata[c].shData->dataref[r].setRef( shData->alldata + t );
 		}
+		this->isprotected = isprotected;
 	};
 	/*! Copy-Constructor */
 	DoubleMatrix( const DoubleMatrix& src ) {
@@ -68,6 +69,7 @@ public:
 		shData->refcounts++;
 		//--- is not a temporary anymore !
 		shData->temporary = false;
+		isprotected = false;
 	};
 	/*! Destructor */
 	~DoubleMatrix() {
@@ -144,6 +146,8 @@ public:
 	 *  If you want only copying DoubleMatrix's values use copy method
 	 */
 	DoubleMatrix& operator=( const DoubleMatrix& src ) {
+		if ( isprotected ) return (*this);
+		if ( shData == src.shData ) return (*this);
 		//--- eliminate the previous data
 		shData->refcounts -= 1;
 		if ( shData->refcounts == 0 ) {
@@ -270,7 +274,7 @@ public:
 	/*! Return the i-th row of the Matrix (this behaves like operator[]) */
 	DoubleVector& row( unsigned int r ) {
 #ifdef NNFW_DEBUG
-		if( row >= shData->nrows ) {
+		if( r >= shData->nrows ) {
 			qCritical() << "Accessing elements outside boundary" ;
 			return shData->rowdata[0];
 		}
@@ -280,7 +284,7 @@ public:
 	/*! Return the i-th row of the Matrix (Const version) (this behaves like operator[]) */
 	const DoubleVector& row( unsigned int r ) const {
 #ifdef NNFW_DEBUG
-		if( row >= shData->nrows ) {
+		if( r >= shData->nrows ) {
 			qCritical() << "Accessing elements outside boundary" ;
 			return shData->rowdata[0];
 		}
@@ -290,7 +294,7 @@ public:
 	/*! Return the i-th column of the Matrix */
 	DoubleVector& column( unsigned int c ) {
 #ifdef NNFW_DEBUG
-		if( row >= shData->ncols ) {
+		if( c >= shData->ncols ) {
 			qCritical() << "Accessing elements outside boundary" ;
 			return shData->coldata[0];
 		}
@@ -300,7 +304,7 @@ public:
 	/*! Return the i-th column of the Matrix (Const version) */
 	const DoubleVector& column( unsigned int c ) const {
 #ifdef NNFW_DEBUG
-		if( row >= shData->ncols ) {
+		if( c >= shData->ncols ) {
 			qCritical() << "Accessing elements outside boundary" ;
 			return shData->coldata[0];
 		}
@@ -335,6 +339,16 @@ public:
 		shData->rowdata[i].unsteady(j);
 		shData->coldata[j].unsteady(i);
 		return (*this);
+	};
+	/*! Return true if the [i][j]-th value is a steady value */
+	bool isSteady( unsigned int i, unsigned int j ) {
+#ifdef NNFW_DEBUG
+		if( i >= shData->nrows || j >= shData->ncols ) {
+			qCritical() << "Accessing elements outside boundary" ;
+			return false;
+		}
+#endif
+		return shData->rowdata[i].isSteady(j);
 	};
 	/*! Set all values to value
 	 *  This method honor the steady values... hence that values will remain at the same values
@@ -609,7 +623,8 @@ public:
 	//@}
 
 private:
-	class NNFW_INTERNAL sharedData {
+	// putting this NNFW_INTERNAL GCC comply with a warning
+	class sharedData {
 	public:
 		/*! Numbers of Rows */
 		unsigned int nrows;
@@ -630,6 +645,9 @@ private:
 	};
 	/*! shared data  among Matrix istances */
 	sharedData* shData;
+	/*! if the vector is protected means that assignment operator= is not allowed */
+	bool isprotected;
+
 };
 
 }

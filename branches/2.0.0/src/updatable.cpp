@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2008 Gianluca Massera <emmegian@yahoo.it>                *
+ *  Copyright (C) 2005-2009 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -22,7 +22,7 @@
 namespace nnfw {
 
 Updatable::Updatable( QString name ) {
-    setName( name );
+	setName( name );
 }
 
 Updatable::~Updatable() {
@@ -33,7 +33,7 @@ void Updatable::setName( QString newname ) {
 }
 
 QString Updatable::name() const {
-    return namev;
+	return namev;
 }
 
 }

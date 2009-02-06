@@ -24,7 +24,7 @@
 namespace nnfw {
 
 Cluster::Cluster( unsigned int numNeurons, QString name )
-	: Updatable(name), inputdata(numNeurons), outputdata(numNeurons) {
+	: Updatable(name), inputdata(numNeurons, true), outputdata(numNeurons, true) {
 	this->numneurons = numNeurons;
 	outputdata.zeroing();
 	inputdata.zeroing();
@@ -54,7 +54,7 @@ void Cluster::setInput( unsigned int neuron, double value ) {
 	inputdata[neuron] = value;
 }
 
-void Cluster::setInputs( const RealVec& inputs ) {
+void Cluster::setInputs( const DoubleVector& inputs ) {
 	inputdata.copy( inputs );
 }
 
@@ -88,7 +88,7 @@ void Cluster::setOutput( unsigned int neuron, double value ) {
 	outputdata[neuron] = value;
 }
 
-void Cluster::setOutputs( const RealVec& outputs ) {
+void Cluster::setOutputs( const DoubleVector& outputs ) {
 	outputdata.copy( outputs );
 }
 

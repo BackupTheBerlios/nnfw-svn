@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2008 Gianluca Massera <emmegian@yahoo.it>                     *
+ *  Copyright (C) 2005-2009 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -25,7 +25,6 @@
 
 #include "types.h"
 #include "cluster.h"
-#include "outputfunction.h"
 
 namespace nnfw {
 
@@ -34,32 +33,26 @@ namespace nnfw {
  */
 class NNFW_API SimpleCluster : public Cluster {
 public:
-    /*! \name Constructors */
-    //@{
-
-    /*! Construct a Cluster that contains numNeurons neuron */
-    SimpleCluster( unsigned int numNeurons, QString name = "unnamed" );
-    /*! Destructor */
-    virtual ~SimpleCluster();
-
-    //@}
-    /*! \name Interface */
-    //@{
-
-    /*! Update the outputs of neurons */
-    void update();
-
-    /*! Randomize Nothing ;-) */
-    void randomize( double, double ) { /* Nothing To Do */ };
-
+	/*! \name Constructors */
+	//@{
+	/*! Construct a Cluster that contains numNeurons neuron */
+	SimpleCluster( unsigned int numNeurons, QString name = "unnamed" );
+	/*! Destructor */
+	virtual ~SimpleCluster();
+	//@}
+	/*! \name Interface */
+	//@{
+	/*! Update the outputs of neurons */
+	void update();
+	/*! Randomize Nothing ;-) */
+	void randomize( double, double ) { /* Nothing To Do */ };
 	/*! Clone this SimpleCluster */
 	virtual SimpleCluster* clone() const;
 	/*! Return its typename */
 	virtual QString typeName() {
 		return "SimpleCluster";
 	};
-
-    //@}
+	//@}
 };
 
 }
