@@ -20,8 +20,6 @@
 #ifndef VECTORS_H
 #define VECTORS_H
 
-#pragma GCC diagnostic warning "-Wformat"
-
 /*! \file
  *  \brief This file contains definitions of Vectors used for algebra
  *

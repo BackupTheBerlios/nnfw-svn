@@ -87,9 +87,9 @@ public:
 	/*! set the both inputs and outputs associated with Cluster passed */
 	void setInputsOutputsOf( Cluster*, const DoubleVector& inputs, const DoubleVector& outputs );
 	/*! return stored information if exists, otherwise it return a zero vector */
-	const DoubleVector inputsOf( Cluster* ) const;
+	const DoubleVector& inputsOf( Cluster* ) const;
 	/*! return stored information if exists, otherwise it return a zero vector */
-	const DoubleVector outputsOf( Cluster* ) const;
+	const DoubleVector& outputsOf( Cluster* ) const;
 	/*! return the stored information
 	 *  \warning it silently create a new one if the Cluster passed is not present */
 	PatternInfo& operator[]( Cluster* );

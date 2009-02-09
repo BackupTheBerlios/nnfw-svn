@@ -39,7 +39,7 @@ void Pattern::setInputsOutputsOf( Cluster* cl, const DoubleVector& ins, const Do
 	pinfo[cl].outputs.copy( ous );
 };
 
-const DoubleVector Pattern::inputsOf( Cluster* cl ) const {
+const DoubleVector& Pattern::inputsOf( Cluster* cl ) const {
 	if ( pinfo.count(cl) != 0 ) {
 		return pinfo[cl].inputs;
 	} else {
@@ -47,7 +47,7 @@ const DoubleVector Pattern::inputsOf( Cluster* cl ) const {
 	}
 };
 
-const DoubleVector Pattern::outputsOf( Cluster* cl ) const {
+const DoubleVector& Pattern::outputsOf( Cluster* cl ) const {
 	if ( pinfo.count(cl) != 0 ) {
 		return pinfo[cl].outputs;
 	} else {

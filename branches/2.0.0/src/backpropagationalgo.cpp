@@ -120,8 +120,9 @@ void BackPropagationAlgo::learn() {
 	propagDeltas();
 	// --- make the learn !!
 	for ( int i=0; i<cluster_deltas_vec.size(); ++i ) {
-		DoubleVector minus_ones( cluster_deltas_vec[i].cluster->outputs().size( ), -1.0f );
-		cluster_deltas_vec[i].modcluster->rule( -learn_rate, minus_ones, cluster_deltas_vec[i].deltas_inputs );
+		//DoubleVector minus_ones( cluster_deltas_vec[i].cluster->outputs().size( ), -1.0f );
+		//cluster_deltas_vec[i].modcluster->rule( -learn_rate, minus_ones, cluster_deltas_vec[i].deltas_inputs );
+		cluster_deltas_vec[i].modcluster->rule( learn_rate, cluster_deltas_vec[i].deltas_inputs );
 
 		for ( int j=0;  j<cluster_deltas_vec[i].incoming_linkers_vec.size(); ++j ) {
 			cluster_deltas_vec[i].incoming_modlinkers[j]->rule(

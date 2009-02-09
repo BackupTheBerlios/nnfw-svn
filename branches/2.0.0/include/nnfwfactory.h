@@ -47,6 +47,8 @@ public:
 	};
 	/*! apply the rule changing the Updatable object */
 	virtual void rule( double r, const DoubleVector& x, const DoubleVector& y ) const = 0;
+	/*! apply the rule changing the Updatable object */
+	virtual void rule( double r, const DoubleVector& x ) const = 0;
 	/*! Virtual Copy-Constructor */
 	virtual AbstractModifier* clone() const = 0;
 	//@}

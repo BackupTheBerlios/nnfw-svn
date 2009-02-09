@@ -46,6 +46,8 @@ public:
 	//@{
 	/*! apply the rule changing the Updatable object */
 	virtual void rule( double, const DoubleVector&, const DoubleVector& ) const { /* nothing to do */ };
+	/*! apply the rule changing the Updatable object */
+	virtual void rule( double, const DoubleVector& ) const { /* nothing to do */ };
 	/*! Virtual Copy-Constructor */
 	virtual DummyModifier* clone() const {
 		return new DummyModifier();
@@ -66,6 +68,10 @@ public:
 	/*! apply the rule changing the Updatable object */
 	virtual void rule( double learn_rate, const DoubleVector& x, const DoubleVector& y ) const {
 		deltarule( cl->biases(), learn_rate, x, y );
+	};
+	/*! apply the rule changing the Updatable object */
+	virtual void rule( double learn_rate, const DoubleVector& x ) const {
+		amul( cl->biases(), learn_rate, x );
 	};
 	/*! Virtual Copy-Constructor */
 	virtual BiasedClusterModifier* clone() const {
@@ -89,6 +95,10 @@ public:
 	/*! apply the rule changing the Updatable object */
 	virtual void rule( double learn_rate, const DoubleVector& x, const DoubleVector& y ) const {
 		deltarule( ml->matrix(), learn_rate, x, y );
+	};
+	/*! apply the rule changing the Updatable object */
+	virtual void rule( double learn_rate, const DoubleVector& x ) const {
+		/* I don't know how to implement */
 	};
 	/*! Virtual Copy-Constructor */
 	virtual MatrixLinkerModifier* clone() const {
