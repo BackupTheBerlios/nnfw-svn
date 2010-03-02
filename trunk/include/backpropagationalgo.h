@@ -58,6 +58,11 @@ public:
 	 *  \param teach_input the RealVec teaching input
 	 */
 	void setTeachingInput( Cluster* output, const RealVec& ti );
+	
+	/*! Don't modify data about that Cluster */
+	void dontLearn( Cluster* cluster );
+	/*! Don't modify weight about that Linker */
+	void dontLearn( Linker* linker );
 
 	virtual void learn();
 
@@ -128,6 +133,9 @@ private:
 	Real useMomentum;
 	//! The update order
 	UpdatableVec update_order;
+	//! Flags for Cluster
+	std::map<Cluster*, bool> learnableClusters;
+	std::map<Linker*, bool> learnableLinkers;
 
 	//! The struct of Clusters and Deltas
 	class NNFW_API cluster_deltas {

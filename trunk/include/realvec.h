@@ -235,7 +235,7 @@ public:
 	
     /*! Return the sum of the vector's elements
      */
-	Real sum() {
+	Real sum() const {
 		Real s = 0.0;
         for( u_int i=0; i<vsize; i++ ) {
             s += data[i];

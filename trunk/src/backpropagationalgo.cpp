@@ -57,6 +57,14 @@ BackPropagationAlgo::~BackPropagationAlgo( ) {
 	/* nothing to do ?!?! */
 }
 
+void BackPropagationAlgo::dontLearn( Cluster* cluster ) {
+	learnableClusters[ cluster ] = false;
+}
+
+void BackPropagationAlgo::dontLearn( Linker* linker ) {
+	learnableLinkers[ linker ] = false;
+}
+
 void BackPropagationAlgo::setTeachingInput( Cluster* output, const RealVec& ti ) {
 	if ( mapIndex.count( output ) == 0 ) { 
 		return;
@@ -130,21 +138,25 @@ void BackPropagationAlgo::learn() {
 	// --- make the learn !!
 	for ( u_int i=0; i<cluster_deltas_vec.size(); ++i ) {
 		RealVec minus_ones( cluster_deltas_vec[i].cluster->outputs().size( ), -1.0f );
-		cluster_deltas_vec[i].modcluster->rule( -learn_rate, minus_ones, cluster_deltas_vec[i].deltas_inputs );
+		if ( learnableClusters[ cluster_deltas_vec[i].cluster ] ) {
+			cluster_deltas_vec[i].modcluster->rule( -learn_rate, minus_ones, cluster_deltas_vec[i].deltas_inputs );
+		}
 
 		for ( u_int j=0;  j<cluster_deltas_vec[i].incoming_linkers_vec.size(); ++j ) {
-			cluster_deltas_vec[i].incoming_modlinkers[j]->rule(
-				-learn_rate,
-				cluster_deltas_vec[i].incoming_linkers_vec[j]->from()->outputs(),
-				cluster_deltas_vec[i].deltas_inputs
-			);
-			if ( !useMomentum ) continue;
-			// --- add the momentum
-			cluster_deltas_vec[i].incoming_modlinkers[j]->rule(
-				-learn_rate*momentumv,
-				cluster_deltas_vec[i].incoming_last_outputs[j],
-				cluster_deltas_vec[i].last_deltas_inputs
-			);
+			if ( learnableLinkers[ cluster_deltas_vec[i].incoming_linkers_vec[j] ] ) {
+				cluster_deltas_vec[i].incoming_modlinkers[j]->rule(
+					-learn_rate,
+					cluster_deltas_vec[i].incoming_linkers_vec[j]->from()->outputs(),
+					cluster_deltas_vec[i].deltas_inputs
+				);
+				if ( !useMomentum ) continue;
+				// --- add the momentum
+				cluster_deltas_vec[i].incoming_modlinkers[j]->rule(
+					-learn_rate*momentumv,
+					cluster_deltas_vec[i].incoming_last_outputs[j],
+					cluster_deltas_vec[i].last_deltas_inputs
+				);
+			}
 			// --- save datas for momentum on the next step
 			cluster_deltas_vec[i].incoming_last_outputs[j].assign( cluster_deltas_vec[i].incoming_linkers_vec[j]->from()->outputs() );
 			cluster_deltas_vec[i].last_deltas_inputs.assign( cluster_deltas_vec[i].deltas_inputs );
@@ -199,6 +211,7 @@ void BackPropagationAlgo::addCluster( Cluster* cl, bool isOut ) {
 		temp.last_deltas_inputs.resize( size );
 		cluster_deltas_vec.push_back( temp );
 		mapIndex[cl] = cluster_deltas_vec.size()-1;
+		learnableClusters[ cl ] = true;
 	}
 }
 
@@ -224,6 +237,7 @@ void BackPropagationAlgo::addLinker( Linker* link ) {
 		cluster_deltas_vec[ tmp ].incoming_modlinkers.push_back( Factory::createModifierFor( link ) );
 		cluster_deltas_vec[ tmp ].incoming_last_outputs.push_back( RealVec( link->from()->numNeurons() ) );
 	}
+	learnableLinkers[ link ] = true;
 }
 
 }
