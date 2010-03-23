@@ -75,9 +75,10 @@ void BackPropagationAlgo::setTeachingInput( Cluster* output, const RealVec& ti )
 }
 
 const RealVec& BackPropagationAlgo::getError( Cluster* cl ) {
+	static const RealVec errVec;
 	if ( mapIndex.count( cl ) == 0 ) {
 		nWarning() << "Cluster not present in BackPropagationAlgo";
-		return RealVec();
+		return errVec; // RealVec();
 	}
 		
 	int index = mapIndex[ cl ];

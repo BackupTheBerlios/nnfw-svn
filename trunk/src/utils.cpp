@@ -25,6 +25,7 @@
 #include "nnfwfactory.h"
 #include "propertized.h"
 #include <stack>
+#include <cstdio>
 
 namespace nnfw {
 

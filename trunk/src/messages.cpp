@@ -20,6 +20,7 @@
 #include "types.h"
 #include <iostream>
 #include <QString>
+#include <cstdio>
 
 extern void exit( int status );
 
