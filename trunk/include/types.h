@@ -41,6 +41,10 @@
 		#define NNFW_API 
 		#define NNFW_TEMPLATE 
 	#endif
+	#ifdef NNFW_STATIC
+		#define NNFW_API 
+		#define NNFW_TEMPLATE 
+	#endif
 	#define NNFW_INTERNAL 
 #else
 	#ifdef NNFW_DONT_EXPORT

@@ -24,6 +24,9 @@
 	#else
 		#define C_NNFW_API __declspec(dllimport)
 	#endif
+	#ifdef NNFW_STATIC
+		#define C_NNFW_API
+	#endif
 #else
 	#define C_NNFW_API
 #endif
