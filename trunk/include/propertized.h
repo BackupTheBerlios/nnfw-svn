@@ -90,6 +90,8 @@ public:
 		dtype = t_dataptr;
 	    ddataptr = d;
 	};
+	/*! Destructor */
+	~Variant();
     //@}
     /*! \name Operators */
     //@{

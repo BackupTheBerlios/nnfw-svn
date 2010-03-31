@@ -42,7 +42,12 @@ Variant::Variant( const Variant& src ) {
     case t_char: dchar = src.dchar; break;
     case t_uchar: duchar = src.duchar; break;
     case t_bool: dbool = src.dbool; break;
-    case t_string: dstring = src.dstring; break;
+    case t_string: {
+		u_int size = strlen(src.dstring);
+		dstring = new char[size+1];
+		strcpy( dstring, src.dstring );
+		}
+		break;
     case t_realvec: drealvec = src.drealvec; break;
     case t_realmat: drealmat = src.drealmat; break;
     case t_outfunction: doutfun = src.doutfun; break;
@@ -127,6 +132,12 @@ Variant::Variant( Propertized* d ) {
     dprop = d;
 }
 
+Variant::~Variant() {
+	if ( dtype == t_string ) {
+		delete []dstring;
+	}
+}
+
 Variant& Variant::operator=( const Variant& src ) {
     dtype = src.dtype;
     switch( dtype ) {
@@ -137,7 +148,13 @@ Variant& Variant::operator=( const Variant& src ) {
     case t_char: dchar = src.dchar; break;
     case t_uchar: duchar = src.duchar; break;
     case t_bool: dbool = src.dbool; break;
-    case t_string: dstring = src.dstring; break;
+    case t_string: {
+		delete []dstring;
+		u_int size = strlen(src.dstring);
+		dstring = new char[size+1];
+		strcpy( dstring, src.dstring );
+		}
+		break;
     case t_realvec: drealvec = src.drealvec; break;
     case t_realmat: drealmat = src.drealmat; break;
     case t_outfunction: doutfun = src.doutfun; break;
