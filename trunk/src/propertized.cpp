@@ -139,6 +139,9 @@ Variant::~Variant() {
 }
 
 Variant& Variant::operator=( const Variant& src ) {
+	if ( dtype == t_string ) {
+		delete []dstring;
+	}
     dtype = src.dtype;
     switch( dtype ) {
     case t_null: break;
@@ -149,7 +152,6 @@ Variant& Variant::operator=( const Variant& src ) {
     case t_uchar: duchar = src.duchar; break;
     case t_bool: dbool = src.dbool; break;
     case t_string: {
-		delete []dstring;
 		u_int size = strlen(src.dstring);
 		dstring = new char[size+1];
 		strcpy( dstring, src.dstring );
