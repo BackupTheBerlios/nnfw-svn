@@ -24,6 +24,7 @@
  */
 
 #include "types.h"
+#include "clonable.h"
 
 namespace nnfw {
 

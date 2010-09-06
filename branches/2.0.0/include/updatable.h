@@ -24,6 +24,7 @@
  */
 
 #include "types.h"
+#include "clonable.h"
 
 namespace nnfw {
 
@@ -31,7 +32,7 @@ namespace nnfw {
  *
  *  The Updatable objects has a name.
  */
-class NNFW_API Updatable {
+class NNFW_API Updatable : public Clonable {
 public:
 	/*! \name Constructors */
 	//@{

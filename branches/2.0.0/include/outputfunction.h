@@ -34,7 +34,7 @@ namespace nnfw {
  *
  *  Details...
  */
-class NNFW_API OutputFunction {
+class NNFW_API OutputFunction : public Clonable {
 public:
 	/*! \name Constructors */
 	//@{

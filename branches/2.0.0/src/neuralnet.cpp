@@ -18,7 +18,6 @@
  ********************************************************************************/
 
 #include "neuralnet.h"
-#include "nnfwfactory.h"
 
 namespace nnfw {
 

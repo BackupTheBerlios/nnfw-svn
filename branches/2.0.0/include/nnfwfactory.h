@@ -32,6 +32,7 @@
  *
  */
 
+#warning QUESTO FILE VA TOLTO (LA FACTORY DA USARE È QUELLA DI LARAL), MA AL MOMENTO BackPropagationAlgo USA AbstractModifier. VEDERE COME FARE...
 
 namespace nnfw {
 

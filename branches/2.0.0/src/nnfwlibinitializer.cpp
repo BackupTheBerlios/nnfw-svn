@@ -17,7 +17,7 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA  *
  ********************************************************************************/
 
-#include "nnfwfactory.h"
+#include "nnfw.h"
 
 using namespace nnfw;
 
@@ -27,7 +27,7 @@ void initUtilitiesLib() {
 #ifdef NNFW_DEBUG
 	qDebug() << "NNFW Initialization";
 #endif
-	Factory::initFactory();
+	#warning QUI REGISTRAZIONE ALLA FACTORY DI LARAL (ANCHE ALTROVE IN QUESTO FILE AL POSTO DI WARNING ANALOGHI)
 }
 #endif
 #ifdef NNFW_WIN
@@ -39,7 +39,7 @@ BOOL WINAPI DllMain( HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpReserved ) {
 #ifdef NNFW_DEBUG
 		qDebug() << "NNFW Initialization";
 #endif
-		Factory::initFactory();
+		#warning QUI REGISTRAZIONE ALLA FACTORY DI LARAL (ANCHE ALTROVE IN QUESTO FILE AL POSTO DI WARNING ANALOGHI)
 		break;
 	case DLL_THREAD_ATTACH:
 		// Do thread-specific initialization.
@@ -60,7 +60,7 @@ void initUtilitiesLib() {
 #ifdef NNFW_DEBUG
 	qDebug() << "NNFW Initialization";
 #endif
-	Factory::initFactory();
+	#warning QUI REGISTRAZIONE ALLA FACTORY DI LARAL (ANCHE ALTROVE IN QUESTO FILE AL POSTO DI WARNING ANALOGHI)
 }
 #endif
 
