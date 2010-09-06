@@ -50,5 +50,11 @@
 #include "random.h"
 #include "neuralnet.h"
 
+#warning SEE THE LIST OF TODOs HERE
+// TODO:
+// 	- Add resetInnerStatus function to both Updatable and OutputFunction classes (virtual function, implementation in base classes does nothing)
+// 	- Modify vectors and matrixes classes to be implicitly shared with copy-on-write
+// 	- Remove properties and use Laral Configuration classes
+
 #endif
 
