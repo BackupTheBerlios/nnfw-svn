@@ -18,7 +18,6 @@
  ********************************************************************************/
 
 #include "normlinker.h"
-#include "random.h"
 #include <cmath>
 
 namespace nnfw {

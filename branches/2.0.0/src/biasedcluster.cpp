@@ -19,7 +19,7 @@
 
 #include "biasedcluster.h"
 #include "liboutputfunctions.h"
-#include "random.h"
+#include "randomgenerator.h"
 
 namespace nnfw {
 
@@ -68,7 +68,7 @@ double BiasedCluster::getBias( unsigned int neuron ) {
 
 void BiasedCluster::randomize( double min, double max ) {
 	for ( unsigned int i = 0; i < numNeurons(); i++ ) {
-		biasesdata[i] = Random::flatDouble( min, max );
+		biasesdata[i] = globalRNG->getDouble( min, max );
 	}
 }
 

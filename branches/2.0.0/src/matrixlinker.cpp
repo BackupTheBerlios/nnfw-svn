@@ -18,7 +18,7 @@
  ********************************************************************************/
 
 #include "matrixlinker.h"
-#include "random.h"
+#include "randomgenerator.h"
 
 namespace nnfw {
 
@@ -36,7 +36,7 @@ unsigned int MatrixLinker::size() const {
 void MatrixLinker::randomize( double min, double max ) {
 	for ( unsigned int i = 0; i<nrows; i++ ) {
 		for ( unsigned int j = 0; j<ncols; j++ ) {
-			w[i][j] = Random::flatDouble( min, max );
+			w[i][j] = globalRNG->getDouble( min, max );
 		}
 	}
 }
@@ -99,7 +99,7 @@ void MatrixLinker::connectRandom( double prob, bool zeroDiagonal, bool symmetric
 					w.steady( r, c );
 					continue;
 				}
-				if ( Random::boolean( prob ) ) {
+				if ( globalRNG->getBool( prob ) ) {
 					w.unsteady( r, c );
 					w.unsteady( c, r );
 				} else {
@@ -119,7 +119,7 @@ void MatrixLinker::connectRandom( double prob, bool zeroDiagonal, bool symmetric
 					w.steady( r, c );
 					continue;
 				}
-				if ( Random::boolean( prob ) ) {
+				if ( globalRNG->getBool( prob ) ) {
 					w.unsteady( r, c );
 				} else {
 					w[r][c] = 0.0;

@@ -19,7 +19,6 @@
 
 #include "cluster.h"
 #include "liboutputfunctions.h"
-#include "random.h"
 
 namespace nnfw {
 

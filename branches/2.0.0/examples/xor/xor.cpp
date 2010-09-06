@@ -4,7 +4,7 @@
 #include "nnfw/dotlinker.h"
 #include "nnfw/liboutputfunctions.h"
 #include "nnfw/backpropagationalgo.h"
-#include "nnfw/random.h"
+#include "randomgenerator.h"
 
 using namespace nnfw;
 
@@ -14,7 +14,7 @@ DotLinker *l1, *l2;
 BaseNeuralNet* net;
 
 int main( int , char** ) {
-	Random::setSeed( time(0) );
+	globalRNG->setSeed( time(0) );
 
 	net = new BaseNeuralNet();
 
