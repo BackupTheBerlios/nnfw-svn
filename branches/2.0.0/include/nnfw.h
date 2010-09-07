@@ -54,6 +54,9 @@
 // 	- Add resetInnerStatus function to both Updatable and OutputFunction classes (virtual function, implementation in base classes does nothing)
 // 	- Modify vectors and matrixes classes to be implicitly shared with copy-on-write
 // 	- Remove properties and use Laral Configuration classes
+// 	- Remove clone implementations from pure virtual base classes (like OutputFunction and Cluster)
+// 	- Pass pointers instead of const references to setFunction of Cluster
+// 	- Think about making the whole library Exception safe
 
 #endif
 

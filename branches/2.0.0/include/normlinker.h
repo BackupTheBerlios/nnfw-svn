@@ -26,6 +26,18 @@
 #include "types.h"
 #include "matrixlinker.h"
 
+PROBLEMI:
+	- La classe Linker non permette di specificare i Cluster from e to dopo
+	  la creazione, ma la factory si aspetta di usare la funzione configure
+	  di ParameterSettable dopo la creazione dell'oggetto (che deve avere un
+	  costruttore che non prende parametri)
+	- Anche se si risolvesse il problema di sopra, come fa un Linker ad
+	  ottenere i puntatori ai cluster from e to dai loro nomi (che ricava
+	  dai parametri settati)? È lecito lasciare questa cosa alla classe
+	  BaseNeuralNet? (Credo di sì, con i parametri un linker costruisce se
+	  stesso, poi la rete che lo contiene si preoccupa di connetterlo a
+	  dovere)
+
 namespace nnfw {
 
 /*! \brief NormLinker Class
@@ -50,6 +62,26 @@ public:
 	virtual QString typeName() {
 		return "NormLinker";
 	};
+	#warning IMPLEMENT THESE TWO FUNCTIONS (configure AND save)
+	/**
+	 * \brief Configures the object using a ConfigurationParameters object
+	 *
+	 * \param params the configuration parameters object with parameters to
+	 *               use
+	 * \param prefix the prefix to use to access the object configuration
+	 *               parameters. This is guaranteed to end with the
+	 *               separator character when called by the factory, so you
+	 *               don't need to add one
+	 */
+	virtual void configure(const ConfigurationParameters& params, QString prefix);
+	/**
+	 * \brief Save the actual status of parameters into the ConfigurationParameters object passed
+	 *
+	 * \param params the configuration parameters object on which save actual parameters
+	 * \param prefix the prefix to use to access the object configuration
+	 *               parameters.
+	 */
+	virtual void save(ConfigurationParameters& params, QString prefix);
 	//@}
 protected:
 	// temp data

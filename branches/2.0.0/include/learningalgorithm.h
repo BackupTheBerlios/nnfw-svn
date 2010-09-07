@@ -25,7 +25,6 @@
 
 #include "types.h"
 #include "neuralnet.h"
-#include "clonable.h"
 #include <QMap>
 #include <QVector>
 #include <cmath>
@@ -97,6 +96,9 @@ public:
 	//@}
 private:
 	mutable QMap<Cluster*, PatternInfo> pinfo;
+
+	/*! An empty vector returned in case of error */
+	static const DoubleVector emptyVector;
 };
 
 /*! \brief PatternSet type
@@ -112,7 +114,7 @@ typedef QVector<Pattern> PatternSet;
  *
  *  The LearningAlgorithm object is a the abstract class from which to implement learning algorithms
  */
-class NNFW_API LearningAlgorithm : public Clonable {
+class NNFW_API LearningAlgorithm {
 public:
 	/*! \name Constructors */
 	//@{

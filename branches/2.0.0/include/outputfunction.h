@@ -46,12 +46,7 @@ public:
 	/*! \name Interface */
 	//@{
 	/*! Calculate the outputs of neurons by the net inputs given */
-	virtual void apply( DoubleVector& inputs, DoubleVector& outputs ) {
-		Q_UNUSED( inputs );
-		Q_UNUSED( outputs );
-		qDebug() << "NOOOOOOOOOOOOOOO";
-		/* nothing to do */
-	};
+	virtual void apply( DoubleVector& inputs, DoubleVector& outputs ) = 0;
 	/*! Calculate the outputs of a single neuron */
 	double apply( double input ) {
 		tmp1[0] = input;
@@ -78,10 +73,11 @@ public:
 	 *  know the the function is inserted into a Cluster.
 	 */
 	virtual void setCluster( Cluster* ) { /* nothing to do */ };
-	/*! Clone this object */
-	virtual OutputFunction* clone() const {
-		return new OutputFunction();
-	};
+	/*! Clone method returns a new allocated clone of this object */
+	// This is here just to tell the compiler that cloning a cluster returns
+	// an output function and not a Clonable (as the base class function
+	// declaration states)
+	virtual OutputFunction* clone() const = 0;
 	//@}
 private:
 	/*! temporary RealVec for speed-up apply with a single value */

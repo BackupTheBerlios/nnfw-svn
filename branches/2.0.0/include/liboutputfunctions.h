@@ -52,6 +52,26 @@ public:
 	virtual bool derivate( const DoubleVector& x, const DoubleVector& y, DoubleVector& d ) const;
 	/*! Clone this object */
 	virtual IdentityFunction* clone() const;
+	#warning IMPLEMENT THESE TWO FUNCTIONS (configure AND save)
+	/**
+	 * \brief Configures the object using a ConfigurationParameters object
+	 *
+	 * \param params the configuration parameters object with parameters to
+	 *               use
+	 * \param prefix the prefix to use to access the object configuration
+	 *               parameters. This is guaranteed to end with the
+	 *               separator character when called by the factory, so you
+	 *               don't need to add one
+	 */
+	virtual void configure(const ConfigurationParameters& params, QString prefix);
+	/**
+	 * \brief Save the actual status of parameters into the ConfigurationParameters object passed
+	 *
+	 * \param params the configuration parameters object on which save actual parameters
+	 * \param prefix the prefix to use to access the object configuration
+	 *               parameters.
+	 */
+	virtual void save(ConfigurationParameters& params, QString prefix);
 	//@}
 };
 
@@ -76,6 +96,26 @@ public:
 	virtual bool derivate( const DoubleVector& x, const DoubleVector& y, DoubleVector& d ) const;
 	/*! Clone this object */
 	virtual ScaleFunction* clone() const;
+	#warning IMPLEMENT THESE TWO FUNCTIONS (configure AND save)
+	/**
+	 * \brief Configures the object using a ConfigurationParameters object
+	 *
+	 * \param params the configuration parameters object with parameters to
+	 *               use
+	 * \param prefix the prefix to use to access the object configuration
+	 *               parameters. This is guaranteed to end with the
+	 *               separator character when called by the factory, so you
+	 *               don't need to add one
+	 */
+	virtual void configure(const ConfigurationParameters& params, QString prefix);
+	/**
+	 * \brief Save the actual status of parameters into the ConfigurationParameters object passed
+	 *
+	 * \param params the configuration parameters object on which save actual parameters
+	 * \param prefix the prefix to use to access the object configuration
+	 *               parameters.
+	 */
+	virtual void save(ConfigurationParameters& params, QString prefix);
 	//@}
 	/*! \name Parameters */
 	//@{
@@ -104,6 +144,26 @@ public:
 	virtual bool derivate( const DoubleVector& x, const DoubleVector& y, DoubleVector& d ) const;
 	/*! Clone this object */
 	virtual GainFunction* clone() const;
+	#warning IMPLEMENT THESE TWO FUNCTIONS (configure AND save)
+	/**
+	 * \brief Configures the object using a ConfigurationParameters object
+	 *
+	 * \param params the configuration parameters object with parameters to
+	 *               use
+	 * \param prefix the prefix to use to access the object configuration
+	 *               parameters. This is guaranteed to end with the
+	 *               separator character when called by the factory, so you
+	 *               don't need to add one
+	 */
+	virtual void configure(const ConfigurationParameters& params, QString prefix);
+	/**
+	 * \brief Save the actual status of parameters into the ConfigurationParameters object passed
+	 *
+	 * \param params the configuration parameters object on which save actual parameters
+	 * \param prefix the prefix to use to access the object configuration
+	 *               parameters.
+	 */
+	virtual void save(ConfigurationParameters& params, QString prefix);
 	//@}
 	/*! \name Parameters */
 	//@{
@@ -132,6 +192,26 @@ public:
 	virtual bool derivate( const DoubleVector& x, const DoubleVector& y, DoubleVector& d ) const;
 	/*! Clone this object */
 	virtual SigmoidFunction* clone() const;
+	#warning IMPLEMENT THESE TWO FUNCTIONS (configure AND save)
+	/**
+	 * \brief Configures the object using a ConfigurationParameters object
+	 *
+	 * \param params the configuration parameters object with parameters to
+	 *               use
+	 * \param prefix the prefix to use to access the object configuration
+	 *               parameters. This is guaranteed to end with the
+	 *               separator character when called by the factory, so you
+	 *               don't need to add one
+	 */
+	virtual void configure(const ConfigurationParameters& params, QString prefix);
+	/**
+	 * \brief Save the actual status of parameters into the ConfigurationParameters object passed
+	 *
+	 * \param params the configuration parameters object on which save actual parameters
+	 * \param prefix the prefix to use to access the object configuration
+	 *               parameters.
+	 */
+	virtual void save(ConfigurationParameters& params, QString prefix);
 	//@}
 	/*! \name Parameters */
 	//@{
@@ -160,6 +240,26 @@ public:
 	virtual bool derivate( const DoubleVector& x, const DoubleVector& y, DoubleVector& d ) const;
 	/*! Clone this object */
 	virtual FakeSigmoidFunction* clone() const;
+	#warning IMPLEMENT THESE TWO FUNCTIONS (configure AND save)
+	/**
+	 * \brief Configures the object using a ConfigurationParameters object
+	 *
+	 * \param params the configuration parameters object with parameters to
+	 *               use
+	 * \param prefix the prefix to use to access the object configuration
+	 *               parameters. This is guaranteed to end with the
+	 *               separator character when called by the factory, so you
+	 *               don't need to add one
+	 */
+	virtual void configure(const ConfigurationParameters& params, QString prefix);
+	/**
+	 * \brief Save the actual status of parameters into the ConfigurationParameters object passed
+	 *
+	 * \param params the configuration parameters object on which save actual parameters
+	 * \param prefix the prefix to use to access the object configuration
+	 *               parameters.
+	 */
+	virtual void save(ConfigurationParameters& params, QString prefix);
 	//@}
 	/*! \name Parameters */
 	//@{
@@ -193,6 +293,26 @@ public:
 	virtual bool derivate( const DoubleVector& x, const DoubleVector& y, DoubleVector& d ) const;
 	/*! Clone this object */
 	virtual ScaledSigmoidFunction* clone() const;
+	#warning IMPLEMENT THESE TWO FUNCTIONS (configure AND save)
+	/**
+	 * \brief Configures the object using a ConfigurationParameters object
+	 *
+	 * \param params the configuration parameters object with parameters to
+	 *               use
+	 * \param prefix the prefix to use to access the object configuration
+	 *               parameters. This is guaranteed to end with the
+	 *               separator character when called by the factory, so you
+	 *               don't need to add one
+	 */
+	virtual void configure(const ConfigurationParameters& params, QString prefix);
+	/**
+	 * \brief Save the actual status of parameters into the ConfigurationParameters object passed
+	 *
+	 * \param params the configuration parameters object on which save actual parameters
+	 * \param prefix the prefix to use to access the object configuration
+	 *               parameters.
+	 */
+	virtual void save(ConfigurationParameters& params, QString prefix);
 	//@}
 	/*! \name Parameters */
 	//@{
@@ -225,6 +345,8 @@ class NNFW_API RampFunction : public OutputFunction {
 public:
 	/*! \name Constructors */
 	//@{
+	/*! Default constructor*/
+	RampFunction();
 	/*! Construct a linear updater */
 	RampFunction( double minX, double maxX, double minY = -1, double maxY = +1 );
 	/*! Destructor */
@@ -238,6 +360,26 @@ public:
 	virtual bool derivate( const DoubleVector& x, const DoubleVector& y, DoubleVector& d ) const;
 	/*! Clone this object */
 	virtual RampFunction* clone() const;
+	#warning IMPLEMENT THESE TWO FUNCTIONS (configure AND save)
+	/**
+	 * \brief Configures the object using a ConfigurationParameters object
+	 *
+	 * \param params the configuration parameters object with parameters to
+	 *               use
+	 * \param prefix the prefix to use to access the object configuration
+	 *               parameters. This is guaranteed to end with the
+	 *               separator character when called by the factory, so you
+	 *               don't need to add one
+	 */
+	virtual void configure(const ConfigurationParameters& params, QString prefix);
+	/**
+	 * \brief Save the actual status of parameters into the ConfigurationParameters object passed
+	 *
+	 * \param params the configuration parameters object on which save actual parameters
+	 * \param prefix the prefix to use to access the object configuration
+	 *               parameters.
+	 */
+	virtual void save(ConfigurationParameters& params, QString prefix);
 	//@}
 	/*! \name Parameters */
 	//@{
@@ -262,6 +404,8 @@ class NNFW_API LinearFunction : public OutputFunction {
 public:
 	/*! \name Constructors */
 	//@{
+	/*! Default constructor */
+	LinearFunction();
 	/*! Construct a linear updater */
 	LinearFunction( double m, double b );
 	/*! Destructor */
@@ -275,6 +419,26 @@ public:
 	virtual bool derivate( const DoubleVector& x, const DoubleVector& y, DoubleVector& d ) const;
 	/*! Clone this object */
 	virtual LinearFunction* clone() const;
+	#warning IMPLEMENT THESE TWO FUNCTIONS (configure AND save)
+	/**
+	 * \brief Configures the object using a ConfigurationParameters object
+	 *
+	 * \param params the configuration parameters object with parameters to
+	 *               use
+	 * \param prefix the prefix to use to access the object configuration
+	 *               parameters. This is guaranteed to end with the
+	 *               separator character when called by the factory, so you
+	 *               don't need to add one
+	 */
+	virtual void configure(const ConfigurationParameters& params, QString prefix);
+	/**
+	 * \brief Save the actual status of parameters into the ConfigurationParameters object passed
+	 *
+	 * \param params the configuration parameters object on which save actual parameters
+	 * \param prefix the prefix to use to access the object configuration
+	 *               parameters.
+	 */
+	virtual void save(ConfigurationParameters& params, QString prefix);
 	//@}
 	/*! \name Parameters */
 	//@{
@@ -307,6 +471,26 @@ public:
 	virtual bool derivate( const DoubleVector& x, const DoubleVector& y, DoubleVector& d ) const;
 	/*! Clone this object */
 	virtual StepFunction* clone() const;
+	#warning IMPLEMENT THESE TWO FUNCTIONS (configure AND save)
+	/**
+	 * \brief Configures the object using a ConfigurationParameters object
+	 *
+	 * \param params the configuration parameters object with parameters to
+	 *               use
+	 * \param prefix the prefix to use to access the object configuration
+	 *               parameters. This is guaranteed to end with the
+	 *               separator character when called by the factory, so you
+	 *               don't need to add one
+	 */
+	virtual void configure(const ConfigurationParameters& params, QString prefix);
+	/**
+	 * \brief Save the actual status of parameters into the ConfigurationParameters object passed
+	 *
+	 * \param params the configuration parameters object on which save actual parameters
+	 * \param prefix the prefix to use to access the object configuration
+	 *               parameters.
+	 */
+	virtual void save(ConfigurationParameters& params, QString prefix);
 	//@}
 	/*! \name Parameters */
 	//@{
@@ -326,6 +510,8 @@ class NNFW_API LeakyIntegratorFunction : public OutputFunction {
 public:
 	/*! \name Constructors */
 	//@{
+	/*! Default constructor */
+	LeakyIntegratorFunction();
 	/*! Construct a LeakyIntegrator with deltas specified */
 	LeakyIntegratorFunction( const DoubleVector& deltas );
 	/*! Destructor */
@@ -343,6 +529,26 @@ public:
 	virtual LeakyIntegratorFunction* clone() const;
 	/*! resize itself to fit the size of Cluster */
 	virtual void setCluster( Cluster* );
+	#warning IMPLEMENT THESE TWO FUNCTIONS (configure AND save)
+	/**
+	 * \brief Configures the object using a ConfigurationParameters object
+	 *
+	 * \param params the configuration parameters object with parameters to
+	 *               use
+	 * \param prefix the prefix to use to access the object configuration
+	 *               parameters. This is guaranteed to end with the
+	 *               separator character when called by the factory, so you
+	 *               don't need to add one
+	 */
+	virtual void configure(const ConfigurationParameters& params, QString prefix);
+	/**
+	 * \brief Save the actual status of parameters into the ConfigurationParameters object passed
+	 *
+	 * \param params the configuration parameters object on which save actual parameters
+	 * \param prefix the prefix to use to access the object configuration
+	 *               parameters.
+	 */
+	virtual void save(ConfigurationParameters& params, QString prefix);
 	//@}
 	/*! \name Parameters */
 	//@{
@@ -376,6 +582,26 @@ public:
 	virtual void apply( DoubleVector& inputs, DoubleVector& outputs );
 	/*! Clone this object */
 	virtual LogLikeFunction* clone() const;
+	#warning IMPLEMENT THESE TWO FUNCTIONS (configure AND save)
+	/**
+	 * \brief Configures the object using a ConfigurationParameters object
+	 *
+	 * \param params the configuration parameters object with parameters to
+	 *               use
+	 * \param prefix the prefix to use to access the object configuration
+	 *               parameters. This is guaranteed to end with the
+	 *               separator character when called by the factory, so you
+	 *               don't need to add one
+	 */
+	virtual void configure(const ConfigurationParameters& params, QString prefix);
+	/**
+	 * \brief Save the actual status of parameters into the ConfigurationParameters object passed
+	 *
+	 * \param params the configuration parameters object on which save actual parameters
+	 * \param prefix the prefix to use to access the object configuration
+	 *               parameters.
+	 */
+	virtual void save(ConfigurationParameters& params, QString prefix);
 	//@}
 	/*! \name Parameters */
 	//@{
@@ -418,8 +644,29 @@ public:
 	virtual void apply( DoubleVector& inputs, DoubleVector& outputs );
 	/*! Clone this object */
 	virtual PoolFunction* clone() const;
-	/*! when it's inserted into a Cluster, it will be resized to fit the size of Cluster */
+	/*! when it's inserted into a Cluster, it will be resized to fit the size of Cluster.<br>
+	    If the new Cluster has more neurons than the previous one, adds IdentityFunctions */
 	virtual void setCluster( Cluster* );
+	#warning IMPLEMENT THESE TWO FUNCTIONS (configure AND save)
+	/**
+	 * \brief Configures the object using a ConfigurationParameters object
+	 *
+	 * \param params the configuration parameters object with parameters to
+	 *               use
+	 * \param prefix the prefix to use to access the object configuration
+	 *               parameters. This is guaranteed to end with the
+	 *               separator character when called by the factory, so you
+	 *               don't need to add one
+	 */
+	virtual void configure(const ConfigurationParameters& params, QString prefix);
+	/**
+	 * \brief Save the actual status of parameters into the ConfigurationParameters object passed
+	 *
+	 * \param params the configuration parameters object on which save actual parameters
+	 * \param prefix the prefix to use to access the object configuration
+	 *               parameters.
+	 */
+	virtual void save(ConfigurationParameters& params, QString prefix);
 	//@}
 private:
 	/*! \name Parameters */
@@ -436,6 +683,8 @@ class NNFW_API CompositeFunction : public OutputFunction {
 public:
 	/*! \name Constructors */
 	//@{
+	/*! Default constructor */
+	CompositeFunction();
 	/*! Construct a Composite */
 	CompositeFunction( const OutputFunction& f, const OutputFunction& g );
 	/*! Destructor */
@@ -460,6 +709,26 @@ public:
 	virtual CompositeFunction* clone() const;
 	/*! recursive call setCluster on first and second function setted */
 	virtual void setCluster( Cluster* );
+	#warning IMPLEMENT THESE TWO FUNCTIONS (configure AND save)
+	/**
+	 * \brief Configures the object using a ConfigurationParameters object
+	 *
+	 * \param params the configuration parameters object with parameters to
+	 *               use
+	 * \param prefix the prefix to use to access the object configuration
+	 *               parameters. This is guaranteed to end with the
+	 *               separator character when called by the factory, so you
+	 *               don't need to add one
+	 */
+	virtual void configure(const ConfigurationParameters& params, QString prefix);
+	/**
+	 * \brief Save the actual status of parameters into the ConfigurationParameters object passed
+	 *
+	 * \param params the configuration parameters object on which save actual parameters
+	 * \param prefix the prefix to use to access the object configuration
+	 *               parameters.
+	 */
+	virtual void save(ConfigurationParameters& params, QString prefix);
 	//@}
 private:
 	/*! \name Parameters */
@@ -481,6 +750,8 @@ class NNFW_API LinearComboFunction : public OutputFunction {
 public:
 	/*! \name Constructors */
 	//@{
+	/*! Standard constructor */
+	LinearComboFunction();
 	/*! Construct a Linear Combination of two functions */
 	LinearComboFunction( double w1, const OutputFunction& f, double w2, const OutputFunction& g );
 	/*! Destructor */
@@ -512,6 +783,26 @@ public:
 	virtual LinearComboFunction* clone() const;
 	/*! recursive call setCluster on first and second function setted */
 	virtual void setCluster( Cluster* );
+	#warning IMPLEMENT THESE TWO FUNCTIONS (configure AND save)
+	/**
+	 * \brief Configures the object using a ConfigurationParameters object
+	 *
+	 * \param params the configuration parameters object with parameters to
+	 *               use
+	 * \param prefix the prefix to use to access the object configuration
+	 *               parameters. This is guaranteed to end with the
+	 *               separator character when called by the factory, so you
+	 *               don't need to add one
+	 */
+	virtual void configure(const ConfigurationParameters& params, QString prefix);
+	/**
+	 * \brief Save the actual status of parameters into the ConfigurationParameters object passed
+	 *
+	 * \param params the configuration parameters object on which save actual parameters
+	 * \param prefix the prefix to use to access the object configuration
+	 *               parameters.
+	 */
+	virtual void save(ConfigurationParameters& params, QString prefix);
 	//@}
 private:
 	/*! \name Parameters */

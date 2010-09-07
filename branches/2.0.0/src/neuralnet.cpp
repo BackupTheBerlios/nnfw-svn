@@ -19,6 +19,8 @@
 
 #include "neuralnet.h"
 
+#warning THERE ARE WARNINGS HERE ABOUT RETURNING REFERENCES TO TEMPORARIES (BOTH BECAUSE LinkerList() IS RETURNED AND BECAUSE THE const VERSION OF operator[] OF QMap RETURNS A COPY INSTEAD OF A CONST REFERENCE). TALK WITH GIANLUCA ABOUT WHAT TO DO HERE.
+
 namespace nnfw {
 
 BaseNeuralNet::BaseNeuralNet() {
@@ -320,8 +322,8 @@ BaseNeuralNet* BaseNeuralNet::clone() const {
 	}
 	// --- putting linkers
 	for( int i=0; i<(int)linkers().size(); i++ ) {
-		Linker* lk = linkers()[i];
-		//--- FIXME: need re-implementation without PropertySettings
+		//Linker* lk = linkers()[i];
+		#warning FIXME: need re-implementation without PropertySettings
 		//clone->addLinker( lk->clone );
 	}
 	// --- copy the order -- not-efficient

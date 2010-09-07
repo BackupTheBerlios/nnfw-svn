@@ -43,7 +43,7 @@ const DoubleVector& Pattern::inputsOf( Cluster* cl ) const {
 	if ( pinfo.count(cl) != 0 ) {
 		return pinfo[cl].inputs;
 	} else {
-		return DoubleVector();
+		return emptyVector;
 	}
 };
 
@@ -51,9 +51,11 @@ const DoubleVector& Pattern::outputsOf( Cluster* cl ) const {
 	if ( pinfo.count(cl) != 0 ) {
 		return pinfo[cl].outputs;
 	} else {
-		return DoubleVector();
+		return emptyVector;
 	}
 };
+
+const DoubleVector Pattern::emptyVector;
 
 Pattern::PatternInfo& Pattern::operator[]( Cluster* cl ) {
 	return pinfo[cl];

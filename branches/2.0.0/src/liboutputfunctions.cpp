@@ -167,6 +167,14 @@ ScaledSigmoidFunction* ScaledSigmoidFunction::clone() const {
 	return new ScaledSigmoidFunction( lambda, min, max );
 }
 
+RampFunction::RampFunction()
+	: OutputFunction() {
+	min_x = 0.0;
+	max_x = 0.0;
+	min_y = 0.0;
+	max_y = 0.0;
+}
+
 RampFunction::RampFunction( double minX, double maxX, double minY, double maxY )
 	: OutputFunction() {
 	min_x = minX;
@@ -206,6 +214,12 @@ bool RampFunction::derivate( const DoubleVector& inputs, const DoubleVector&, Do
 
 RampFunction* RampFunction::clone() const {
 	return new RampFunction( min_x, max_x, min_y, max_y );
+}
+
+LinearFunction::LinearFunction()
+	: OutputFunction() {
+	m = 0.0;
+	b = 0.0;
 }
 
 LinearFunction::LinearFunction( double m, double b )
@@ -253,6 +267,11 @@ bool StepFunction::derivate( const DoubleVector& inputs, const DoubleVector&, Do
 
 StepFunction* StepFunction::clone() const {
 	return new StepFunction( min, max, threshold );
+}
+
+LeakyIntegratorFunction::LeakyIntegratorFunction()
+	: OutputFunction(), delta(), outprev()
+{
 }
 
 LeakyIntegratorFunction::LeakyIntegratorFunction( const DoubleVector& d )
@@ -382,8 +401,14 @@ void PoolFunction::setCluster( Cluster* c ) {
 	unsigned int newDim = c->numNeurons();
 	ups.resize( newDim );
 	for( unsigned int i=oldDim; i<newDim; i++ ) {
-		ups[i] = new OutputFunction();
+		ups[i] = new IdentityFunction();
 	}
+}
+
+CompositeFunction::CompositeFunction()
+	: OutputFunction(), mid() {
+	first = NULL;
+	second = NULL;
 }
 
 CompositeFunction::CompositeFunction( const OutputFunction& f, const OutputFunction& g )
@@ -439,6 +464,15 @@ void CompositeFunction::setCluster( Cluster* c ) {
 	mid.resize( c->numNeurons() );
 	first->setCluster( c );
 	second->setCluster( c );
+}
+
+LinearComboFunction::LinearComboFunction()
+	: OutputFunction(), mid()
+{
+	first = NULL;
+	second = NULL;
+	this->w1 = 0.0;
+	this->w2 = 0.0;
 }
 
 LinearComboFunction::LinearComboFunction( double w1, const OutputFunction& f, double w2, const OutputFunction& g )

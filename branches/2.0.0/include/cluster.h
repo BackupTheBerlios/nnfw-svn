@@ -160,12 +160,15 @@ public:
 	OutputFunction* function() const {
 		return updater;
 	};
-	/*! Clone this Cluster */
-	virtual Cluster* clone() const;
 	/*! Return its typename */
 	virtual QString typeName() {
 		return "Cluster";
 	};
+	/*! Clone method returns a new allocated clone of this object */
+	// This is here just to tell the compiler that cloning a cluster returns
+	// a cluster and not a Clonable (as the base class function declaration
+	// states)
+	virtual Cluster* clone() const = 0;
 	//@}
 
 protected:

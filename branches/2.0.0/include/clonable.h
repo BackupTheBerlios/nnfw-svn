@@ -25,6 +25,7 @@
 
 #include "types.h"
 #include "clonable.h"
+#include <factory/parametersettable.h>
 
 namespace nnfw {
 
@@ -32,7 +33,7 @@ namespace nnfw {
  *
  *  Clonable Objects
  */
-class NNFW_API Clonable {
+class NNFW_API Clonable : public ParameterSettable {
 public:
 	/*! \name Virtual Destrucor */
 	//@{

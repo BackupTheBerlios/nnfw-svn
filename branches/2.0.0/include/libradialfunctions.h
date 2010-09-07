@@ -55,6 +55,26 @@ public:
 	virtual bool derivate( const DoubleVector& x, const DoubleVector& y, DoubleVector& d ) const;
 	/*! Clone this object */
 	virtual GaussFunction* clone() const;
+	#warning IMPLEMENT THESE TWO FUNCTIONS (configure AND save)
+	/**
+	 * \brief Configures the object using a ConfigurationParameters object
+	 *
+	 * \param params the configuration parameters object with parameters to
+	 *               use
+	 * \param prefix the prefix to use to access the object configuration
+	 *               parameters. This is guaranteed to end with the
+	 *               separator character when called by the factory, so you
+	 *               don't need to add one
+	 */
+	virtual void configure(const ConfigurationParameters& params, QString prefix);
+	/**
+	 * \brief Save the actual status of parameters into the ConfigurationParameters object passed
+	 *
+	 * \param params the configuration parameters object on which save actual parameters
+	 * \param prefix the prefix to use to access the object configuration
+	 *               parameters.
+	 */
+	virtual void save(ConfigurationParameters& params, QString prefix);
 	//@}
 	/*! \name Parameters */
 	//@{

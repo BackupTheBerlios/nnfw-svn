@@ -18,16 +18,63 @@
  ********************************************************************************/
 
 #include "nnfw.h"
+#include "simplecluster.h"
+#include "biasedcluster.h"
+#include "ddecluster.h"
+#include "fakecluster.h"
+#include "sparsematrixlinker.h"
+#include "copylinker.h"
+#include "dotlinker.h"
+#include "normlinker.h"
+#include "liboutputfunctions.h"
+#include "libperiodicfunctions.h"
+#include "libradialfunctions.h"
+#include <factory/factory.h>
 
 using namespace nnfw;
 
 #ifdef NNFW_LINUX
-void initUtilitiesLib() __attribute__ ((constructor));
-void initUtilitiesLib() {
+void initNNFWLib() __attribute__ ((constructor));
+void initNNFWLib() {
 #ifdef NNFW_DEBUG
 	qDebug() << "NNFW Initialization";
 #endif
-	#warning QUI REGISTRAZIONE ALLA FACTORY DI LARAL (ANCHE ALTROVE IN QUESTO FILE AL POSTO DI WARNING ANALOGHI)
+	// Registering all types to factory
+	// Clusters
+	Factory::getInstance().registerClass<SimpleCluster>("SimpleCluster");
+	Factory::getInstance().registerClass<BiasedCluster>("BiasedCluster");
+	Factory::getInstance().registerClass<DDECluster>("DDECluster");
+	Factory::getInstance().registerClass<FakeCluster>("FakeCluster");
+
+	// Linkers
+	#warning THE SparseMatrixLinker CLASS IS IN VERSION 1.0 AND NOT IN VERSION 2.0
+// 	Factory::getInstance().registerClass<SparseMatrixLinker>("SparseMatrixLinker");
+	Factory::getInstance().registerClass<CopyLinker>("CopyLinker");
+	Factory::getInstance().registerClass<DotLinker>("DotLinker", QStringList() << "MatrixLinker"); // "MatrixLinker" is for backward compatibility
+	Factory::getInstance().registerClass<NormLinker>("NormLinker");
+
+	// Output Functions
+	Factory::getInstance().registerClass<FakeSigmoidFunction>("FakeSigmoidFunction");
+	Factory::getInstance().registerClass<IdentityFunction>("IdentityFunction");
+	Factory::getInstance().registerClass<GainFunction>("GainFunction");
+	Factory::getInstance().registerClass<LinearFunction>("LinearFunction");
+	Factory::getInstance().registerClass<RampFunction>("RampFunction");
+	Factory::getInstance().registerClass<ScaleFunction>("ScaleFunction");
+	Factory::getInstance().registerClass<ScaledSigmoidFunction>("ScaledSigmoidFunction");
+	Factory::getInstance().registerClass<SigmoidFunction>("SigmoidFunction");
+	Factory::getInstance().registerClass<StepFunction>("StepFunction");
+	Factory::getInstance().registerClass<LeakyIntegratorFunction>("LeakyIntegratorFunction");
+	Factory::getInstance().registerClass<LogLikeFunction>("LogLikeFunction");
+	Factory::getInstance().registerClass<PoolFunction>("PoolFunction");
+	Factory::getInstance().registerClass<CompositeFunction>("CompositeFunction");
+	Factory::getInstance().registerClass<LinearComboFunction>("LinearComboFunction");
+	Factory::getInstance().registerClass<GaussFunction>("GaussFunction");
+	Factory::getInstance().registerClass<PseudoGaussFunction>("PseudoGaussFunction");
+	Factory::getInstance().registerClass<SawtoothFunction>("SawtoothFunction");
+	Factory::getInstance().registerClass<SinFunction>("SinFunction");
+	Factory::getInstance().registerClass<TriangleFunction>("TriangleFunction");
+	#warning THE WinnerTakeAllFunction CLASS IS IN VERSION 1.0 AND NOT IN VERSION 2.0
+// 	Factory::getInstance().registerClass<WinnerTakeAllFunction>("WinnerTakeAllFunction");
 }
 #endif
 #ifdef NNFW_WIN
@@ -39,7 +86,40 @@ BOOL WINAPI DllMain( HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpReserved ) {
 #ifdef NNFW_DEBUG
 		qDebug() << "NNFW Initialization";
 #endif
-		#warning QUI REGISTRAZIONE ALLA FACTORY DI LARAL (ANCHE ALTROVE IN QUESTO FILE AL POSTO DI WARNING ANALOGHI)
+		// Registering all types to factory
+		// Clusters
+		Factory::getInstance().registerClass<SimpleCluster>("SimpleCluster");
+		Factory::getInstance().registerClass<BiasedCluster>("BiasedCluster");
+		Factory::getInstance().registerClass<DDECluster>("DDECluster");
+		Factory::getInstance().registerClass<FakeCluster>("FakeCluster");
+
+		// Linkers
+		Factory::getInstance().registerClass<SparseMatrixLinker>("SparseMatrixLinker");
+		Factory::getInstance().registerClass<CopyLinker>("CopyLinker");
+		Factory::getInstance().registerClass<DotLinker>("DotLinker", QStringList() << "MatrixLinker"); // "MatrixLinker" is for backward compatibility
+		Factory::getInstance().registerClass<NormLinker>("NormLinker");
+
+		// Output Functions
+		Factory::getInstance().registerClass<FakeSigmoidFunction>("FakeSigmoidFunction");
+		Factory::getInstance().registerClass<IdentityFunction>("IdentityFunction");
+		Factory::getInstance().registerClass<GainFunction>("GainFunction");
+		Factory::getInstance().registerClass<LinearFunction>("LinearFunction");
+		Factory::getInstance().registerClass<RampFunction>("RampFunction");
+		Factory::getInstance().registerClass<ScaleFunction>("ScaleFunction");
+		Factory::getInstance().registerClass<ScaledSigmoidFunction>("ScaledSigmoidFunction");
+		Factory::getInstance().registerClass<SigmoidFunction>("SigmoidFunction");
+		Factory::getInstance().registerClass<StepFunction>("StepFunction");
+		Factory::getInstance().registerClass<LeakyIntegratorFunction>("LeakyIntegratorFunction");
+		Factory::getInstance().registerClass<LogLikeFunction>("LogLikeFunction");
+		Factory::getInstance().registerClass<PoolFunction>("PoolFunction");
+		Factory::getInstance().registerClass<CompositeFunction>("CompositeFunction");
+		Factory::getInstance().registerClass<LinearComboFunction>("LinearComboFunction");
+		Factory::getInstance().registerClass<GaussFunction>("GaussFunction");
+		Factory::getInstance().registerClass<PseudoGaussFunction>("PseudoGaussFunction");
+		Factory::getInstance().registerClass<SawtoothFunction>("SawtoothFunction");
+		Factory::getInstance().registerClass<SinFunction>("SinFunction");
+		Factory::getInstance().registerClass<TriangleFunction>("TriangleFunction");
+		Factory::getInstance().registerClass<WinnerTakeAllFunction>("WinnerTakeAllFunction");
 		break;
 	case DLL_THREAD_ATTACH:
 		// Do thread-specific initialization.
@@ -55,12 +135,45 @@ BOOL WINAPI DllMain( HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpReserved ) {
 }
 #endif
 #ifdef NNFW_MAC
-void initUtilitiesLib() __attribute__ ((constructor));
-void initUtilitiesLib() {
+void initNNFWLib() __attribute__ ((constructor));
+void initNNFWLib() {
 #ifdef NNFW_DEBUG
 	qDebug() << "NNFW Initialization";
 #endif
-	#warning QUI REGISTRAZIONE ALLA FACTORY DI LARAL (ANCHE ALTROVE IN QUESTO FILE AL POSTO DI WARNING ANALOGHI)
+	// Registering all types to factory
+	// Clusters
+	Factory::getInstance().registerClass<SimpleCluster>("SimpleCluster");
+	Factory::getInstance().registerClass<BiasedCluster>("BiasedCluster");
+	Factory::getInstance().registerClass<DDECluster>("DDECluster");
+	Factory::getInstance().registerClass<FakeCluster>("FakeCluster");
+
+	// Linkers
+	Factory::getInstance().registerClass<SparseMatrixLinker>("SparseMatrixLinker");
+	Factory::getInstance().registerClass<CopyLinker>("CopyLinker");
+	Factory::getInstance().registerClass<DotLinker>("DotLinker", QStringList() << "MatrixLinker"); // "MatrixLinker" is for backward compatibility
+	Factory::getInstance().registerClass<NormLinker>("NormLinker");
+
+	// Output Functions
+	Factory::getInstance().registerClass<FakeSigmoidFunction>("FakeSigmoidFunction");
+	Factory::getInstance().registerClass<IdentityFunction>("IdentityFunction");
+	Factory::getInstance().registerClass<GainFunction>("GainFunction");
+	Factory::getInstance().registerClass<LinearFunction>("LinearFunction");
+	Factory::getInstance().registerClass<RampFunction>("RampFunction");
+	Factory::getInstance().registerClass<ScaleFunction>("ScaleFunction");
+	Factory::getInstance().registerClass<ScaledSigmoidFunction>("ScaledSigmoidFunction");
+	Factory::getInstance().registerClass<SigmoidFunction>("SigmoidFunction");
+	Factory::getInstance().registerClass<StepFunction>("StepFunction");
+	Factory::getInstance().registerClass<LeakyIntegratorFunction>("LeakyIntegratorFunction");
+	Factory::getInstance().registerClass<LogLikeFunction>("LogLikeFunction");
+	Factory::getInstance().registerClass<PoolFunction>("PoolFunction");
+	Factory::getInstance().registerClass<CompositeFunction>("CompositeFunction");
+	Factory::getInstance().registerClass<LinearComboFunction>("LinearComboFunction");
+	Factory::getInstance().registerClass<GaussFunction>("GaussFunction");
+	Factory::getInstance().registerClass<PseudoGaussFunction>("PseudoGaussFunction");
+	Factory::getInstance().registerClass<SawtoothFunction>("SawtoothFunction");
+	Factory::getInstance().registerClass<SinFunction>("SinFunction");
+	Factory::getInstance().registerClass<TriangleFunction>("TriangleFunction");
+	Factory::getInstance().registerClass<WinnerTakeAllFunction>("WinnerTakeAllFunction");
 }
 #endif
 

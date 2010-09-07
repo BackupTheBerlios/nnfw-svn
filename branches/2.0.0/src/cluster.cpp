@@ -101,9 +101,4 @@ double Cluster::getOutput( unsigned int neuron ) const {
 	return outputdata[neuron];
 }
 
-Cluster* Cluster::clone() const {
-	qWarning() << "The clone() method has to implemented by subclasses";
-	return 0;
-}
-
 }
