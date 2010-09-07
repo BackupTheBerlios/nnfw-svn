@@ -1,7 +1,7 @@
 
 #include "nnfw/nnfw.h"
 #include "nnfw/types.h"
-#include "nnfw/utils.h"
+#include "simpletimer.h"
 using namespace nnfw;
 
 #include <iostream>

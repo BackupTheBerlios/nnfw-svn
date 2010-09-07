@@ -25,12 +25,12 @@
 
 #include "types.h"
 #include "learningalgorithm.h"
+#include "biasedcluster.h"
+#include "matrixlinker.h"
 #include <QMap>
 #include <QVector>
 
 namespace nnfw {
-
-class AbstractModifier;
 
 /*! \brief Back-Propagation Algorithm implementation
  *
@@ -118,6 +118,8 @@ public:
 	 *  setTeachingInput() for all the output clusters before calling getError() for any of the clusters.
 	 */
 	const DoubleVector getError( Cluster* );
+
+	virtual BackPropagationAlgo* clone() const { return NULL; }
 	//@}
 
 private:
@@ -133,14 +135,12 @@ private:
 	//! The struct of Clusters and Deltas
 	class NNFW_API cluster_deltas {
 	public:
-		Cluster* cluster;
-		AbstractModifier* modcluster;
+		BiasedCluster* cluster;
 		bool isOutput;
 		DoubleVector deltas_outputs;
 		DoubleVector deltas_inputs;
 		DoubleVector last_deltas_inputs;
-		LinkerList incoming_linkers_vec;
-		QVector<AbstractModifier*> incoming_modlinkers;
+		QList<MatrixLinker*> incoming_linkers_vec;
 		QVector<DoubleVector> incoming_last_outputs;
 	};
 	//! map to help looking for cluster_deltas info

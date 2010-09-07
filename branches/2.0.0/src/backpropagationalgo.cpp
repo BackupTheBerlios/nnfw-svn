@@ -21,7 +21,6 @@
 #include "matrixlinker.h"
 #include "biasedcluster.h"
 #include "backpropagationalgo.h"
-#include "nnfwfactory.h"
 
 namespace nnfw {
 
@@ -120,26 +119,30 @@ void BackPropagationAlgo::learn() {
 	propagDeltas();
 	// --- make the learn !!
 	for ( int i=0; i<cluster_deltas_vec.size(); ++i ) {
-		//DoubleVector minus_ones( cluster_deltas_vec[i].cluster->outputs().size( ), -1.0f );
-		//cluster_deltas_vec[i].modcluster->rule( -learn_rate, minus_ones, cluster_deltas_vec[i].deltas_inputs );
-		cluster_deltas_vec[i].modcluster->rule( learn_rate, cluster_deltas_vec[i].deltas_inputs );
+		if ( cluster_deltas_vec[i].cluster != NULL) {
+			amul( cluster_deltas_vec[i].cluster->biases(), learn_rate, cluster_deltas_vec[i].deltas_inputs );
+		}
 
 		for ( int j=0;  j<cluster_deltas_vec[i].incoming_linkers_vec.size(); ++j ) {
-			cluster_deltas_vec[i].incoming_modlinkers[j]->rule(
-				-learn_rate,
-				cluster_deltas_vec[i].incoming_linkers_vec[j]->from()->outputs(),
-				cluster_deltas_vec[i].deltas_inputs
-			);
-			if ( !useMomentum ) continue;
-			// --- add the momentum
-			cluster_deltas_vec[i].incoming_modlinkers[j]->rule(
-				-learn_rate*momentumv,
-				cluster_deltas_vec[i].incoming_last_outputs[j],
-				cluster_deltas_vec[i].last_deltas_inputs
-			);
-			// --- save datas for momentum on the next step
-			cluster_deltas_vec[i].incoming_last_outputs[j].copy( cluster_deltas_vec[i].incoming_linkers_vec[j]->from()->outputs() );
-			cluster_deltas_vec[i].last_deltas_inputs.copy( cluster_deltas_vec[i].deltas_inputs );
+			if ( cluster_deltas_vec[i].incoming_linkers_vec[j] != NULL ) {
+				deltarule(
+					cluster_deltas_vec[i].incoming_linkers_vec[j]->matrix(),
+					-learn_rate,
+					cluster_deltas_vec[i].incoming_linkers_vec[j]->from()->outputs(),
+					cluster_deltas_vec[i].deltas_inputs
+				);
+				if ( !useMomentum ) continue;
+				// --- add the momentum
+				deltarule(
+					cluster_deltas_vec[i].incoming_linkers_vec[j]->matrix(),
+					-learn_rate*momentumv,
+					cluster_deltas_vec[i].incoming_last_outputs[j],
+					cluster_deltas_vec[i].last_deltas_inputs
+				);
+				// --- save datas for momentum on the next step
+				cluster_deltas_vec[i].incoming_last_outputs[j].copy( cluster_deltas_vec[i].incoming_linkers_vec[j]->from()->outputs() );
+				cluster_deltas_vec[i].last_deltas_inputs.copy( cluster_deltas_vec[i].deltas_inputs );
+			}
 		}
 	}
 	return;
@@ -183,8 +186,7 @@ void BackPropagationAlgo::addCluster( Cluster* cl, bool isOut ) {
 	if( mapIndex.count( cl ) == 0 ) {
 		cluster_deltas temp;
 		int size = cl->numNeurons();
-		temp.cluster = cl;
-		temp.modcluster = Factory::createModifierFor( temp.cluster );
+		temp.cluster = dynamic_cast<BiasedCluster*>(cl);
 		temp.isOutput = isOut;
 		temp.deltas_outputs.resize( size );
 		temp.deltas_inputs.resize( size );
@@ -198,22 +200,19 @@ void BackPropagationAlgo::addLinker( Linker* link ) {
 	if ( mapIndex.count( link->to() ) == 0 ) {
 		cluster_deltas temp;
 		int size = link->to()->numNeurons();
-		temp.cluster = link->to();
-		temp.modcluster = Factory::createModifierFor( temp.cluster );
+		temp.cluster = dynamic_cast<BiasedCluster*>(link->to());
 		temp.isOutput = false;
 		temp.deltas_outputs.resize( size );
 		temp.deltas_inputs.resize( size );
 		temp.last_deltas_inputs.resize( size );
-		temp.incoming_linkers_vec.push_back( link );
-		temp.incoming_modlinkers.push_back( Factory::createModifierFor( link ) );
+		temp.incoming_linkers_vec.push_back( dynamic_cast<MatrixLinker*>(link) );
 		temp.incoming_last_outputs.push_back( DoubleVector( link->from()->numNeurons() ) );
 		cluster_deltas_vec.push_back( temp );
 		mapIndex[temp.cluster] = cluster_deltas_vec.size()-1;
 	}
 	else {
 		int tmp = mapIndex[link->to()];
-		cluster_deltas_vec[ tmp ].incoming_linkers_vec.push_back( link );
-		cluster_deltas_vec[ tmp ].incoming_modlinkers.push_back( Factory::createModifierFor( link ) );
+		cluster_deltas_vec[ tmp ].incoming_linkers_vec.push_back( dynamic_cast<MatrixLinker*>(link) );
 		cluster_deltas_vec[ tmp ].incoming_last_outputs.push_back( DoubleVector( link->from()->numNeurons() ) );
 	}
 }
