@@ -60,7 +60,10 @@ public:
 	 */
 	virtual void randomize( double min, double max ) = 0;
 	/*! Clone this Linker */
-	virtual Linker* clone() const;
+	// This is here just to tell the compiler that cloning a linker returns
+	// a linker and not a Clonable (as the base class function declaration
+	// states)
+	virtual Linker* clone() const = 0;
 	/*! Return its typename */
 	virtual QString typeName() {
 		return "Linker";

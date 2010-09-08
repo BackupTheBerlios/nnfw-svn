@@ -28,10 +28,5 @@ Linker::Linker( Cluster* from, Cluster* to, QString name )
 	this->toc = to;
 }
 
-Linker* Linker::clone() const {
-	qWarning() << "The Linker::clone() method has to implemented by subclasses";
-	return 0;
-}
-
 }
 
