@@ -29,6 +29,18 @@
 #include "cluster.h"
 #include "updatable.h"
 
+PROBLEMI:
+	- La classe Linker non permette di specificare i Cluster from e to dopo
+	  la creazione, ma la factory si aspetta di usare la funzione configure
+	  di ParameterSettable dopo la creazione dell'oggetto (che deve avere un
+	  costruttore che non prende parametri)
+	- Anche se si risolvesse il problema di sopra, come fa un Linker ad
+	  ottenere i puntatori ai cluster from e to dai loro nomi (che ricava
+	  dai parametri settati)? È lecito lasciare questa cosa alla classe
+	  BaseNeuralNet? (Credo di sì, con i parametri un linker costruisce se
+	  stesso, poi la rete che lo contiene si preoccupa di connetterlo a
+	  dovere)
+
 namespace nnfw {
 
 /*! \brief Abstract Linker Class. This define the common interface among Linkers
