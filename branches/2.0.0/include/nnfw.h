@@ -30,6 +30,8 @@
  *
  */
 
+MAKE CLUSTER, LINKERS, OUTPUT FUNCTIONS, BASE NEURAL NET, ... EXCEPTION SAFE (AN EXCEPTION COULD BE THROWN DURING CONFIGURATION)
+
 /*! \file
  *  \brief This is the main header files!! Include this file in your project... and play :-)
  *
