@@ -26,7 +26,7 @@
  */
 
 #include "types.h"
-#include "clonable.h"
+#include <factory/parametersettable.h>
 
 namespace nnfw {
 
@@ -34,7 +34,7 @@ namespace nnfw {
  *
  *  Details...
  */
-class NNFW_API OutputFunction : public Clonable {
+class NNFW_API OutputFunction : public ParameterSettableWithConfigureFunction {
 public:
 	/*! \name Constructors */
 	//@{
