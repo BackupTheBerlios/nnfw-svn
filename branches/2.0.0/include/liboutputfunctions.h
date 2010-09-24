@@ -28,6 +28,7 @@
  */
 
 #include "outputfunction.h"
+#include <configuration/configurationparameters.h>
 
 namespace nnfw {
 
@@ -50,9 +51,6 @@ public:
 	virtual void apply( DoubleVector& inputs, DoubleVector& outputs );
 	/*! return always 1 (an explain of why will be coming soon) */
 	virtual bool derivate( const DoubleVector& x, const DoubleVector& y, DoubleVector& d ) const;
-	/*! Clone this object */
-	virtual IdentityFunction* clone() const;
-	#warning IMPLEMENT THESE TWO FUNCTIONS (configure AND save)
 	/**
 	 * \brief Configures the object using a ConfigurationParameters object
 	 *
@@ -63,7 +61,7 @@ public:
 	 *               separator character when called by the factory, so you
 	 *               don't need to add one
 	 */
-	virtual void configure(const ConfigurationParameters& params, QString prefix);
+	virtual void configure(ConfigurationParameters& params, QString prefix);
 	/**
 	 * \brief Save the actual status of parameters into the ConfigurationParameters object passed
 	 *
@@ -94,9 +92,6 @@ public:
 	virtual void apply( DoubleVector& inputs, DoubleVector& outputs );
 	/*! return always the rate (an explain of why will be coming soon) */
 	virtual bool derivate( const DoubleVector& x, const DoubleVector& y, DoubleVector& d ) const;
-	/*! Clone this object */
-	virtual ScaleFunction* clone() const;
-	#warning IMPLEMENT THESE TWO FUNCTIONS (configure AND save)
 	/**
 	 * \brief Configures the object using a ConfigurationParameters object
 	 *
@@ -107,7 +102,7 @@ public:
 	 *               separator character when called by the factory, so you
 	 *               don't need to add one
 	 */
-	virtual void configure(const ConfigurationParameters& params, QString prefix);
+	virtual void configure(ConfigurationParameters& params, QString prefix);
 	/**
 	 * \brief Save the actual status of parameters into the ConfigurationParameters object passed
 	 *
@@ -142,9 +137,6 @@ public:
 	virtual void apply( DoubleVector& inputs, DoubleVector& outputs );
 	/*! return always 1 (an explain of why will be coming soon) */
 	virtual bool derivate( const DoubleVector& x, const DoubleVector& y, DoubleVector& d ) const;
-	/*! Clone this object */
-	virtual GainFunction* clone() const;
-	#warning IMPLEMENT THESE TWO FUNCTIONS (configure AND save)
 	/**
 	 * \brief Configures the object using a ConfigurationParameters object
 	 *
@@ -155,7 +147,7 @@ public:
 	 *               separator character when called by the factory, so you
 	 *               don't need to add one
 	 */
-	virtual void configure(const ConfigurationParameters& params, QString prefix);
+	virtual void configure(ConfigurationParameters& params, QString prefix);
 	/**
 	 * \brief Save the actual status of parameters into the ConfigurationParameters object passed
 	 *
@@ -190,9 +182,6 @@ public:
 	virtual void apply( DoubleVector& inputs, DoubleVector& outputs );
 	/*! return the approximation commonly used in backpropagation learning: y*(1-y) */
 	virtual bool derivate( const DoubleVector& x, const DoubleVector& y, DoubleVector& d ) const;
-	/*! Clone this object */
-	virtual SigmoidFunction* clone() const;
-	#warning IMPLEMENT THESE TWO FUNCTIONS (configure AND save)
 	/**
 	 * \brief Configures the object using a ConfigurationParameters object
 	 *
@@ -203,7 +192,7 @@ public:
 	 *               separator character when called by the factory, so you
 	 *               don't need to add one
 	 */
-	virtual void configure(const ConfigurationParameters& params, QString prefix);
+	virtual void configure(ConfigurationParameters& params, QString prefix);
 	/**
 	 * \brief Save the actual status of parameters into the ConfigurationParameters object passed
 	 *
@@ -238,9 +227,6 @@ public:
 	virtual void apply( DoubleVector& inputs, DoubleVector& outputs );
 	/*! return the approximation commonly used in backpropagation learning: x(1-x) */
 	virtual bool derivate( const DoubleVector& x, const DoubleVector& y, DoubleVector& d ) const;
-	/*! Clone this object */
-	virtual FakeSigmoidFunction* clone() const;
-	#warning IMPLEMENT THESE TWO FUNCTIONS (configure AND save)
 	/**
 	 * \brief Configures the object using a ConfigurationParameters object
 	 *
@@ -251,7 +237,7 @@ public:
 	 *               separator character when called by the factory, so you
 	 *               don't need to add one
 	 */
-	virtual void configure(const ConfigurationParameters& params, QString prefix);
+	virtual void configure(ConfigurationParameters& params, QString prefix);
 	/**
 	 * \brief Save the actual status of parameters into the ConfigurationParameters object passed
 	 *
@@ -291,9 +277,6 @@ public:
 	virtual void apply( DoubleVector& inputs, DoubleVector& outputs );
 	/*! return the approximation commonly used in backpropagation learning: x(1-x) */
 	virtual bool derivate( const DoubleVector& x, const DoubleVector& y, DoubleVector& d ) const;
-	/*! Clone this object */
-	virtual ScaledSigmoidFunction* clone() const;
-	#warning IMPLEMENT THESE TWO FUNCTIONS (configure AND save)
 	/**
 	 * \brief Configures the object using a ConfigurationParameters object
 	 *
@@ -304,7 +287,7 @@ public:
 	 *               separator character when called by the factory, so you
 	 *               don't need to add one
 	 */
-	virtual void configure(const ConfigurationParameters& params, QString prefix);
+	virtual void configure(ConfigurationParameters& params, QString prefix);
 	/**
 	 * \brief Save the actual status of parameters into the ConfigurationParameters object passed
 	 *
@@ -358,9 +341,6 @@ public:
 	virtual void apply( DoubleVector& inputs, DoubleVector& outputs );
 	/*! return the m coefficient if x is in [minX, maxX] and x(1-x) otherwise */
 	virtual bool derivate( const DoubleVector& x, const DoubleVector& y, DoubleVector& d ) const;
-	/*! Clone this object */
-	virtual RampFunction* clone() const;
-	#warning IMPLEMENT THESE TWO FUNCTIONS (configure AND save)
 	/**
 	 * \brief Configures the object using a ConfigurationParameters object
 	 *
@@ -371,7 +351,7 @@ public:
 	 *               separator character when called by the factory, so you
 	 *               don't need to add one
 	 */
-	virtual void configure(const ConfigurationParameters& params, QString prefix);
+	virtual void configure(ConfigurationParameters& params, QString prefix);
 	/**
 	 * \brief Save the actual status of parameters into the ConfigurationParameters object passed
 	 *
@@ -417,9 +397,6 @@ public:
 	virtual void apply( DoubleVector& inputs, DoubleVector& outputs );
 	/*! return the m coefficient */
 	virtual bool derivate( const DoubleVector& x, const DoubleVector& y, DoubleVector& d ) const;
-	/*! Clone this object */
-	virtual LinearFunction* clone() const;
-	#warning IMPLEMENT THESE TWO FUNCTIONS (configure AND save)
 	/**
 	 * \brief Configures the object using a ConfigurationParameters object
 	 *
@@ -430,7 +407,7 @@ public:
 	 *               separator character when called by the factory, so you
 	 *               don't need to add one
 	 */
-	virtual void configure(const ConfigurationParameters& params, QString prefix);
+	virtual void configure(ConfigurationParameters& params, QString prefix);
 	/**
 	 * \brief Save the actual status of parameters into the ConfigurationParameters object passed
 	 *
@@ -469,9 +446,6 @@ public:
 	virtual void apply( DoubleVector& inputs, DoubleVector& outputs );
 	/*! Using the derivate of the sigmoid function!!!  */
 	virtual bool derivate( const DoubleVector& x, const DoubleVector& y, DoubleVector& d ) const;
-	/*! Clone this object */
-	virtual StepFunction* clone() const;
-	#warning IMPLEMENT THESE TWO FUNCTIONS (configure AND save)
 	/**
 	 * \brief Configures the object using a ConfigurationParameters object
 	 *
@@ -482,7 +456,7 @@ public:
 	 *               separator character when called by the factory, so you
 	 *               don't need to add one
 	 */
-	virtual void configure(const ConfigurationParameters& params, QString prefix);
+	virtual void configure(ConfigurationParameters& params, QString prefix);
 	/**
 	 * \brief Save the actual status of parameters into the ConfigurationParameters object passed
 	 *
@@ -525,11 +499,8 @@ public:
 	 * it computes: y(t) <- delta * y(t-1) + (1.0-delta) * inputs
 	 */
 	virtual void apply( DoubleVector& inputs, DoubleVector& outputs );
-	/*! Clone this object */
-	virtual LeakyIntegratorFunction* clone() const;
 	/*! resize itself to fit the size of Cluster */
 	virtual void setCluster( Cluster* );
-	#warning IMPLEMENT THESE TWO FUNCTIONS (configure AND save)
 	/**
 	 * \brief Configures the object using a ConfigurationParameters object
 	 *
@@ -540,7 +511,7 @@ public:
 	 *               separator character when called by the factory, so you
 	 *               don't need to add one
 	 */
-	virtual void configure(const ConfigurationParameters& params, QString prefix);
+	virtual void configure(ConfigurationParameters& params, QString prefix);
 	/**
 	 * \brief Save the actual status of parameters into the ConfigurationParameters object passed
 	 *
@@ -580,9 +551,6 @@ public:
 	//@{
 	/*! Implement the updating method */
 	virtual void apply( DoubleVector& inputs, DoubleVector& outputs );
-	/*! Clone this object */
-	virtual LogLikeFunction* clone() const;
-	#warning IMPLEMENT THESE TWO FUNCTIONS (configure AND save)
 	/**
 	 * \brief Configures the object using a ConfigurationParameters object
 	 *
@@ -593,7 +561,7 @@ public:
 	 *               separator character when called by the factory, so you
 	 *               don't need to add one
 	 */
-	virtual void configure(const ConfigurationParameters& params, QString prefix);
+	virtual void configure(ConfigurationParameters& params, QString prefix);
 	/**
 	 * \brief Save the actual status of parameters into the ConfigurationParameters object passed
 	 *
@@ -609,70 +577,6 @@ public:
 	double A;
 	/*! B coefficient */
 	double B;
-	//@}
-};
-
-/*! \brief Pool of Functions
- *
- *  Further Details coming soon ;-)
- *  \par Warnings
- *  The dimension of PoolFunction must be at least one.
- *
- */
-class NNFW_API PoolFunction : public OutputFunction {
-public:
-	/*! \name Constructors */
-	//@{
-	/*! Construct a PoolFunction contains dim elements all equal to prototype passed */
-	PoolFunction( const OutputFunction& prototype, unsigned int dim );
-	/*! Construct a PoolFunction with dimension dim, but with <b>unintialized</b> OutputFunction */
-	PoolFunction( unsigned int dim = 1 );
-	/*! Destructor */
-	~PoolFunction();
-	//@}
-	/*! \name Interface */
-	//@{
-	/*! Return the i-th OutputFunction setted */
-	OutputFunction* getOutputFunction( unsigned int i );
-	/*! Set the i-th element of this Pool to a OutputFunction of type prototype */
-	void setOutputFunction( unsigned int i, const OutputFunction& prototype );
-	/*! Return the dimension */
-	unsigned int size();
-	/*! Implement the updating method <br>
-	 *  Apply OutputFunctions setted by setOutputFunction to elements of inputs
-	 */
-	virtual void apply( DoubleVector& inputs, DoubleVector& outputs );
-	/*! Clone this object */
-	virtual PoolFunction* clone() const;
-	/*! when it's inserted into a Cluster, it will be resized to fit the size of Cluster.<br>
-	    If the new Cluster has more neurons than the previous one, adds IdentityFunctions */
-	virtual void setCluster( Cluster* );
-	#warning IMPLEMENT THESE TWO FUNCTIONS (configure AND save)
-	/**
-	 * \brief Configures the object using a ConfigurationParameters object
-	 *
-	 * \param params the configuration parameters object with parameters to
-	 *               use
-	 * \param prefix the prefix to use to access the object configuration
-	 *               parameters. This is guaranteed to end with the
-	 *               separator character when called by the factory, so you
-	 *               don't need to add one
-	 */
-	virtual void configure(const ConfigurationParameters& params, QString prefix);
-	/**
-	 * \brief Save the actual status of parameters into the ConfigurationParameters object passed
-	 *
-	 * \param params the configuration parameters object on which save actual parameters
-	 * \param prefix the prefix to use to access the object configuration
-	 *               parameters.
-	 */
-	virtual void save(ConfigurationParameters& params, QString prefix);
-	//@}
-private:
-	/*! \name Parameters */
-	//@{
-    /*! Vector of OutputFunction */
-    QVector<OutputFunction*> ups;
 	//@}
 };
 
@@ -705,11 +609,8 @@ public:
 	 * where mid is a private vector that traces the outputs of first function
 	 */
 	virtual void apply( DoubleVector& inputs, DoubleVector& outputs );
-	/*! Clone this object */
-	virtual CompositeFunction* clone() const;
 	/*! recursive call setCluster on first and second function setted */
 	virtual void setCluster( Cluster* );
-	#warning IMPLEMENT THESE TWO FUNCTIONS (configure AND save)
 	/**
 	 * \brief Configures the object using a ConfigurationParameters object
 	 *
@@ -720,7 +621,7 @@ public:
 	 *               separator character when called by the factory, so you
 	 *               don't need to add one
 	 */
-	virtual void configure(const ConfigurationParameters& params, QString prefix);
+	virtual void configure(ConfigurationParameters& params, QString prefix);
 	/**
 	 * \brief Save the actual status of parameters into the ConfigurationParameters object passed
 	 *
@@ -779,11 +680,8 @@ public:
 	 * it computes: y <- w1*first(input,output) + w2*second(input,outputs)
 	 */
 	virtual void apply( DoubleVector& inputs, DoubleVector& outputs );
-	/*! Clone this object */
-	virtual LinearComboFunction* clone() const;
 	/*! recursive call setCluster on first and second function setted */
 	virtual void setCluster( Cluster* );
-	#warning IMPLEMENT THESE TWO FUNCTIONS (configure AND save)
 	/**
 	 * \brief Configures the object using a ConfigurationParameters object
 	 *
@@ -794,7 +692,7 @@ public:
 	 *               separator character when called by the factory, so you
 	 *               don't need to add one
 	 */
-	virtual void configure(const ConfigurationParameters& params, QString prefix);
+	virtual void configure(ConfigurationParameters& params, QString prefix);
 	/**
 	 * \brief Save the actual status of parameters into the ConfigurationParameters object passed
 	 *

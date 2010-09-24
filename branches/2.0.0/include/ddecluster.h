@@ -63,8 +63,6 @@ public:
 	void update();
 	/*! Randomize Nothing ;-) */
 	void randomize( double, double ) { /* Nothing To Do */ };
-	/*! Clone this DDECluster */
-	virtual DDECluster* clone() const;
 	/*! Return its typename */
 	virtual QString typeName() {
 		return "DDECluster";

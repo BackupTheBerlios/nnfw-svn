@@ -41,8 +41,24 @@ void WinnerTakeAllFunction::apply( DoubleVector& inputs, DoubleVector& outputs )
 	outputs[ maxIndex( inputs ) ] = valuev;
 }
 
-WinnerTakeAllFunction* WinnerTakeAllFunction::clone() const {
-	return (new WinnerTakeAllFunction( valuev ) );
+void WinnerTakeAllFunction::configure(ConfigurationParameters& params, QString prefix)
+{
+	valuev = 1.0;
+	QString str = params.getValue(prefix + "value").
+	if (!str.isNull()) {
+		bool ok;
+		valuev = str.toDouble(&ok);
+		if (!ok) {
+			valuev = 1.0;
+		}
+	}
+}
+
+void WinnerTakeAllFunction::save(ConfigurationParameters& params, QString prefix)
+{
+	params.startObjectParameters(prefix, "WinnerTakeAllFunction", this);
+
+	params.createParameter(prefix, "value", QString::number(valuev));
 }
 
 }

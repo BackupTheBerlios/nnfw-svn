@@ -44,8 +44,6 @@ public:
 	//@{
 	/*! Performs the euclidean norm calculation */
 	void update();
-	/*! Clone this NormLinker */
-	virtual NormLinker* clone() const;
 	/*! Return its typename */
 	virtual QString typeName() {
 		return "NormLinker";

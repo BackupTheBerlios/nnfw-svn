@@ -60,8 +60,6 @@ public:
 	void update();
 	/*! Randomize ?!?! it do nothings */
 	void randomize( double min, double max );
-	/*! Clone this FakeCluster */
-	virtual FakeCluster* clone() const;
 	/*! Return its typename */
 	virtual QString typeName() {
 		return "FakeCluster";

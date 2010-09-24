@@ -53,8 +53,6 @@ public:
 	virtual void apply( DoubleVector& inputs, DoubleVector& outputs );
 	/*! derivate of Gauss function */
 	virtual bool derivate( const DoubleVector& x, const DoubleVector& y, DoubleVector& d ) const;
-	/*! Clone this object */
-	virtual GaussFunction* clone() const;
 	#warning IMPLEMENT THESE TWO FUNCTIONS (configure AND save)
 	/**
 	 * \brief Configures the object using a ConfigurationParameters object

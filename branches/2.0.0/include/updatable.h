@@ -37,7 +37,7 @@ public:
 	/*! \name Constructors */
 	//@{
 	/*! Constructor */
-	Updatable( QString name = "unnamed" );
+	Updatable( QString name = "unnamed", ConfigurationParameters& params, QString prefix );
 	/*! Destructor */
 	virtual ~Updatable();
 	//@}

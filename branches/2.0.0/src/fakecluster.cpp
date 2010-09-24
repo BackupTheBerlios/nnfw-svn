@@ -40,13 +40,4 @@ void FakeCluster::randomize( double , double ) {
 	return;
 }
 
-FakeCluster* FakeCluster::clone() const {
-	FakeCluster* newclone = new FakeCluster( numNeurons(), name() );
-	newclone->setAccumulate( this->isAccumulate() );
-	newclone->inputs().copy( this->inputs() );
-	//newclone->outputs().copy( this->outputs() ); <-- is not necessary
-	newclone->setFunction( *(this->function()) );
-	return newclone;
-}
-
 }

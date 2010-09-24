@@ -73,11 +73,6 @@ public:
 	 *  know the the function is inserted into a Cluster.
 	 */
 	virtual void setCluster( Cluster* ) { /* nothing to do */ };
-	/*! Clone method returns a new allocated clone of this object */
-	// This is here just to tell the compiler that cloning a cluster returns
-	// an output function and not a Clonable (as the base class function
-	// declaration states)
-	virtual OutputFunction* clone() const = 0;
 	//@}
 private:
 	/*! temporary RealVec for speed-up apply with a single value */

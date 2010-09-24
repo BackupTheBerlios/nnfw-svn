@@ -118,8 +118,6 @@ public:
 	 *  setTeachingInput() for all the output clusters before calling getError() for any of the clusters.
 	 */
 	const DoubleVector getError( Cluster* );
-
-	virtual BackPropagationAlgo* clone() const { return NULL; }
 	//@}
 
 private:

@@ -48,10 +48,4 @@ void NormLinker::update() {
 	return;
 }
 
-NormLinker* NormLinker::clone() const {
-	NormLinker* newclone = new NormLinker( this->from(), this->to(), name() );
-	newclone->matrix().copy( this->matrix() );
-	return newclone;
-}
-
 }

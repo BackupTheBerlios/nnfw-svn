@@ -26,7 +26,7 @@
  */
 
 #include "types.h"
-#include "clonable.h"
+#include <factory/parametersettable.h>
 #include "cluster.h"
 #include "linker.h"
 
@@ -38,7 +38,7 @@ namespace nnfw {
  * The relationship among Clusters and Linkers must be specified by cluster and linker constructors; 
  *
  */
-class NNFW_API BaseNeuralNet : public Clonable {
+class NNFW_API BaseNeuralNet : public ParameterSettableWithConfigureFunction {
 public:
 	/*! \name Constructors */
 	//@{
@@ -150,8 +150,6 @@ public:
 	/*! Return true if the Updatable object is in this net
 	 */
 	bool find( const Updatable* ) const;
-	/*! Clone this BaseNeuralNet */
-	BaseNeuralNet* clone() const;
 	#warning IMPLEMENT THESE TWO FUNCTIONS (configure AND save)
 	/**
 	 * \brief Configures the object using a ConfigurationParameters object
@@ -163,7 +161,7 @@ public:
 	 *               separator character when called by the factory, so you
 	 *               don't need to add one
 	 */
-	virtual void configure(const ConfigurationParameters& params, QString prefix);
+	virtual void configure(ConfigurationParameters& params, QString prefix);
 	/**
 	 * \brief Save the actual status of parameters into the ConfigurationParameters object passed
 	 *

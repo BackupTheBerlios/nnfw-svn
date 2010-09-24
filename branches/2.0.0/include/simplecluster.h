@@ -46,8 +46,6 @@ public:
 	void update();
 	/*! Randomize Nothing ;-) */
 	void randomize( double, double ) { /* Nothing To Do */ };
-	/*! Clone this SimpleCluster */
-	virtual SimpleCluster* clone() const;
 	/*! Return its typename */
 	virtual QString typeName() {
 		return "SimpleCluster";

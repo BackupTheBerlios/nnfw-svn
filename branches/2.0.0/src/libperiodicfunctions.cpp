@@ -40,10 +40,6 @@ void SawtoothFunction::apply( DoubleVector& inputs, DoubleVector& outputs ) {
 	}
 }
 
-SawtoothFunction* SawtoothFunction::clone() const {
-	return (new SawtoothFunction( phase, span, amplitude ) );
-}
-
 TriangleFunction::TriangleFunction( double phase, double span, double amplitude )
 	: PeriodicFunction(phase,span,amplitude) {
 }
@@ -54,10 +50,6 @@ void TriangleFunction::apply( DoubleVector& inputs, DoubleVector& outputs ) {
 		double sawtooth = (inputs[i]-phase)/span-floor((inputs[i]-phase)/span+0.5);
 		outputs[i] = amplitude*( 1.0 - fabs( sawtooth ) );
 	}
-}
-
-TriangleFunction* TriangleFunction::clone() const {
-	return (new TriangleFunction( phase, span, amplitude ) );
 }
 
 SinFunction::SinFunction( double phase, double span, double amplitude )
@@ -74,10 +66,6 @@ void SinFunction::apply( DoubleVector& inputs, DoubleVector& outputs ) {
 	}
 }
 
-SinFunction* SinFunction::clone() const {
-	return (new SinFunction( phase, span, amplitude ) );
-}
-
 PseudoGaussFunction::PseudoGaussFunction( double phase, double span, double amplitude )
 	: PeriodicFunction(phase,span,amplitude) {
 }
@@ -86,10 +74,6 @@ void PseudoGaussFunction::apply( DoubleVector& inputs, DoubleVector& outputs ) {
 	for( unsigned int i=0; i<inputs.size(); i++ ) {
 		outputs[i] = 0.5*amplitude*( sin( 2.0*PI_GRECO*((inputs[i]-phase)/span+0.25) ) + 1.0 );
 	}
-}
-
-PseudoGaussFunction* PseudoGaussFunction::clone() const {
-	return (new PseudoGaussFunction( phase, span, amplitude ) );
 }
 
 }

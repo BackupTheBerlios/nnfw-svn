@@ -306,33 +306,4 @@ bool BaseNeuralNet::find( const Updatable* u ) const {
 	);
 }
 
-BaseNeuralNet* BaseNeuralNet::clone() const {
-	BaseNeuralNet* clone = new BaseNeuralNet();
-	for( int i=0; i<(int)inputClusters().size(); i++ ) {
-		clone->addInputCluster( inputClusters()[i]->clone() );
-	}
-	for( int i=0; i<(int)outputClusters().size(); i++ ) {
-		clone->addOutputCluster( outputClusters()[i]->clone() );
-	}
-	// --- not efficient way to add 'hidden clusters'
-	for( int i=0; i<(int)clusters().size(); i++ ) {
-		if ( clone->getByName( clusters()[i]->name() ) == 0 ) {
-			clone->addCluster( clusters()[i]->clone() );
-		}
-	}
-	// --- putting linkers
-	for( int i=0; i<(int)linkers().size(); i++ ) {
-		//Linker* lk = linkers()[i];
-		#warning FIXME: need re-implementation without PropertySettings
-		//clone->addLinker( lk->clone );
-	}
-	// --- copy the order -- not-efficient
-	UpdatableList ord;
-	for( int i=0; i<(int)order().size(); i++ ) {
-		ord << clone->getByName( order()[i]->name() );
-	}
-	clone->setOrder( ord );
-	return clone;
-}
-
 }

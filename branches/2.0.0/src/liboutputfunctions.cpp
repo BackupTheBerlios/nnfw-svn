@@ -19,7 +19,8 @@
 
 #include "liboutputfunctions.h"
 #include "cluster.h"
-
+#include <QStringList>
+#include <QRegExp>
 #include <cmath>
 
 namespace nnfw {
@@ -37,8 +38,15 @@ bool IdentityFunction::derivate( const DoubleVector&, const DoubleVector&, Doubl
 	return true;
 }
 
-IdentityFunction* IdentityFunction::clone() const {
-	return new IdentityFunction();
+void IdentityFunction::configure(ConfigurationParameters& params, QString prefix)
+{
+	// Nothing to configure
+}
+
+void IdentityFunction::save(ConfigurationParameters& params, QString prefix)
+{
+	// Just telling our type to ConfigurationParameters
+	params.startObjectParameters(prefix, "IdentityFunction", this);
 }
 
 ScaleFunction::ScaleFunction( double rate )
@@ -55,8 +63,24 @@ bool ScaleFunction::derivate( const DoubleVector&, const DoubleVector&, DoubleVe
 	return true;
 }
 
-ScaleFunction* ScaleFunction::clone() const {
-	return new ScaleFunction( rate );
+void ScaleFunction::configure(ConfigurationParameters& params, QString prefix)
+{
+	rate = 1.0;
+	QString str = params.getValue(prefix + "rate").
+	if (!str.isNull()) {
+		bool ok;
+		rate = str.toDouble(&ok);
+		if (!ok) {
+			rate = 1.0;
+		}
+	}
+}
+
+void ScaleFunction::save(ConfigurationParameters& params, QString prefix)
+{
+	params.startObjectParameters(prefix, "ScaleFunction", this);
+
+	params.createParameter(prefix, "rate", QString::number(rate));
 }
 
 GainFunction::GainFunction( double gain )
@@ -74,8 +98,24 @@ bool GainFunction::derivate( const DoubleVector&, const DoubleVector&, DoubleVec
 	return true;
 }
 
-GainFunction* GainFunction::clone() const {
-	return new GainFunction( gainv );
+void GainFunction::configure(ConfigurationParameters& params, QString prefix)
+{
+	gainv = 1.0;
+	QString str = params.getValue(prefix + "gain").
+	if (!str.isNull()) {
+		bool ok;
+		gainv = str.toDouble(&ok);
+		if (!ok) {
+			gainv = 1.0;
+		}
+	}
+}
+
+void GainFunction::save(ConfigurationParameters& params, QString prefix)
+{
+	params.startObjectParameters(prefix, "GainFunction", this);
+
+	params.createParameter(prefix, "gain", QString::number(gainv));
 }
 
 SigmoidFunction::SigmoidFunction( double l ) : OutputFunction() {
@@ -96,8 +136,24 @@ bool SigmoidFunction::derivate( const DoubleVector&, const DoubleVector& outputs
 	return true;
 }
 
-SigmoidFunction* SigmoidFunction::clone() const {
-	return new SigmoidFunction( lambda );
+void SigmoidFunction::configure(ConfigurationParameters& params, QString prefix)
+{
+	lambda = 1.0;
+	QString str = params.getValue(prefix + "lambda").
+	if (!str.isNull()) {
+		bool ok;
+		lambda = str.toDouble(&ok);
+		if (!ok) {
+			lambda = 1.0;
+		}
+	}
+}
+
+void SigmoidFunction::save(ConfigurationParameters& params, QString prefix)
+{
+	params.startObjectParameters(prefix, "SigmoidFunction", this);
+
+	params.createParameter(prefix, "lambda", QString::number(lambda));
 }
 
 FakeSigmoidFunction::FakeSigmoidFunction( double l )
@@ -134,8 +190,24 @@ bool FakeSigmoidFunction::derivate( const DoubleVector&, const DoubleVector& out
 	return true;
 }
 
-FakeSigmoidFunction* FakeSigmoidFunction::clone() const {
-	return new FakeSigmoidFunction( lambda );
+void FakeSigmoidFunction::configure(ConfigurationParameters& params, QString prefix)
+{
+	lambda = 1.0;
+	QString str = params.getValue(prefix + "lambda").
+	if (!str.isNull()) {
+		bool ok;
+		lambda = str.toDouble(&ok);
+		if (!ok) {
+			lambda = 1.0;
+		}
+	}
+}
+
+void FakeSigmoidFunction::save(ConfigurationParameters& params, QString prefix)
+{
+	params.startObjectParameters(prefix, "FakeSigmoidFunction", this);
+
+	params.createParameter(prefix, "lambda", QString::number(lambda));
 }
 
 ScaledSigmoidFunction::ScaledSigmoidFunction( double l, double min, double max )
@@ -163,8 +235,48 @@ bool ScaledSigmoidFunction::derivate( const DoubleVector&, const DoubleVector& o
 	return true;
 }
 
-ScaledSigmoidFunction* ScaledSigmoidFunction::clone() const {
-	return new ScaledSigmoidFunction( lambda, min, max );
+void ScaledSigmoidFunction::configure(ConfigurationParameters& params, QString prefix)
+{
+	lambda = 1.0;
+	QString str = params.getValue(prefix + "lambda").
+	if (!str.isNull()) {
+		bool ok;
+		lambda = str.toDouble(&ok);
+		if (!ok) {
+			lambda = 1.0;
+		}
+	}
+
+	min = -1.0;
+	str = params.getValue(prefix + "min").
+	if (!str.isNull()) {
+		bool ok;
+		min = str.toDouble(&ok);
+		if (!ok) {
+			min = -1.0;
+		}
+	}
+
+	max = 1.0;
+	str = params.getValue(prefix + "max").
+	if (!str.isNull()) {
+		bool ok;
+		max = str.toDouble(&ok);
+		if (!ok) {
+			max = 1.0;
+		}
+	}
+}
+
+void ScaledSigmoidFunction::save(ConfigurationParameters& params, QString prefix)
+{
+	params.startObjectParameters(prefix, "ScaledSigmoidFunction", this);
+
+	params.createParameter(prefix, "lambda", QString::number(lambda));
+
+	params.createParameter(prefix, "min", QString::number(min));
+
+	params.createParameter(prefix, "max", QString::number(max));
 }
 
 RampFunction::RampFunction()
@@ -212,8 +324,60 @@ bool RampFunction::derivate( const DoubleVector& inputs, const DoubleVector&, Do
 	return true;
 }
 
-RampFunction* RampFunction::clone() const {
-	return new RampFunction( min_x, max_x, min_y, max_y );
+void RampFunction::configure(ConfigurationParameters& params, QString prefix)
+{
+	min_x = 0.0;
+	QString str = params.getValue(prefix + "minX").
+	if (!str.isNull()) {
+		bool ok;
+		min_x = str.toDouble(&ok);
+		if (!ok) {
+			min_x = 0.0;
+		}
+	}
+
+	max_x = 0.0;
+	str = params.getValue(prefix + "maxX").
+	if (!str.isNull()) {
+		bool ok;
+		max_x = str.toDouble(&ok);
+		if (!ok) {
+			max_x = 0.0;
+		}
+	}
+
+	min_y = 0.0;
+	str = params.getValue(prefix + "minY").
+	if (!str.isNull()) {
+		bool ok;
+		min_y = str.toDouble(&ok);
+		if (!ok) {
+			min_y = 0.0;
+		}
+	}
+
+	max_y = 0.0;
+	str = params.getValue(prefix + "maxY").
+	if (!str.isNull()) {
+		bool ok;
+		max_y = str.toDouble(&ok);
+		if (!ok) {
+			max_y = 0.0;
+		}
+	}
+}
+
+void RampFunction::save(ConfigurationParameters& params, QString prefix)
+{
+	params.startObjectParameters(prefix, "RampFunction", this);
+
+	params.createParameter(prefix, "minX", QString::number(min_x));
+
+	params.createParameter(prefix, "maxX", QString::number(max_x));
+
+	params.createParameter(prefix, "minY", QString::number(min_y));
+
+	params.createParameter(prefix, "maxY", QString::number(max_y));
 }
 
 LinearFunction::LinearFunction()
@@ -237,8 +401,36 @@ bool LinearFunction::derivate( const DoubleVector& , const DoubleVector&, Double
 	return true;
 }
 
-LinearFunction* LinearFunction::clone() const {
-	return new LinearFunction( m, b );
+void LinearFunction::configure(ConfigurationParameters& params, QString prefix)
+{
+	m = 0.0;
+	QString str = params.getValue(prefix + "m").
+	if (!str.isNull()) {
+		bool ok;
+		m = str.toDouble(&ok);
+		if (!ok) {
+			m = 0.0;
+		}
+	}
+
+	b = 0.0;
+	str = params.getValue(prefix + "b").
+	if (!str.isNull()) {
+		bool ok;
+		b = str.toDouble(&ok);
+		if (!ok) {
+			b = 0.0;
+		}
+	}
+}
+
+void LinearFunction::save(ConfigurationParameters& params, QString prefix)
+{
+	params.startObjectParameters(prefix, "LinearFunction", this);
+
+	params.createParameter(prefix, "m", QString::number(m));
+
+	params.createParameter(prefix, "b", QString::number(b));
 }
 
 StepFunction::StepFunction( double min, double max, double threshold )
@@ -265,8 +457,48 @@ bool StepFunction::derivate( const DoubleVector& inputs, const DoubleVector&, Do
 	return true;
 }
 
-StepFunction* StepFunction::clone() const {
-	return new StepFunction( min, max, threshold );
+void StepFunction::configure(ConfigurationParameters& params, QString prefix)
+{
+	min = 0.0;
+	QString str = params.getValue(prefix + "min").
+	if (!str.isNull()) {
+		bool ok;
+		min = str.toDouble(&ok);
+		if (!ok) {
+			min = 0.0;
+		}
+	}
+
+	max = 1.0;
+	str = params.getValue(prefix + "max").
+	if (!str.isNull()) {
+		bool ok;
+		max = str.toDouble(&ok);
+		if (!ok) {
+			max = 1.0;
+		}
+	}
+
+	threshold = 0.0;
+	str = params.getValue(prefix + "threshold").
+	if (!str.isNull()) {
+		bool ok;
+		threshold = str.toDouble(&ok);
+		if (!ok) {
+			threshold = 0.0;
+		}
+	}
+}
+
+void StepFunction::save(ConfigurationParameters& params, QString prefix)
+{
+	params.startObjectParameters(prefix, "StepFunction", this);
+
+	params.createParameter(prefix, "min", QString::number(min));
+
+	params.createParameter(prefix, "max", QString::number(max));
+
+	params.createParameter(prefix, "threshold", QString::number(threshold));
 }
 
 LeakyIntegratorFunction::LeakyIntegratorFunction()
@@ -294,17 +526,45 @@ void LeakyIntegratorFunction::zeroingStatus() {
 	outprev.zeroing();
 }
 
-LeakyIntegratorFunction* LeakyIntegratorFunction::clone() const {
-	LeakyIntegratorFunction* cl = new LeakyIntegratorFunction( delta );
-	cl->outprev.copy( outprev );
-	return cl;
-}
-
 void LeakyIntegratorFunction::setCluster( Cluster* c ) {
 	if ( c->numNeurons() != delta.size() ) {
 		delta.resize( c->numNeurons() );
 		outprev.resize( c->numNeurons() );
 	}
+}
+
+void LeakyIntegratorFunction::configure(ConfigurationParameters& params, QString prefix)
+{
+	// Delta is a vector, that is a list of space-separated values
+	QString str = params.getValue(prefix + "delta").
+	if (!str.isNull()) {
+		QStringList list = str.split(QRegExp("\\s+"), QString::SkipEmptyParts);
+		delta.resize(list.size());
+
+		for (unsigned int i = 0; i < list.size(); i++) {
+			bool ok;
+			delta[i] = list[i].toDouble(&ok);
+			if (!ok) {
+				delta[i] = 0.0;
+			}
+		}
+	}
+
+	// Also resizing outprev and zeroing it
+	outprev.resize(delta.size());
+	outprev.zeroing();
+}
+
+void LeakyIntegratorFunction::save(ConfigurationParameters& params, QString prefix)
+{
+	params.startObjectParameters(prefix, "LeakyIntegratorFunction", this);
+
+	// First creating a string list, then transforming to a single string
+	QStringList list;
+	for (unsigned int i = 0; i < delta.size(); i++) {
+		list.push_back(delta[i]);
+	}
+	params.createParameter(prefix, "delta", list.join(" "));
 }
 
 LogLikeFunction::LogLikeFunction( double A, double B )
@@ -319,90 +579,36 @@ void LogLikeFunction::apply( DoubleVector& inputs, DoubleVector& outputs ) {
 	outputs *= inputs;
 }
 
-LogLikeFunction* LogLikeFunction::clone() const {
-	return ( new LogLikeFunction( A, B ) );
-}
-
-PoolFunction::PoolFunction( const OutputFunction& prototype, unsigned int dim )
-	: OutputFunction(), ups(dim) {
-	for( unsigned int i=0; i<dim; i++ ) {
-		ups[i] = prototype.clone();
+void LogLikeFunction::configure(ConfigurationParameters& params, QString prefix)
+{
+	A = 1.0;
+	QString str = params.getValue(prefix + "A").
+	if (!str.isNull()) {
+		bool ok;
+		A = str.toDouble(&ok);
+		if (!ok) {
+			A = 1.0;
+		}
 	}
-	// --- if dimension is zero, set at least one element to OutputFunction
-	if ( dim == 0 ) {
-#ifdef NNFW_DEBUG
-		qWarning() << "The dimension of PoolFunction must be at least one";
-#endif
-		ups.resize( 1 );
-		ups[0] = prototype.clone();
-	}
-}
 
-PoolFunction::PoolFunction( unsigned int dim )
-	: OutputFunction(), ups(dim) {
-	// --- if dimension is zero, set at least one element to OutputFunction
-	if ( dim == 0 ) {
-#ifdef NNFW_DEBUG
-		qWarning() << "The dimension of PoolFunction must be at least one" ;
-#endif
-		ups.resize( 1 );
+	B = 5.0;
+	str = params.getValue(prefix + "B").
+	if (!str.isNull()) {
+		bool ok;
+		B = str.toDouble(&ok);
+		if (!ok) {
+			B = 5.0;
+		}
 	}
 }
 
-PoolFunction::~PoolFunction() {
-	for( int i=0; i<ups.size(); i++ ) {
-		delete (ups[i]);
-	}
-}
+void LogLikeFunction::save(ConfigurationParameters& params, QString prefix)
+{
+	params.startObjectParameters(prefix, "LogLikeFunction", this);
 
-OutputFunction* PoolFunction::getOutputFunction( unsigned int i ) {
-#ifdef NNFW_DEBUG
-	if ( (int)i >= ups.size() ) {
-		qWarning() << "Accessing beyond boundary of this PoolFunction" ;
-		return 0;
-	}
-#endif
-	return ups[i];
-}
+	params.createParameter(prefix, "A", QString::number(A));
 
-void PoolFunction::setOutputFunction( unsigned int i, const OutputFunction& prototype ) {
-#ifdef NNFW_DEBUG
-	if ( (int)i >= ups.size() ) {
-		qWarning() << "Setting a OutputFunction beyond boundary of this PoolFunction";
-		return;
-	}
-#endif
-	delete (ups[i]);
-	ups[i] = prototype.clone();
-	return;
-}
-
-unsigned int PoolFunction::size() {
-	return ups.size();
-}
-
-void PoolFunction::apply( DoubleVector& inputs, DoubleVector& outputs ) {
-	unsigned int dim = ups.size();
-	for( unsigned int i=0; i<dim; i++ ) {
-		outputs[i] = ups[i]->apply( inputs[i] );
-	}
-}
-
-PoolFunction* PoolFunction::clone() const {
-	PoolFunction* pool = new PoolFunction( ups.size() );
-	for( int i=0; i<ups.size(); i++ ) {
-		pool->ups[i] = this->ups[i]->clone();
-	}
-	return pool;
-}
-
-void PoolFunction::setCluster( Cluster* c ) {
-	unsigned int oldDim = ups.size();
-	unsigned int newDim = c->numNeurons();
-	ups.resize( newDim );
-	for( unsigned int i=oldDim; i<newDim; i++ ) {
-		ups[i] = new IdentityFunction();
-	}
+	params.createParameter(prefix, "B", QString::number(B));
 }
 
 CompositeFunction::CompositeFunction()
@@ -455,15 +661,21 @@ OutputFunction* CompositeFunction::getSecondFunction() {
 	return second;
 }
 
-CompositeFunction* CompositeFunction::clone() const {
-	return new CompositeFunction( *first, *second );
-}
-
 void CompositeFunction::setCluster( Cluster* c ) {
 	this->cl = c;
 	mid.resize( c->numNeurons() );
 	first->setCluster( c );
 	second->setCluster( c );
+}
+
+void CompositeFunction::configure(ConfigurationParameters& params, QString prefix)
+{
+	dafsdfasdfas
+}
+
+void CompositeFunction::save(ConfigurationParameters& params, QString prefix)
+{
+	asdfsadfsadd
 }
 
 LinearComboFunction::LinearComboFunction()
@@ -543,15 +755,21 @@ double LinearComboFunction::getSecondWeight() {
 	return w2;
 }
 
-LinearComboFunction* LinearComboFunction::clone() const {
-	return new LinearComboFunction( w1, *first, w2, *second );
-}
-
 void LinearComboFunction::setCluster( Cluster* c ) {
 	this->cl = c;
 	mid.resize( c->numNeurons() );
 	first->setCluster( c );
 	second->setCluster( c );
+}
+
+void LinearComboFunction::configure(ConfigurationParameters& params, QString prefix)
+{
+	dafsdfasdfas
+}
+
+void LinearComboFunction::save(ConfigurationParameters& params, QString prefix)
+{
+	asdfsadfsadd
 }
 
 }

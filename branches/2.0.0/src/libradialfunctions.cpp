@@ -53,9 +53,5 @@ bool GaussFunction::derivate( const DoubleVector& x, const DoubleVector& y, Doub
 	return true;
 }
 
-GaussFunction* GaussFunction::clone() const {
-	return (new GaussFunction( centre, variancev, max ) );
-}
-
 }
 

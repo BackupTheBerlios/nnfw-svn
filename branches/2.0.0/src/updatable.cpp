@@ -21,7 +21,9 @@
 
 namespace nnfw {
 
-Updatable::Updatable( QString name ) {
+Updatable::Updatable( QString name, ConfigurationParameters& params, QString prefix ) :
+	ParameterSettableInConstructor(params, prefix)
+{
 	setName( name );
 }
 

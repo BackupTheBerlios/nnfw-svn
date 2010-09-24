@@ -77,9 +77,4 @@ unsigned int CopyLinker::size() const {
     return dimData;
 }
 
-CopyLinker* CopyLinker::clone() const {
-	CopyLinker* newclone = new CopyLinker( this->from(), this->to(), this->getMode(), name() );
-	return newclone;
-}
-
 }

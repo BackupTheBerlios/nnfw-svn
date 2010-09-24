@@ -86,8 +86,6 @@ public:
 	void randomize( double , double ) {
 		// --- Do Nothing
 	};
-	/*! Clone this CopyLinker */
-	virtual CopyLinker* clone() const;
 	/*! Return its typename */
 	virtual QString typeName() {
 		return "CopyLinker";

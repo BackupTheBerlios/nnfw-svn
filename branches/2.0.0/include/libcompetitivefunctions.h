@@ -28,6 +28,7 @@
  */
 
 #include "outputfunction.h"
+#include <configuration/configurationparameters.h>
 
 namespace nnfw {
 
@@ -49,10 +50,27 @@ public:
 	bool setValue( double v );
 	/*! Return the value */
 	double value();
-	/*! Implement the Sawtooth function */
+	/*! Implement the WinnerTakeAllFunction function */
 	virtual void apply( DoubleVector& inputs, DoubleVector& outputs );
-	/*! Clone this object */
-	virtual WinnerTakeAllFunction* clone() const;
+	/**
+	 * \brief Configures the object using a ConfigurationParameters object
+	 *
+	 * \param params the configuration parameters object with parameters to
+	 *               use
+	 * \param prefix the prefix to use to access the object configuration
+	 *               parameters. This is guaranteed to end with the
+	 *               separator character when called by the factory, so you
+	 *               don't need to add one
+	 */
+	virtual void configure(ConfigurationParameters& params, QString prefix);
+	/**
+	 * \brief Save the actual status of parameters into the ConfigurationParameters object passed
+	 *
+	 * \param params the configuration parameters object on which save actual parameters
+	 * \param prefix the prefix to use to access the object configuration
+	 *               parameters.
+	 */
+	virtual void save(ConfigurationParameters& params, QString prefix);
 	//@}
 
 private:

@@ -34,13 +34,4 @@ void SimpleCluster::update() {
 	setNeedReset( true );
 }
 
-SimpleCluster* SimpleCluster::clone() const {
-	SimpleCluster* newclone = new SimpleCluster( numNeurons(), name() );
-	newclone->setAccumulate( this->isAccumulate() );
-	newclone->inputs().copy( this->inputs() );
-	newclone->outputs().copy( this->outputs() );
-	newclone->setFunction( *(this->function()) );
-	return newclone;
-}
-
 }

@@ -76,8 +76,6 @@ public:
 	};
 	/*! Randomize the biases of BiasedCluster */
 	void randomize( double min, double max );
-	/*! Clone this BiasedCluster */
-	virtual BiasedCluster* clone() const;
 	/*! Return its typename */
 	virtual QString typeName() {
 		return "BiasedCluster";

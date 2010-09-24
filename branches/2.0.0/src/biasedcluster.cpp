@@ -72,14 +72,4 @@ void BiasedCluster::randomize( double min, double max ) {
 	}
 }
 
-BiasedCluster* BiasedCluster::clone() const {
-	BiasedCluster* newclone = new BiasedCluster( numNeurons(), name() );
-	newclone->setAccumulate( this->isAccumulate() );
-	newclone->inputs().copy( this->inputs() );
-	newclone->outputs().copy( this->outputs() );
-	newclone->setBiases( this->biasesdata );
-	newclone->setFunction( *(this->function()) );
-	return newclone;
-}
-
 }

@@ -47,8 +47,6 @@ public:
 	//@{
 	/*! Implement the Periodic function */
 	virtual void apply( DoubleVector& inputs, DoubleVector& outputs ) = 0;
-	/*! Clone this object */
-	virtual PeriodicFunction* clone() const = 0;
 	#warning IMPLEMENT THESE TWO FUNCTIONS (configure AND save)
 	/**
 	 * \brief Configures the object using a ConfigurationParameters object
@@ -94,8 +92,6 @@ public:
 	//@{
 	/*! Implement the Sawtooth function */
 	virtual void apply( DoubleVector& inputs, DoubleVector& outputs );
-	/*! Clone this object */
-	virtual SawtoothFunction* clone() const;
 	#warning IMPLEMENT THESE TWO FUNCTIONS (configure AND save)
 	/**
 	 * \brief Configures the object using a ConfigurationParameters object
@@ -135,8 +131,6 @@ public:
 	//@{
 	/*! Implement the Triangle function */
 	virtual void apply( DoubleVector& inputs, DoubleVector& outputs );
-	/*! Clone this object */
-	virtual TriangleFunction* clone() const;
 	#warning IMPLEMENT THESE TWO FUNCTIONS (configure AND save)
 	/**
 	 * \brief Configures the object using a ConfigurationParameters object
@@ -180,8 +174,6 @@ public:
 	double frequency();
 	/*! Implement the Sin function */
 	virtual void apply( DoubleVector& inputs, DoubleVector& outputs );
-	/*! Clone this object */
-	virtual SinFunction* clone() const;
 	#warning IMPLEMENT THESE TWO FUNCTIONS (configure AND save)
 	/**
 	 * \brief Configures the object using a ConfigurationParameters object
@@ -221,8 +213,6 @@ public:
 	//@{
 	/*! Implement the Triangle function */
 	virtual void apply( DoubleVector& inputs, DoubleVector& outputs );
-	/*! Clone this object */
-	virtual PseudoGaussFunction* clone() const;
 	#warning IMPLEMENT THESE TWO FUNCTIONS (configure AND save)
 	/**
 	 * \brief Configures the object using a ConfigurationParameters object
