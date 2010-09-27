@@ -30,8 +30,6 @@
  *
  */
 
-MAKE CLUSTER, LINKERS, OUTPUT FUNCTIONS, BASE NEURAL NET, ... EXCEPTION SAFE (AN EXCEPTION COULD BE THROWN DURING CONFIGURATION)
-
 /*! \file
  *  \brief This is the main header files!! Include this file in your project... and play :-)
  *
@@ -51,13 +49,15 @@ MAKE CLUSTER, LINKERS, OUTPUT FUNCTIONS, BASE NEURAL NET, ... EXCEPTION SAFE (AN
 #include "outputfunction.h"
 #include "neuralnet.h"
 
-#warning SEE THE LIST OF TODOs HERE
+SEE THE LIST OF TODOs HERE
 // TODO:
-// 	- Add resetInnerStatus function to both Updatable and OutputFunction classes (virtual function, implementation in base classes does nothing)
+// 	- Add resetInnerStatus function to both Updatable and OutputFunction classes (virtual function, implementation in base classes does nothing). When
+// 	  saving something (cluster, linker or outputfunction), the whole status is saved. This means that the resetInnerStatus should be called also after
+// 	  reloading the network from file to have a resetted network
 // 	- Modify vectors and matrixes classes to be implicitly shared with copy-on-write
 // 	- Remove properties and use Laral Configuration classes
 // 	- Pass pointers instead of const references to setFunction of Cluster
-// 	- Think about making the whole library Exception safe
+// 	- Make the whole library Exception safe (an exception could be thrown during configuration of clusters, linkers, output functions, base neural net...)
 // 	- Nella setFunction dei cluster evitare di usare clone (farsi passare un puntatore e prenderne possesso)
 // 	- Rimuovere clone dappertutto (farsi passare puntatori e prenderne possesso o altro)
 

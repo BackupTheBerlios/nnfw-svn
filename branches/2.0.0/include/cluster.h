@@ -75,6 +75,8 @@ public:
 	//@{
 	/*! Construct a Cluster */
 	Cluster( unsigned int numNeurons, QString name = "unnamed" );
+	/*! Constructor */
+	Cluster( ConfigurationParameters& params, QString prefix );
 	/*! Destructor */
 	virtual ~Cluster();
 	//@}
@@ -160,10 +162,18 @@ public:
 	OutputFunction* function() const {
 		return updater;
 	};
-	/*! Return its typename */
-	virtual QString typeName() {
-		return "Cluster";
-	};
+	//@}
+	/*! \name Saving functions */
+	//@{
+	/**
+	 * \brief Save the actual status of parameters into the ConfigurationParameters object passed
+	 *
+	 * This saves the name property, remember to call this in child classes
+	 * \param params the configuration parameters object on which save actual parameters
+	 * \param prefix the prefix to use to access the object configuration
+	 *               parameters.
+	 */
+	virtual void save(ConfigurationParameters& params, QString prefix);
 	//@}
 
 protected:

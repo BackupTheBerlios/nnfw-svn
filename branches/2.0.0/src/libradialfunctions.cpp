@@ -53,5 +53,50 @@ bool GaussFunction::derivate( const DoubleVector& x, const DoubleVector& y, Doub
 	return true;
 }
 
+void GaussFunction::configure(ConfigurationParameters& params, QString prefix)
+{
+	centre = 0.0;
+	QString str = params.getValue(prefix + "centre").
+	if (!str.isNull()) {
+		bool ok;
+		centre = str.toDouble(&ok);
+		if (!ok) {
+			centre = 0.0;
+		}
+	}
+
+	variancev = 1.0;
+	QString str = params.getValue(prefix + "variance").
+	if (!str.isNull()) {
+		bool ok;
+		variancev = str.toDouble(&ok);
+		if (!ok) {
+			variancev = 1.0;
+		}
+	}
+	// Also recomputing minus squared variance
+	msqrvar = -( variancev*variancev );
+
+	max = 1.0;
+	QString str = params.getValue(prefix + "max").
+	if (!str.isNull()) {
+		bool ok;
+		max = str.toDouble(&ok);
+		if (!ok) {
+			max = 1.0;
+		}
+	}
 }
 
+void GaussFunction::save(ConfigurationParameters& params, QString prefix)
+{
+	params.startObjectParameters(prefix, "GaussFunction", this);
+
+	params.createParameter(prefix, "centre", QString::number(centre));
+
+	params.createParameter(prefix, "variance", QString::number(variancev));
+
+	params.createParameter(prefix, "max", QString::number(max));
+}
+
+}

@@ -550,9 +550,21 @@ void LeakyIntegratorFunction::configure(ConfigurationParameters& params, QString
 		}
 	}
 
-	// Also resizing outprev and zeroing it
+	// Also reloading outprev (resizing it to match delta length)
+	QString str = params.getValue(prefix + "outprev").
+	if (!str.isNull()) {
+		QStringList list = str.split(QRegExp("\\s+"), QString::SkipEmptyParts);
+		outprev.resize(list.size());
+
+		for (unsigned int i = 0; i < list.size(); i++) {
+			bool ok;
+			outprev[i] = list[i].toDouble(&ok);
+			if (!ok) {
+				outprev[i] = 0.0;
+			}
+		}
+	}
 	outprev.resize(delta.size());
-	outprev.zeroing();
 }
 
 void LeakyIntegratorFunction::save(ConfigurationParameters& params, QString prefix)
@@ -562,9 +574,16 @@ void LeakyIntegratorFunction::save(ConfigurationParameters& params, QString pref
 	// First creating a string list, then transforming to a single string
 	QStringList list;
 	for (unsigned int i = 0; i < delta.size(); i++) {
-		list.push_back(delta[i]);
+		list.push_back(QString::number(delta[i]));
 	}
 	params.createParameter(prefix, "delta", list.join(" "));
+
+	// Saving in the same way also outprev
+	QStringList list;
+	for (unsigned int i = 0; i < delta.size(); i++) {
+		list.push_back(QString::number(outprev[i]));
+	}
+	params.createParameter(prefix, "outprev", list.join(" "));
 }
 
 LogLikeFunction::LogLikeFunction( double A, double B )
@@ -612,20 +631,15 @@ void LogLikeFunction::save(ConfigurationParameters& params, QString prefix)
 }
 
 CompositeFunction::CompositeFunction()
-	: OutputFunction(), mid() {
-	first = NULL;
-	second = NULL;
+	: OutputFunction(), mid(), first(), second() {
 }
 
-CompositeFunction::CompositeFunction( const OutputFunction& f, const OutputFunction& g )
-	: OutputFunction(), mid() {
-	first = f.clone();
-	second = g.clone();
+CompositeFunction::CompositeFunction( OutputFunction *f, OutputFunction *g )
+	: OutputFunction(), mid(), first(f), second(g) {
 }
 
 CompositeFunction::~CompositeFunction() {
-	delete first;
-	delete second;
+	// auto_ptr will release memory for us
 }
 
 void CompositeFunction::apply( DoubleVector& inputs, DoubleVector& outputs ) {
@@ -639,26 +653,24 @@ void CompositeFunction::apply( DoubleVector& inputs, DoubleVector& outputs ) {
 	second->apply( mid, outputs );
 }
 
-bool CompositeFunction::setFirstFunction( const OutputFunction& f ) {
-	delete first;
-	first = f.clone();
+bool CompositeFunction::setFirstFunction( OutputFunction *f ) {
+	first.reset(f);
 	first->setCluster( cl );
 	return true;
 }
 
-OutputFunction* CompositeFunction::getFirstFunction() {
-	return first;
+OutputFunction& CompositeFunction::getFirstFunction() {
+	return *first;
 }
 
-bool CompositeFunction::setSecondFunction( const OutputFunction& g ) {
-	delete second;
-	second = g.clone();
+bool CompositeFunction::setSecondFunction( OutputFunction *g ) {
+	second.reset(g);
 	second->setCluster( cl );
 	return true;
 }
 
-OutputFunction* CompositeFunction::getSecondFunction() {
-	return second;
+OutputFunction& CompositeFunction::getSecondFunction() {
+	return *second;
 }
 
 void CompositeFunction::setCluster( Cluster* c ) {
@@ -670,34 +682,42 @@ void CompositeFunction::setCluster( Cluster* c ) {
 
 void CompositeFunction::configure(ConfigurationParameters& params, QString prefix)
 {
-	dafsdfasdfas
+	// We don't need configured component functions here (and they will be
+	// configured after exiting from this function)
+	first.reset(params.getObjectFromParameter(prefix + "first", false, false);
+	second.reset(params.getObjectFromParameter(prefix + "second", false, false);
+
+	// We don't need to reload a reference to the cluster as he calls our setCluster
+	// function after our creation
 }
 
 void CompositeFunction::save(ConfigurationParameters& params, QString prefix)
 {
-	asdfsadfsadd
+	params.startObjectParameters(prefix, "CompositeFunction", this);
+
+	params.createParameter(prefix, "first", first.get());
+
+	params.createParameter(prefix, "second", second.get());
+
+	// We don't need to save the reference to the cluster as he calls our setCluster
+	// function after our creation
 }
 
 LinearComboFunction::LinearComboFunction()
-	: OutputFunction(), mid()
+	: OutputFunction(), mid(), first(), second()
 {
-	first = NULL;
-	second = NULL;
 	this->w1 = 0.0;
 	this->w2 = 0.0;
 }
 
-LinearComboFunction::LinearComboFunction( double w1, const OutputFunction& f, double w2, const OutputFunction& g )
-	: OutputFunction(), mid() {
-	first = f.clone();
-	second = g.clone();
+LinearComboFunction::LinearComboFunction( double w1, OutputFunction *f, double w2, OutputFunction *g )
+	: OutputFunction(), mid(), first(f), second(g) {
 	this->w1 = w1;
 	this->w2 = w2;
 }
 
 LinearComboFunction::~LinearComboFunction() {
-	delete first;
-	delete second;
+	// auto_ptr will release memory for us
 }
 
 void LinearComboFunction::apply( DoubleVector& inputs, DoubleVector& outputs ) {
@@ -715,15 +735,14 @@ void LinearComboFunction::apply( DoubleVector& inputs, DoubleVector& outputs ) {
 	outputs += mid;
 }
 
-bool LinearComboFunction::setFirstFunction( const OutputFunction& f ) {
-	delete first;
-	first = f.clone();
+bool LinearComboFunction::setFirstFunction( OutputFunction *f ) {
+	first.reset(f);
 	first->setCluster( cl );
 	return true;
 }
 
-OutputFunction* LinearComboFunction::getFirstFunction() {
-	return first;
+OutputFunction& LinearComboFunction::getFirstFunction() {
+	return *first;
 }
 
 bool LinearComboFunction::setFirstWeight( double v ) {
@@ -735,15 +754,14 @@ double LinearComboFunction::getFirstWeight() {
 	return w1;
 }
 
-bool LinearComboFunction::setSecondFunction( const OutputFunction& g ) {
-	delete second;
-	second = g.clone();
+bool LinearComboFunction::setSecondFunction( OutputFunction *g ) {
+	second.reset(g);
 	second->setCluster( cl );
 	return true;
 }
 
-OutputFunction* LinearComboFunction::getSecondFunction() {
-	return second;
+OutputFunction& LinearComboFunction::getSecondFunction() {
+	return *second;
 }
 
 bool LinearComboFunction::setSecondWeight( double v ) {
@@ -764,12 +782,50 @@ void LinearComboFunction::setCluster( Cluster* c ) {
 
 void LinearComboFunction::configure(ConfigurationParameters& params, QString prefix)
 {
-	dafsdfasdfas
+	// We don't need configured component functions here (and they will be
+	// configured after exiting from this function)
+	first.reset(params.getObjectFromParameter(prefix + "first", false, false);
+
+	w1 = 0.0;
+	QString str = params.getValue(prefix + "w1").
+	if (!str.isNull()) {
+		bool ok;
+		w1 = str.toDouble(&ok);
+		if (!ok) {
+			w1 = 0.0;
+		}
+	}
+
+	second.reset(params.getObjectFromParameter(prefix + "second", false, false);
+
+	w2 = 0.0;
+	str = params.getValue(prefix + "w2").
+	if (!str.isNull()) {
+		bool ok;
+		w2 = str.toDouble(&ok);
+		if (!ok) {
+			w2 = 0.0;
+		}
+	}
+
+	// We don't need to reload a reference to the cluster as he calls our setCluster
+	// function after our creation
 }
 
 void LinearComboFunction::save(ConfigurationParameters& params, QString prefix)
 {
-	asdfsadfsadd
+	params.startObjectParameters(prefix, "LinearComboFunction", this);
+
+	params.createParameter(prefix, "first", first.get());
+
+	params.createParameter(prefix, "w1", QString::number(w1));
+
+	params.createParameter(prefix, "second", second.get());
+
+	params.createParameter(prefix, "w2", QString::number(w2));
+
+	// We don't need to save the reference to the cluster as he calls our setCluster
+	// function after our creation
 }
 
 }

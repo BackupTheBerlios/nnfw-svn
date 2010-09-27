@@ -47,10 +47,11 @@ public:
 	//@{
 	/*! Implement the Periodic function */
 	virtual void apply( DoubleVector& inputs, DoubleVector& outputs ) = 0;
-	#warning IMPLEMENT THESE TWO FUNCTIONS (configure AND save)
 	/**
 	 * \brief Configures the object using a ConfigurationParameters object
 	 *
+	 * This sets parameters for the base class, remember to call it in the
+	 * configure function of child classes.
 	 * \param params the configuration parameters object with parameters to
 	 *               use
 	 * \param prefix the prefix to use to access the object configuration
@@ -58,10 +59,12 @@ public:
 	 *               separator character when called by the factory, so you
 	 *               don't need to add one
 	 */
-	virtual void configure(const ConfigurationParameters& params, QString prefix);
+	virtual void configure(ConfigurationParameters& params, QString prefix);
 	/**
 	 * \brief Save the actual status of parameters into the ConfigurationParameters object passed
 	 *
+	 * This saves parameters for the base class, remember to call it in the
+	 * configure function of child classes
 	 * \param params the configuration parameters object on which save actual parameters
 	 * \param prefix the prefix to use to access the object configuration
 	 *               parameters.
@@ -92,7 +95,6 @@ public:
 	//@{
 	/*! Implement the Sawtooth function */
 	virtual void apply( DoubleVector& inputs, DoubleVector& outputs );
-	#warning IMPLEMENT THESE TWO FUNCTIONS (configure AND save)
 	/**
 	 * \brief Configures the object using a ConfigurationParameters object
 	 *
@@ -103,7 +105,7 @@ public:
 	 *               separator character when called by the factory, so you
 	 *               don't need to add one
 	 */
-	virtual void configure(const ConfigurationParameters& params, QString prefix);
+	virtual void configure(ConfigurationParameters& params, QString prefix);
 	/**
 	 * \brief Save the actual status of parameters into the ConfigurationParameters object passed
 	 *
@@ -131,7 +133,6 @@ public:
 	//@{
 	/*! Implement the Triangle function */
 	virtual void apply( DoubleVector& inputs, DoubleVector& outputs );
-	#warning IMPLEMENT THESE TWO FUNCTIONS (configure AND save)
 	/**
 	 * \brief Configures the object using a ConfigurationParameters object
 	 *
@@ -142,7 +143,7 @@ public:
 	 *               separator character when called by the factory, so you
 	 *               don't need to add one
 	 */
-	virtual void configure(const ConfigurationParameters& params, QString prefix);
+	virtual void configure(ConfigurationParameters& params, QString prefix);
 	/**
 	 * \brief Save the actual status of parameters into the ConfigurationParameters object passed
 	 *
@@ -174,7 +175,6 @@ public:
 	double frequency();
 	/*! Implement the Sin function */
 	virtual void apply( DoubleVector& inputs, DoubleVector& outputs );
-	#warning IMPLEMENT THESE TWO FUNCTIONS (configure AND save)
 	/**
 	 * \brief Configures the object using a ConfigurationParameters object
 	 *
@@ -185,7 +185,7 @@ public:
 	 *               separator character when called by the factory, so you
 	 *               don't need to add one
 	 */
-	virtual void configure(const ConfigurationParameters& params, QString prefix);
+	virtual void configure(ConfigurationParameters& params, QString prefix);
 	/**
 	 * \brief Save the actual status of parameters into the ConfigurationParameters object passed
 	 *
@@ -213,7 +213,6 @@ public:
 	//@{
 	/*! Implement the Triangle function */
 	virtual void apply( DoubleVector& inputs, DoubleVector& outputs );
-	#warning IMPLEMENT THESE TWO FUNCTIONS (configure AND save)
 	/**
 	 * \brief Configures the object using a ConfigurationParameters object
 	 *
@@ -224,7 +223,7 @@ public:
 	 *               separator character when called by the factory, so you
 	 *               don't need to add one
 	 */
-	virtual void configure(const ConfigurationParameters& params, QString prefix);
+	virtual void configure(ConfigurationParameters& params, QString prefix);
 	/**
 	 * \brief Save the actual status of parameters into the ConfigurationParameters object passed
 	 *

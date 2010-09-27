@@ -60,10 +60,6 @@ public:
 	void update();
 	/*! Randomize ?!?! it do nothings */
 	void randomize( double min, double max );
-	/*! Return its typename */
-	virtual QString typeName() {
-		return "FakeCluster";
-	};
 	#warning IMPLEMENT THESE TWO FUNCTIONS (configure AND save)
 	/**
 	 * \brief Configures the object using a ConfigurationParameters object

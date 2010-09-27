@@ -101,10 +101,6 @@ public:
 	void disconnect( unsigned int from, unsigned int to );
 	/*! Disonnect all couples of neurons */
 	void disconnectAll();
-	/*! Return its typename */
-	virtual QString typeName() {
-		return "MatrixLinker";
-	};
 	//@}
 private:
 	/*! Registers the dimensions of the matrix */

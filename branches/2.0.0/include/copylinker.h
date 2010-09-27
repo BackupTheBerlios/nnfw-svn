@@ -86,10 +86,6 @@ public:
 	void randomize( double , double ) {
 		// --- Do Nothing
 	};
-	/*! Return its typename */
-	virtual QString typeName() {
-		return "CopyLinker";
-	};
 	//@}
 
 private:

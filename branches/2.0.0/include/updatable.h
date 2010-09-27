@@ -37,7 +37,9 @@ public:
 	/*! \name Constructors */
 	//@{
 	/*! Constructor */
-	Updatable( QString name = "unnamed", ConfigurationParameters& params, QString prefix );
+	Updatable( QString name = "unnamed" );
+	/*! Constructor */
+	Updatable( ConfigurationParameters& params, QString prefix );
 	/*! Destructor */
 	virtual ~Updatable();
 	//@}
@@ -49,8 +51,15 @@ public:
 	void setName( QString newname );
 	/*! Return its name */
 	QString name() const;
-	/*! Return its typename */
-	virtual QString typeName() = 0;
+	/**
+	 * \brief Save the actual status of parameters into the ConfigurationParameters object passed
+	 *
+	 * This saves the name property, remember to call this in child classes
+	 * \param params the configuration parameters object on which save actual parameters
+	 * \param prefix the prefix to use to access the object configuration
+	 *               parameters.
+	 */
+	virtual void save(ConfigurationParameters& params, QString prefix);
 	//@}
 protected:
 	QString namev;

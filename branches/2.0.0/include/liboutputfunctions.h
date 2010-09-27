@@ -29,6 +29,7 @@
 
 #include "outputfunction.h"
 #include <configuration/configurationparameters.h>
+#include <memory>
 
 namespace nnfw {
 
@@ -580,8 +581,10 @@ public:
 	//@}
 };
 
-/*! \brief Composite Function !! 
+/*! \brief Composite Function !!
  *
+ * \note Component OutputFunction objects are destroyed by the CompositeFunction
+ *       object to which they belong.
  */
 class NNFW_API CompositeFunction : public OutputFunction {
 public:
@@ -590,20 +593,20 @@ public:
 	/*! Default constructor */
 	CompositeFunction();
 	/*! Construct a Composite */
-	CompositeFunction( const OutputFunction& f, const OutputFunction& g );
+	CompositeFunction( OutputFunction *f, OutputFunction *g );
 	/*! Destructor */
 	virtual ~CompositeFunction();
 	//@}
 	/*! \name Interface */
 	//@{
 	/*! Set the first function of CompositeFunction */
-	bool setFirstFunction( const OutputFunction& f );
+	bool setFirstFunction( OutputFunction *f );
 	/*! Return the first function of CompositeFunction */
-	OutputFunction* getFirstFunction();
+	OutputFunction& getFirstFunction();
 	/*! Set the second function of CompositeFunction */
-	bool setSecondFunction( const OutputFunction& g );
+	bool setSecondFunction( OutputFunction *g );
 	/*! Return the second function of CompositeFunction */
-	OutputFunction* getSecondFunction();
+	OutputFunction& getSecondFunction();
 	/*! Implement the updating method <br>
 	 * it computes: y <- second( first( input, mid ), outputs ) <br>
 	 * where mid is a private vector that traces the outputs of first function
@@ -635,16 +638,22 @@ private:
 	/*! \name Parameters */
 	//@{
 	//--- functions
-	OutputFunction* first;
-	OutputFunction* second;
+	std::auto_ptr<OutputFunction> first;
+	std::auto_ptr<OutputFunction> second;
 	//--- intermediate result
 	DoubleVector mid;
 	//--- Cluster
 	Cluster* cl;
+	// Copy constructor and copy operator (here to prevent usage)
+	CompositeFunction(const CompositeFunction&);
+	CompositeFunction& operator=(const CompositeFunction&);
 	//@}
 };
 
-/*! \brief Linear Combination of Two Function !! 
+/*! \brief Linear Combination of Two Function !!
+ *
+ * \note Component OutputFunction objects are destroyed by the
+ *       LinearComboFunction object to which they belong.
  *
  */
 class NNFW_API LinearComboFunction : public OutputFunction {
@@ -654,24 +663,24 @@ public:
 	/*! Standard constructor */
 	LinearComboFunction();
 	/*! Construct a Linear Combination of two functions */
-	LinearComboFunction( double w1, const OutputFunction& f, double w2, const OutputFunction& g );
+	LinearComboFunction( double w1, OutputFunction *f, double w2, OutputFunction *g );
 	/*! Destructor */
 	virtual ~LinearComboFunction();
 	//@}
 	/*! \name Interface */
 	//@{
 	/*! Set the first function of LinearComboFunction */
-	bool setFirstFunction( const OutputFunction& f );
+	bool setFirstFunction( OutputFunction *f );
 	/*! Return the first function of LinearComboFunction */
-	OutputFunction* getFirstFunction();
+	OutputFunction& getFirstFunction();
 	/*! Set the first weight of LinearComboFunction */
 	bool setFirstWeight( double v );
 	/*! Return the first weight of LinearComboFunction */
 	double getFirstWeight();
 	/*! Set the second function of CompositeFunction */
-	bool setSecondFunction( const OutputFunction& g );
+	bool setSecondFunction( OutputFunction *g );
 	/*! Return the second function of CompositeFunction */
-	OutputFunction* getSecondFunction();
+	OutputFunction& getSecondFunction();
 	/*! Set the second weight of LinearComboFunction */
 	bool setSecondWeight( double v );
 	/*! Return the second weight of LinearComboFunction */
@@ -706,14 +715,17 @@ private:
 	/*! \name Parameters */
 	//@{
 	//--- functions
-	OutputFunction* first;
-	OutputFunction* second;
+	std::auto_ptr<OutputFunction> first;
+	std::auto_ptr<OutputFunction> second;
 	//--- temporary result
 	DoubleVector mid;
 	//--- weights
 	double w1, w2;
 	//--- Cluster
 	Cluster* cl;
+	// Copy constructor and copy operator (here to prevent usage)
+	LinearComboFunction(const LinearComboFunction&);
+	LinearComboFunction& operator=(const LinearComboFunction&);
 	//@}
 };
 

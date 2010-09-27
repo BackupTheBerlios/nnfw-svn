@@ -53,7 +53,6 @@ public:
 	virtual void apply( DoubleVector& inputs, DoubleVector& outputs );
 	/*! derivate of Gauss function */
 	virtual bool derivate( const DoubleVector& x, const DoubleVector& y, DoubleVector& d ) const;
-	#warning IMPLEMENT THESE TWO FUNCTIONS (configure AND save)
 	/**
 	 * \brief Configures the object using a ConfigurationParameters object
 	 *
@@ -64,7 +63,7 @@ public:
 	 *               separator character when called by the factory, so you
 	 *               don't need to add one
 	 */
-	virtual void configure(const ConfigurationParameters& params, QString prefix);
+	virtual void configure(ConfigurationParameters& params, QString prefix);
 	/**
 	 * \brief Save the actual status of parameters into the ConfigurationParameters object passed
 	 *

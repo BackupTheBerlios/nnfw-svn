@@ -71,10 +71,6 @@ public:
 	 * The parameters randomized by this method will be specified by sub-classes
 	 */
 	virtual void randomize( double min, double max ) = 0;
-	/*! Return its typename */
-	virtual QString typeName() {
-		return "Linker";
-	};
 	//@}
 private:
 	/*! incoming Cluster */

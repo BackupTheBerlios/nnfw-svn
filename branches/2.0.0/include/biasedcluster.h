@@ -76,10 +76,6 @@ public:
 	};
 	/*! Randomize the biases of BiasedCluster */
 	void randomize( double min, double max );
-	/*! Return its typename */
-	virtual QString typeName() {
-		return "BiasedCluster";
-	};
 	#warning IMPLEMENT THESE TWO FUNCTIONS (configure AND save)
 	/**
 	 * \brief Configures the object using a ConfigurationParameters object

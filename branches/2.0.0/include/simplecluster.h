@@ -46,10 +46,6 @@ public:
 	void update();
 	/*! Randomize Nothing ;-) */
 	void randomize( double, double ) { /* Nothing To Do */ };
-	/*! Return its typename */
-	virtual QString typeName() {
-		return "SimpleCluster";
-	};
 	#warning IMPLEMENT THESE TWO FUNCTIONS (configure AND save)
 	/**
 	 * \brief Configures the object using a ConfigurationParameters object

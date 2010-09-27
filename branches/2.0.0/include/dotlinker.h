@@ -44,10 +44,6 @@ public:
 	//@{
 	/*! Performs the dot-product calculation */
 	void update();
-	/*! Return its typename */
-	virtual QString typeName() {
-		return "DotLinker";
-	};
 	//@}
 };
 

@@ -33,6 +33,18 @@ Cluster::Cluster( unsigned int numNeurons, QString name )
 	updater = new SigmoidFunction( 1.0 );
 }
 
+Cluster::Cluster( ConfigurationParameters& params, QString prefix ) :
+	Updatable(params, prefix),
+	sdfgsdafsfsadfsaddfsadfs
+{
+	QUIQUIQUI
+	addProperty( "numNeurons", Variant::t_uint, this, &Cluster::numNeuronsP );
+	addProperty( "accumulate", Variant::t_bool, this, &Cluster::accumP, &Cluster::setAccumP );
+	addProperty( "inputs", Variant::t_realvec, this, &Cluster::inputsP, &Cluster::setInputsP );
+	addProperty( "outputs", Variant::t_realvec, this, &Cluster::outputsP, &Cluster::setOutputsP );
+	addProperty( "outfunction", Variant::t_outfunction, this, &Cluster::getFunctionP, &Cluster::setFunction );
+}
+
 Cluster::~Cluster() {
 	delete updater;
 }
@@ -99,6 +111,15 @@ double Cluster::getOutput( unsigned int neuron ) const {
 	}
 #endif
 	return outputdata[neuron];
+}
+
+void Cluster::save(ConfigurationParameters& params, QString prefix)
+{
+	params.startObjectParameters(prefix, "Cluster", this);
+
+	QUIQUIQUI
+
+	params.createParameter(prefix, "value", QString::number(valuev));
 }
 
 }

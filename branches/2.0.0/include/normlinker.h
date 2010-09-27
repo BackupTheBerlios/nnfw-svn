@@ -44,10 +44,6 @@ public:
 	//@{
 	/*! Performs the euclidean norm calculation */
 	void update();
-	/*! Return its typename */
-	virtual QString typeName() {
-		return "NormLinker";
-	};
 	#warning IMPLEMENT THESE TWO FUNCTIONS (configure AND save)
 	/**
 	 * \brief Configures the object using a ConfigurationParameters object

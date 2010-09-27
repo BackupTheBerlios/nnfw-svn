@@ -21,10 +21,16 @@
 
 namespace nnfw {
 
-Updatable::Updatable( QString name, ConfigurationParameters& params, QString prefix ) :
-	ParameterSettableInConstructor(params, prefix)
+Updatable::Updatable( QString name ) :
+	ParameterSettableInConstructor(ConfigurationParameters(), "")
 {
 	setName( name );
+}
+
+Updatable::Updatable( ConfigurationParameters& params, QString prefix ) :
+	ParameterSettableInConstructor(params, prefix)
+{
+	setName( params.getValue(prefix + "name"); );
 }
 
 Updatable::~Updatable() {
@@ -37,5 +43,13 @@ void Updatable::setName( QString newname ) {
 QString Updatable::name() const {
 	return namev;
 }
+
+void Updatable::save(ConfigurationParameters& params, QString prefix)
+{
+	params.startObjectParameters(prefix, "Updatable", this);
+
+	params.createParameter(prefix, "name", name);
+}
+
 
 }
