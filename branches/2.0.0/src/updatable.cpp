@@ -30,7 +30,7 @@ Updatable::Updatable( QString name ) :
 Updatable::Updatable( ConfigurationParameters& params, QString prefix ) :
 	ParameterSettableInConstructor(params, prefix)
 {
-	setName( params.getValue(prefix + "name"); );
+	setName( params.getValue(prefix + "name") );
 }
 
 Updatable::~Updatable() {

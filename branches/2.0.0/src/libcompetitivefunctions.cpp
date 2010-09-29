@@ -44,7 +44,7 @@ void WinnerTakeAllFunction::apply( DoubleVector& inputs, DoubleVector& outputs )
 void WinnerTakeAllFunction::configure(ConfigurationParameters& params, QString prefix)
 {
 	valuev = 1.0;
-	QString str = params.getValue(prefix + "value").
+	QString str = params.getValue(prefix + "value");
 	if (!str.isNull()) {
 		bool ok;
 		valuev = str.toDouble(&ok);

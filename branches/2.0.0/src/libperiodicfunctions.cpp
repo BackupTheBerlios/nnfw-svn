@@ -32,7 +32,7 @@ PeriodicFunction::PeriodicFunction( double phase, double span, double amplitude 
 void PeriodicFunction::configure(ConfigurationParameters& params, QString prefix)
 {
 	phase = 0.0;
-	QString str = params.getValue(prefix + "phase").
+	QString str = params.getValue(prefix + "phase");
 	if (!str.isNull()) {
 		bool ok;
 		phase = str.toDouble(&ok);
@@ -42,7 +42,7 @@ void PeriodicFunction::configure(ConfigurationParameters& params, QString prefix
 	}
 
 	span = 1.0;
-	str = params.getValue(prefix + "span").
+	str = params.getValue(prefix + "span");
 	if (!str.isNull()) {
 		bool ok;
 		span = str.toDouble(&ok);
@@ -52,7 +52,7 @@ void PeriodicFunction::configure(ConfigurationParameters& params, QString prefix
 	}
 
 	amplitude = 1.0;
-	str = params.getValue(prefix + "amplitude").
+	str = params.getValue(prefix + "amplitude");
 	if (!str.isNull()) {
 		bool ok;
 		amplitude = str.toDouble(&ok);

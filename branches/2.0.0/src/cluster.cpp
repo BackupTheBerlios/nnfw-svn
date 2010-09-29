@@ -19,6 +19,7 @@
 
 #include "cluster.h"
 #include "liboutputfunctions.h"
+#include <algorithms>
 
 namespace nnfw {
 
@@ -30,7 +31,7 @@ Cluster::Cluster( unsigned int numNeurons, QString name )
 	accOff = true;
 	setNeedReset( false );
 	//! SigmoidFunction as Default
-	updater.rese(SigmoidFunction( 1.0 ));
+	setFunction(new SigmoidFunction( 1.0 ));
 }
 
 Cluster::Cluster( ConfigurationParameters& params, QString prefix ) :
@@ -38,21 +39,80 @@ Cluster::Cluster( ConfigurationParameters& params, QString prefix ) :
 	inputdata(1, true), // The number of neurons will be changed during configuration
 	outputdata(1, true) // The number of neurons will be changed during configuration
 {
-	QUIQUIQUI
-	addProperty( "numNeurons", Variant::t_uint, this, &Cluster::numNeuronsP );
-	addProperty( "accumulate", Variant::t_bool, this, &Cluster::accumP, &Cluster::setAccumP );
-	addProperty( "inputs", Variant::t_realvec, this, &Cluster::inputsP, &Cluster::setInputsP );
-	addProperty( "outputs", Variant::t_realvec, this, &Cluster::outputsP, &Cluster::setOutputsP );
-	addProperty( "outfunction", Variant::t_outfunction, this, &Cluster::getFunctionP, &Cluster::setFunction );
+	numneurons = 1;
+	QString str = params.getValue(prefix + "numNeurons");
+	if (!str.isNull()) {
+		bool ok;
+		numneurons = str.toUInt(&ok);
+		if (!ok) {
+			numneurons = 1;
+		}
+	}
+	// Resizing inputdata and outputdata
+	inputdata.resize(numneurons);
+	outputdata.resize(numneurons);
+
+	accOff = true;
+	str = params.getValue(prefix + "accumulate").toLower();
+	// If accumulate is true, we set accOff to false
+	if ((str == "t") || (str == "true") || (str == "1")) {
+		accOff = false;
+	}
+
+	// Delta is a vector, that is a list of space-separated values
+	str = params.getValue(prefix + "inputs");
+	if (!str.isNull()) {
+		QStringList list = str.split(QRegExp("\\s+"), QString::SkipEmptyParts);
+		unsigned int cycleLength = numneurons;
+		if (list.size() != numneurons) {
+#ifdef NNFW_DEBUG
+			qWarning() << "The number of elements of the inputs vector in configuration file (" << list.size()
+			           << ") is different from the number of neurons (" << numneurons << ").";
+#endif
+			cycleLength = std::min(list.size(), numneurons);
+		}
+
+		for (unsigned int i = 0; i < cycleLength; i++) {
+			bool ok;
+			inputdata[i] = list[i].toDouble(&ok);
+			if (!ok) {
+				inputdata[i] = 0.0;
+			}
+		}
+	}
+
+	// Delta is a vector, that is a list of space-separated values
+	str = params.getValue(prefix + "outputs");
+	if (!str.isNull()) {
+		QStringList list = str.split(QRegExp("\\s+"), QString::SkipEmptyParts);
+		unsigned int cycleLength = numneurons;
+		if (list.size() != numneurons) {
+#ifdef NNFW_DEBUG
+			qWarning() << "The number of elements of the output vector in configuration file (" << list.size()
+			           << ") is different from the number of neurons (" << numneurons << ").";
+#endif
+			cycleLength = std::min(list.size(), numneurons);
+		}
+
+		for (unsigned int i = 0; i < cycleLength; i++) {
+			bool ok;
+			outputdata[i] = list[i].toDouble(&ok);
+			if (!ok) {
+				outputdata[i] = 0.0;
+			}
+		}
+	}
+
+	// The output function needs to be already configured when we get here
+	setFunction(params.getObjectFromParameter(prefix + "outfunction", false, true));
 }
 
 Cluster::~Cluster() {
-	delete updater;
+	// No need to delete anything, we use auto_ptr
 }
 
-void Cluster::setFunction( const OutputFunction& up ) {
-	delete updater;
-	updater = up.clone();
+void Cluster::setFunction( OutputFunction *up ) {
+	updater.reset(up);
 	updater->setCluster( this );
 }
 
@@ -118,9 +178,26 @@ void Cluster::save(ConfigurationParameters& params, QString prefix)
 {
 	params.startObjectParameters(prefix, "Cluster", this);
 
-	QUIQUIQUI
+	params.createParameter(prefix, "numNeurons", QString::number(numneurons));
 
-	params.createParameter(prefix, "value", QString::number(valuev));
+	params.createParameter(prefix, "accumulate", (accumulate ? "False" : "True"));
+
+	// First creating a string list, then transforming to a single string
+	QStringList list;
+	for (unsigned int i = 0; i < inputdata.size(); i++) {
+		list.push_back(QString::number(inputdata[i]));
+	}
+	params.createParameter(prefix, "inputs", list.join(" "));
+
+	// Doing the same with outputdata
+	list.clear();
+	for (unsigned int i = 0; i < outputdata.size(); i++) {
+		list.push_back(QString::number(outputdata[i]));
+	}
+	params.createParameter(prefix, "outputs", list.join(" "));
+
+	// The output function needs to be already configured when we get here
+	params.createParameter(prefix, "outfunction", updater.get()));
 }
 
 }

@@ -27,6 +27,7 @@
 #include "types.h"
 #include "updatable.h"
 #include "outputfunction.h"
+#include <memory>
 
 namespace nnfw {
 
@@ -157,10 +158,10 @@ public:
 	 *  This method create an internal copy of the OutputFunction passed <br>
 	 *  \warning This function delete the previous updater class registered !!! <br>
 	 */
-	void setFunction( const OutputFunction& up );
+	void setFunction( OutputFunction* up );
 	/*! Get the Output function */
-	OutputFunction* function() const {
-		return updater;
+	OutputFunction& function() const {
+		return *updater;
 	};
 	//@}
 	/*! \name Saving functions */
@@ -190,7 +191,7 @@ protected:
 	/*! Output of neurons */
 	DoubleVector outputdata;
 	/*! OutputFunction Object */
-	OutputFunction* updater;
+	std::auto_ptr<OutputFunction> updater;
 	/*! True if the inputs needs a reset */
 	bool needRst;
 	/*! In Accumulated mode the needRst is always false, and then linkers attached to this will never resetInputs

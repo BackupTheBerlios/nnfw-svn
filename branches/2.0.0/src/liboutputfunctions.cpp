@@ -66,7 +66,7 @@ bool ScaleFunction::derivate( const DoubleVector&, const DoubleVector&, DoubleVe
 void ScaleFunction::configure(ConfigurationParameters& params, QString prefix)
 {
 	rate = 1.0;
-	QString str = params.getValue(prefix + "rate").
+	QString str = params.getValue(prefix + "rate");
 	if (!str.isNull()) {
 		bool ok;
 		rate = str.toDouble(&ok);
@@ -101,7 +101,7 @@ bool GainFunction::derivate( const DoubleVector&, const DoubleVector&, DoubleVec
 void GainFunction::configure(ConfigurationParameters& params, QString prefix)
 {
 	gainv = 1.0;
-	QString str = params.getValue(prefix + "gain").
+	QString str = params.getValue(prefix + "gain");
 	if (!str.isNull()) {
 		bool ok;
 		gainv = str.toDouble(&ok);
@@ -139,7 +139,7 @@ bool SigmoidFunction::derivate( const DoubleVector&, const DoubleVector& outputs
 void SigmoidFunction::configure(ConfigurationParameters& params, QString prefix)
 {
 	lambda = 1.0;
-	QString str = params.getValue(prefix + "lambda").
+	QString str = params.getValue(prefix + "lambda");
 	if (!str.isNull()) {
 		bool ok;
 		lambda = str.toDouble(&ok);
@@ -193,7 +193,7 @@ bool FakeSigmoidFunction::derivate( const DoubleVector&, const DoubleVector& out
 void FakeSigmoidFunction::configure(ConfigurationParameters& params, QString prefix)
 {
 	lambda = 1.0;
-	QString str = params.getValue(prefix + "lambda").
+	QString str = params.getValue(prefix + "lambda");
 	if (!str.isNull()) {
 		bool ok;
 		lambda = str.toDouble(&ok);
@@ -238,7 +238,7 @@ bool ScaledSigmoidFunction::derivate( const DoubleVector&, const DoubleVector& o
 void ScaledSigmoidFunction::configure(ConfigurationParameters& params, QString prefix)
 {
 	lambda = 1.0;
-	QString str = params.getValue(prefix + "lambda").
+	QString str = params.getValue(prefix + "lambda");
 	if (!str.isNull()) {
 		bool ok;
 		lambda = str.toDouble(&ok);
@@ -248,7 +248,7 @@ void ScaledSigmoidFunction::configure(ConfigurationParameters& params, QString p
 	}
 
 	min = -1.0;
-	str = params.getValue(prefix + "min").
+	str = params.getValue(prefix + "min");
 	if (!str.isNull()) {
 		bool ok;
 		min = str.toDouble(&ok);
@@ -258,7 +258,7 @@ void ScaledSigmoidFunction::configure(ConfigurationParameters& params, QString p
 	}
 
 	max = 1.0;
-	str = params.getValue(prefix + "max").
+	str = params.getValue(prefix + "max");
 	if (!str.isNull()) {
 		bool ok;
 		max = str.toDouble(&ok);
@@ -327,7 +327,7 @@ bool RampFunction::derivate( const DoubleVector& inputs, const DoubleVector&, Do
 void RampFunction::configure(ConfigurationParameters& params, QString prefix)
 {
 	min_x = 0.0;
-	QString str = params.getValue(prefix + "minX").
+	QString str = params.getValue(prefix + "minX");
 	if (!str.isNull()) {
 		bool ok;
 		min_x = str.toDouble(&ok);
@@ -337,7 +337,7 @@ void RampFunction::configure(ConfigurationParameters& params, QString prefix)
 	}
 
 	max_x = 0.0;
-	str = params.getValue(prefix + "maxX").
+	str = params.getValue(prefix + "maxX");
 	if (!str.isNull()) {
 		bool ok;
 		max_x = str.toDouble(&ok);
@@ -347,7 +347,7 @@ void RampFunction::configure(ConfigurationParameters& params, QString prefix)
 	}
 
 	min_y = 0.0;
-	str = params.getValue(prefix + "minY").
+	str = params.getValue(prefix + "minY");
 	if (!str.isNull()) {
 		bool ok;
 		min_y = str.toDouble(&ok);
@@ -357,7 +357,7 @@ void RampFunction::configure(ConfigurationParameters& params, QString prefix)
 	}
 
 	max_y = 0.0;
-	str = params.getValue(prefix + "maxY").
+	str = params.getValue(prefix + "maxY");
 	if (!str.isNull()) {
 		bool ok;
 		max_y = str.toDouble(&ok);
@@ -404,7 +404,7 @@ bool LinearFunction::derivate( const DoubleVector& , const DoubleVector&, Double
 void LinearFunction::configure(ConfigurationParameters& params, QString prefix)
 {
 	m = 0.0;
-	QString str = params.getValue(prefix + "m").
+	QString str = params.getValue(prefix + "m");
 	if (!str.isNull()) {
 		bool ok;
 		m = str.toDouble(&ok);
@@ -414,7 +414,7 @@ void LinearFunction::configure(ConfigurationParameters& params, QString prefix)
 	}
 
 	b = 0.0;
-	str = params.getValue(prefix + "b").
+	str = params.getValue(prefix + "b");
 	if (!str.isNull()) {
 		bool ok;
 		b = str.toDouble(&ok);
@@ -460,7 +460,7 @@ bool StepFunction::derivate( const DoubleVector& inputs, const DoubleVector&, Do
 void StepFunction::configure(ConfigurationParameters& params, QString prefix)
 {
 	min = 0.0;
-	QString str = params.getValue(prefix + "min").
+	QString str = params.getValue(prefix + "min");
 	if (!str.isNull()) {
 		bool ok;
 		min = str.toDouble(&ok);
@@ -470,7 +470,7 @@ void StepFunction::configure(ConfigurationParameters& params, QString prefix)
 	}
 
 	max = 1.0;
-	str = params.getValue(prefix + "max").
+	str = params.getValue(prefix + "max");
 	if (!str.isNull()) {
 		bool ok;
 		max = str.toDouble(&ok);
@@ -480,7 +480,7 @@ void StepFunction::configure(ConfigurationParameters& params, QString prefix)
 	}
 
 	threshold = 0.0;
-	str = params.getValue(prefix + "threshold").
+	str = params.getValue(prefix + "threshold");
 	if (!str.isNull()) {
 		bool ok;
 		threshold = str.toDouble(&ok);
@@ -536,7 +536,7 @@ void LeakyIntegratorFunction::setCluster( Cluster* c ) {
 void LeakyIntegratorFunction::configure(ConfigurationParameters& params, QString prefix)
 {
 	// Delta is a vector, that is a list of space-separated values
-	QString str = params.getValue(prefix + "delta").
+	QString str = params.getValue(prefix + "delta");
 	if (!str.isNull()) {
 		QStringList list = str.split(QRegExp("\\s+"), QString::SkipEmptyParts);
 		delta.resize(list.size());
@@ -551,7 +551,7 @@ void LeakyIntegratorFunction::configure(ConfigurationParameters& params, QString
 	}
 
 	// Also reloading outprev (resizing it to match delta length)
-	QString str = params.getValue(prefix + "outprev").
+	QString str = params.getValue(prefix + "outprev");
 	if (!str.isNull()) {
 		QStringList list = str.split(QRegExp("\\s+"), QString::SkipEmptyParts);
 		outprev.resize(list.size());
@@ -579,7 +579,7 @@ void LeakyIntegratorFunction::save(ConfigurationParameters& params, QString pref
 	params.createParameter(prefix, "delta", list.join(" "));
 
 	// Saving in the same way also outprev
-	QStringList list;
+	list.clear();
 	for (unsigned int i = 0; i < delta.size(); i++) {
 		list.push_back(QString::number(outprev[i]));
 	}
@@ -601,7 +601,7 @@ void LogLikeFunction::apply( DoubleVector& inputs, DoubleVector& outputs ) {
 void LogLikeFunction::configure(ConfigurationParameters& params, QString prefix)
 {
 	A = 1.0;
-	QString str = params.getValue(prefix + "A").
+	QString str = params.getValue(prefix + "A");
 	if (!str.isNull()) {
 		bool ok;
 		A = str.toDouble(&ok);
@@ -611,7 +611,7 @@ void LogLikeFunction::configure(ConfigurationParameters& params, QString prefix)
 	}
 
 	B = 5.0;
-	str = params.getValue(prefix + "B").
+	str = params.getValue(prefix + "B");
 	if (!str.isNull()) {
 		bool ok;
 		B = str.toDouble(&ok);
@@ -784,10 +784,10 @@ void LinearComboFunction::configure(ConfigurationParameters& params, QString pre
 {
 	// We don't need configured component functions here (and they will be
 	// configured after exiting from this function)
-	first.reset(params.getObjectFromParameter(prefix + "first", false, false);
+	first.reset(params.getObjectFromParameter(prefix + "first", false, false));
 
 	w1 = 0.0;
-	QString str = params.getValue(prefix + "w1").
+	QString str = params.getValue(prefix + "w1");
 	if (!str.isNull()) {
 		bool ok;
 		w1 = str.toDouble(&ok);
@@ -796,10 +796,10 @@ void LinearComboFunction::configure(ConfigurationParameters& params, QString pre
 		}
 	}
 
-	second.reset(params.getObjectFromParameter(prefix + "second", false, false);
+	second.reset(params.getObjectFromParameter(prefix + "second", false, false));
 
 	w2 = 0.0;
-	str = params.getValue(prefix + "w2").
+	str = params.getValue(prefix + "w2");
 	if (!str.isNull()) {
 		bool ok;
 		w2 = str.toDouble(&ok);
