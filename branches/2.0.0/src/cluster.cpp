@@ -30,12 +30,13 @@ Cluster::Cluster( unsigned int numNeurons, QString name )
 	accOff = true;
 	setNeedReset( false );
 	//! SigmoidFunction as Default
-	updater = new SigmoidFunction( 1.0 );
+	updater.rese(SigmoidFunction( 1.0 ));
 }
 
 Cluster::Cluster( ConfigurationParameters& params, QString prefix ) :
 	Updatable(params, prefix),
-	sdfgsdafsfsadfsaddfsadfs
+	inputdata(1, true), // The number of neurons will be changed during configuration
+	outputdata(1, true) // The number of neurons will be changed during configuration
 {
 	QUIQUIQUI
 	addProperty( "numNeurons", Variant::t_uint, this, &Cluster::numNeuronsP );
