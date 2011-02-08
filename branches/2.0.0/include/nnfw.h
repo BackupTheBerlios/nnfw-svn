@@ -43,7 +43,6 @@
  */
 
 #include "types.h"
-#include "clonable.h"
 #include "cluster.h"
 #include "linker.h"
 #include "outputfunction.h"
@@ -58,8 +57,6 @@ SEE THE LIST OF TODOs HERE
 // 	- Remove properties and use Laral Configuration classes
 // 	- Pass pointers instead of const references to setFunction of Cluster
 // 	- Make the whole library Exception safe (an exception could be thrown during configuration of clusters, linkers, output functions, base neural net...)
-// 	- Nella setFunction dei cluster evitare di usare clone (farsi passare un puntatore e prenderne possesso)
-// 	- Rimuovere clone dappertutto (farsi passare puntatori e prenderne possesso o altro)
 
 #endif
 

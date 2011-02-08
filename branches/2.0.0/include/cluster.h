@@ -160,8 +160,8 @@ public:
 	 */
 	void setFunction( OutputFunction* up );
 	/*! Get the Output function */
-	OutputFunction& function() const {
-		return *updater;
+	OutputFunction* function() const {
+		return updater;
 	};
 	//@}
 	/*! \name Saving functions */
@@ -179,7 +179,7 @@ public:
 
 protected:
 	/*! Set the state of 'needReset'<br>
-	 *  Used by subclassed into update implementation
+	 *  Used by subclasses into update implementation
 	 */
 	void setNeedReset( bool b ) {
 		needRst = accOff && b;

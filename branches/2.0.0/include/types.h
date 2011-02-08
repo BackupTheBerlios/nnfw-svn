@@ -37,6 +37,7 @@
 		#define NNFW_API __declspec(dllimport)
 		#define NNFW_TEMPLATE 
 	#endif
+	// used for: create the static library, and for hide symbols when generating DLL
 	#ifdef NNFW_DONT_EXPORT
 		#define NNFW_API 
 		#define NNFW_TEMPLATE 
