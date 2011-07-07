@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2009 Gianluca Massera <emmegian@yahoo.it>                *
+ *  Copyright (C) 2005-2011 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -27,6 +27,8 @@
 
 #include "types.h"
 #include <factory/parametersettable.h>
+#include <configuration/configurationparameters.h>
+#include <QRegExp>
 
 namespace nnfw {
 
@@ -39,9 +41,19 @@ public:
 	/*! \name Constructors */
 	//@{
 	/*! Constructor */
-	OutputFunction() : tmp1(1), tmp2(1) { /*nothing to do*/ };
+	OutputFunction() : clusterv(NULL), tmp1(1), tmp2(1) { /*nothing to do*/ };
 	/*! Destructor */
 	virtual ~OutputFunction() { /*nothing to do*/ };
+	//@}
+	/*! \name Exceptions throw by OutputFunction */
+	//@{
+	/*! Thrown when a user attempt to call setCluster on an OutputFunction already inserted into a Cluster*/
+	class NNFW_API SetClusterException : public std::exception {
+	public:
+		virtual const char* what() const throw() {
+			return "setCluster called on an OutputFunction already configured to be part of another Cluster!\n";
+		};
+	};
 	//@}
 	/*! \name Interface */
 	//@{
@@ -66,14 +78,21 @@ public:
 		return false;
 	};
 	/*! Set the Cluster which it is inserted<br>
-	 *  This method it's not necessary for simple OutputFunction like SigmoidFunction, LinearFunction, etc...
-	 *  but can be very helpfull for some particular and advanced function that requires to access the data
-	 *  of the Cluster in which it is inserted into. (like PoolFunction)<br>
-	 *  If you don't have to access to the Cluster data ignore it, but if you needs then reimplement for
-	 *  know the the function is inserted into a Cluster.
+	 *  This is automatically called, and in normal case you don't have to call it directly
 	 */
-	virtual void setCluster( Cluster* ) { /* nothing to do */ };
+	void setCluster( Cluster* cl ) {
+		if ( cl != NULL ) throw SetClusterException();
+		clusterv = cl;
+		clusterSetted();
+	};
 	//@}
+protected:
+	/*! The method setCluster will call clusterSetted to inform subclasses that the OutputFunction
+	 *  has been inserted into a Cluster.
+	 */
+	virtual void clusterSetted() { /* nothing to do */ };
+	/*! Cluster on which the OutputFunction is inserted */
+	Cluster* clusterv;
 private:
 	/*! temporary RealVec for speed-up apply with a single value */
 	DoubleVector tmp1;

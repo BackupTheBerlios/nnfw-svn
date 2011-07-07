@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2009 Gianluca Massera <emmegian@yahoo.it>                *
+ *  Copyright (C) 2005-2011 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -67,8 +67,10 @@ public:
 	typedef enum { In2In = 0, In2Out = 1, Out2In = 2, Out2Out = 3 } CopyMode;
 	/*! \name Constructors */
 	//@{
-	/*! This constructor should be self-explanatory, post a comment on the forum if you can't work out what to do */
+	/*! Constructor */
 	CopyLinker( Cluster* from, Cluster* to, CopyMode mode, QString name = "unnamed" );
+	/*! Constructor */
+	CopyLinker( ConfigurationParameters& params, QString prefix );
 	/*! Destructor */
 	virtual ~CopyLinker();
 	//@}
@@ -86,8 +88,16 @@ public:
 	void randomize( double , double ) {
 		// --- Do Nothing
 	};
+	/**
+	 * \brief Save the actual status of parameters into the ConfigurationParameters object passed
+	 *
+	 * This saves the name property, remember to call this in child classes
+	 * \param params the configuration parameters object on which save actual parameters
+	 * \param prefix the prefix to use to access the object configuration
+	 *               parameters.
+	 */
+	virtual void save(ConfigurationParameters& params, QString prefix);
 	//@}
-
 private:
 	/*! Source of copying */
 	DoubleVector dataFrom;

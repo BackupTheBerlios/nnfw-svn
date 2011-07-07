@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2009 Gianluca Massera <emmegian@yahoo.it>                *
+ *  Copyright (C) 2005-2011 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -25,7 +25,12 @@ namespace nnfw {
 FakeCluster::FakeCluster( unsigned int size, QString name )
 	: Cluster( size, name) {
 	// Outputs will share data of Inputs
-	outputdata = inputdata;
+	outputdataref = inputdataref;
+}
+
+FakeCluster::FakeCluster( ConfigurationParameters& params, QString prefix )
+	: Cluster( params, prefix ) {
+	// there is no extra parameters to configure
 }
 
 FakeCluster::~FakeCluster() {
@@ -38,6 +43,12 @@ void FakeCluster::update() {
 
 void FakeCluster::randomize( double , double ) {
 	return;
+}
+
+void FakeCluster::save(ConfigurationParameters& params, QString prefix) {
+	Cluster::save( params, prefix );
+	params.startObjectParameters( prefix, "FakeCluster", this );
+	// there is no extra parameters to save
 }
 
 }

@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2009 Gianluca Massera <emmegian@yahoo.it>                *
+ *  Copyright (C) 2005-2011 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -23,7 +23,12 @@
 namespace nnfw {
 
 NormLinker::NormLinker( Cluster* from, Cluster* to, QString name )
-	: MatrixLinker(from, to, name), temp( to->numNeurons() ) {
+	: MatrixLinker(from, to, name), temp( from->numNeurons() ) {
+}
+
+NormLinker::NormLinker( ConfigurationParameters& params, QString prefix )
+	: MatrixLinker( params, prefix ) {
+	// there are no extra parameters to configure
 }
 
 NormLinker::~NormLinker() {
@@ -34,18 +39,19 @@ void NormLinker::update() {
 	if ( to()->needReset() ) {
 		to()->resetInputs();
 	}
+	const DoubleVector& outs = from()->outputs();
+	DoubleVector& ins = to()->inputs();
+	const DoubleMatrix& mat = matrix();
 	temp.zeroing();
-	DoubleVector outs = from()->outputs();
-	DoubleMatrix mat = matrix();
 	for( unsigned int j=0; j<cols(); j++ ) {
-		for( unsigned int i=0; i<rows(); i++ ) {
-			double d = outs[i] - mat[i][j];
-			temp[j] += d*d;
-		}
-		temp[j] = sqrt( temp[j] );
+		ins[j] += sqrt( sum( square( subtract( temp, outs, mat.column(j) ) ) ) );
 	}
-	to()->inputs() += temp;
 	return;
+}
+
+void NormLinker::save(ConfigurationParameters& params, QString prefix) {
+	MatrixLinker::save( params, prefix );
+	params.startObjectParameters( prefix, "NormLinker", this );
 }
 
 }

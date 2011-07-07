@@ -26,12 +26,23 @@ SimpleCluster::SimpleCluster( unsigned int numNeurons, QString name )
 	: Cluster( numNeurons, name) {
 }
 
+SimpleCluster::SimpleCluster( ConfigurationParameters& params, QString prefix )
+	: Cluster( params, prefix ) {
+	// there is no extra parameters to configure
+}
+
 SimpleCluster::~SimpleCluster() {
 }
 
 void SimpleCluster::update() {
-	function()->apply( inputs(), outputs() );
+	outFunction()->apply( inputs(), outputs() );
 	setNeedReset( true );
+}
+
+void SimpleCluster::save(ConfigurationParameters& params, QString prefix) {
+	Cluster::save( params, prefix );
+	params.startObjectParameters( prefix, "SimpleCluster", this );
+	// there is no extra parameters to save
 }
 
 }

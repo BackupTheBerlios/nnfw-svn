@@ -30,7 +30,7 @@ IdentityFunction::IdentityFunction()
 }
 
 void IdentityFunction::apply( DoubleVector& inputs, DoubleVector& outputs ) {
-	outputs.copy( inputs );
+	outputs.copyValues( inputs );
 }
 
 bool IdentityFunction::derivate( const DoubleVector&, const DoubleVector&, DoubleVector& derivates ) const {
@@ -40,6 +40,8 @@ bool IdentityFunction::derivate( const DoubleVector&, const DoubleVector&, Doubl
 
 void IdentityFunction::configure(ConfigurationParameters& params, QString prefix)
 {
+	((void)params);
+	((void)prefix);
 	// Nothing to configure
 }
 
@@ -79,7 +81,6 @@ void ScaleFunction::configure(ConfigurationParameters& params, QString prefix)
 void ScaleFunction::save(ConfigurationParameters& params, QString prefix)
 {
 	params.startObjectParameters(prefix, "ScaleFunction", this);
-
 	params.createParameter(prefix, "rate", QString::number(rate));
 }
 
@@ -89,7 +90,7 @@ GainFunction::GainFunction( double gain )
 }
 
 void GainFunction::apply( DoubleVector& inputs, DoubleVector& outputs ) {
-	outputs.copy( inputs );
+	outputs.copyValues( inputs );
 	outputs += gainv;
 }
 
@@ -114,7 +115,6 @@ void GainFunction::configure(ConfigurationParameters& params, QString prefix)
 void GainFunction::save(ConfigurationParameters& params, QString prefix)
 {
 	params.startObjectParameters(prefix, "GainFunction", this);
-
 	params.createParameter(prefix, "gain", QString::number(gainv));
 }
 
@@ -130,7 +130,7 @@ void SigmoidFunction::apply( DoubleVector& inputs, DoubleVector& outputs ) {
 
 bool SigmoidFunction::derivate( const DoubleVector&, const DoubleVector& outputs, DoubleVector& derivates ) const {
 	// derivates <- lambda * out * (1.0-out)
-	minus( derivates, 1.0, outputs );
+	subtract( derivates, 1.0, outputs );
 	derivates *= outputs;
 	derivates *= lambda;
 	return true;
@@ -152,7 +152,6 @@ void SigmoidFunction::configure(ConfigurationParameters& params, QString prefix)
 void SigmoidFunction::save(ConfigurationParameters& params, QString prefix)
 {
 	params.startObjectParameters(prefix, "SigmoidFunction", this);
-
 	params.createParameter(prefix, "lambda", QString::number(lambda));
 }
 
@@ -184,7 +183,7 @@ void FakeSigmoidFunction::apply( DoubleVector& inputs, DoubleVector& outputs ) {
 
 bool FakeSigmoidFunction::derivate( const DoubleVector&, const DoubleVector& outputs, DoubleVector& derivates ) const {
 	// derivates <- lambda * out * (1.0-out)
-	minus( derivates, 1.0, outputs );
+	subtract( derivates, 1.0, outputs );
 	derivates *= outputs;
 	derivates *= lambda;
 	return true;
@@ -206,7 +205,6 @@ void FakeSigmoidFunction::configure(ConfigurationParameters& params, QString pre
 void FakeSigmoidFunction::save(ConfigurationParameters& params, QString prefix)
 {
 	params.startObjectParameters(prefix, "FakeSigmoidFunction", this);
-
 	params.createParameter(prefix, "lambda", QString::number(lambda));
 }
 
@@ -229,7 +227,7 @@ void ScaledSigmoidFunction::apply( DoubleVector& inputs, DoubleVector& outputs )
 
 bool ScaledSigmoidFunction::derivate( const DoubleVector&, const DoubleVector& outputs, DoubleVector& derivates ) const {
 	// derivates <- lambda * out * (1.0-out)
-	minus( derivates, 1.0, outputs );
+	subtract( derivates, 1.0, outputs );
 	derivates *= outputs;
 	derivates *= lambda;
 	return true;
@@ -271,11 +269,8 @@ void ScaledSigmoidFunction::configure(ConfigurationParameters& params, QString p
 void ScaledSigmoidFunction::save(ConfigurationParameters& params, QString prefix)
 {
 	params.startObjectParameters(prefix, "ScaledSigmoidFunction", this);
-
 	params.createParameter(prefix, "lambda", QString::number(lambda));
-
 	params.createParameter(prefix, "min", QString::number(min));
-
 	params.createParameter(prefix, "max", QString::number(max));
 }
 
@@ -370,13 +365,9 @@ void RampFunction::configure(ConfigurationParameters& params, QString prefix)
 void RampFunction::save(ConfigurationParameters& params, QString prefix)
 {
 	params.startObjectParameters(prefix, "RampFunction", this);
-
 	params.createParameter(prefix, "minX", QString::number(min_x));
-
 	params.createParameter(prefix, "maxX", QString::number(max_x));
-
 	params.createParameter(prefix, "minY", QString::number(min_y));
-
 	params.createParameter(prefix, "maxY", QString::number(max_y));
 }
 
@@ -427,9 +418,7 @@ void LinearFunction::configure(ConfigurationParameters& params, QString prefix)
 void LinearFunction::save(ConfigurationParameters& params, QString prefix)
 {
 	params.startObjectParameters(prefix, "LinearFunction", this);
-
 	params.createParameter(prefix, "m", QString::number(m));
-
 	params.createParameter(prefix, "b", QString::number(b));
 }
 
@@ -493,11 +482,8 @@ void StepFunction::configure(ConfigurationParameters& params, QString prefix)
 void StepFunction::save(ConfigurationParameters& params, QString prefix)
 {
 	params.startObjectParameters(prefix, "StepFunction", this);
-
 	params.createParameter(prefix, "min", QString::number(min));
-
 	params.createParameter(prefix, "max", QString::number(max));
-
 	params.createParameter(prefix, "threshold", QString::number(threshold));
 }
 
@@ -508,7 +494,7 @@ LeakyIntegratorFunction::LeakyIntegratorFunction()
 
 LeakyIntegratorFunction::LeakyIntegratorFunction( const DoubleVector& d )
 	: OutputFunction(), delta(d.size()), outprev(d.size()) {
-	delta.copy( d );
+	delta.copyValues( d );
 	outprev.zeroing();
 }
 
@@ -516,20 +502,20 @@ void LeakyIntegratorFunction::apply( DoubleVector& inputs, DoubleVector& outputs
 	//--- y <- delta*y(t-1) + (1.0-delta)*inputs
 	//---  its equivalent to
 	//--- y <- delta*( y(t-1) - inputs ) + inputs
-	outputs = minus( outputs, outprev, inputs );
+	outputs = subtract( outputs, outprev, inputs );
 	outputs *= delta;
 	outputs += inputs;
-	outprev.copy( outputs );
+	outprev.copyValues( outputs );
 }
 
 void LeakyIntegratorFunction::zeroingStatus() {
 	outprev.zeroing();
 }
 
-void LeakyIntegratorFunction::setCluster( Cluster* c ) {
-	if ( c->numNeurons() != delta.size() ) {
-		delta.resize( c->numNeurons() );
-		outprev.resize( c->numNeurons() );
+void LeakyIntegratorFunction::clusterSetted() {
+	if ( clusterv->numNeurons() != delta.size() ) {
+		delta.resize( clusterv->numNeurons() );
+		outprev.resize( clusterv->numNeurons() );
 	}
 }
 
@@ -540,8 +526,7 @@ void LeakyIntegratorFunction::configure(ConfigurationParameters& params, QString
 	if (!str.isNull()) {
 		QStringList list = str.split(QRegExp("\\s+"), QString::SkipEmptyParts);
 		delta.resize(list.size());
-
-		for (unsigned int i = 0; i < list.size(); i++) {
+		for( int i = 0; i < list.size(); i++) {
 			bool ok;
 			delta[i] = list[i].toDouble(&ok);
 			if (!ok) {
@@ -551,12 +536,11 @@ void LeakyIntegratorFunction::configure(ConfigurationParameters& params, QString
 	}
 
 	// Also reloading outprev (resizing it to match delta length)
-	QString str = params.getValue(prefix + "outprev");
+	str = params.getValue(prefix + "outprev");
 	if (!str.isNull()) {
 		QStringList list = str.split(QRegExp("\\s+"), QString::SkipEmptyParts);
 		outprev.resize(list.size());
-
-		for (unsigned int i = 0; i < list.size(); i++) {
+		for( int i = 0; i < list.size(); i++) {
 			bool ok;
 			outprev[i] = list[i].toDouble(&ok);
 			if (!ok) {
@@ -624,18 +608,16 @@ void LogLikeFunction::configure(ConfigurationParameters& params, QString prefix)
 void LogLikeFunction::save(ConfigurationParameters& params, QString prefix)
 {
 	params.startObjectParameters(prefix, "LogLikeFunction", this);
-
 	params.createParameter(prefix, "A", QString::number(A));
-
 	params.createParameter(prefix, "B", QString::number(B));
 }
 
 CompositeFunction::CompositeFunction()
-	: OutputFunction(), mid(), first(), second() {
+	: OutputFunction(), first(), second(), mid() {
 }
 
 CompositeFunction::CompositeFunction( OutputFunction *f, OutputFunction *g )
-	: OutputFunction(), mid(), first(f), second(g) {
+	: OutputFunction(), first(f), second(g), mid() {
 }
 
 CompositeFunction::~CompositeFunction() {
@@ -643,49 +625,42 @@ CompositeFunction::~CompositeFunction() {
 }
 
 void CompositeFunction::apply( DoubleVector& inputs, DoubleVector& outputs ) {
-#ifdef NNFW_DEBUG
-	if ( inputs.size() != outputs.size() ) {
-		qWarning() << "The output dimension doesn't match the input dimension" ;
-		return;
-	}
-#endif
 	first->apply( inputs, mid );
 	second->apply( mid, outputs );
 }
 
 bool CompositeFunction::setFirstFunction( OutputFunction *f ) {
 	first.reset(f);
-	first->setCluster( cl );
+	first->setCluster( clusterv );
 	return true;
 }
 
-OutputFunction& CompositeFunction::getFirstFunction() {
-	return *first;
+OutputFunction* CompositeFunction::getFirstFunction() {
+	return first.get();
 }
 
 bool CompositeFunction::setSecondFunction( OutputFunction *g ) {
 	second.reset(g);
-	second->setCluster( cl );
+	second->setCluster( clusterv );
 	return true;
 }
 
-OutputFunction& CompositeFunction::getSecondFunction() {
-	return *second;
+OutputFunction* CompositeFunction::getSecondFunction() {
+	return second.get();
 }
 
-void CompositeFunction::setCluster( Cluster* c ) {
-	this->cl = c;
-	mid.resize( c->numNeurons() );
-	first->setCluster( c );
-	second->setCluster( c );
+void CompositeFunction::clusterSetted() {
+	mid.resize( clusterv->numNeurons() );
+	first->setCluster( clusterv );
+	second->setCluster( clusterv );
 }
 
 void CompositeFunction::configure(ConfigurationParameters& params, QString prefix)
 {
 	// We don't need configured component functions here (and they will be
 	// configured after exiting from this function)
-	first.reset(params.getObjectFromParameter(prefix + "first", false, false);
-	second.reset(params.getObjectFromParameter(prefix + "second", false, false);
+	first.reset(params.getObjectFromParameter<OutputFunction>(prefix + "first", false, false));
+	second.reset(params.getObjectFromParameter<OutputFunction>(prefix + "second", false, false));
 
 	// We don't need to reload a reference to the cluster as he calls our setCluster
 	// function after our creation
@@ -694,9 +669,7 @@ void CompositeFunction::configure(ConfigurationParameters& params, QString prefi
 void CompositeFunction::save(ConfigurationParameters& params, QString prefix)
 {
 	params.startObjectParameters(prefix, "CompositeFunction", this);
-
 	params.createParameter(prefix, "first", first.get());
-
 	params.createParameter(prefix, "second", second.get());
 
 	// We don't need to save the reference to the cluster as he calls our setCluster
@@ -704,14 +677,14 @@ void CompositeFunction::save(ConfigurationParameters& params, QString prefix)
 }
 
 LinearComboFunction::LinearComboFunction()
-	: OutputFunction(), mid(), first(), second()
+	: OutputFunction(), first(), second(), mid()
 {
 	this->w1 = 0.0;
 	this->w2 = 0.0;
 }
 
 LinearComboFunction::LinearComboFunction( double w1, OutputFunction *f, double w2, OutputFunction *g )
-	: OutputFunction(), mid(), first(f), second(g) {
+	: OutputFunction(), first(f), second(g), mid() {
 	this->w1 = w1;
 	this->w2 = w2;
 }
@@ -721,15 +694,8 @@ LinearComboFunction::~LinearComboFunction() {
 }
 
 void LinearComboFunction::apply( DoubleVector& inputs, DoubleVector& outputs ) {
-#ifdef NNFW_DEBUG
-	if ( inputs.size() != outputs.size() ) {
-		qWarning() << "The output dimension doesn't match the input dimension" ;
-		return;
-	}
-#endif
-	mid.copy( outputs );
 	first->apply( inputs, mid );
-	mid *= w1 ;
+	mid *= w1;
 	second->apply( inputs, outputs );
 	outputs *= w2;
 	outputs += mid;
@@ -737,12 +703,12 @@ void LinearComboFunction::apply( DoubleVector& inputs, DoubleVector& outputs ) {
 
 bool LinearComboFunction::setFirstFunction( OutputFunction *f ) {
 	first.reset(f);
-	first->setCluster( cl );
+	first->setCluster( clusterv );
 	return true;
 }
 
-OutputFunction& LinearComboFunction::getFirstFunction() {
-	return *first;
+OutputFunction* LinearComboFunction::getFirstFunction() {
+	return first.get();
 }
 
 bool LinearComboFunction::setFirstWeight( double v ) {
@@ -756,12 +722,12 @@ double LinearComboFunction::getFirstWeight() {
 
 bool LinearComboFunction::setSecondFunction( OutputFunction *g ) {
 	second.reset(g);
-	second->setCluster( cl );
+	second->setCluster( clusterv );
 	return true;
 }
 
-OutputFunction& LinearComboFunction::getSecondFunction() {
-	return *second;
+OutputFunction* LinearComboFunction::getSecondFunction() {
+	return second.get();
 }
 
 bool LinearComboFunction::setSecondWeight( double v ) {
@@ -773,18 +739,17 @@ double LinearComboFunction::getSecondWeight() {
 	return w2;
 }
 
-void LinearComboFunction::setCluster( Cluster* c ) {
-	this->cl = c;
-	mid.resize( c->numNeurons() );
-	first->setCluster( c );
-	second->setCluster( c );
+void LinearComboFunction::clusterSetted() {
+	mid.resize( clusterv->numNeurons() );
+	first->setCluster( clusterv );
+	second->setCluster( clusterv );
 }
 
 void LinearComboFunction::configure(ConfigurationParameters& params, QString prefix)
 {
 	// We don't need configured component functions here (and they will be
 	// configured after exiting from this function)
-	first.reset(params.getObjectFromParameter(prefix + "first", false, false));
+	first.reset(params.getObjectFromParameter<OutputFunction>(prefix + "first", false, false));
 
 	w1 = 0.0;
 	QString str = params.getValue(prefix + "w1");
@@ -796,7 +761,7 @@ void LinearComboFunction::configure(ConfigurationParameters& params, QString pre
 		}
 	}
 
-	second.reset(params.getObjectFromParameter(prefix + "second", false, false));
+	second.reset(params.getObjectFromParameter<OutputFunction>(prefix + "second", false, false));
 
 	w2 = 0.0;
 	str = params.getValue(prefix + "w2");
@@ -815,13 +780,9 @@ void LinearComboFunction::configure(ConfigurationParameters& params, QString pre
 void LinearComboFunction::save(ConfigurationParameters& params, QString prefix)
 {
 	params.startObjectParameters(prefix, "LinearComboFunction", this);
-
 	params.createParameter(prefix, "first", first.get());
-
 	params.createParameter(prefix, "w1", QString::number(w1));
-
 	params.createParameter(prefix, "second", second.get());
-
 	params.createParameter(prefix, "w2", QString::number(w2));
 
 	// We don't need to save the reference to the cluster as he calls our setCluster

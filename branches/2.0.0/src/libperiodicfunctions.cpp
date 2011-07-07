@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2009 Gianluca Massera <emmegian@yahoo.it>                *
+ *  Copyright (C) 2005-2011 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -67,11 +67,8 @@ void PeriodicFunction::save(ConfigurationParameters& params, QString prefix)
 	// Here we call startObjectParameters even if this is an abstract class
 	// because it creates the group
 	params.startObjectParameters(prefix, "PeriodicFunction", this);
-
 	params.createParameter(prefix, "phase", QString::number(phase));
-
 	params.createParameter(prefix, "span", QString::number(span));
-
 	params.createParameter(prefix, "amplitude", QString::number(amplitude));
 }
 
@@ -89,14 +86,13 @@ void SawtoothFunction::apply( DoubleVector& inputs, DoubleVector& outputs ) {
 void SawtoothFunction::configure(ConfigurationParameters& params, QString prefix)
 {
 	// Calling parent function
-	PeriodicFunction::configure(params, prefix)
+	PeriodicFunction::configure(params, prefix);
 }
 
 void SawtoothFunction::save(ConfigurationParameters& params, QString prefix)
 {
 	// Calling parent function
 	PeriodicFunction::save(params, prefix);
-
 	// Now saving our parameters
 	params.startObjectParameters(prefix, "SawtoothFunction", this);
 }
@@ -116,14 +112,13 @@ void TriangleFunction::apply( DoubleVector& inputs, DoubleVector& outputs ) {
 void TriangleFunction::configure(ConfigurationParameters& params, QString prefix)
 {
 	// Calling parent function
-	PeriodicFunction::configure(params, prefix)
+	PeriodicFunction::configure(params, prefix);
 }
 
 void TriangleFunction::save(ConfigurationParameters& params, QString prefix)
 {
 	// Calling parent function
 	PeriodicFunction::save(params, prefix);
-
 	// Now saving our parameters
 	params.startObjectParameters(prefix, "TriangleFunction", this);
 }
@@ -145,14 +140,13 @@ void SinFunction::apply( DoubleVector& inputs, DoubleVector& outputs ) {
 void SinFunction::configure(ConfigurationParameters& params, QString prefix)
 {
 	// Calling parent function
-	PeriodicFunction::configure(params, prefix)
+	PeriodicFunction::configure(params, prefix);
 }
 
 void SinFunction::save(ConfigurationParameters& params, QString prefix)
 {
 	// Now calling parent function
 	PeriodicFunction::save(params, prefix);
-
 	// Now saving our parameters
 	params.startObjectParameters(prefix, "SinFunction", this);
 }
@@ -170,14 +164,13 @@ void PseudoGaussFunction::apply( DoubleVector& inputs, DoubleVector& outputs ) {
 void PseudoGaussFunction::configure(ConfigurationParameters& params, QString prefix)
 {
 	// Calling parent function
-	PeriodicFunction::configure(params, prefix)
+	PeriodicFunction::configure(params, prefix);
 }
 
 void PseudoGaussFunction::save(ConfigurationParameters& params, QString prefix)
 {
 	// Now calling parent function
 	PeriodicFunction::save(params, prefix);
-
 	// Now saving our parameters
 	params.startObjectParameters(prefix, "PseudoGaussFunction", this);
 }

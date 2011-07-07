@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2009 Gianluca Massera <emmegian@yahoo.it>                *
+ *  Copyright (C) 2005-2011 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -24,6 +24,33 @@ namespace nnfw {
 
 MatrixLinker::MatrixLinker( Cluster* from, Cluster* to, QString name )
 	: Linker(from, to, name), nrows(from->numNeurons()), ncols(to->numNeurons()), w(nrows, ncols, true) {
+	w.zeroing();
+}
+
+MatrixLinker::MatrixLinker( ConfigurationParameters& params, QString prefix )
+	: Linker( params, prefix ), nrows(from()->numNeurons()), ncols(to()->numNeurons()), w(nrows, ncols, true) {
+	// the weights are read from a single vector of data supposing they are row-major arranged
+	QString str = params.getValue(prefix + "weights");
+	if (!str.isNull()) {
+		QStringList list = str.split(QRegExp("\\s+"), QString::SkipEmptyParts);
+		int cycleLength = nrows*ncols;
+		if (list.size() != cycleLength) {
+#ifdef NNFW_DEBUG
+			qWarning() << "The number of elements of the weights in configuration file (" << list.size()
+			           << ") is different from the total number of weights (" << cycleLength << ").";
+#endif
+			cycleLength = std::min(list.size(), cycleLength);
+		}
+		for( int i=0; i<cycleLength; i++) {
+			bool ok;
+			unsigned int r = i/ncols; //--- division may be expensive
+			unsigned int c = i%ncols; //--- module may be expensive
+			w[r][c] = list[i].toDouble(&ok);
+			if (!ok) {
+				w[r][c] = 0.0;
+			}
+		}
+	}
 }
 
 MatrixLinker::~MatrixLinker() {
@@ -42,44 +69,14 @@ void MatrixLinker::randomize( double min, double max ) {
 }
 
 void MatrixLinker::setWeight( unsigned int from, unsigned int to, double weight ) {
-	#ifdef NNFW_DEBUG
-	if ( from >= nrows ) {
-		qWarning() << "Accessing out of Rows Boundary in MatrixLinker" ;
-		return;
-	}
-	if ( to >= ncols ) {
-		qWarning() << "Accessing out of Columns Boundary in MatrixLinker" ;
-		return;
-	}
-	#endif
 	w[from][to] = weight;
 }
 
 double MatrixLinker::weight( unsigned int from, unsigned int to ) {
-#ifdef NNFW_DEBUG
-	if ( from >= nrows ) {
-		qWarning() << "Accessing out of Rows Boundary" ;
-		return 0.0;
-	}
-	if ( to >= ncols ) {
-		qWarning() << "Accessing out of Columns Boundary" ;
-		return 0.0;
-	}
-#endif
 	return w[from][to];
 }
 
 void MatrixLinker::connect( unsigned int from, unsigned int to ) {
-#ifdef NNFW_DEBUG
-	if ( from >= nrows ) {
-		qWarning() << "Accessing out of Rows Boundary" ;
-		return;
-	}
-	if ( to >= ncols ) {
-		qWarning() << "Accessing out of Columns Boundary" ;
-		return;
-	}
-#endif
 	w.unsteady( from, to );
 }
 
@@ -94,15 +91,15 @@ void MatrixLinker::connectRandom( double prob, bool zeroDiagonal, bool symmetric
 #endif
 		for( unsigned int r=0; r<rows(); r++ ) {
 			for( unsigned int c=r; c<cols(); c++ ) {
+				//--- clear any previous steadyness before to steady some values
+				w.unsteady( r, c );
+				w.unsteady( c, r );
 				if ( r==c && zeroDiagonal ) {
 					w[r][c] = 0.0;
 					w.steady( r, c );
 					continue;
 				}
-				if ( globalRNG->getBool( prob ) ) {
-					w.unsteady( r, c );
-					w.unsteady( c, r );
-				} else {
+				if ( !globalRNG->getBool( prob ) ) {
 					w[r][c] = 0.0;
 					w.steady( r, c );
 					w[c][r] = 0.0;
@@ -114,14 +111,14 @@ void MatrixLinker::connectRandom( double prob, bool zeroDiagonal, bool symmetric
 		//--- SYMMETRIC FALSE
 		for( unsigned int r=0; r<rows(); r++ ) {
 			for( unsigned int c=0; c<cols(); c++ ) {
+				//--- clear any previous steadyness before to steady some values
+				w.unsteady( r, c );
 				if ( r==c && zeroDiagonal ) {
 					w[r][c] = 0.0;
 					w.steady( r, c );
 					continue;
 				}
-				if ( globalRNG->getBool( prob ) ) {
-					w.unsteady( r, c );
-				} else {
+				if ( !globalRNG->getBool( prob ) ) {
 					w[r][c] = 0.0;
 					w.steady( r, c );
 				}
@@ -139,16 +136,7 @@ void MatrixLinker::connectAll() {
 }
 
 void MatrixLinker::disconnect( unsigned int from, unsigned int to ) {
-#ifdef NNFW_DEBUG
-	if ( from >= nrows ) {
-		qWarning() << "Accessing out of Rows Boundary" ;
-		return;
-	}
-	if ( to >= ncols ) {
-		qWarning() << "Accessing out of Columns Boundary" ;
-		return;
-	}
-#endif
+	w.unsteady( from, to );
 	w[from][to] = 0.0;
 	w.steady( from, to );
 }
@@ -156,10 +144,24 @@ void MatrixLinker::disconnect( unsigned int from, unsigned int to ) {
 void MatrixLinker::disconnectAll() {
 	for( unsigned int r=0; r<rows(); r++ ) {
 		for( unsigned int c=0; c<cols(); c++ ) {
+			w.unsteady( r, c );
 			w[r][c] = 0.0;
 			w.steady( r, c );
 		}
 	}
+}
+
+void MatrixLinker::save(ConfigurationParameters& params, QString prefix) {
+	Linker::save( params, prefix );
+	params.startObjectParameters( prefix, "MatrixLinker", this );
+	// First creating a string list, then transforming to a single string
+	QStringList list;
+	for( unsigned int r=0; r<rows(); r++ ) {
+		for( unsigned int c=0; c<cols(); c++ ) {
+			list.push_back(QString::number(w[r][c]));
+		}
+	}
+	params.createParameter(prefix, "weights", list.join(" "));
 }
 
 }

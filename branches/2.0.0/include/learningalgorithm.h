@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2009 Gianluca Massera <emmegian@yahoo.it>                *
+ *  Copyright (C) 2005-2011 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -31,7 +31,7 @@
 
 namespace nnfw {
 
-class BaseNeuralNet;
+class NeuralNet;
 
 /*! \brief Pattern object
  *
@@ -87,18 +87,15 @@ public:
 	/*! set the both inputs and outputs associated with Cluster passed */
 	void setInputsOutputsOf( Cluster*, const DoubleVector& inputs, const DoubleVector& outputs );
 	/*! return stored information if exists, otherwise it return a zero vector */
-	const DoubleVector& inputsOf( Cluster* ) const;
+	DoubleVector inputsOf( Cluster* ) const;
 	/*! return stored information if exists, otherwise it return a zero vector */
-	const DoubleVector& outputsOf( Cluster* ) const;
+	DoubleVector outputsOf( Cluster* ) const;
 	/*! return the stored information
 	 *  \warning it silently create a new one if the Cluster passed is not present */
 	PatternInfo& operator[]( Cluster* );
 	//@}
 private:
 	mutable QMap<Cluster*, PatternInfo> pinfo;
-
-	/*! An empty vector returned in case of error */
-	static const DoubleVector emptyVector;
 };
 
 /*! \brief PatternSet type
@@ -119,14 +116,14 @@ public:
 	/*! \name Constructors */
 	//@{
 	/*! Constructor */
-	LearningAlgorithm( BaseNeuralNet* net );
+	LearningAlgorithm( NeuralNet* net );
 	/*! Destructor */
 	virtual ~LearningAlgorithm();
 	//@}
 	/*! \name Interface */
 	//@{
 	/*! Return the BaseNeuralNet setted */
-	BaseNeuralNet* net() {
+	NeuralNet* net() {
 		return netp;
 	};
 	/*! a single step of learning algorithm */
@@ -161,7 +158,7 @@ public:
 	//@}
 
 private:
-	BaseNeuralNet* netp;
+	NeuralNet* netp;
 };
 
 }

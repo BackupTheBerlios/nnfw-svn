@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2009 Gianluca Massera <emmegian@yahoo.it>                *
+ *  Copyright (C) 2005-2011 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -43,8 +43,6 @@ namespace nnfw {
  * the underlying matrix using DoubleMatrix::steady and DoubleMatrix::unsteady methods
  *
  * \par Warning
- *
- * \todo Adding a boolean matrix for return the mask of connections of neurons
  */
 class NNFW_API MatrixLinker : public Linker {
 public:
@@ -55,6 +53,8 @@ public:
 	 *   choose a different way: connect, connectRandom, disconnect, disconnectRandom
 	 */
 	MatrixLinker( Cluster* from, Cluster* to, QString name = "unnamed" );
+	/*! Constructor */
+	MatrixLinker( ConfigurationParameters& params, QString prefix );
 	/*!  Destructor */
 	virtual ~MatrixLinker();
 	//@}
@@ -81,7 +81,7 @@ public:
 		return w;
 	};
 	/*! const version of matrix() method */
-	const DoubleMatrix& matrix() const {
+	DoubleMatrix matrix() const {
 		return w;
 	};
 	/*! Connect two neurons */
@@ -101,6 +101,15 @@ public:
 	void disconnect( unsigned int from, unsigned int to );
 	/*! Disonnect all couples of neurons */
 	void disconnectAll();
+	/**
+	 * \brief Save the actual status of parameters into the ConfigurationParameters object passed
+	 *
+	 * This saves the name property, remember to call this in child classes
+	 * \param params the configuration parameters object on which save actual parameters
+	 * \param prefix the prefix to use to access the object configuration
+	 *               parameters.
+	 */
+	virtual void save(ConfigurationParameters& params, QString prefix);
 	//@}
 private:
 	/*! Registers the dimensions of the matrix */

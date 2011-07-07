@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2009 Gianluca Massera <emmegian@yahoo.it>                *
+ *  Copyright (C) 2005-2011 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -37,6 +37,8 @@ public:
 	//@{
 	/*! Connect clusters with a complete connections */
 	NormLinker( Cluster* from, Cluster* to, QString name = "unnamed" );
+	/*! Constructor */
+	NormLinker( ConfigurationParameters& params, QString prefix );
 	/*! Destructor */
 	virtual ~NormLinker();
 	//@}
@@ -44,18 +46,6 @@ public:
 	//@{
 	/*! Performs the euclidean norm calculation */
 	void update();
-	#warning IMPLEMENT THESE TWO FUNCTIONS (configure AND save)
-	/**
-	 * \brief Configures the object using a ConfigurationParameters object
-	 *
-	 * \param params the configuration parameters object with parameters to
-	 *               use
-	 * \param prefix the prefix to use to access the object configuration
-	 *               parameters. This is guaranteed to end with the
-	 *               separator character when called by the factory, so you
-	 *               don't need to add one
-	 */
-	virtual void configure(const ConfigurationParameters& params, QString prefix);
 	/**
 	 * \brief Save the actual status of parameters into the ConfigurationParameters object passed
 	 *

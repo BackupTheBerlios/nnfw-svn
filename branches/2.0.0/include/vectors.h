@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2009 Gianluca Massera <emmegian@yahoo.it>                *
+ *  Copyright (C) 2005-2011 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -26,6 +26,7 @@
  */
 
 #include "memutils.h"
+#include <exception>
 
 namespace nnfw {
 
@@ -107,8 +108,14 @@ private:
 
 /*! \brief DoubleVector Class
  *  \par Motivation
+ *  This represent a vector of double values
  *  \par Description
+ *  The DoubleVector use an implicit-sharing mechanism based on copy-on-write
  *  \par Warnings
+ *  This class is also used by other class for structuring their underlyng data. In these case, changing the structure of
+ *  a DoubleVector using directly the assign operator= can result in uncoerent state of the object owning the DoubleVector.
+ *  There special constructor that takes a boolean value, isinternal, for flag such situations.
+ *  When a user attempt to call the operator= on a DoubleVector with isinternal flag on an Exception will be throw.
  */
 class NNFW_API DoubleVector {
 public:
@@ -123,12 +130,13 @@ public:
 		shData->refcounts = 1;
 		shData->temporary = false;
 		shData->nodata = false;
-		this->isprotected = false;
+		this->isinternal = false;
 	};
 	/*! Construct a vector of dimension size setting all values to zero
-	 *  \param isprotected if the parameter is true, then the operator= is disable (not allowed);
+	 *  \param isinternal if this parameter is true means that the DoubleVector is a internal part of another structure or object. In this case you are not allowed to change its structure but only the values
+	 *  \warning If isinternal is true, then the operator= will raise an exception
 	 */
-	DoubleVector( unsigned int size, bool isprotected = false ) {
+	DoubleVector( unsigned int size, bool isinternal = false ) {
 		shData = new sharedData();
 		shData->vsize = size;
 		shData->data = new double[size];
@@ -140,10 +148,13 @@ public:
 		for( unsigned int i=0; i<shData->vsize; i++ ) {
 			shData->dataref[i].setRef( shData->data + i );
 		}
-		this->isprotected = isprotected;
+		this->isinternal = isinternal;
 	};
-	/*! Construct a vector of dimension size setting all the values as specified */
-	DoubleVector( unsigned int size, double value, bool isprotected = false ) {
+	/*! Construct a vector of dimension size setting all the values as specified
+	 *  \param isinternal if this parameter is true means that the DoubleVector is a internal part of another structure or object. In this case you are not allowed to change its structure but only the values
+	 *  \warning If isinternal is true, then the operator= will raise an exception
+	 */
+	DoubleVector( unsigned int size, double value, bool isinternal = false ) {
 		shData = new sharedData();
 		shData->vsize = size;
 		shData->data = new double[size];
@@ -155,10 +166,13 @@ public:
 			shData->data[i] = value;
 			shData->dataref[i].setRef( shData->data + i );
 		}
-		this->isprotected = isprotected;
+		this->isinternal = isinternal;
 	};
-	/*! Construct by copying data from const T* vector */
-	DoubleVector( const double* r, unsigned int dim, bool isprotected = false ) {
+	/*! Construct by copying data from const double* vector
+	 *  \param isinternal if this parameter is true means that the DoubleVector is a internal part of another structure or object. In this case you are not allowed to change its structure but only the values
+	 *  \warning If isinternal is true, then the operator= will raise an exception
+	 */
+	DoubleVector( const double* r, unsigned int dim, bool isinternal = false ) {
 		shData = new sharedData();
 		shData->vsize = dim;
 		shData->data = new double[dim];
@@ -170,7 +184,7 @@ public:
 			shData->data[i] = r[i];
 			shData->dataref[i].setRef( shData->data + i );
 		}
-		this->isprotected = isprotected;
+		this->isinternal = isinternal;
 	};
 	/*! The Copy-Constructor */
 	DoubleVector( const DoubleVector& src ) {
@@ -178,7 +192,50 @@ public:
 		shData->refcounts += 1;
 		//--- is not a temporary anymore !
 		shData->temporary = false;
-		isprotected = false;
+		isinternal = false;
+	};
+	/*! This is a special constructor used for copy a DoubleVector and mark it as temporary for speed-up
+	 *  calculation.
+	 *  It's intended for internal use only
+	 *  DON'T USE UNLESS YOUR ARE VERY CONFIDENT on How the special temporary DoubleVector are used
+	 *  \internal
+	 *  The idea behind the temporary DoubleVector works in this way:
+	 *  when an operator is called, and it has to create a new fresh copy of the data and return it, then
+	 *  it will call the this constructor that will allocate new data for storing the calculations.
+	 *  After that, the DoubleVector is returned by the operator and from now it is marked as temporary
+	 *  If the DoubleVector will be passed to another operator (like in chained operations), then the operator
+	 *  instead of creating the new data again, it will use the DoubleVector marked as temporary
+	 *  At the end of operations it will be assigned and then the operator= unmark the DoubleVector as temporary
+	 *  For example, suppose this code:
+	 *  \code
+	 *  DoubleVector v1 = v2 + v3*v4 - v5;
+	 *  \endcode
+	 *  When the first operator* is called, it will create a temporary DoubleVector and then all others operators will
+	 *  write on it, reducing the allocation of memory from three to one !
+	 *  In the example above, because the DoubleVector v1 has been created exactly when the operations have been done,
+	 *  then v1 still marked as temporary, then successive operations like the example below will not allocate further
+	 *  memory:
+	 *  \code
+	 *  DoubleVector v1 = v2 + v3*v4 - v5;
+	 *  DoubleVector v6 = v1*v4 + v2;
+	 *  \endcode
+	 *  A DoubleVector will be unmarked as temporary when the copy-constructor and the operator= will be called.
+	 *  \param dummy is not used, and exists only to avoid that the constructor has the same signature
+	 *   of DoubleVector( unsigned int, bool internal )
+	 */
+	DoubleVector( unsigned int dim, bool temp, unsigned int dummy ) {
+		dummy = 0; // just for avoid warning :-P
+		shData = new sharedData();
+		shData->vsize = dim;
+		shData->data = new double[dim];
+		shData->dataref = new doubleRef[dim];
+		shData->refcounts = 1;
+		shData->temporary = temp;
+		shData->nodata = false;
+		for( unsigned int i=0; i<shData->vsize; i++ ) {
+			shData->dataref[i].setRef( shData->data + i );
+		}
+		this->isinternal = false;
 	};
 	/*! Destructor */
 	~DoubleVector() {
@@ -195,6 +252,47 @@ public:
 		}
 	};
 	//@}
+	/*! \name Exceptions throw by DoubleVector */
+	//@{
+	/*! Thrown when a user attempt to call the operator= on a DoubleVector with isinternal flag on */
+	class NNFW_API AssignmentNotAllowed : public std::exception {
+	public:
+		virtual const char* what() const throw() {
+			return "It is not allowed to use the operator=() on DoubleVector used as internal data\n";
+		};
+	};
+	/*! Thrown when a user attempt to resize a DoubleVector with isinternal flag on */
+	class NNFW_API ResizeNotAllowed : public std::exception {
+	public:
+		virtual const char* what() const throw() {
+			return "It is not allowed to resize a DoubleVector used as internal data\n";
+		};
+	};
+	/*! Thrown when a user attempt to do calculations with incompatible DoubleVectors */
+	class NNFW_API IncompatibleVectors : public std::exception {
+	public:
+		IncompatibleVectors( const char* why ) {
+			this->why = why;
+		};
+		virtual const char* what() const throw() {
+			return why;
+		};
+	private:
+		const char* why;
+	};
+	/*! Thrown when a user attempt to access outside boundary of a DoubleVector */
+	class NNFW_API OutsideBoundaries : public std::exception {
+	public:
+		OutsideBoundaries( const char* why ) {
+			this->why = why;
+		};
+		virtual const char* what() const throw() {
+			return why;
+		};
+	private:
+		const char* why;
+	};
+	//@}
 	/*! \name Informations about VectorData */
 	//@{
 	/*! Return the size of VectorData */
@@ -206,7 +304,7 @@ public:
 		return (shData->vsize==0);
 	};
 	/*! Equal Operator */
-	bool operator==( const DoubleVector& b ) {
+	bool operator==( const DoubleVector& b ) const {
 		if ( shData == b.shData ) return true;
 		if ( shData->vsize != b.shData->vsize ) return false;
 		for( unsigned int i=0; i<shData->vsize; i++ ) {
@@ -215,7 +313,7 @@ public:
 		return true;
 	};
 	/*! Not-Equal Operator */
-	bool operator!=( const DoubleVector& b ) {
+	bool operator!=( const DoubleVector& b ) const {
 		return !( *this == b );
 	};
 	//@}
@@ -224,11 +322,11 @@ public:
 	/*! Behaves as a CopyConstructor: this do a completely substitution of underlying data
 	 *  so, it does not honor fixed elements, hence it substitute all
 	 *  informations taking also the new information about fixed element in src.<br/>
-	 *  If you want only copying DoubleVector's values use copy method
-	 *  \warning when constructed with isprotected to true, then this method is not allowed
+	 *  If you want copy only the DoubleVector's values use copyValues method instead.
+	 *  \warning If the isinternal flag is true, then the operator= will raise the AssignmentNotAllowed
 	 */
 	DoubleVector& operator=( const DoubleVector& src ) {
-		if ( isprotected ) return (*this);
+		if ( isinternal ) throw AssignmentNotAllowed();
 		if ( src.shData == shData ) return (*this);
 		//--- eliminate the previous data
 		shData->refcounts -= 1;
@@ -251,23 +349,59 @@ public:
 	};
 	/*! Copy the values from source honoring fixed elements
 	 *  (i.e.: the fixed element of this remains unchanged )
-	 *  \warning Dimensionality check activated only when DEBUG is defined
+	 *  \note this method does not check the dimension of the two vectors, but behaves safely in this way:
+	 *  - if src vector is bigger, then it copy all values from src without go beyond the size of this vector
+	 *  - if src vector is smaller, then it copy all values from src and left unchanged all values that are 
+	 *    beyond the limit of src vector
 	 */
-	DoubleVector& copy( const DoubleVector& src ) {
-#ifdef NNFW_DEBUG
-		if ( shData->vsize != src.shData->vsize ) {
-			qCritical() << "Incompatible DoubleVector in copy method (dimension must be equals)";
-			return (*this);
-		}
-#endif
-		for( unsigned int i=0; i<shData->vsize; i++ ) {
+	DoubleVector& copyValues( const DoubleVector& src ) {
+		// if shared data is the same, they already share the same values
+		if ( shData == src.shData ) return (*this);
+		detach();
+		unsigned int max = qMin( shData->vsize, src.size() );
+		for( unsigned int i=0; i<max; i++ ) {
 			shData->dataref[i] = src[i];
 		}
 		return (*this);
 	};
-	/*! It behaves exactly as copy method and not as operator= */
-	DoubleVector& assignData( const DoubleVector& src ) {
-		return copy( src );
+	/*! Copy the values from source honoring fixed elements starting from the offsets specified
+	 *  (i.e.: the fixed element of this remains unchanged )
+	 *  \param srcOffset is the offset from which the values are read from the src vector
+	 *  \param thisOffset is the offset on which the values from the src vector are placed
+	 *  \note this method does not check the dimension of the two vectors, but behaves safely
+	 *        like the copyValues method
+	 */
+	DoubleVector& copyValues( const DoubleVector& src, unsigned int srcOffset, unsigned int thisOffset ) {
+		// if shared data is the same and offsets are zero, then there is nothing to do
+		if ( shData == src.shData && srcOffset == 0 && thisOffset == 0 ) return (*this);
+		detach();
+		unsigned int max = qMin( shData->vsize-thisOffset, src.size()-srcOffset );
+		for( unsigned int i=0; i<max; i++ ) {
+			shData->dataref[i+thisOffset] = src[i+srcOffset];
+		}
+		return (*this);
+	};
+	/*! Copy the values from source honoring fixed elements starting from the offsets specified
+	 *  using the stride specified
+	 *  (i.e.: the fixed element of this remains unchanged )
+	 *  \param srcOffset is the offset from which the values are read from the src vector
+	 *  \param thisOffset is the offset on which the values from the src vector are placed
+	 *  \param stride is the stride; stride zero is not allowed, stride == 1 behaves like copyValues without stride,
+	 *        stride > 1 it jump 'stride' values when coping, leaving the jumped values unchanged
+	 *  \note this method does not check the dimension of the two vectors, but behaves safely
+	 *        like the copyValues method
+	 *  \warning if stride == 0, then it does not copy any values and return the vector unchanged
+	 */
+	DoubleVector& copyValues( const DoubleVector& src, unsigned int srcOffset, unsigned int thisOffset, unsigned int stride ) {
+		if ( stride == 0 ) return (*this);
+		// if shared data is the same and offsets are zero, then there is nothing to do
+		if ( shData == src.shData && srcOffset == 0 && thisOffset == 0 ) return (*this);
+		detach();
+		unsigned int max = qMin( shData->vsize-thisOffset, src.size()-srcOffset );
+		for( unsigned int i=0; i<max; i=i+stride ) {
+			shData->dataref[i+thisOffset] = src[i+srcOffset];
+		}
+		return (*this);
 	};
 	/*! If the current data is shared by other objects, this method will create a new copy of the data
 	 *  not shared by other objects.
@@ -297,184 +431,196 @@ public:
 		}
 		return (*this);
 	};
+	/*! unary operator + */
+	const DoubleVector& operator+() const {
+		return (*this);
+	};
+	/*! unary operator - */
+	const DoubleVector operator-() const {
+		if ( shData->temporary ) {
+			for( unsigned int i=0; i<shData->vsize; i++ ) {
+				shData->dataref[i] = -shData->dataref[i];
+			}
+			return (*this);
+		} else {
+			DoubleVector ret( shData->vsize, true, 0 );
+			for( unsigned int i=0; i<shData->vsize; i++ ) {
+				ret.shData->dataref[i] = -shData->dataref[i];
+			}
+			return ret;
+		}
+	};
 	/*! operator +
-	 *  \warning Dimensionality check activated only when DEBUG is defined
+	 *  \warning Dimensionality check activated only when NNFW_DEBUG is defined
 	 */
-	DoubleVector operator+( const DoubleVector& right ) const {
+	const DoubleVector operator+( const DoubleVector& right ) const {
 #ifdef NNFW_DEBUG
 		if ( shData->vsize != right.shData->vsize ) {
-			qCritical() << "Incompatible DoubleVector in operator + (dimension must be equals)";
-			return (*this);
+			throw IncompatibleVectors("Incompatible DoubleVectors in operator+ (dimension must be equals)");
 		}
-#endif		
+#endif
 		if ( right.shData->temporary ) {
 			for( unsigned int i=0; i<shData->vsize; i++ ) {
-				((DoubleVector&)right)[i] = shData->dataref[i] + right[i];
+				right.shData->dataref[i] = shData->dataref[i] + right.shData->dataref[i];
 			}
 			return right;
 		} else if ( shData->temporary ) {
 			for( unsigned int i=0; i<shData->vsize; i++ ) {
-				shData->dataref[i] = shData->dataref[i] + right[i];
+				shData->dataref[i] = shData->dataref[i] + right.shData->dataref[i];
 			}
 			return (*this);
 		} else {
-			DoubleVector ret( shData->vsize );
-			ret.shData->temporary = true;
+			DoubleVector ret( shData->vsize, true, 0 );
 			for( unsigned int i=0; i<shData->vsize; i++ ) {
-				ret[i] = shData->dataref[i] + right[i];
+				ret.shData->dataref[i] = shData->dataref[i] + right.shData->dataref[i];
 			}
 			return ret;
 		}
 	};
 	/*! operator -
-	 *  \warning Dimensionality check activated only when DEBUG is defined
+	 *  \warning Dimensionality check activated only when NNFW_DEBUG is defined
 	 */
-	DoubleVector operator-( const DoubleVector& right ) const {
+	const DoubleVector operator-( const DoubleVector& right ) const {
 #ifdef NNFW_DEBUG
 		if ( shData->vsize != right.shData->vsize ) {
-			qCritical() << "Incompatible DoubleVector in operator - (dimension must be equals)";
-			return (*this);
+			throw IncompatibleVectors("Incompatible DoubleVectors in operator- (dimension must be equals)");
 		}
 #endif
 		if ( right.shData->temporary ) {
 			for( unsigned int i=0; i<shData->vsize; i++ ) {
-				((DoubleVector&)right)[i] = shData->dataref[i] - right[i];
+				right.shData->dataref[i] = shData->dataref[i] - right.shData->dataref[i];
 			}
 			return right;
 		} else if ( shData->temporary ) {
 			for( unsigned int i=0; i<shData->vsize; i++ ) {
-				shData->dataref[i] = shData->dataref[i] - right[i];
+				shData->dataref[i] = shData->dataref[i] - right.shData->dataref[i];
 			}
 			return (*this);
 		} else {
-			DoubleVector ret( shData->vsize );
-			ret.shData->temporary = true;
+			DoubleVector ret( shData->vsize, true, 0 );
 			for( unsigned int i=0; i<shData->vsize; i++ ) {
-				ret[i] = shData->dataref[i] - right[i];
+				ret.shData->dataref[i] = shData->dataref[i] - right.shData->dataref[i];
 			}
 			return ret;
 		}
 	};
 	/*! operator *
-	 *  \warning Dimensionality check activated only when DEBUG is defined
+	 *  \warning Dimensionality check activated only when NNFW_DEBUG is defined
 	 */
-	DoubleVector operator*( const DoubleVector& right ) const {
+	const DoubleVector operator*( const DoubleVector& right ) const {
 #ifdef NNFW_DEBUG
 		if ( shData->vsize != right.shData->vsize ) {
-			qCritical() << "Incompatible DoubleVector in operator * (dimension must be equals)";
-			return (*this);
+			throw IncompatibleVectors("Incompatible DoubleVectors in operator* (dimension must be equals)");
 		}
 #endif
 		if ( right.shData->temporary ) {
 			for( unsigned int i=0; i<shData->vsize; i++ ) {
-				((DoubleVector&)right)[i] = shData->dataref[i] * right[i];
+				right.shData->dataref[i] = shData->dataref[i] * right.shData->dataref[i];
 			}
 			return right;
 		} else if ( shData->temporary ) {
 			for( unsigned int i=0; i<shData->vsize; i++ ) {
-				shData->dataref[i] = shData->dataref[i] * right[i];
+				shData->dataref[i] = shData->dataref[i] * right.shData->dataref[i];
 			}
 			return (*this);
 		} else {
-			DoubleVector ret( shData->vsize );
-			ret.shData->temporary = true;
+			DoubleVector ret( shData->vsize, true, 0 );
 			for( unsigned int i=0; i<shData->vsize; i++ ) {
-				ret[i] = shData->dataref[i] * right[i];
+				ret.shData->dataref[i] = shData->dataref[i] * right.shData->dataref[i];
 			}
 			return ret;
 		}
 	};
 	/*! operator /
-	 *  \warning Dimensionality check activated only when DEBUG is defined
+	 *  \warning Dimensionality check activated only when NNFW_DEBUG is defined
 	 */
-	DoubleVector operator/( const DoubleVector& right ) const {
+	const DoubleVector operator/( const DoubleVector& right ) const {
 #ifdef NNFW_DEBUG
 		if ( shData->vsize != right.shData->vsize ) {
-			qCritical() << "Incompatible DoubleVector in operator / (dimension must be equals)";
-			return (*this);
+			throw IncompatibleVectors("Incompatible DoubleVectors in operator/ (dimension must be equals)");
 		}
 #endif
 		if ( right.shData->temporary ) {
 			for( unsigned int i=0; i<shData->vsize; i++ ) {
-				((DoubleVector&)right)[i] = shData->dataref[i] / right[i];
+				right.shData->dataref[i] = shData->dataref[i] / right.shData->dataref[i];
 			}
 			return right;
 		} else if ( shData->temporary ) {
 			for( unsigned int i=0; i<shData->vsize; i++ ) {
-				shData->dataref[i] = shData->dataref[i] / right[i];
+				shData->dataref[i] = shData->dataref[i] / right.shData->dataref[i];
 			}
 			return (*this);
 		} else {
-			DoubleVector ret( shData->vsize );
-			ret.shData->temporary = true;
+			DoubleVector ret( shData->vsize, true, 0 );
 			for( unsigned int i=0; i<shData->vsize; i++ ) {
-				ret[i] = shData->dataref[i] / right[i];
+				ret.shData->dataref[i] = shData->dataref[i] / right.shData->dataref[i];
 			}
 			return ret;
 		}
 	};
 	/*! operator +=
-	 *  \warning Dimensionality check activated only when DEBUG is defined
+	 *  \warning Dimensionality check activated only when NNFW_DEBUG is defined
 	 */
 	DoubleVector& operator+=( const DoubleVector& right ) {
 #ifdef NNFW_DEBUG
 		if ( shData->vsize != right.shData->vsize ) {
-			qCritical() << "Incompatible DoubleVector in operator += (dimension must be equals)";
-			return (*this);
+			throw IncompatibleVectors("Incompatible DoubleVectors in operator+= (dimension must be equals)");
 		}
 #endif
+		detach();
 		for( unsigned int i=0; i<shData->vsize; i++ ) {
-			shData->dataref[i] = shData->dataref[i] + right[i];
+			shData->dataref[i] = shData->dataref[i] + right.shData->dataref[i];
 		}
 		return (*this);
 	};
 	/*! operator -=
-	 *  \warning Dimensionality check activated only when DEBUG is defined
+	 *  \warning Dimensionality check activated only when NNFW_DEBUG is defined
 	 */
 	DoubleVector& operator-=( const DoubleVector& right ) {
 #ifdef NNFW_DEBUG
 		if ( shData->vsize != right.shData->vsize ) {
-			qCritical() << "Incompatible DoubleVector in operator -= (dimension must be equals)";
-			return (*this);
+			throw IncompatibleVectors("Incompatible DoubleVectors in operator-= (dimension must be equals)");
 		}
 #endif
+		detach();
 		for( unsigned int i=0; i<shData->vsize; i++ ) {
-			shData->dataref[i] = shData->dataref[i] - right[i];
+			shData->dataref[i] = shData->dataref[i] - right.shData->dataref[i];
 		}
 		return (*this);
 	};
 	/*! operator *=
-	 *  \warning Dimensionality check activated only when DEBUG is defined
+	 *  \warning Dimensionality check activated only when NNFW_DEBUG is defined
 	 */
 	DoubleVector& operator*=( const DoubleVector& right ) {
 #ifdef NNFW_DEBUG
 		if ( shData->vsize != right.shData->vsize ) {
-			qCritical() << "Incompatible DoubleVector in operator *= (dimension must be equals)";
-			return (*this);
+			throw IncompatibleVectors("Incompatible DoubleVectors in operator*= (dimension must be equals)");
 		}
 #endif
+		detach();
 		for( unsigned int i=0; i<shData->vsize; i++ ) {
-			shData->dataref[i] = shData->dataref[i] * right[i];
+			shData->dataref[i] = shData->dataref[i] * right.shData->dataref[i];
 		}
 		return (*this);
 	};
 	/*! operator /=
-	 *  \warning Dimensionality check activated only when DEBUG is defined
+	 *  \warning Dimensionality check activated only when NNFW_DEBUG is defined
 	 */
 	DoubleVector& operator/=( const DoubleVector& right ) {
 #ifdef NNFW_DEBUG
 		if ( shData->vsize != right.shData->vsize ) {
-			qCritical() << "Incompatible DoubleVector in operator+ (dimension must be equals)";
-			return (*this);
+			throw IncompatibleVectors("Incompatible DoubleVectors in operator/= (dimension must be equals)");
 		}
 #endif
+		detach();
 		for( unsigned int i=0; i<shData->vsize; i++ ) {
-			shData->dataref[i] = shData->dataref[i] / right[i];
+			shData->dataref[i] = shData->dataref[i] / right.shData->dataref[i];
 		}
 		return (*this);
 	};
 	/*! operator += with a scalar */
 	DoubleVector& operator+=( const double& right ) {
+		detach();
 		for( unsigned int i=0; i<shData->vsize; i++ ) {
 			shData->dataref[i] = shData->dataref[i] + right;
 		}
@@ -482,6 +628,7 @@ public:
 	};
 	/*! operator -= with a scalar */
 	DoubleVector& operator-=( const double& right ) {
+		detach();
 		for( unsigned int i=0; i<shData->vsize; i++ ) {
 			shData->dataref[i] = shData->dataref[i] - right;
 		}
@@ -489,6 +636,7 @@ public:
 	};
 	/*! operator *= with a scalar */
 	DoubleVector& operator*=( const double& right ) {
+		detach();
 		for( unsigned int i=0; i<shData->vsize; i++ ) {
 			shData->dataref[i] = shData->dataref[i] * right;
 		}
@@ -496,6 +644,7 @@ public:
 	};
 	/*! operator /= with a scalar */
 	DoubleVector& operator/=( const double& right ) {
+		detach();
 		for( unsigned int i=0; i<shData->vsize; i++ ) {
 			shData->dataref[i] = shData->dataref[i] / right;
 		}
@@ -503,37 +652,38 @@ public:
 	};
 	/*! Fix the i-th value, hence the i-th value will never change anymore
 	 *  until unsteady is called
-	 *  \warning Boundary check activated only when DEBUG if defined
+	 *  \warning Boundary check activated only when NNFW_DEBUG if defined
 	 */
 	DoubleVector& steady( unsigned int i ) {
 #ifdef NNFW_DEBUG
 		if( i >= shData->vsize ) {
-			qCritical() << "Fixating elements outside boundary" ;
-			return (*this);
+			throw OutsideBoundaries("Fixating elements outside boundary");
 		}
 #endif
+		detach();
 		shData->dataref[i].setSteady();
 		return (*this);
 	};
 	/*! Reallow the modification of i-th value
-	 *  \warning Boundary check activated only when DEBUG if defined
+	 *  \warning Boundary check activated only when NNFW_DEBUG if defined
 	 */
 	DoubleVector& unsteady( unsigned int i ) {
 #ifdef NNFW_DEBUG
 		if( i >= shData->vsize ) {
-			qCritical() << "Un-Fixating elements outside boundary" ;
-			return (*this);
+			throw OutsideBoundaries("Un-Fixating elements outside boundary");
 		}
 #endif
+		detach();
 		shData->dataref[i].setNoSteady();
 		return (*this);
 	};
-	/*! Return true if the i-th value is a steady value */
-	bool isSteady( unsigned int i ) {
+	/*! Return true if the i-th value is a steady value
+	 *  \warning Boundary check activated only when NNFW_DEBUG if defined
+	 */
+	bool isSteady( unsigned int i ) const {
 #ifdef NNFW_DEBUG
 		if( i >= shData->vsize ) {
-			qCritical() << "Accessing elements outside boundary" ;
-			return false;
+			throw OutsideBoundaries("isSteady - Accessing element outside boundary");
 		}
 #endif
 		return shData->dataref[i].isSteady();
@@ -542,6 +692,7 @@ public:
 	 *  This method honor the steady values... hence that values will remain at the same values
 	 */
 	DoubleVector& zeroing() {
+		detach();
 		for( unsigned int i=0; i<shData->vsize; i++ ) {
 			shData->dataref[i] = 0;
 		}
@@ -551,40 +702,41 @@ public:
 	 *  This method honor the steady values... hence that values will remain at the same values
 	 */
 	DoubleVector& setAll( const double value ) {
+		detach();
 		for( unsigned int i=0; i<shData->vsize; i++ ) {
 			shData->dataref[i] = value;
 		}
 		return (*this);
 	};
 	/*! Indexing operator
-	 *  \warning Boundary check activated only when DEBUG is defined
+	 *  \warning Boundary check activated only when NNFW_DEBUG is defined
 	 */
 	doubleRef& operator[]( unsigned int index ) {
 #ifdef NNFW_DEBUG
 		if( index >= shData->vsize ) {
-			qCritical() << "Accessing elements outside boundary" ;
-			return shData->dataref[0];
+			throw OutsideBoundaries("operator[] - Accessing elements outside boundary");
 		}
 #endif
+		detach();
 		return shData->dataref[index];
 	};
 	/*! Indexing operator (Const Version)
-	 *  \warning Boundary check activated only when DEBUG if defined
+	 *  \warning Boundary check activated only when NNFW_DEBUG if defined
 	 */
 	double operator[]( unsigned int index ) const {
 #ifdef NNFW_DEBUG
 		if( index >= shData->vsize ) {
-			qCritical() << "Accessing elements outside boundary" ;
-			return shData->dataref[0];
+			throw OutsideBoundaries("operator[] - Accessing elements outside boundary");
 		}
 #endif
 		return shData->dataref[index];
 	};
 	/*! Resize the VectorData */
 	DoubleVector& resize( unsigned int newsize ) {
-		if ( shData->nodata ) {
-			qFatal("You cannot resize DoubleVector returned by row or column views of Matrices");
+		if ( shData->nodata || isinternal ) {
+			throw ResizeNotAllowed();
 		}
+		detach();
 		if ( newsize > shData->vsize ) {
 			double* newdata = new double[newsize];
 			memoryCopy( newdata, shData->data, shData->vsize );
@@ -603,12 +755,14 @@ public:
 	};
 	/*! Append an element; the dimesion increase by one */
 	DoubleVector& append( const double& value ) {
+		//--- detach (and throw) done by resize
 		resize( shData->vsize+1 );
 		shData->data[ shData->vsize-1 ] = value;
 		return (*this);
 	};
 	/*! Append Operator; the dimesion increase by one */
 	DoubleVector& operator<<( const double& value ) {
+		//--- detach (and throw) done by resize (append)
 		append( value );
 		return (*this);
 	};
@@ -633,8 +787,11 @@ private:
 	};
 	/*! shared data among DoubleVector istances */
 	sharedData* shData;
-	/*! if the vector is protected means that assignment operator= is not allowed */
-	bool isprotected;
+	/*! if the vector is internal means that it is not possible to change its structure:
+	 *  - assignment operator= is not allowed
+	 *  - resize is not allowed
+	 */
+	bool isinternal;
 
 	friend class DoubleMatrix;
 	/*! Private method used by Matrix for setting DoubleVector for row-view and col-view. <br/>
@@ -650,13 +807,8 @@ private:
 		shData->vsize = newsize;
 		shData->dataref = new doubleRef[ newsize ];
 		shData->nodata = true;
-		isprotected = true;
+		isinternal = true;
 	};
-
-#ifdef C_NNFW_API
-	//--- for accessing from C interface implementation
-	friend double* getRawData( DoubleVector& );
-#endif
 };
 
 }

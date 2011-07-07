@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2009 Gianluca Massera <emmegian@yahoo.it>                *
+ *  Copyright (C) 2005-2011 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -57,7 +57,6 @@ void WinnerTakeAllFunction::configure(ConfigurationParameters& params, QString p
 void WinnerTakeAllFunction::save(ConfigurationParameters& params, QString prefix)
 {
 	params.startObjectParameters(prefix, "WinnerTakeAllFunction", this);
-
 	params.createParameter(prefix, "value", QString::number(valuev));
 }
 

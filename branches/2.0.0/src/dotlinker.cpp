@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2009 Gianluca Massera <emmegian@yahoo.it>                *
+ *  Copyright (C) 2005-2011 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -25,6 +25,11 @@ DotLinker::DotLinker( Cluster* from, Cluster* to, QString name )
 	: MatrixLinker(from, to, name) {
 }
 
+DotLinker::DotLinker( ConfigurationParameters& params, QString prefix )
+	: MatrixLinker( params, prefix ) {
+	// there are no extra parameters to configure
+}
+
 DotLinker::~DotLinker() {
 }
 
@@ -35,6 +40,11 @@ void DotLinker::update() {
 	}
 	amul( to()->inputs(), from()->outputs(), matrix() );
 	return;
+}
+
+void DotLinker::save(ConfigurationParameters& params, QString prefix) {
+	MatrixLinker::save( params, prefix );
+	params.startObjectParameters( prefix, "DotLinker", this );
 }
 
 }

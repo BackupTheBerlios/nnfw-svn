@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2008 Gianluca Massera <emmegian@yahoo.it>                *
+ *  Copyright (C) 2005-2011 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -22,13 +22,13 @@
 #include "biasedcluster.h"
 #include "ddecluster.h"
 #include "fakecluster.h"
-#include "sparsematrixlinker.h"
 #include "copylinker.h"
 #include "dotlinker.h"
 #include "normlinker.h"
 #include "liboutputfunctions.h"
 #include "libperiodicfunctions.h"
 #include "libradialfunctions.h"
+#include "libcompetitivefunctions.h"
 #include <factory/factory.h>
 
 using namespace nnfw;
@@ -47,8 +47,6 @@ void initNNFWLib() {
 	Factory::getInstance().registerClass<FakeCluster>("FakeCluster");
 
 	// Linkers
-	#warning THE SparseMatrixLinker CLASS IS IN VERSION 1.0 AND NOT IN VERSION 2.0
-// 	Factory::getInstance().registerClass<SparseMatrixLinker>("SparseMatrixLinker");
 	Factory::getInstance().registerClass<CopyLinker>("CopyLinker");
 	Factory::getInstance().registerClass<DotLinker>("DotLinker", QStringList() << "MatrixLinker"); // "MatrixLinker" is for backward compatibility
 	Factory::getInstance().registerClass<NormLinker>("NormLinker");
@@ -65,7 +63,6 @@ void initNNFWLib() {
 	Factory::getInstance().registerClass<StepFunction>("StepFunction");
 	Factory::getInstance().registerClass<LeakyIntegratorFunction>("LeakyIntegratorFunction");
 	Factory::getInstance().registerClass<LogLikeFunction>("LogLikeFunction");
-	Factory::getInstance().registerClass<PoolFunction>("PoolFunction");
 	Factory::getInstance().registerClass<CompositeFunction>("CompositeFunction");
 	Factory::getInstance().registerClass<LinearComboFunction>("LinearComboFunction");
 	Factory::getInstance().registerClass<GaussFunction>("GaussFunction");
@@ -73,8 +70,7 @@ void initNNFWLib() {
 	Factory::getInstance().registerClass<SawtoothFunction>("SawtoothFunction");
 	Factory::getInstance().registerClass<SinFunction>("SinFunction");
 	Factory::getInstance().registerClass<TriangleFunction>("TriangleFunction");
-	#warning THE WinnerTakeAllFunction CLASS IS IN VERSION 1.0 AND NOT IN VERSION 2.0
-// 	Factory::getInstance().registerClass<WinnerTakeAllFunction>("WinnerTakeAllFunction");
+	Factory::getInstance().registerClass<WinnerTakeAllFunction>("WinnerTakeAllFunction");
 }
 #endif
 #ifdef NNFW_WIN
@@ -94,7 +90,6 @@ BOOL WINAPI DllMain( HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpReserved ) {
 		Factory::getInstance().registerClass<FakeCluster>("FakeCluster");
 
 		// Linkers
-		Factory::getInstance().registerClass<SparseMatrixLinker>("SparseMatrixLinker");
 		Factory::getInstance().registerClass<CopyLinker>("CopyLinker");
 		Factory::getInstance().registerClass<DotLinker>("DotLinker", QStringList() << "MatrixLinker"); // "MatrixLinker" is for backward compatibility
 		Factory::getInstance().registerClass<NormLinker>("NormLinker");
@@ -111,7 +106,6 @@ BOOL WINAPI DllMain( HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpReserved ) {
 		Factory::getInstance().registerClass<StepFunction>("StepFunction");
 		Factory::getInstance().registerClass<LeakyIntegratorFunction>("LeakyIntegratorFunction");
 		Factory::getInstance().registerClass<LogLikeFunction>("LogLikeFunction");
-		Factory::getInstance().registerClass<PoolFunction>("PoolFunction");
 		Factory::getInstance().registerClass<CompositeFunction>("CompositeFunction");
 		Factory::getInstance().registerClass<LinearComboFunction>("LinearComboFunction");
 		Factory::getInstance().registerClass<GaussFunction>("GaussFunction");
@@ -148,7 +142,6 @@ void initNNFWLib() {
 	Factory::getInstance().registerClass<FakeCluster>("FakeCluster");
 
 	// Linkers
-	Factory::getInstance().registerClass<SparseMatrixLinker>("SparseMatrixLinker");
 	Factory::getInstance().registerClass<CopyLinker>("CopyLinker");
 	Factory::getInstance().registerClass<DotLinker>("DotLinker", QStringList() << "MatrixLinker"); // "MatrixLinker" is for backward compatibility
 	Factory::getInstance().registerClass<NormLinker>("NormLinker");
@@ -165,7 +158,6 @@ void initNNFWLib() {
 	Factory::getInstance().registerClass<StepFunction>("StepFunction");
 	Factory::getInstance().registerClass<LeakyIntegratorFunction>("LeakyIntegratorFunction");
 	Factory::getInstance().registerClass<LogLikeFunction>("LogLikeFunction");
-	Factory::getInstance().registerClass<PoolFunction>("PoolFunction");
 	Factory::getInstance().registerClass<CompositeFunction>("CompositeFunction");
 	Factory::getInstance().registerClass<LinearComboFunction>("LinearComboFunction");
 	Factory::getInstance().registerClass<GaussFunction>("GaussFunction");

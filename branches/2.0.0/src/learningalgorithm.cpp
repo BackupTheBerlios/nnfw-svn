@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2009 Gianluca Massera <emmegian@yahoo.it>                *
+ *  Copyright (C) 2005-2011 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -24,44 +24,42 @@ namespace nnfw {
 
 void Pattern::setInputsOf( Cluster* cl, const DoubleVector& ins ) {
 	pinfo[cl].inputs.resize( ins.size() );
-	pinfo[cl].inputs.copy( ins );
+	pinfo[cl].inputs.copyValues( ins );
 };
 
 void Pattern::setOutputsOf( Cluster* cl, const DoubleVector& ous ) {
 	pinfo[cl].outputs.resize( ous.size() );
-	pinfo[cl].outputs.copy( ous );
+	pinfo[cl].outputs.copyValues( ous );
 };
 
 void Pattern::setInputsOutputsOf( Cluster* cl, const DoubleVector& ins, const DoubleVector& ous ) {
 	pinfo[cl].inputs.resize( ins.size() );
-	pinfo[cl].inputs.copy( ins );
+	pinfo[cl].inputs.copyValues( ins );
 	pinfo[cl].outputs.resize( ous.size() );
-	pinfo[cl].outputs.copy( ous );
+	pinfo[cl].outputs.copyValues( ous );
 };
 
-const DoubleVector& Pattern::inputsOf( Cluster* cl ) const {
+DoubleVector Pattern::inputsOf( Cluster* cl ) const {
 	if ( pinfo.count(cl) != 0 ) {
 		return pinfo[cl].inputs;
 	} else {
-		return emptyVector;
+		return DoubleVector();
 	}
 };
 
-const DoubleVector& Pattern::outputsOf( Cluster* cl ) const {
+DoubleVector Pattern::outputsOf( Cluster* cl ) const {
 	if ( pinfo.count(cl) != 0 ) {
 		return pinfo[cl].outputs;
 	} else {
-		return emptyVector;
+		return DoubleVector();
 	}
 };
-
-const DoubleVector Pattern::emptyVector;
 
 Pattern::PatternInfo& Pattern::operator[]( Cluster* cl ) {
 	return pinfo[cl];
 };
 
-LearningAlgorithm::LearningAlgorithm( BaseNeuralNet* net ) {
+LearningAlgorithm::LearningAlgorithm( NeuralNet* net ) {
 	this->netp = net;
 }
 

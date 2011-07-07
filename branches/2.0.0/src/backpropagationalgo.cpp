@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2009 Gianluca Massera <emmegian@yahoo.it>                *
+ *  Copyright (C) 2005-2011 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -24,12 +24,12 @@
 
 namespace nnfw {
 
-BackPropagationAlgo::BackPropagationAlgo( BaseNeuralNet *n_n, UpdatableList up_order, double l_r )
+BackPropagationAlgo::BackPropagationAlgo( NeuralNet *n_n, UpdatableList up_order, double l_r )
 	: LearningAlgorithm(n_n), learn_rate(l_r), update_order(up_order) {
 
 	Cluster *cluster_temp;
 	// pushing the info for output cluster
-	const ClusterList& outs = n_n->outputClusters();
+	ClusterList outs = n_n->outputClusters();
 	for( int i=0; i<(int)outs.size(); i++ ) {
 		addCluster( outs[i], true );
 	}
@@ -58,16 +58,15 @@ void BackPropagationAlgo::setTeachingInput( Cluster* output, const DoubleVector&
 		return;
 	}
 	int index = mapIndex[ output ];
-	minus( cluster_deltas_vec[index].deltas_outputs, output->outputs(), ti );
+	subtract( cluster_deltas_vec[index].deltas_outputs, output->outputs(), ti );
 	return;
 }
 
-const DoubleVector BackPropagationAlgo::getError( Cluster* cl ) {
+DoubleVector BackPropagationAlgo::getError( Cluster* cl ) {
 	if ( mapIndex.count( cl ) == 0 ) {
 		qWarning() << "Cluster not present in BackPropagationAlgo";
 		return DoubleVector();
 	}
-		
 	int index = mapIndex[ cl ];
 	return cluster_deltas_vec[index].deltas_outputs;
 }
@@ -88,9 +87,9 @@ void BackPropagationAlgo::propagDeltas() {
 	for( int i=0; i<(int)cluster_deltas_vec.size(); i++ ) {
 		cluster_deltas_vec[i].incoming_linkers_vec;
 		// --- propagate DeltaOutput to DeltaInputs
-		cluster_deltas_vec[i].deltas_inputs.copy( cluster_deltas_vec[i].deltas_outputs );
+		cluster_deltas_vec[i].deltas_inputs.copyValues( cluster_deltas_vec[i].deltas_outputs );
 		Cluster* cl = cluster_deltas_vec[i].cluster;
-		OutputFunction* func = cl->function();
+		OutputFunction* func = cl->outFunction();
 		diff_vec.resize( cluster_deltas_vec[i].deltas_inputs.size() );
 		if ( func->derivate( cl->inputs(), cl->outputs(), diff_vec ) ) {
 			cluster_deltas_vec[i].deltas_inputs *= diff_vec;
@@ -120,7 +119,8 @@ void BackPropagationAlgo::learn() {
 	// --- make the learn !!
 	for ( int i=0; i<cluster_deltas_vec.size(); ++i ) {
 		if ( cluster_deltas_vec[i].cluster != NULL) {
-			amul( cluster_deltas_vec[i].cluster->biases(), learn_rate, cluster_deltas_vec[i].deltas_inputs );
+			DoubleVector minus_ones( cluster_deltas_vec[i].cluster->outputs().size( ), -1.0f );
+			deltarule( cluster_deltas_vec[i].cluster->biases(), -learn_rate, minus_ones, cluster_deltas_vec[i].deltas_inputs );
 		}
 
 		for ( int j=0;  j<cluster_deltas_vec[i].incoming_linkers_vec.size(); ++j ) {
@@ -140,8 +140,8 @@ void BackPropagationAlgo::learn() {
 					cluster_deltas_vec[i].last_deltas_inputs
 				);
 				// --- save datas for momentum on the next step
-				cluster_deltas_vec[i].incoming_last_outputs[j].copy( cluster_deltas_vec[i].incoming_linkers_vec[j]->from()->outputs() );
-				cluster_deltas_vec[i].last_deltas_inputs.copy( cluster_deltas_vec[i].deltas_inputs );
+				cluster_deltas_vec[i].incoming_last_outputs[j].copyValues( cluster_deltas_vec[i].incoming_linkers_vec[j]->from()->outputs() );
+				cluster_deltas_vec[i].last_deltas_inputs.copyValues( cluster_deltas_vec[i].deltas_inputs );
 			}
 		}
 	}
@@ -150,14 +150,14 @@ void BackPropagationAlgo::learn() {
 
 void BackPropagationAlgo::learn( const Pattern& pat ) {
 	// --- set the inputs of the net
-	const ClusterList& clins = net()->inputClusters();
+	ClusterList clins = net()->inputClusters();
 	for( int i=0; i<clins.size(); i++ ) {
-		clins[i]->inputs().copy( pat.inputsOf( clins[i] ) );
+		clins[i]->inputs().copyValues( pat.inputsOf( clins[i] ) );
 	}
 	// --- spread the net
 	net()->step();
 	// --- set the teaching input
-	const ClusterList& clout = net()->outputClusters();
+	ClusterList clout = net()->outputClusters();
 	for( int i=0; i<clout.size(); i++ ) {
 		setTeachingInput( clout[i], pat.outputsOf( clout[i] ) );
 	}
@@ -166,14 +166,14 @@ void BackPropagationAlgo::learn( const Pattern& pat ) {
 
 double BackPropagationAlgo::calculateMSE( const Pattern& pat ) {
 	// --- set the inputs of the net
-	const ClusterList& clins = net()->inputClusters();
+	ClusterList clins = net()->inputClusters();
 	for( int i=0; i<clins.size(); i++ ) {
-		clins[i]->inputs().copy( pat.inputsOf( clins[i] ) );
+		clins[i]->inputs().copyValues( pat.inputsOf( clins[i] ) );
 	}
 	// --- spread the net
 	net()->step();
 	// --- calculate the MSE
-	const ClusterList& clout = net()->outputClusters();
+	ClusterList clout = net()->outputClusters();
 	double mseacc = 0.0;
 	int dim = (int)clout.size();
 	for( int i=0; i<dim; i++ ) {

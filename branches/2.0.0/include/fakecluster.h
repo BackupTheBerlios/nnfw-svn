@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2009 Gianluca Massera <emmegian@yahoo.it>                *
+ *  Copyright (C) 2005-2011 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -51,6 +51,8 @@ public:
 	//@{
 	/*! Construct a FakeCluster */
 	FakeCluster( unsigned int size, QString name = "unnamed" );
+	/*! Construct from ConfigurationParameters */
+	FakeCluster( ConfigurationParameters& params, QString prefix );
 	/*! Destructor */
 	virtual ~FakeCluster();
 	//@}
@@ -60,18 +62,6 @@ public:
 	void update();
 	/*! Randomize ?!?! it do nothings */
 	void randomize( double min, double max );
-	#warning IMPLEMENT THESE TWO FUNCTIONS (configure AND save)
-	/**
-	 * \brief Configures the object using a ConfigurationParameters object
-	 *
-	 * \param params the configuration parameters object with parameters to
-	 *               use
-	 * \param prefix the prefix to use to access the object configuration
-	 *               parameters. This is guaranteed to end with the
-	 *               separator character when called by the factory, so you
-	 *               don't need to add one
-	 */
-	virtual void configure(const ConfigurationParameters& params, QString prefix);
 	/**
 	 * \brief Save the actual status of parameters into the ConfigurationParameters object passed
 	 *
@@ -81,7 +71,6 @@ public:
 	 */
 	virtual void save(ConfigurationParameters& params, QString prefix);
 	//@}
-
 };
 
 }

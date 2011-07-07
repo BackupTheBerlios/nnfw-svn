@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2008 Gianluca Massera <emmegian@yahoo.it>                *
+ *  Copyright (C) 2005-2011 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -46,7 +46,7 @@ public:
 	 *  \param update_order the UpdatableList for the backpropagation sequence
 	 *  \param learn_rate the double learning rate factor
 	 */
-	BackPropagationAlgo( BaseNeuralNet *n_n, UpdatableList update_order, double l_r = 0.1 );
+	BackPropagationAlgo( NeuralNet *n_n, UpdatableList update_order, double l_r = 0.1 );
 
 	//! Destructor
 	~BackPropagationAlgo( );
@@ -117,7 +117,7 @@ public:
 	 *  teaching_input ) method. If your network has more than one output layer you have to call
 	 *  setTeachingInput() for all the output clusters before calling getError() for any of the clusters.
 	 */
-	const DoubleVector getError( Cluster* );
+	DoubleVector getError( Cluster* );
 	//@}
 
 private:

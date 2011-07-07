@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2009 Gianluca Massera <emmegian@yahoo.it>                *
+ *  Copyright (C) 2005-2011 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -41,13 +41,13 @@ double GaussFunction::variance() {
 
 void GaussFunction::apply( DoubleVector& inputs, DoubleVector& outputs ) {
 	// --- out <- max * exp( (centre-inputs)^2 / -(variance^2) )
-	square( minus( outputs, centre, inputs ) );
+	square( subtract( outputs, centre, inputs ) );
 	exp( outputs /= msqrvar ) *= max;
 }
 
 bool GaussFunction::derivate( const DoubleVector& x, const DoubleVector& y, DoubleVector& d ) const {
     // --- d <- ( 2.0*(centre-x) / variance^2 ) * y
-	minus( d, centre, x ) *= 2.0;
+	subtract( d, centre, x ) *= 2.0;
 	d /= -msqrvar;
 	d *= y;
 	return true;
@@ -56,7 +56,7 @@ bool GaussFunction::derivate( const DoubleVector& x, const DoubleVector& y, Doub
 void GaussFunction::configure(ConfigurationParameters& params, QString prefix)
 {
 	centre = 0.0;
-	QString str = params.getValue(prefix + "centre").
+	QString str = params.getValue(prefix + "centre");
 	if (!str.isNull()) {
 		bool ok;
 		centre = str.toDouble(&ok);
@@ -66,7 +66,7 @@ void GaussFunction::configure(ConfigurationParameters& params, QString prefix)
 	}
 
 	variancev = 1.0;
-	QString str = params.getValue(prefix + "variance").
+	str = params.getValue(prefix + "variance");
 	if (!str.isNull()) {
 		bool ok;
 		variancev = str.toDouble(&ok);
@@ -78,7 +78,7 @@ void GaussFunction::configure(ConfigurationParameters& params, QString prefix)
 	msqrvar = -( variancev*variancev );
 
 	max = 1.0;
-	QString str = params.getValue(prefix + "max").
+	str = params.getValue(prefix + "max");
 	if (!str.isNull()) {
 		bool ok;
 		max = str.toDouble(&ok);
@@ -91,11 +91,8 @@ void GaussFunction::configure(ConfigurationParameters& params, QString prefix)
 void GaussFunction::save(ConfigurationParameters& params, QString prefix)
 {
 	params.startObjectParameters(prefix, "GaussFunction", this);
-
 	params.createParameter(prefix, "centre", QString::number(centre));
-
 	params.createParameter(prefix, "variance", QString::number(variancev));
-
 	params.createParameter(prefix, "max", QString::number(max));
 }
 

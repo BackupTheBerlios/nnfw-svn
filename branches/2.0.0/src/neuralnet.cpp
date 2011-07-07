@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2009 Gianluca Massera <emmegian@yahoo.it>                *
+ *  Copyright (C) 2005-2011 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -19,18 +19,16 @@
 
 #include "neuralnet.h"
 
-#warning THERE ARE WARNINGS HERE ABOUT RETURNING REFERENCES TO TEMPORARIES (BOTH BECAUSE LinkerList() IS RETURNED AND BECAUSE THE const VERSION OF operator[] OF QMap RETURNS A COPY INSTEAD OF A CONST REFERENCE). TALK WITH GIANLUCA ABOUT WHAT TO DO HERE.
-
 namespace nnfw {
 
-BaseNeuralNet::BaseNeuralNet() {
+NeuralNet::NeuralNet() {
 	dimUps = 0;
 }
 
-BaseNeuralNet::~BaseNeuralNet() {
+NeuralNet::~NeuralNet() {
 }
 
-void BaseNeuralNet::addCluster( Cluster* c, bool isInput, bool isOutput ) {
+void NeuralNet::addCluster( Cluster* c, bool isInput, bool isOutput ) {
 #ifdef NNFW_DEBUG
 	if ( !c ) {
 		qWarning() << "Null Pointer passed to addCluster! This operation will be ignored" ;
@@ -58,7 +56,7 @@ void BaseNeuralNet::addCluster( Cluster* c, bool isInput, bool isOutput ) {
 	return;
 }
 
-bool BaseNeuralNet::removeCluster( Cluster* c ) {
+bool NeuralNet::removeCluster( Cluster* c ) {
 #ifdef NNFW_DEBUG
 	if ( !c ) {
 		qWarning() << "Null Pointer passed to removeCluster! This operation will return false" ;
@@ -76,7 +74,7 @@ bool BaseNeuralNet::removeCluster( Cluster* c ) {
 	return true;
 }
 
-void BaseNeuralNet::markAsInput( Cluster* c ) {
+void NeuralNet::markAsInput( Cluster* c ) {
 #ifdef NNFW_DEBUG
 	if ( !c ) {
 		qWarning() << "Null Pointer passed to addCluster! This operation will be ignored" ;
@@ -94,9 +92,10 @@ void BaseNeuralNet::markAsInput( Cluster* c ) {
 		return;
 	}
 	inclusters.append( c );
+	hidclusters.removeOne( c );
 }
 
-void BaseNeuralNet::markAsOutput( Cluster* c ) {
+void NeuralNet::markAsOutput( Cluster* c ) {
 #ifdef NNFW_DEBUG
 	if ( !c ) {
 		qWarning() << "Null Pointer passed to addCluster! This operation will be ignored" ;
@@ -114,9 +113,10 @@ void BaseNeuralNet::markAsOutput( Cluster* c ) {
 		return;
 	}
 	outclusters.append( c );
+	hidclusters.removeOne( c );
 }
 
-void BaseNeuralNet::unmark( Cluster* c ) {
+void NeuralNet::unmark( Cluster* c ) {
 #ifdef NNFW_DEBUG
 	if ( !c ) {
 		qWarning() << "Null Pointer passed to addCluster! This operation will be ignored" ;
@@ -125,6 +125,9 @@ void BaseNeuralNet::unmark( Cluster* c ) {
 #endif
 	// Check if the Cluster exists
 	if ( !find( c ) ) {
+#ifdef NNFW_DEBUG
+		qWarning() << "attempt to unmark a Cluster not present in this net!" ;
+#endif
 		return;
 	}
 	inclusters.removeOne( c );
@@ -133,14 +136,14 @@ void BaseNeuralNet::unmark( Cluster* c ) {
 	return;
 }
 
-void BaseNeuralNet::unmarkAll( ) {
+void NeuralNet::unmarkAll( ) {
 	inclusters.clear();
 	outclusters.clear();
 	hidclusters = clustersv;
 	return;
 }
 
-bool BaseNeuralNet::isIsolated( Cluster* c ) const {
+bool NeuralNet::isIsolated( Cluster* c ) const {
 #ifdef NNFW_DEBUG
 	if ( !c ) {
 		qWarning() << "Null Pointer passed to isIsolato! This operation will return false" ;
@@ -150,23 +153,23 @@ bool BaseNeuralNet::isIsolated( Cluster* c ) const {
 	return ( inLinks.count( c ) == 0 && outLinks.count( c ) == 0 );
 }
 
-const ClusterList& BaseNeuralNet::clusters() const {
+ClusterList NeuralNet::clusters() const {
 	return clustersv;
 }
 
-const ClusterList& BaseNeuralNet::inputClusters() const {
+ClusterList NeuralNet::inputClusters() const {
 	return inclusters;
 }
 
-const ClusterList& BaseNeuralNet::outputClusters() const {
+ClusterList NeuralNet::outputClusters() const {
 	return outclusters;
 }
 
-const ClusterList& BaseNeuralNet::hiddenClusters() const {
+ClusterList NeuralNet::hiddenClusters() const {
 	return hidclusters;
 }
 
-void BaseNeuralNet::addLinker( Linker* l ) {
+void NeuralNet::addLinker( Linker* l ) {
 #ifdef NNFW_DEBUG
 	if ( !l ) {
 		qWarning() << "Null Pointer passed to addLinker! This operation will be ignored" ;
@@ -183,13 +186,11 @@ void BaseNeuralNet::addLinker( Linker* l ) {
 #ifdef NNFW_DEBUG
 	// --- Check: Are There in this net the Clusters that linker l connects ???
 	if ( ! find( l->from() ) ) {
-		qWarning() << "The linker that you want add links clusters that doesn't exist in this net! \
-									This operation will be ignored" ;
+		qWarning() << "The linker that you want add links clusters that doesn't exist in this net! This operation will be ignored" ;
 		return;
 	}
 	if ( ! find( l->to() ) ) {
-		qWarning() << "The linker that you want add links clusters that doesn't exist in this net! \
-									This operation will be ignored" ;
+		qWarning() << "The linker that you want add links clusters that doesn't exist in this net! This operation will be ignored" ;
 		return;
 	}
 #endif
@@ -202,7 +203,7 @@ void BaseNeuralNet::addLinker( Linker* l ) {
 	return;
 }
 
-bool BaseNeuralNet::removeLinker( Linker* l ) {
+bool NeuralNet::removeLinker( Linker* l ) {
 #ifdef NNFW_DEBUG
 	if ( !l ) {
 		qWarning() << "Null Pointer passed to removeLinker! This operation will return false" ;
@@ -219,14 +220,14 @@ bool BaseNeuralNet::removeLinker( Linker* l ) {
 	return true;
 }
 
-const LinkerList& BaseNeuralNet::linkers() const {
+LinkerList NeuralNet::linkers() const {
 	return linkersv;
 }
 
-const LinkerList& BaseNeuralNet::linkers( Cluster* c, bool out ) const {
+LinkerList NeuralNet::linkers( Cluster* c, bool out ) const {
 #ifdef NNFW_DEBUG
 	if ( !c ) {
-		qWarning() << "Null Pointer passed to linkers! This operation will return an empty LinkerGroup" ;
+		qWarning() << "Null Pointer passed to linkers! This operation will return an empty LinkerList" ;
 		return LinkerList();
 	}
 #endif
@@ -244,30 +245,40 @@ const LinkerList& BaseNeuralNet::linkers( Cluster* c, bool out ) const {
 	return LinkerList();
 }
 
-void BaseNeuralNet::setOrder( Updatable* u[], unsigned int dim ) {
+void NeuralNet::setOrder( Updatable* u[], unsigned int dim ) {
 	ups.clear();
 	for( unsigned int i = 0; i<dim; i++ ) {
 		if ( find( u[i] ) ) {
 			ups.append( u[i] );
 		}
+#ifdef NNFW_DEBUG
+		else {
+			qWarning() << "In the Updatable order list passed there are some Clusters and/or Linkers not present in this NeuralNet";
+		}
+#endif
 	}
 	dimUps = ups.size();
 	return;
 }
 
-void BaseNeuralNet::setOrder( const UpdatableList& u ) {
+void NeuralNet::setOrder( const UpdatableList& u ) {
 	ups.clear();
 	unsigned int dim = u.size();
 	for( unsigned int i = 0; i<dim; i++ ) {
 		if ( find( u[i] ) ) {
 			ups.append( u[i] );
 		}
+#ifdef NNFW_DEBUG
+		else {
+			qWarning() << "In the Updatable order list passed there are some Clusters and/or Linkers not present in this NeuralNet";
+		}
+#endif
 	}
 	dimUps = ups.size();
 	return;
 }
 
-void BaseNeuralNet::randomize( double min, double max ) {
+void NeuralNet::randomize( double min, double max ) {
 	int dim = clustersv.size();
 	for( int i=0; i<dim; i++ ) {
 		clustersv[i]->randomize( min, max );
@@ -278,32 +289,148 @@ void BaseNeuralNet::randomize( double min, double max ) {
 	}
 }
 
-Updatable* BaseNeuralNet::getByName( QString name ) {
+Updatable* NeuralNet::getByName( QString name ) {
 	if ( clsMap.contains( name ) ) {
 		return clsMap[name];
 	}
-	if ( lksMap.find( name ) != lksMap.end() ) {
+	if ( lksMap.contains( name ) ) {
 		return lksMap[name];
 	}
 #ifdef NNFW_DEBUG
-	qWarning() << "Updatable not present in BaseNeuralNet!!!";
+	qWarning() << "getByName: Updatable not present in BaseNeuralNet";
 #endif
 	return NULL;
 }
 
-bool BaseNeuralNet::find( const Cluster* cl ) const {
+bool NeuralNet::find( const Cluster* cl ) const {
 	return clustersv.contains( (Cluster*)cl );
 }
 
-bool BaseNeuralNet::find( const Linker* l ) const {
+bool NeuralNet::find( const Linker* l ) const {
 	return linkersv.contains( (Linker*)l );
 }
 
-bool BaseNeuralNet::find( const Updatable* u ) const {
+bool NeuralNet::find( const Updatable* u ) const {
 	return (
 		clustersv.contains( (Cluster*)u ) ||
 		linkersv.contains( (Linker*)u )
 	);
+}
+
+void NeuralNet::configure(ConfigurationParameters& params, QString prefix) {
+	params.startRememberingGroupObjectAssociations();
+	//--- get all subgroups, merge this list with clustersList and linkersList
+	//    and create the objects
+	QStringList subgroups = params.getGroupsList( prefix );
+	QString str = params.getValue(prefix + "clustersList");
+	if (!str.isNull()) {
+		subgroups << str.split(QRegExp("\\s+"), QString::SkipEmptyParts);
+	}
+	str = params.getValue(prefix + "linkersList");
+	if (!str.isNull()) {
+		subgroups << str.split(QRegExp("\\s+"), QString::SkipEmptyParts);
+	}
+	foreach( QString sub, subgroups ) {
+		Updatable* up = params.getObjectFromGroup<Updatable>( sub, true );
+		//--- check if is a Cluster
+		Cluster* cl = dynamic_cast<Cluster*>(up);
+		if ( cl ) {
+			addCluster( cl );
+			continue;
+		}
+		//--- check if is a Linker
+		Linker* ln = dynamic_cast<Linker*>(up);
+		if ( ln ) {
+			addLinker( ln );
+			continue;
+		}
+	}
+	//--- parse the parameter inputClusters
+	str = params.getValue(prefix + "inputClusters");
+	if (!str.isNull()) {
+		QStringList list = str.split(QRegExp("\\s+"), QString::SkipEmptyParts);
+		foreach( QString sub, list ) {
+			Cluster* cl = params.getObjectFromGroup<Cluster>( sub, true );
+			//--- don't call addCluster( cl, true ) because
+			//    if the Cluster has been added before the addCluster( cl, true ) will fails
+			//    and then the Cluster will not be marked as input
+			addCluster( cl );
+			markAsInput( cl );
+		}
+	}
+	//--- parse the parameter outputClusters
+	str = params.getValue(prefix + "outputClusters");
+	if (!str.isNull()) {
+		QStringList list = str.split(QRegExp("\\s+"), QString::SkipEmptyParts);
+		foreach( QString sub, list ) {
+			Cluster* cl = params.getObjectFromGroup<Cluster>( sub, true );
+			//--- don't call addCluster( cl, false, true ) because
+			//    if the Cluster has been added before the addCluster( cl, false, true ) will fails
+			//    and then the Cluster will not be marked as output
+			addCluster( cl );
+			markAsOutput( cl );
+		}
+	}
+	//--- parse the parameter spreadOrder
+	str = params.getValue(prefix + "spreadOrder");
+	if (!str.isNull()) {
+		QStringList list = str.split(QRegExp("\\s+"), QString::SkipEmptyParts);
+		ups.clear();
+		foreach( QString sub, list ) {
+			Updatable* up = params.getObjectFromGroup<Updatable>( sub, true );
+			if ( !find( up ) ) {
+				// automatically add it to the net
+				//--- check if is a Cluster
+				Cluster* cl = dynamic_cast<Cluster*>(up);
+				if ( cl ) addCluster( cl );
+				//--- check if is a Linker
+				Linker* ln = dynamic_cast<Linker*>(up);
+				if ( ln ) addLinker( ln );
+			}
+			ups.append( up );
+		}
+		dimUps = ups.size();
+	}
+	params.stopRememberingGroupObjectAssociations();
+}
+
+void NeuralNet::save(ConfigurationParameters& params, QString prefix) {
+	params.startObjectParameters( prefix, "NeuralNet", this );
+	//--- save all Clusters and generate parameter clustersList
+	QStringList list;
+	list.clear();
+	foreach( Cluster* cl, clustersv ) {
+		params.createGroup( cl->name() );
+		cl->save( params, cl->name() );
+		list << cl->name();
+	}
+	params.createParameter( prefix, "clustersList", list.join(" ") );
+	//--- save all Linkers and generate parameter linkersList
+	list.clear();
+	foreach( Linker* ln, linkersv ) {
+		params.createGroup( ln->name() );
+		ln->save( params, ln->name() );
+		list << ln->name();
+	}
+	params.createParameter( prefix, "linkersList", list.join(" ") );
+	//--- save parameter inputClusters
+	list.clear();
+	foreach( Cluster* cl, inclusters ) {
+		list << cl->name();
+	}
+	params.createParameter( prefix, "inputClusters", list.join(" ") );
+	//--- save parameter outputClusters
+	list.clear();
+	foreach( Cluster* cl, outclusters ) {
+		list << cl->name();
+	}
+	params.createParameter( prefix, "outputClusters", list.join(" ") );
+	//--- save parameter spreadOrder
+	list.clear();
+	foreach( Updatable* up, ups ) {
+		list << up->name();
+	}
+	params.createParameter( prefix, "spreadOrder", list.join(" ") );
 }
 
 }

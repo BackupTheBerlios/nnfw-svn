@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2009 Gianluca Massera <emmegian@yahoo.it>                *
+ *  Copyright (C) 2005-2011 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -501,7 +501,7 @@ public:
 	 */
 	virtual void apply( DoubleVector& inputs, DoubleVector& outputs );
 	/*! resize itself to fit the size of Cluster */
-	virtual void setCluster( Cluster* );
+	virtual void clusterSetted();
 	/**
 	 * \brief Configures the object using a ConfigurationParameters object
 	 *
@@ -602,18 +602,18 @@ public:
 	/*! Set the first function of CompositeFunction */
 	bool setFirstFunction( OutputFunction *f );
 	/*! Return the first function of CompositeFunction */
-	OutputFunction& getFirstFunction();
+	OutputFunction* getFirstFunction();
 	/*! Set the second function of CompositeFunction */
 	bool setSecondFunction( OutputFunction *g );
 	/*! Return the second function of CompositeFunction */
-	OutputFunction& getSecondFunction();
+	OutputFunction* getSecondFunction();
 	/*! Implement the updating method <br>
 	 * it computes: y <- second( first( input, mid ), outputs ) <br>
 	 * where mid is a private vector that traces the outputs of first function
 	 */
 	virtual void apply( DoubleVector& inputs, DoubleVector& outputs );
 	/*! recursive call setCluster on first and second function setted */
-	virtual void setCluster( Cluster* );
+	virtual void clusterSetted();
 	/**
 	 * \brief Configures the object using a ConfigurationParameters object
 	 *
@@ -642,8 +642,6 @@ private:
 	std::auto_ptr<OutputFunction> second;
 	//--- intermediate result
 	DoubleVector mid;
-	//--- Cluster
-	Cluster* cl;
 	// Copy constructor and copy operator (here to prevent usage)
 	CompositeFunction(const CompositeFunction&);
 	CompositeFunction& operator=(const CompositeFunction&);
@@ -672,7 +670,7 @@ public:
 	/*! Set the first function of LinearComboFunction */
 	bool setFirstFunction( OutputFunction *f );
 	/*! Return the first function of LinearComboFunction */
-	OutputFunction& getFirstFunction();
+	OutputFunction* getFirstFunction();
 	/*! Set the first weight of LinearComboFunction */
 	bool setFirstWeight( double v );
 	/*! Return the first weight of LinearComboFunction */
@@ -680,7 +678,7 @@ public:
 	/*! Set the second function of CompositeFunction */
 	bool setSecondFunction( OutputFunction *g );
 	/*! Return the second function of CompositeFunction */
-	OutputFunction& getSecondFunction();
+	OutputFunction* getSecondFunction();
 	/*! Set the second weight of LinearComboFunction */
 	bool setSecondWeight( double v );
 	/*! Return the second weight of LinearComboFunction */
@@ -690,7 +688,7 @@ public:
 	 */
 	virtual void apply( DoubleVector& inputs, DoubleVector& outputs );
 	/*! recursive call setCluster on first and second function setted */
-	virtual void setCluster( Cluster* );
+	virtual void clusterSetted();
 	/**
 	 * \brief Configures the object using a ConfigurationParameters object
 	 *
@@ -721,8 +719,6 @@ private:
 	DoubleVector mid;
 	//--- weights
 	double w1, w2;
-	//--- Cluster
-	Cluster* cl;
 	// Copy constructor and copy operator (here to prevent usage)
 	LinearComboFunction(const LinearComboFunction&);
 	LinearComboFunction& operator=(const LinearComboFunction&);

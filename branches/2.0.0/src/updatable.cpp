@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2009 Gianluca Massera <emmegian@yahoo.it>                *
+ *  Copyright (C) 2005-2011 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -21,8 +21,11 @@
 
 namespace nnfw {
 
-Updatable::Updatable( QString name ) :
-	ParameterSettableInConstructor(ConfigurationParameters(), "")
+#warning Ho Dovuto mettere una variabile statica relativo ad un configurationParameters vuoto perché il construttore non mi accetta ParameterSettableInConstructor(ConfigurationParameters(), "") e da errore
+static ConfigurationParameters dummyParams;
+Updatable::Updatable( QString name )
+//	: ParameterSettableInConstructor(ConfigurationParameters(), QString(""))
+	: ParameterSettableInConstructor(dummyParams, "")
 {
 	setName( name );
 }
@@ -30,7 +33,7 @@ Updatable::Updatable( QString name ) :
 Updatable::Updatable( ConfigurationParameters& params, QString prefix ) :
 	ParameterSettableInConstructor(params, prefix)
 {
-	setName( params.getValue(prefix + "name") );
+	setName( prefix );
 }
 
 Updatable::~Updatable() {
@@ -47,9 +50,6 @@ QString Updatable::name() const {
 void Updatable::save(ConfigurationParameters& params, QString prefix)
 {
 	params.startObjectParameters(prefix, "Updatable", this);
-
-	params.createParameter(prefix, "name", name);
 }
-
 
 }

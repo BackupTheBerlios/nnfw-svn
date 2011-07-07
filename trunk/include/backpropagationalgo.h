@@ -124,6 +124,11 @@ public:
 	const RealVec& getError( Cluster* );
 	//@}
 
+	void zeroingDeltas();
+	void applyDeltas();
+	// --- propagate delta through the net
+	void propagDeltas();
+
 private:
 	//! The Real learning rate factor
 	Real learn_rate;
@@ -154,8 +159,6 @@ private:
 	std::map<Cluster*, int> mapIndex;
 	//! The VectorData of struct of Clusters and Deltas
 	VectorData<cluster_deltas> cluster_deltas_vec;
-	// --- propagate delta through the net
-	void propagDeltas();
 	// --- add a Cluster into the structures above
 	void addCluster( Cluster*, bool );
 	// --- add a Linker into the structures above

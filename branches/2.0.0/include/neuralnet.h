@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2009 Gianluca Massera <emmegian@yahoo.it>                *
+ *  Copyright (C) 2005-2011 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -32,20 +32,188 @@
 
 namespace nnfw {
 
-/*! \brief The Base Neural Network Class
+/*! \brief The Neural Network Class
  *
- * The BaseNeuralNetwork class can seen as a simple container of Clusters and Linkers<br>
- * The relationship among Clusters and Linkers must be specified by cluster and linker constructors; 
+ * The NeuralNet class can seen as a simple container of Clusters and Linkers<br>
+ * The relationship among Clusters and Linkers must be specified by cluster and linker constructors;
+ * 
+ * When the NeuralNet is configured from a file, it is configured in the following way:
+ *  - the parameters for configuring a NeuralNet are: inputClusters, outputClusters, spreadOrder, clustersList, linkersList;
+ *    all parameters consist in a list of the group name where is present the corresponding object configuration
+ *  - the only mandatory parameter is spreadOrder
+ *  - inputClusters is the list of all Clusters considered the input layer of the NeuralNet
+ *  - outputClusters is the list of all Clusters considered the output layer of the NeuralNet
+ *  - clustersList and LinkersList are the full list of all Clusters and Linkers to put into the network;
+ *    in some cases, these parameters are redundant, because if a Cluster or a Linker is specified into spreadOrder
+ *    then it will be automatically put into to the NeuralNet
+ *  - all sub-groups of the group containing the parameters of NeuralNet are considered object to be created and
+ *    to be put into the NeuralNet
+ * 
+ * Some examples of configuration files using the INI format.
+ * The first example shows how to create a NeuralNet with two Cluster as input and one Cluster as output connected by two linkers. This example uses all parameters even if some are redundant
+ * \code
+ * inputClusters = input1 input2
+ * outputClusters = output1
+ * spreadOrder = input1 input2 linker1 linker2 output1
+ * clustersList = input1 input2 output1
+ * linkersList = linker1 linker2
+ * 
+ * [input1]
+ * type = FakeCluster
+ * 
+ * [input2]
+ * type = SimpleCluster
+ * [input2/OutFunction]
+ * type = StepFunction
+ * min = -1.0
+ * max = +1.0
+ * threshold = 0.5
+ * 
+ * [output1]
+ * type = BiasedCluster
+ * [output1/OutFunction]
+ * type = SigmoidFunction
+ * lambda = 0.5
+ * 
+ * [linker1]
+ * type = DotLinker
+ * from = input1
+ * to = output1
+ * 
+ * [linker2]
+ * type = DotLinker
+ * from = input2
+ * to = output1
+ * \endcode
  *
+ * The same NeuralNet can be configured without specifing clustersList and linkersList with the following file INI:
+ * \code
+ * inputClusters = input1 input2
+ * outputClusters = output1
+ * spreadOrder = input1 input2 linker1 linker2 output1
+ * 
+ * [input1]
+ * type = FakeCluster
+ * 
+ * [input2]
+ * type = SimpleCluster
+ * [input2/OutFunction]
+ * type = StepFunction
+ * min = -1.0
+ * max = +1.0
+ * threshold = 0.5
+ * 
+ * [output1]
+ * type = BiasedCluster
+ * [output1/OutFunction]
+ * type = SigmoidFunction
+ * lambda = 0.5
+ * 
+ * [linker1]
+ * type = DotLinker
+ * from = input1
+ * to = output1
+ * 
+ * [linker2]
+ * type = DotLinker
+ * from = input2
+ * to = output1
+ * \endcode
+ * 
+ * Let's suppose that you want to change the NeuralNet of the example above removing input1 as input Cluster of the NeuralNet
+ * then the two following configurations results in the same NeuralNet:
+ * \code
+ * inputClusters = input2
+ * outputClusters = output1
+ * spreadOrder = input1 input2 linker1 linker2 output1
+ * 
+ * ...
+ * \endcode
+ * \code
+ * inputClusters = input2
+ * outputClusters = output1
+ * spreadOrder = input2 linker1 linker2 output1
+ * 
+ * ...
+ * \endcode
+ * Because even if in the last example the input1 is not specified in any of the NeuralNet parameters,
+ * it will be created because [input1] is a subgroup of the main group where the NeuralNet parameters are present
+ * 
+ * To understand better this situation, let's put all NeuralNet parameters into a group called [Net1], the above example
+ * will appear in this way:
+ * \code
+ * [Net1]
+ * inputClusters = input2
+ * outputClusters = output1
+ * spreadOrder = input2 linker1 linker2 output1
+ * 
+ * [input1]
+ * type = FakeCluster
+ * 
+ * [input2]
+ * type = SimpleCluster
+ * [input2/OutFunction]
+ * type = StepFunction
+ * min = -1.0
+ * max = +1.0
+ * threshold = 0.5
+ * 
+ * [output1]
+ * type = BiasedCluster
+ * [output1/OutFunction]
+ * type = SigmoidFunction
+ * lambda = 0.5
+ * 
+ * [linker1]
+ * type = DotLinker
+ * from = input1
+ * to = output1
+ * 
+ * [linker2]
+ * type = DotLinker
+ * from = input2
+ * to = output1
+ * \endcode
+ * 
+ * Now the input1 will be not automatically added to the NeuralNet because the group [input1] is not anymore a subgroup of
+ * the group ([Net1]) where the NeuralNet parameters are present.
+ * In this case, if you want that also [input1] will be put into the NeuralNet you have two options:
+ *  - change the group of [input1] to [Net1/input1]; but this also means that the corresponding Cluster will
+ *    be named "Net1/input1" instead of "input1"
+ *  - add a clustersList parameter where you declare the complete list of Clusters including input1; in this way
+ *    the name of the Cluster will remain "input1"
+ * The two alternatives appear in the following way:
+ * \code
+ * [Net1]
+ * inputClusters = input2
+ * outputClusters = output1
+ * spreadOrder = input2 linker1 linker2 output1
+ * 
+ * [Net1/input1]
+ * type = FakeCluster
+ * ...
+ * \endcode
+ * \code
+ * [Net1]
+ * inputClusters = input2
+ * outputClusters = output1
+ * spreadOrder = input2 linker1 linker2 output1
+ * clustersList = input1 input2 output1
+ * 
+ * [input1]
+ * type = FakeCluster
+ * ...
+ * \endcode
+ * 
  */
-class NNFW_API BaseNeuralNet : public ParameterSettableWithConfigureFunction {
+class NNFW_API NeuralNet : public ParameterSettableWithConfigureFunction {
 public:
 	/*! \name Constructors */
 	//@{
 	/*! Construct an empty neural network */
-	BaseNeuralNet();
+	NeuralNet();
 	/*! Destructor */
-	~BaseNeuralNet();
+	~NeuralNet();
 	//@}
 	/*! \name Interface */
 	//@{
@@ -77,27 +245,27 @@ public:
 	/*! Return true if there isn't any Linker connected with Cluster c */
 	bool isIsolated( Cluster* c ) const;
 	/*! Returns the vector of Clusters contained */
-	const ClusterList& clusters() const;
+	ClusterList clusters() const;
 	/*! Returns the vector of Input Clusters contained */
-	const ClusterList& inputClusters() const;
+	ClusterList inputClusters() const;
 	/*! Returns the vector of Output Clusters contained */
-	const ClusterList& outputClusters() const;
+	ClusterList outputClusters() const;
 	/*! Returns the vector of Hidden Clusters contained (i.e. UnMarked Clusters) */
-	const ClusterList& hiddenClusters() const;
+	ClusterList hiddenClusters() const;
 	/*! Add Linker */
 	void addLinker( Linker* l );
 	/*! Remove Linker */
 	bool removeLinker( Linker* );
 	/*! Returns the array of Linkers contained */
-	const LinkerList& linkers() const;
+	LinkerList linkers() const;
 	/*! If out is true, return the Linkers outgoing from Cluster c, otherwise return incoming Linkers */
-	const LinkerList& linkers( Cluster* c, bool out = false ) const;
+	LinkerList linkers( Cluster* c, bool out = false ) const;
 	/*! Set the order */
 	void setOrder( Updatable* updatables[], unsigned int dim );
 	/*! Set the order */
 	void setOrder( const UpdatableList& );
 	/*! Return the order */
-	const UpdatableList& order() const {
+	UpdatableList order() const {
 		return ups;
 	};
 	/*! Step */
@@ -150,7 +318,6 @@ public:
 	/*! Return true if the Updatable object is in this net
 	 */
 	bool find( const Updatable* ) const;
-	#warning IMPLEMENT THESE TWO FUNCTIONS (configure AND save)
 	/**
 	 * \brief Configures the object using a ConfigurationParameters object
 	 *
@@ -194,15 +361,12 @@ protected:
 	LinkVecMap outLinks;
 
 	typedef QMap<QString, Linker*> LinkersMap;
-	/*! map name -> Cluster* */
+	/*! map name -> Linker* */
 	LinkersMap lksMap;
 
 	/*! Array of Updateables ordered as specified */
 	UpdatableList ups;
 	unsigned int dimUps;
-
-	/*! An empty linker list to be returned as a const reference in case */
-	static const LinkerList emptyLinkerList;
 };
 
 }

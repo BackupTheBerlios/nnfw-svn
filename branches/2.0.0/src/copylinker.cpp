@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2009 Gianluca Massera <emmegian@yahoo.it>                *
+ *  Copyright (C) 2005-2011 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -28,6 +28,27 @@ CopyLinker::CopyLinker( Cluster* from, Cluster* to, CopyMode mode, QString name 
 	// initialization may results in unpredictable behaviour
 	this->mode = (CopyMode)-1;
 	setMode( mode );
+}
+
+CopyLinker::CopyLinker( ConfigurationParameters& params, QString prefix )
+	: Linker( params, prefix ), dataFrom(), dataTo() {
+	dimData = qMin( to()->numNeurons(), from()->numNeurons() );
+	this->mode = (CopyMode)-1;
+	//--- default initialisation, in the case the user forget to set the parameter
+	setMode( Out2In );
+	QString str = params.getValue(prefix + "mode");
+	if ( !str.isNull() ) {
+		str = str.toLower();
+		if ( str == "in2in" ) {
+			setMode( In2In );
+		} else if ( str == "in2ou" ) {
+			setMode( In2Out );
+		} else if ( str == "out2in" ) {
+			setMode( Out2In );
+		} else if ( str == "out2out" ) {
+			setMode( Out2Out );
+		}
+	}
 }
 
 CopyLinker::~CopyLinker() {
@@ -75,6 +96,25 @@ void CopyLinker::update() {
 
 unsigned int CopyLinker::size() const {
     return dimData;
+}
+
+void CopyLinker::save(ConfigurationParameters& params, QString prefix) {
+	Linker::save( params, prefix );
+	params.startObjectParameters( prefix, "CopyLinker", this );
+	switch( mode ) {
+	case In2In:
+		params.createParameter( prefix, "mode", "In2In" );
+		break;
+	case In2Out:
+		params.createParameter( prefix, "mode", "In2Out" );
+		break;
+	case Out2In:
+		params.createParameter( prefix, "mode", "Out2In" );
+		break;
+	case Out2Out:
+		params.createParameter( prefix, "mode", "Out2Out" );
+		break;
+	}
 }
 
 }

@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2009 Gianluca Massera <emmegian@yahoo.it>                *
+ *  Copyright (C) 2005-2011 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -28,18 +28,7 @@
 #include "types.h"
 #include "cluster.h"
 #include "updatable.h"
-
-PROBLEMI:
-	- La classe Linker non permette di specificare i Cluster from e to dopo
-	  la creazione, ma la factory si aspetta di usare la funzione configure
-	  di ParameterSettable dopo la creazione dell'oggetto (che deve avere un
-	  costruttore che non prende parametri)
-	- Anche se si risolvesse il problema di sopra, come fa un Linker ad
-	  ottenere i puntatori ai cluster from e to dai loro nomi (che ricava
-	  dai parametri settati)? È lecito lasciare questa cosa alla classe
-	  BaseNeuralNet? (Credo di sì, con i parametri un linker costruisce se
-	  stesso, poi la rete che lo contiene si preoccupa di connetterlo a
-	  dovere)
+#include <exception>
 
 namespace nnfw {
 
@@ -52,6 +41,18 @@ public:
 	//@{
 	/*! Construct */
 	Linker( Cluster* from, Cluster* to, QString name = "unnamed" );
+	/*! Constructor */
+	Linker( ConfigurationParameters& params, QString prefix );
+	//@}
+	/*! \name Exceptions throw by Linker */
+	//@{
+	/*! Thrown when a user attempt to create a Linker without specify the "from" or "to" */
+	class NNFW_API ClusterFromOrToMissing : public std::exception {
+	public:
+		virtual const char* what() const throw() {
+			return "The Cluster 'from' or 'to' is missing - Check your configuration file\n";
+		};
+	};
 	//@}
 	/*! \name Interface */
 	//@{
@@ -71,6 +72,15 @@ public:
 	 * The parameters randomized by this method will be specified by sub-classes
 	 */
 	virtual void randomize( double min, double max ) = 0;
+	/**
+	 * \brief Save the actual status of parameters into the ConfigurationParameters object passed
+	 *
+	 * This saves the name property, remember to call this in child classes
+	 * \param params the configuration parameters object on which save actual parameters
+	 * \param prefix the prefix to use to access the object configuration
+	 *               parameters.
+	 */
+	virtual void save(ConfigurationParameters& params, QString prefix);
 	//@}
 private:
 	/*! incoming Cluster */

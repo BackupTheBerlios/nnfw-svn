@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Neural Network Framework.                                                   *
- *  Copyright (C) 2005-2009 Gianluca Massera <emmegian@yahoo.it>                *
+ *  Copyright (C) 2005-2011 Gianluca Massera <emmegian@yahoo.it>                *
  *                                                                              *
  *  This program is free software; you can redistribute it and/or modify        *
  *  it under the terms of the GNU General Public License as published by        *
@@ -50,7 +50,7 @@ namespace nnfw {
  * // create a SimpleCluster, a specialized subclass of Cluster
  * SimpleCluster* simple = new SimpleCluster( 10 ); // this cluster contains 10 neurons
  * // set the SigmoidUpdater for all neurons
- * simple->setUpdater( SigmoidUpdater( 1.0 ) );
+ * simple->setUpdater( new SigmoidUpdater( 1.0 ) );
  *    \endcode
  *  \par Warnings
  *    <b>For whose want to implement a subclass of Cluster: </b>
@@ -61,7 +61,7 @@ namespace nnfw {
  *    \code
  * RealVec& in = cluster->inputs();
  * in[2] = 3.0;   // This statement will be changes the inputs of third neuron.
- * // the above statements must be equivalent with the following
+ * // the above statement is equivalent with the following
  * cluster->setInput( 2, 3.0 );
  *    \endcode
  *    The reasons behind this kind of behaviour its the efficiency!! When another class must do heavy calculation
@@ -112,44 +112,44 @@ public:
 	/*! Set the input of neuron
 	 * Details...
 	 */
-	virtual void setInput( unsigned int neuron, double value );
+	void setInput( unsigned int neuron, double value );
 	/*! Set the inputs from the vector given */
-	virtual void setInputs( const DoubleVector& inputs );
+	void setInputs( const DoubleVector& inputs );
 	/*! Set all the inputs with the same value
 	 * Details...
 	 */
-	virtual void setAllInputs( double value );
-	/*! Reset the inputs of this cluster, typically this means that the inputs will be set to zero.
+	void setAllInputs( double value );
+	/*! Reset the inputs of this cluster; the inputs will be set to zero.
 	 * Details...
 	 */
-	virtual void resetInputs();
+	void resetInputs();
 	/*! Get the input of neuron
 	 */
-	virtual double getInput( unsigned int neuron ) const;
+	double getInput( unsigned int neuron ) const;
 	/*! Get the array of inputs */
 	DoubleVector& inputs() {
-		return inputdata;
+		return inputdataref;
 	};
 	/*! Get the array of inputs */
-	const DoubleVector& inputs() const {
-		return inputdata;
+	DoubleVector inputs() const {
+		return inputdataref;
 	};
 	//@}
 	/*! \name Operations on Output's vector */
 	//@{
 	/*! Force the output of the neuron at value specified */
-	virtual void setOutput( unsigned int neuron, double value );
+	void setOutput( unsigned int neuron, double value );
 	/*! Set the outputs from the vector given */
-	virtual void setOutputs( const DoubleVector& outputs );
+	void setOutputs( const DoubleVector& outputs );
 	/*! Get the output of neuron */
-	virtual double getOutput( unsigned int neuron ) const;
+	double getOutput( unsigned int neuron ) const;
 	/*! Get the array of outputs */
 	DoubleVector& outputs() {
-		return outputdata;
+		return outputdataref;
 	};
 	/*! Get the array of outputs */
-	const DoubleVector& outputs() const {
-		return outputdata;
+	DoubleVector outputs() const {
+		return outputdataref;
 	};
 	//@}
 	/*! \name Operations on OutputFunction */
@@ -158,10 +158,10 @@ public:
 	 *  This method create an internal copy of the OutputFunction passed <br>
 	 *  \warning This function delete the previous updater class registered !!! <br>
 	 */
-	void setFunction( OutputFunction* up );
+	void setOutFunction( OutputFunction* up );
 	/*! Get the Output function */
-	OutputFunction* function() const {
-		return updater;
+	OutputFunction* outFunction() const {
+		return updater.get();
 	};
 	//@}
 	/*! \name Saving functions */
@@ -184,12 +184,23 @@ protected:
 	void setNeedReset( bool b ) {
 		needRst = accOff && b;
 	};
+private:
 	/*! Number of neurons */
 	unsigned int numneurons;
 	/*! Input of neurons */
 	DoubleVector inputdata;
 	/*! Output of neurons */
 	DoubleVector outputdata;
+protected:
+	/*! Reference to the input data
+	 *  This can be changed by subclasses (see FakeCluster for an example)
+	 */
+	DoubleVector& inputdataref;
+	/*! Reference to the output data
+	 *  This can be changed by subclasses (see FakeCluster for an example)
+	 */
+	DoubleVector& outputdataref;
+private:
 	/*! OutputFunction Object */
 	std::auto_ptr<OutputFunction> updater;
 	/*! True if the inputs needs a reset */
@@ -203,4 +214,3 @@ protected:
 }
 
 #endif
-
