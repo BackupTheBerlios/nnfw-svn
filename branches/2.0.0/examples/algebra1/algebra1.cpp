@@ -1,6 +1,6 @@
 
-#include "nnfw/nnfw.h"
-#include "nnfw/types.h"
+#include "nnfw.h"
+#include "types.h"
 #include "simpletimer.h"
 using namespace nnfw;
 
@@ -18,8 +18,6 @@ int main( int , char** ) {
 	a[3] = 7;
 	a[4] = 9;
 	DoubleVector b = a;
-	b.detach();
-	a.detach();
 	a.steady(1);
 	DoubleVector c = a+b+a*a+a;
 	a += b+a*a+a;

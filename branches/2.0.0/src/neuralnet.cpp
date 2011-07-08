@@ -186,11 +186,11 @@ void NeuralNet::addLinker( Linker* l ) {
 #ifdef NNFW_DEBUG
 	// --- Check: Are There in this net the Clusters that linker l connects ???
 	if ( ! find( l->from() ) ) {
-		qWarning() << "The linker that you want add links clusters that doesn't exist in this net! This operation will be ignored" ;
+		qWarning() << "The linker that you want add links cluster" << l->from()->name() << "that doesn't exist in this net! This operation will be ignored" ;
 		return;
 	}
 	if ( ! find( l->to() ) ) {
-		qWarning() << "The linker that you want add links clusters that doesn't exist in this net! This operation will be ignored" ;
+		qWarning() << "The linker that you want add links cluster" << l->to()->name() << "that doesn't exist in this net! This operation will be ignored" ;
 		return;
 	}
 #endif
@@ -319,8 +319,13 @@ bool NeuralNet::find( const Updatable* u ) const {
 
 void NeuralNet::configure(ConfigurationParameters& params, QString prefix) {
 	params.startRememberingGroupObjectAssociations();
+	// All Cluster has to be added before the creation of linkers, that's why the insertion is done after
+	ClusterList clsToAdd;
+	ClusterList clsInput;
+	ClusterList clsOutput;
+	LinkerList lnsToAdd;
+
 	//--- get all subgroups, merge this list with clustersList and linkersList
-	//    and create the objects
 	QStringList subgroups = params.getGroupsList( prefix );
 	QString str = params.getValue(prefix + "clustersList");
 	if (!str.isNull()) {
@@ -331,19 +336,13 @@ void NeuralNet::configure(ConfigurationParameters& params, QString prefix) {
 		subgroups << str.split(QRegExp("\\s+"), QString::SkipEmptyParts);
 	}
 	foreach( QString sub, subgroups ) {
-		Updatable* up = params.getObjectFromGroup<Updatable>( sub, true );
+		Updatable* up = params.getObjectFromGroup<Updatable>( prefix + sub, true );
 		//--- check if is a Cluster
 		Cluster* cl = dynamic_cast<Cluster*>(up);
-		if ( cl ) {
-			addCluster( cl );
-			continue;
-		}
+		if ( cl ) clsToAdd << cl;
 		//--- check if is a Linker
 		Linker* ln = dynamic_cast<Linker*>(up);
-		if ( ln ) {
-			addLinker( ln );
-			continue;
-		}
+		if ( ln ) lnsToAdd << ln;
 	}
 	//--- parse the parameter inputClusters
 	str = params.getValue(prefix + "inputClusters");
@@ -351,11 +350,8 @@ void NeuralNet::configure(ConfigurationParameters& params, QString prefix) {
 		QStringList list = str.split(QRegExp("\\s+"), QString::SkipEmptyParts);
 		foreach( QString sub, list ) {
 			Cluster* cl = params.getObjectFromGroup<Cluster>( sub, true );
-			//--- don't call addCluster( cl, true ) because
-			//    if the Cluster has been added before the addCluster( cl, true ) will fails
-			//    and then the Cluster will not be marked as input
-			addCluster( cl );
-			markAsInput( cl );
+			if ( !clsToAdd.contains( cl ) ) clsToAdd << cl;
+			clsInput << cl;
 		}
 	}
 	//--- parse the parameter outputClusters
@@ -364,11 +360,8 @@ void NeuralNet::configure(ConfigurationParameters& params, QString prefix) {
 		QStringList list = str.split(QRegExp("\\s+"), QString::SkipEmptyParts);
 		foreach( QString sub, list ) {
 			Cluster* cl = params.getObjectFromGroup<Cluster>( sub, true );
-			//--- don't call addCluster( cl, false, true ) because
-			//    if the Cluster has been added before the addCluster( cl, false, true ) will fails
-			//    and then the Cluster will not be marked as output
-			addCluster( cl );
-			markAsOutput( cl );
+			if ( !clsToAdd.contains( cl ) ) clsToAdd << cl;
+			clsOutput << cl;
 		}
 	}
 	//--- parse the parameter spreadOrder
@@ -378,18 +371,30 @@ void NeuralNet::configure(ConfigurationParameters& params, QString prefix) {
 		ups.clear();
 		foreach( QString sub, list ) {
 			Updatable* up = params.getObjectFromGroup<Updatable>( sub, true );
+			//--- check if it is already added by parameters parsed before
 			if ( !find( up ) ) {
-				// automatically add it to the net
-				//--- check if is a Cluster
+				// add it to the list of objects to add
 				Cluster* cl = dynamic_cast<Cluster*>(up);
-				if ( cl ) addCluster( cl );
+				if ( cl && !clsToAdd.contains( cl ) ) clsToAdd << cl;
 				//--- check if is a Linker
 				Linker* ln = dynamic_cast<Linker*>(up);
-				if ( ln ) addLinker( ln );
+				if ( ln && !lnsToAdd.contains( ln ) ) lnsToAdd << ln;
 			}
 			ups.append( up );
 		}
 		dimUps = ups.size();
+	}
+	foreach( Cluster* cl, clsToAdd ) {
+		addCluster( cl );
+	}
+	foreach( Cluster* cl, clsInput ) {
+		markAsInput( cl );
+	}
+	foreach( Cluster* cl, clsOutput ) {
+		markAsOutput( cl );
+	}
+	foreach( Linker* ln, lnsToAdd ) {
+		addLinker( ln );
 	}
 	params.stopRememberingGroupObjectAssociations();
 }

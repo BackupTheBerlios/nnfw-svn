@@ -21,11 +21,8 @@
 
 namespace nnfw {
 
-#warning Ho Dovuto mettere una variabile statica relativo ad un configurationParameters vuoto perché il construttore non mi accetta ParameterSettableInConstructor(ConfigurationParameters(), "") e da errore
-static ConfigurationParameters dummyParams;
 Updatable::Updatable( QString name )
-//	: ParameterSettableInConstructor(ConfigurationParameters(), QString(""))
-	: ParameterSettableInConstructor(dummyParams, "")
+	: ParameterSettableInConstructor()
 {
 	setName( name );
 }
@@ -33,7 +30,16 @@ Updatable::Updatable( QString name )
 Updatable::Updatable( ConfigurationParameters& params, QString prefix ) :
 	ParameterSettableInConstructor(params, prefix)
 {
-	setName( prefix );
+	QString upname = prefix;
+	// remove from the name the GroupSeparator at the start and at the end
+	// because they create problem when referencing the object using NeuralNet::byName
+	if ( upname.startsWith( ConfigurationParameters::GroupSeparator ) ) {
+		upname.remove( 0, 1 );
+	}
+	if ( upname.endsWith( ConfigurationParameters::GroupSeparator ) ) {
+		upname.chop( 1 );
+	}
+	setName( upname );
 }
 
 Updatable::~Updatable() {

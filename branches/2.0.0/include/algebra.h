@@ -170,6 +170,18 @@ inline DoubleVector& subtract( DoubleVector& r, const DoubleVector& x, const Dou
 	}
 	return r;
 };
+/*! subtraction with alread allocated destination vector: r = a - x */
+inline DoubleVector& subtract( DoubleVector& r, double a, const DoubleVector& x ) {
+#ifdef NNFW_DEBUG
+	if ( r.size() != x.size() ) {
+		throw DoubleVector::IncompatibleVectors("Incompatibles DoubleVectors in subtract operation (dimensions must be equals");
+	}
+#endif
+	for( unsigned int i=0; i<r.size(); i++ ) {
+		r[i] = a-x[i];
+	}
+	return r;
+};
 /*! multiplication with alread allocated destination vector: r = a * x */
 inline DoubleVector& mul( DoubleVector& r, double a, const DoubleVector& x ) {
 #ifdef NNFW_DEBUG

@@ -128,11 +128,11 @@ public:
 	double getInput( unsigned int neuron ) const;
 	/*! Get the array of inputs */
 	DoubleVector& inputs() {
-		return inputdataref;
+		return *inputdataptr;
 	};
 	/*! Get the array of inputs */
 	DoubleVector inputs() const {
-		return inputdataref;
+		return *inputdataptr;
 	};
 	//@}
 	/*! \name Operations on Output's vector */
@@ -145,11 +145,11 @@ public:
 	double getOutput( unsigned int neuron ) const;
 	/*! Get the array of outputs */
 	DoubleVector& outputs() {
-		return outputdataref;
+		return *outputdataptr;
 	};
 	/*! Get the array of outputs */
 	DoubleVector outputs() const {
-		return outputdataref;
+		return *outputdataptr;
 	};
 	//@}
 	/*! \name Operations on OutputFunction */
@@ -184,6 +184,10 @@ protected:
 	void setNeedReset( bool b ) {
 		needRst = accOff && b;
 	};
+	/*! Pointer to data Input */
+	DoubleVector* inputdataptr;
+	/*! Pointer to data Output */
+	DoubleVector* outputdataptr;
 private:
 	/*! Number of neurons */
 	unsigned int numneurons;
@@ -191,16 +195,6 @@ private:
 	DoubleVector inputdata;
 	/*! Output of neurons */
 	DoubleVector outputdata;
-protected:
-	/*! Reference to the input data
-	 *  This can be changed by subclasses (see FakeCluster for an example)
-	 */
-	DoubleVector& inputdataref;
-	/*! Reference to the output data
-	 *  This can be changed by subclasses (see FakeCluster for an example)
-	 */
-	DoubleVector& outputdataref;
-private:
 	/*! OutputFunction Object */
 	std::auto_ptr<OutputFunction> updater;
 	/*! True if the inputs needs a reset */

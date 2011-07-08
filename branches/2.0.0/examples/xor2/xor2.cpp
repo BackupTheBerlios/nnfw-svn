@@ -5,6 +5,7 @@
 #include "liboutputfunctions.h"
 #include "backpropagationalgo.h"
 #include "randomgenerator.h"
+#include "configuration/configurationparameters.h"
 
 using namespace nnfw;
 
@@ -16,39 +17,25 @@ NeuralNet* net;
 int main( int , char** ) {
 	globalRNG->setSeed( time(0) );
 
-	net = new NeuralNet();
-
-	// --- Create the Layers of network
-	in = new BiasedCluster( 2 );
-	in->setOutFunction( new SigmoidFunction( 1.0f ) );
-	hid = new BiasedCluster( 4 );
-	hid->setOutFunction( new SigmoidFunction( 1.0f ) );
-	out = new BiasedCluster( 1 );
-	out->setOutFunction( new SigmoidFunction( 1.0f ) );
-
-	// --- Create the Matrix connection among layers
-	l1 = new DotLinker( in, hid );
-	l1->connectRandom( 0.7 );
-	l2 = new DotLinker( hid, out );
-	l2->connectRandom( 0.7 );
-
-	// --- Add all in the BaseNeuralNet class
-	net->addCluster( in, true );
-	net->addCluster( hid );
-	net->addCluster( out, false, true );
-	net->addLinker( l1 );
-	net->addLinker( l2 );
-	// --- Specify the order on which layers and matrix weight will be updated
-	UpdatableList ord;
-	net->setOrder( ord << in << l1 << hid << l2 << out );
+	ConfigurationParameters params(false);
+	params.loadParameters( "net.ini" );
+	net = params.getObjectFromGroup<NeuralNet>( "NET" );
 
 	// --- Randomize the parameters of network (biases of neuron's layers and weight of matrix linkers)
 	net->randomize( -1.0, 1.0 );
 
 	UpdatableList bp_ord;
-	bp_ord << out << l2 << hid << l1 << in;
+	for( int i=0; i<net->order().size(); i++ ) {
+		bp_ord.prepend( net->order()[i] );
+	}
 	BackPropagationAlgo* bp = new BackPropagationAlgo( net, bp_ord, 0.2 );
 
+	net->byName( "input", in );
+	net->byName( "hidden", hid );
+	net->byName( "output", out );
+	net->byName( "NET/linker1", l1 );
+	net->byName( "NET/linker2", l2 );
+	
 	// --- The learning Set
 	PatternSet learningSet(4);
 	// --- Input <0,0> -> Output <0>
@@ -66,7 +53,7 @@ int main( int , char** ) {
 
 	// --- Main loop for learning the network
 	int i;
-	for( i = 0; i<50000; i++ ) {
+	for( i = 0; i<5000; i++ ) {
 		bp->learnOnSet( learningSet );
 		// --- each 1000 iteration print out the error
 		if ( i%1000 == 0 ) {
@@ -80,30 +67,12 @@ int main( int , char** ) {
 		net->step();
 		double out1 = out->getOutput(0);
 		double out2 = learningSet[i].outputsOf( out )[0];
-		qDebug() << "Target: " << out2 << "\tRete: " << out1;
+		qDebug() << "Inputs: " << in->inputs()[0] << in->inputs()[1] << "Target: " << out2 << "\tRete: " << out1;
 	}
 
-	// Print out Weights
-	for( int i=0; i<(int)l1->rows(); i++ ) {
-		for( int j=0; j<(int)l1->cols(); j++ ) {
-			double w = l1->weight( i, j );
-			if ( w==0 && l1->matrix().isSteady(i,j) ) {
-				qDebug() << "FALSE, ";
-			} else {
-				qDebug() << w << ", ";
-			}
-		}
-	}
-	qDebug() << "-----------";
-	for( int i=0; i<(int)l2->rows(); i++ ) {
-		for( int j=0; j<(int)l2->cols(); j++ ) {
-			double w = l2->weight( i, j );
-			if ( w == 0 && l2->matrix().isSteady(i,j) ) {
-				qDebug() << "FALSE, ";
-			} else {
-				qDebug() << w << ", ";
-			}
-		}
-	}
+	ConfigurationParameters paramsSave(false);
+	net->save( paramsSave, "NET" );
+	paramsSave.saveParameters( "netSave.ini" );
+
 	return 0;
 }

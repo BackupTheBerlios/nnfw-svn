@@ -81,7 +81,7 @@ public:
 	 *  This is automatically called, and in normal case you don't have to call it directly
 	 */
 	void setCluster( Cluster* cl ) {
-		if ( cl != NULL ) throw SetClusterException();
+		if ( clusterv != NULL ) throw SetClusterException();
 		clusterv = cl;
 		clusterSetted();
 	};

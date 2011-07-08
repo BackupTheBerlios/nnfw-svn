@@ -25,11 +25,12 @@
 namespace nnfw {
 
 Cluster::Cluster( unsigned int numNeurons, QString name )
-	: Updatable(name), inputdata(numNeurons, true), outputdata(numNeurons, true),
-	inputdataref(inputdata), outputdataref(outputdata) {
+	: Updatable(name), inputdata(numNeurons,true), outputdata(numNeurons,true) {
 	this->numneurons = numNeurons;
-	outputdata.zeroing();
+	inputdataptr = &inputdata;
 	inputdata.zeroing();
+	outputdataptr = &outputdata;
+	outputdata.zeroing();
 	accOff = true;
 	setNeedReset( false );
 	// SigmoidFunction as Default
@@ -37,14 +38,8 @@ Cluster::Cluster( unsigned int numNeurons, QString name )
 }
 
 Cluster::Cluster( ConfigurationParameters& params, QString prefix ) :
-	Updatable(params, prefix),
-	inputdata(1, true), // The number of neurons will be changed during configuration
-	outputdata(1, true), // The number of neurons will be changed during configuration
-	inputdataref(inputdata),
-	outputdataref(outputdata)
+	Updatable(params, prefix)
 {
-	inputdataref = inputdata;
-	outputdataref = outputdata;
 	numneurons = 1;
 	QString str = params.getValue(prefix + "numNeurons");
 	if (!str.isNull()) {
@@ -54,9 +49,13 @@ Cluster::Cluster( ConfigurationParameters& params, QString prefix ) :
 			numneurons = 1;
 		}
 	}
-	// Resizing inputdata and outputdata
-	inputdata.resize(numneurons);
-	outputdata.resize(numneurons);
+	// Creating inputdata and outputdata
+	inputdata = DoubleVector(numneurons, true );
+	inputdataptr = &inputdata;
+	inputdata.zeroing();
+	outputdata = DoubleVector(numneurons, true );
+	outputdataptr = &outputdata;
+	outputdata.zeroing();
 
 	accOff = true;
 	str = params.getValue(prefix + "accumulate").toLower();
@@ -79,9 +78,9 @@ Cluster::Cluster( ConfigurationParameters& params, QString prefix ) :
 		}
 		for( unsigned int i=0; i<cycleLength; i++) {
 			bool ok;
-			inputdata[i] = list[i].toDouble(&ok);
+			(*inputdataptr)[i] = list[i].toDouble(&ok);
 			if (!ok) {
-				inputdata[i] = 0.0;
+				(*inputdataptr)[i] = 0.0;
 			}
 		}
 	}
@@ -100,9 +99,9 @@ Cluster::Cluster( ConfigurationParameters& params, QString prefix ) :
 		}
 		for( unsigned int i=0; i<cycleLength; i++) {
 			bool ok;
-			outputdata[i] = list[i].toDouble(&ok);
+			(*outputdataptr)[i] = list[i].toDouble(&ok);
 			if (!ok) {
-				outputdata[i] = 0.0;
+				(*outputdataptr)[i] = 0.0;
 			}
 		}
 	}
@@ -118,7 +117,7 @@ Cluster::Cluster( ConfigurationParameters& params, QString prefix ) :
 }
 
 Cluster::~Cluster() {
-	// No need to delete anything, we use auto_ptr
+	// No need to delete anything else, we use auto_ptr
 }
 
 void Cluster::setOutFunction( OutputFunction *up ) {
@@ -127,37 +126,37 @@ void Cluster::setOutFunction( OutputFunction *up ) {
 }
 
 void Cluster::setInput( unsigned int neuron, double value ) {
-	inputdataref[neuron] = value;
+	(*inputdataptr)[neuron] = value;
 }
 
 void Cluster::setInputs( const DoubleVector& inputs ) {
-	inputdataref.copyValues( inputs );
+	inputdataptr->copyValues( inputs );
 }
 
 void Cluster::setAllInputs( double value ) {
-	inputdataref.setAll( value );
+	inputdataptr->setAll( value );
 	setNeedReset( false );
 }
 
 void Cluster::resetInputs() {
-	inputdataref.zeroing();
+	inputdataptr->zeroing();
 	setNeedReset( false );
 }
 
 double Cluster::getInput( unsigned int neuron ) const {
-	return inputdataref[neuron];
+	return (*inputdataptr)[neuron];
 }
 
 void Cluster::setOutput( unsigned int neuron, double value ) {
-	outputdataref[neuron] = value;
+	(*outputdataptr)[neuron] = value;
 }
 
 void Cluster::setOutputs( const DoubleVector& outputs ) {
-	outputdataref.copyValues( outputs );
+	outputdataptr->copyValues( outputs );
 }
 
 double Cluster::getOutput( unsigned int neuron ) const {
-	return outputdataref[neuron];
+	return (*outputdataptr)[neuron];
 }
 
 void Cluster::save(ConfigurationParameters& params, QString prefix)
@@ -168,14 +167,14 @@ void Cluster::save(ConfigurationParameters& params, QString prefix)
 	params.createParameter(prefix, "accumulate", (isAccumulate() ? "True" : "False"));
 	// First creating a string list, then transforming to a single string
 	QStringList list;
-	for (unsigned int i = 0; i < inputdataref.size(); i++) {
-		list.push_back(QString::number(inputdataref[i]));
+	for (unsigned int i = 0; i < inputdataptr->size(); i++) {
+		list.push_back(QString::number((*inputdataptr)[i]));
 	}
 	params.createParameter(prefix, "inputs", list.join(" "));
 	// Doing the same with outputdata
 	list.clear();
-	for (unsigned int i = 0; i < outputdataref.size(); i++) {
-		list.push_back(QString::number(outputdataref[i]));
+	for (unsigned int i = 0; i < outputdataptr->size(); i++) {
+		list.push_back(QString::number((*outputdataptr)[i]));
 	}
 	params.createParameter(prefix, "outputs", list.join(" "));
 	// and finally the outfunction will be saved in the group "prefix/OutFunction"

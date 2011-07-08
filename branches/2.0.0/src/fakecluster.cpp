@@ -24,8 +24,8 @@ namespace nnfw {
 
 FakeCluster::FakeCluster( unsigned int size, QString name )
 	: Cluster( size, name) {
-	// Outputs will share data of Inputs
-	outputdataref = inputdataref;
+	// Outputs will point to same data of Inputs
+	outputdataptr = inputdataptr;
 }
 
 FakeCluster::FakeCluster( ConfigurationParameters& params, QString prefix )

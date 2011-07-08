@@ -1,9 +1,9 @@
 
-#include "nnfw/nnfw.h"
-#include "nnfw/biasedcluster.h"
-#include "nnfw/dotlinker.h"
-#include "nnfw/liboutputfunctions.h"
-#include "nnfw/backpropagationalgo.h"
+#include "nnfw.h"
+#include "biasedcluster.h"
+#include "dotlinker.h"
+#include "liboutputfunctions.h"
+#include "backpropagationalgo.h"
 #include "randomgenerator.h"
 
 using namespace nnfw;
@@ -11,20 +11,20 @@ using namespace nnfw;
 //-------- Neural Network Structures
 BiasedCluster *in, *hid, *out;
 DotLinker *l1, *l2;
-BaseNeuralNet* net;
+NeuralNet* net;
 
 int main( int , char** ) {
 	globalRNG->setSeed( time(0) );
 
-	net = new BaseNeuralNet();
+	net = new NeuralNet();
 
 	// --- Create the Layers of network
 	in = new BiasedCluster( 2 );
-	in->setFunction( SigmoidFunction( 1.0f ) );
+	in->setOutFunction( new SigmoidFunction( 1.0f ) );
 	hid = new BiasedCluster( 4 );
-	hid->setFunction( SigmoidFunction( 1.0f ) );
+	hid->setOutFunction( new SigmoidFunction( 1.0f ) );
 	out = new BiasedCluster( 1 );
-	out->setFunction( SigmoidFunction( 1.0f ) );
+	out->setOutFunction( new SigmoidFunction( 1.0f ) );
 
 	// --- Create the Matrix connection among layers
 	l1 = new DotLinker( in, hid );
@@ -74,7 +74,7 @@ int main( int , char** ) {
 	qDebug() << "Iterations: " << i << "\tError:" << bp->calculateMSEOnSet( learningSet );
 	// --- compare the outputs with learning set
 	for( int i = 0; i<4; i++ ) {
-		in->inputs().copy( learningSet[i].inputsOf( in ) );
+		in->inputs().copyValues( learningSet[i].inputsOf( in ) );
 		net->step();
 		double out1 = out->getOutput(0);
 		double out2 = learningSet[i].outputsOf( out )[0];

@@ -40,6 +40,7 @@ void initNNFWLib() {
 	qDebug() << "NNFW Initialization";
 #endif
 	// Registering all types to factory
+	Factory::getInstance().registerClass<NeuralNet>("NeuralNet");
 	// Clusters
 	Factory::getInstance().registerClass<SimpleCluster>("SimpleCluster");
 	Factory::getInstance().registerClass<BiasedCluster>("BiasedCluster");
@@ -83,6 +84,7 @@ BOOL WINAPI DllMain( HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpReserved ) {
 		qDebug() << "NNFW Initialization";
 #endif
 		// Registering all types to factory
+		Factory::getInstance().registerClass<NeuralNet>("NeuralNet");
 		// Clusters
 		Factory::getInstance().registerClass<SimpleCluster>("SimpleCluster");
 		Factory::getInstance().registerClass<BiasedCluster>("BiasedCluster");
@@ -135,6 +137,7 @@ void initNNFWLib() {
 	qDebug() << "NNFW Initialization";
 #endif
 	// Registering all types to factory
+	Factory::getInstance().registerClass<NeuralNet>("NeuralNet");
 	// Clusters
 	Factory::getInstance().registerClass<SimpleCluster>("SimpleCluster");
 	Factory::getInstance().registerClass<BiasedCluster>("BiasedCluster");

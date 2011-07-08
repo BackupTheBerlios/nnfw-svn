@@ -449,7 +449,7 @@ public:
 		detach();
 		shData->rowdata[i].steady(j);
 		shData->coldata[j].steady(i);
-		shData->alldataref[ shData->nrows*i + j ].setSteady();
+		shData->alldataref[ i*shData->ncols + j ].setSteady();
 		return (*this);
 	};
 	/*! Reallow the modification of [i][j]-th value
@@ -462,7 +462,7 @@ public:
 		detach();
 		shData->rowdata[i].unsteady(j);
 		shData->coldata[j].unsteady(i);
-		shData->alldataref[ shData->nrows*i + j ].setNoSteady();
+		shData->alldataref[ i*shData->ncols + j ].setNoSteady();
 		return (*this);
 	};
 	/*! Return true if the [i][j]-th value is a steady value */
