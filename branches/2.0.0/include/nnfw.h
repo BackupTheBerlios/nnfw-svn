@@ -54,20 +54,5 @@
 // 	  saving something (cluster, linker or outputfunction), the whole status is saved. This means that the resetInnerStatus should be called also after
 // 	  reloading the network from file to have a resetted network
 
-//---------- WORKING ON
-// 	- Remove properties and use Laral Configuration classes
-// al momento sono arrivato a Cluster.cpp, per quanto riguarda la configurazione avverrà nel seguente modo:
-//  - dal configure di NeuralNetwork inizialmente si attiverà il flag per mantenere gli oggetti creati durante la configurazione
-//    dopodichè si chiamerà getObjectFromParameter per i vari cluster e linker specificati nei parametri della rete
-//    all'interno del configure di Cluster.cpp verrà creato l'outputFunction, qui andrà fatta attenzione a controllare
-//    che l'outputFunction sia unico per il cluster in oggetto, alcuni modi possono essere:
-//    1) far si che il gruppo abbia come prefisso forzato il gruppo del cluster; esempio se in [PIPPO] specifico outfuncion = Sigmoid ; allora si cercherà la outputfunction da creare nel gruppo [PIPPO/Sigmoid]
-//    2) invece di un parametro, si può far si chè la outputfunction venga create sempre a partire da un gruppo con un nome fissato; ad esempio per il cluster [PIPPO] si cercherà sempre il gruppo [PIPPO/OutFunction]
-// --- la soluzione 2 e' quella selezionata per essere implementato
-
-//  - Lanciare un eccezione in OutputFunction::setCluster per evitare che venga settato su più di un Cluster
-
-// 	- Make the whole library Exception safe (an exception could be thrown during configuration of clusters, linkers, output functions, base neural net...)
-
 #endif
 
