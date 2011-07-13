@@ -26,10 +26,32 @@ namespace nnfw {
 
 BackPropagationAlgo::BackPropagationAlgo( NeuralNet *n_n, UpdatableList up_order, double l_r )
 	: LearningAlgorithm(n_n), learn_rate(l_r), update_order(up_order) {
+	useMomentum = false;
+	momentumv = 0.0f;
+	neuralNetChanged();
+}
 
+BackPropagationAlgo::BackPropagationAlgo()
+	: LearningAlgorithm(), learn_rate(0.0) {
+	useMomentum = false;
+	momentumv = 0.0f;
+	neuralNetChanged();
+}
+
+BackPropagationAlgo::~BackPropagationAlgo( ) {
+	/* nothing to do ?!?! */
+}
+
+void BackPropagationAlgo::neuralNetChanged() {
+	NeuralNet* net = neuralNet();
+	if ( !net ) return;
+	//--- clear all data
+	mapIndex.clear();
+	cluster_deltas_vec.clear();
+	//--- insert new data for the new NeuralNet
 	Cluster *cluster_temp;
 	// pushing the info for output cluster
-	ClusterList outs = n_n->outputClusters();
+	ClusterList outs = net->outputClusters();
 	for( int i=0; i<(int)outs.size(); i++ ) {
 		addCluster( outs[i], true );
 	}
@@ -45,12 +67,11 @@ BackPropagationAlgo::BackPropagationAlgo( NeuralNet *n_n, UpdatableList up_order
 			addLinker( linker_temp );
 		}
 	}
-	useMomentum = false;
-	momentumv = 0.0f;
 }
 
-BackPropagationAlgo::~BackPropagationAlgo( ) {
-	/* nothing to do ?!?! */
+void BackPropagationAlgo::setUpdateOrder( const UpdatableList& update_order ) {
+	this->update_order = update_order;
+	this->neuralNetChanged();
 }
 
 void BackPropagationAlgo::setTeachingInput( Cluster* output, const DoubleVector& ti ) {
@@ -150,14 +171,14 @@ void BackPropagationAlgo::learn() {
 
 void BackPropagationAlgo::learn( const Pattern& pat ) {
 	// --- set the inputs of the net
-	ClusterList clins = net()->inputClusters();
+	ClusterList clins = neuralNet()->inputClusters();
 	for( int i=0; i<clins.size(); i++ ) {
 		clins[i]->inputs().copyValues( pat.inputsOf( clins[i] ) );
 	}
 	// --- spread the net
-	net()->step();
+	neuralNet()->step();
 	// --- set the teaching input
-	ClusterList clout = net()->outputClusters();
+	ClusterList clout = neuralNet()->outputClusters();
 	for( int i=0; i<clout.size(); i++ ) {
 		setTeachingInput( clout[i], pat.outputsOf( clout[i] ) );
 	}
@@ -166,14 +187,14 @@ void BackPropagationAlgo::learn( const Pattern& pat ) {
 
 double BackPropagationAlgo::calculateMSE( const Pattern& pat ) {
 	// --- set the inputs of the net
-	ClusterList clins = net()->inputClusters();
+	ClusterList clins = neuralNet()->inputClusters();
 	for( int i=0; i<clins.size(); i++ ) {
 		clins[i]->inputs().copyValues( pat.inputsOf( clins[i] ) );
 	}
 	// --- spread the net
-	net()->step();
+	neuralNet()->step();
 	// --- calculate the MSE
-	ClusterList clout = net()->outputClusters();
+	ClusterList clout = neuralNet()->outputClusters();
 	double mseacc = 0.0;
 	int dim = (int)clout.size();
 	for( int i=0; i<dim; i++ ) {
@@ -215,6 +236,45 @@ void BackPropagationAlgo::addLinker( Linker* link ) {
 		cluster_deltas_vec[ tmp ].incoming_linkers_vec.push_back( dynamic_cast<MatrixLinker*>(link) );
 		cluster_deltas_vec[ tmp ].incoming_last_outputs.push_back( DoubleVector( link->from()->numNeurons() ) );
 	}
+}
+
+void BackPropagationAlgo::configure(ConfigurationParameters& params, QString prefix) {
+	params.startRememberingGroupObjectAssociations();
+	learn_rate = params.getValue( prefix + "rate" ).toDouble();
+	momentumv = params.getValue( prefix + "momentum" ).toDouble();
+	if ( momentumv == 0.0 ) {
+		useMomentum = false;
+	} else {
+		useMomentum = true;
+	}
+	QString str = params.getValue( prefix + "order" );
+	update_order.clear();
+	if ( !str.isNull() ) {
+		QStringList list = str.split(QRegExp("\\s+"), QString::SkipEmptyParts);
+		foreach( QString upl, list ) {
+			Updatable* up = params.getObjectFromGroup<Updatable>( upl, true );
+			update_order << up;
+		}
+	}
+	NeuralNet* net = params.getObjectFromParameter<NeuralNet>( prefix+"neuralnet", false, true );
+	setNeuralNet( net );
+	params.stopRememberingGroupObjectAssociations();
+}
+
+void BackPropagationAlgo::save(ConfigurationParameters& params, QString prefix) {
+	params.startObjectParameters(prefix, "BackPropagationAlgo", this);
+	params.createParameter( prefix, "neuralnet", neuralNet() );
+	params.createParameter( prefix, "rate", QString::number(learn_rate) );
+	if ( useMomentum ) {
+		params.createParameter( prefix, "momentum", QString::number(momentumv) );
+	}
+	QStringList list;
+	foreach( Updatable* up, update_order ) {
+		list << up->name();
+	}
+	params.createParameter( prefix, "order", list.join(" ") );
+	//--- save the neuralnet in the group corresponding to its name
+	neuralNet()->save( params, neuralNet()->name() );
 }
 
 }

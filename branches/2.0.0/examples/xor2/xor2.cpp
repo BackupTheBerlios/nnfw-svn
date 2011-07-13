@@ -18,7 +18,7 @@ int main( int , char** ) {
 	globalRNG->setSeed( time(0) );
 
 	ConfigurationParameters params(false);
-	params.loadParameters( "net.ini" );
+	params.loadParameters( "net.xml" );
 	net = params.getObjectFromGroup<NeuralNet>( "NET" );
 
 	// --- Randomize the parameters of network (biases of neuron's layers and weight of matrix linkers)
@@ -53,7 +53,7 @@ int main( int , char** ) {
 
 	// --- Main loop for learning the network
 	int i;
-	for( i = 0; i<5000; i++ ) {
+	for( i = 0; i<50000; i++ ) {
 		bp->learnOnSet( learningSet );
 		// --- each 1000 iteration print out the error
 		if ( i%1000 == 0 ) {
@@ -72,6 +72,7 @@ int main( int , char** ) {
 
 	ConfigurationParameters paramsSave(false);
 	net->save( paramsSave, "NET" );
+	paramsSave.saveParameters( "netSave.xml" );
 	paramsSave.saveParameters( "netSave.ini" );
 
 	return 0;

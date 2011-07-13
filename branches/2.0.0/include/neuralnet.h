@@ -217,6 +217,17 @@ public:
 	//@}
 	/*! \name Interface */
 	//@{
+	/*! Set the name of the NeuralNet
+	 *  It's useful when loading from ConfigurationParameters more than NeuralNet or from
+	 *  LearningAlgorithms subclasses
+	 */
+	void setName( QString name ) {
+		namev = name;
+	};
+	/*! return the name of the NeuralNet */
+	QString name() {
+		return namev;
+	};
 	/*! Add a Cluster into the neural network<br>
 	 * If isInput is true then the Cluster will be considered as an Input Cluster of this network<br>
 	 * If isOutput is true then the Cluster will be considered as an Output Cluster of this network */
@@ -339,6 +350,8 @@ public:
 	virtual void save(ConfigurationParameters& params, QString prefix);
 	//@}
 protected:
+	/*! name of this NeuralNet */
+	QString namev;
 	/*! Clusters */
 	ClusterList clustersv;
 	/*! Input Clusters */

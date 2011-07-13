@@ -66,6 +66,10 @@
 #include "matrices.h"
 #include "algebra.h"
 
+namespace laral {
+}
+using namespace laral;
+
 namespace nnfw {
 
 class Updatable;

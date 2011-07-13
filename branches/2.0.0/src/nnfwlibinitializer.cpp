@@ -29,6 +29,8 @@
 #include "libperiodicfunctions.h"
 #include "libradialfunctions.h"
 #include "libcompetitivefunctions.h"
+#include "learningalgorithm.h"
+#include "backpropagationalgo.h"
 #include <factory/factory.h>
 
 using namespace nnfw;
@@ -41,6 +43,8 @@ void initNNFWLib() {
 #endif
 	// Registering all types to factory
 	Factory::getInstance().registerClass<NeuralNet>("NeuralNet");
+	Factory::getInstance().registerClass<Pattern>("Pattern");
+	Factory::getInstance().registerClass<BackPropagationAlgo>("BackPropagationAlgo");
 	// Clusters
 	Factory::getInstance().registerClass<SimpleCluster>("SimpleCluster");
 	Factory::getInstance().registerClass<BiasedCluster>("BiasedCluster");

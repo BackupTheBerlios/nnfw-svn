@@ -47,6 +47,8 @@ public:
 	 *  \param learn_rate the double learning rate factor
 	 */
 	BackPropagationAlgo( NeuralNet *n_n, UpdatableList update_order, double l_r = 0.1 );
+	/*! Default Constructor */
+	BackPropagationAlgo();
 
 	//! Destructor
 	~BackPropagationAlgo( );
@@ -55,6 +57,16 @@ public:
 	/*! \name Interface */
 	//@{
 
+	/*! Set the order on which the error is backpropagated through the NeuralNet
+	 *  \warning Calling this method will also clean any previous data about previous processing and
+	 *   re-initialize all datas
+	 */
+	void setUpdateOrder( const UpdatableList& update_order );
+	
+	/*! Return the order on which the error is backpropaget through the NeuralNet */
+	UpdatableList updateOrder() const {
+		return update_order;
+	};
 	/*! Set the teaching input for Cluster passed
 	 *  \param teach_input the DoubleVector teaching input
 	 */
@@ -74,7 +86,7 @@ public:
 	};
 
 	/*! return the learning rate */
-	double rate() {
+	double rate() const {
 		return learn_rate;
 	};
 
@@ -84,7 +96,7 @@ public:
 	};
 
 	/*! return the momentum */
-	double momentum() {
+	double momentum() const {
 		return momentumv;
 	};
 
@@ -118,8 +130,62 @@ public:
 	 *  setTeachingInput() for all the output clusters before calling getError() for any of the clusters.
 	 */
 	DoubleVector getError( Cluster* );
+	/**
+	 * \brief Configures the object using a ConfigurationParameters object
+	 * 
+	 * From the file you can configure the parameters of the BackPropagation in this way:
+	 * \code
+	 * [aBackPropagationGroup]
+	 * neuralnet = nameOfGroupOfTheNeuralNet
+	 * rate = learningRate      ;if it's not present, default is 0.0 !!
+	 * momentum = momentumRate  ;if it's not present, means momentum disabled
+	 * order = cluster2 linker1 cluster1 ; order of Cluster and Linker on which the error is backpropagated
+	 * \endcode
+	 * As you can note, there is no configuration parameters for loading the learning set from here.
+	 * This is intended. You need to load separately the learning set and call the method learn on the
+	 * loaded learning set.
+	 * 
+	 * You can do that creating groups like the following (see class Pattern):
+	 * \code
+	 * [learningSet:1]
+	 * cluster:1 = cluster1
+	 * inputs:1 = 1 2 3     ; input
+	 * cluster:2 = cluster2
+	 * outputs:2 = 2 4      ; desired output
+	 * [learningSet:2]
+	 * cluster:1 = cluster1
+	 * inputs:1 = 2 4 6     ; input
+	 * cluster:2 = cluster2
+	 * outputs:2 = 4 8      ; desired output
+	 * ...
+	 * [learningSet:N]
+	 * cluster:1 = cluster1
+	 * inputs:1 = 10 20 30    ; input
+	 * cluster:2 = cluster2
+	 * outputs:2 = 20 40      ; desired output
+	 * \endcode
+	 * And call the method LearningAlgorithm::loadPatternSet( params, "learningSet" )
+	 *
+	 * \param params the configuration parameters object with parameters to
+	 *               use
+	 * \param prefix the prefix to use to access the object configuration
+	 *               parameters. This is guaranteed to end with the
+	 *               separator character when called by the factory, so you
+	 *               don't need to add one
+	 */
+	virtual void configure(ConfigurationParameters& params, QString prefix);
+	/**
+	 * \brief Save the actual status of parameters into the ConfigurationParameters object passed
+	 *
+	 * \param params the configuration parameters object on which save actual parameters
+	 * \param prefix the prefix to use to access the object configuration
+	 *               parameters.
+	 */
+	virtual void save(ConfigurationParameters& params, QString prefix);
 	//@}
-
+protected:
+	/*! Configure internal data for backpropagation on NeuralNet setted */
+	virtual void neuralNetChanged();
 private:
 	//! The double learning rate factor
 	double learn_rate;

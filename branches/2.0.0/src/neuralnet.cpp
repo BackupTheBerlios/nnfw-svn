@@ -319,6 +319,16 @@ bool NeuralNet::find( const Updatable* u ) const {
 
 void NeuralNet::configure(ConfigurationParameters& params, QString prefix) {
 	params.startRememberingGroupObjectAssociations();
+	// the name will correspond to the group where the declaration of NeuralNet is
+	QString myname = prefix;
+	if ( myname.startsWith( ConfigurationParameters::GroupSeparator ) ) {
+		myname.remove( 0, 1 );
+	}
+	if ( myname.endsWith( ConfigurationParameters::GroupSeparator ) ) {
+		myname.chop( 1 );
+	}
+	setName( myname );
+	
 	// All Cluster has to be added before the creation of linkers, that's why the insertion is done after
 	ClusterList clsToAdd;
 	ClusterList clsInput;
@@ -326,7 +336,12 @@ void NeuralNet::configure(ConfigurationParameters& params, QString prefix) {
 	LinkerList lnsToAdd;
 
 	//--- get all subgroups, merge this list with clustersList and linkersList
-	QStringList subgroups = params.getGroupsList( prefix );
+	QStringList subgroups;
+	foreach( QString sub, params.getGroupsList( prefix ) ) {
+		// append the full path
+		subgroups << (prefix+sub);
+	}
+	//--- clustersList and linkersList are supposed to be full path
 	QString str = params.getValue(prefix + "clustersList");
 	if (!str.isNull()) {
 		subgroups << str.split(QRegExp("\\s+"), QString::SkipEmptyParts);
@@ -336,13 +351,13 @@ void NeuralNet::configure(ConfigurationParameters& params, QString prefix) {
 		subgroups << str.split(QRegExp("\\s+"), QString::SkipEmptyParts);
 	}
 	foreach( QString sub, subgroups ) {
-		Updatable* up = params.getObjectFromGroup<Updatable>( prefix + sub, true );
+		Updatable* up = params.getObjectFromGroup<Updatable>( sub, true );
 		//--- check if is a Cluster
 		Cluster* cl = dynamic_cast<Cluster*>(up);
-		if ( cl ) clsToAdd << cl;
+		if ( cl && !clsToAdd.contains( cl ) ) clsToAdd << cl;
 		//--- check if is a Linker
 		Linker* ln = dynamic_cast<Linker*>(up);
-		if ( ln ) lnsToAdd << ln;
+		if ( ln && !lnsToAdd.contains( ln ) ) lnsToAdd << ln;
 	}
 	//--- parse the parameter inputClusters
 	str = params.getValue(prefix + "inputClusters");
@@ -371,15 +386,12 @@ void NeuralNet::configure(ConfigurationParameters& params, QString prefix) {
 		ups.clear();
 		foreach( QString sub, list ) {
 			Updatable* up = params.getObjectFromGroup<Updatable>( sub, true );
-			//--- check if it is already added by parameters parsed before
-			if ( !find( up ) ) {
-				// add it to the list of objects to add
-				Cluster* cl = dynamic_cast<Cluster*>(up);
-				if ( cl && !clsToAdd.contains( cl ) ) clsToAdd << cl;
-				//--- check if is a Linker
-				Linker* ln = dynamic_cast<Linker*>(up);
-				if ( ln && !lnsToAdd.contains( ln ) ) lnsToAdd << ln;
-			}
+			// add it to the list of objects to add
+			Cluster* cl = dynamic_cast<Cluster*>(up);
+			if ( cl && !clsToAdd.contains( cl ) ) clsToAdd << cl;
+			//--- check if is a Linker
+			Linker* ln = dynamic_cast<Linker*>(up);
+			if ( ln && !lnsToAdd.contains( ln ) ) { qDebug() << ln->name(); lnsToAdd << ln; }
 			ups.append( up );
 		}
 		dimUps = ups.size();

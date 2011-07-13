@@ -28,6 +28,8 @@
 #include <QMap>
 #include <QVector>
 #include <cmath>
+#include <factory/parametersettable.h>
+#include <configuration/configurationparameters.h>
 
 namespace nnfw {
 
@@ -61,7 +63,7 @@ class NeuralNet;
  *  Pay attention when you use operator[] because it silently add new data. Like QMap::operator[]
  *
  */
-class NNFW_API Pattern {
+class NNFW_API Pattern : public ParameterSettableWithConfigureFunction {
 public:
 	/*! \name Nested Structures */
 	//@{
@@ -74,7 +76,7 @@ public:
 	/*! \name Constructors */
 	//@{
 	/*! Construct an empty Pattern */
-	Pattern() : pinfo() { /*nothing to do*/ };
+	Pattern() : ParameterSettableWithConfigureFunction(), pinfo() { /*nothing to do*/ };
 	/*! Destructor */
 	~Pattern() { /*nothing to do*/ };
 	//@}
@@ -93,6 +95,40 @@ public:
 	/*! return the stored information
 	 *  \warning it silently create a new one if the Cluster passed is not present */
 	PatternInfo& operator[]( Cluster* );
+	/**
+	 * \brief Configures the object using a ConfigurationParameters object
+	 * 
+	 * The Pattern has to be declared using a sequence of parameters with the following schema:
+	 * \code
+	 * [aPattern]
+	 * cluster:1 = nameOfCluster
+	 * inputs:1 = list of the inputs associated to cluster:1
+	 * outputs:1 = list of the outputs associated to cluster:1
+	 * ...
+	 * cluster:i = nameOf_ith_Cluster
+	 * inputs:i = list of the inputs associated to cluster:i
+	 * outputs:i = list of the outputs associated to cluster:i
+	 * \endcode
+	 * Essentialy, the parameters are grouped using the identifier string after the ':' char.
+	 * And the inputs and outputs with a given identifier are associated to the cluster with the same identifier.
+	 * If a cluster:i is present, then at least inputs:i or outputs:i parameter must be present
+	 *
+	 * \param params the configuration parameters object with parameters to
+	 *               use
+	 * \param prefix the prefix to use to access the object configuration
+	 *               parameters. This is guaranteed to end with the
+	 *               separator character when called by the factory, so you
+	 *               don't need to add one
+	 */
+	virtual void configure(ConfigurationParameters& params, QString prefix);
+	/**
+	 * \brief Save the actual status of parameters into the ConfigurationParameters object passed
+	 *
+	 * \param params the configuration parameters object on which save actual parameters
+	 * \param prefix the prefix to use to access the object configuration
+	 *               parameters.
+	 */
+	virtual void save(ConfigurationParameters& params, QString prefix);
 	//@}
 private:
 	mutable QMap<Cluster*, PatternInfo> pinfo;
@@ -111,19 +147,26 @@ typedef QVector<Pattern> PatternSet;
  *
  *  The LearningAlgorithm object is a the abstract class from which to implement learning algorithms
  */
-class NNFW_API LearningAlgorithm {
+class NNFW_API LearningAlgorithm : public ParameterSettableWithConfigureFunction {
 public:
 	/*! \name Constructors */
 	//@{
 	/*! Constructor */
 	LearningAlgorithm( NeuralNet* net );
+	/*! Constructor */
+	LearningAlgorithm();
 	/*! Destructor */
 	virtual ~LearningAlgorithm();
 	//@}
 	/*! \name Interface */
 	//@{
-	/*! Return the BaseNeuralNet setted */
-	NeuralNet* net() {
+	/*! Set the NeuralNet to learn */
+	void setNeuralNet( NeuralNet* net ) {
+		netp = net;
+		this->neuralNetChanged();
+	};
+	/*! Return the NeuralNet setted */
+	NeuralNet* neuralNet() {
 		return netp;
 	};
 	/*! a single step of learning algorithm */
@@ -155,8 +198,14 @@ public:
 	double calculateRMSDOnSet( const PatternSet& p ) {
 		return sqrt( calculateMSEOnSet( p ) );
 	};
+	/*! Utility function for loading a PatternSet from a ConfigurationParameters */
+	PatternSet loadPatternSet( ConfigurationParameters& params, QString path, QString prefix );
+	/*! Utility function for saving a PatternSet to a ConfigurationParameters */
+	void savePatternSet( PatternSet& set, ConfigurationParameters& params, QString prefix );
 	//@}
-
+protected:
+	/*! Implemented by subclasses for configuring internal structure when the NeuralNet has been setted */
+	virtual void neuralNetChanged() = 0;
 private:
 	NeuralNet* netp;
 };
