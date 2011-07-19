@@ -34,14 +34,15 @@
 		#define NNFW_API __declspec(dllexport)
 		#define NNFW_TEMPLATE __declspec(dllexport)
 	#else
-		#define NNFW_API __declspec(dllimport)
-		#define NNFW_TEMPLATE 
+		#ifdef NNFW_STATIC
+			#define NNFW_API 
+			#define NNFW_TEMPLATE 
+		#else
+			#define NNFW_API __declspec(dllimport)
+			#define NNFW_TEMPLATE 
+		#endif
 	#endif
 	#ifdef NNFW_DONT_EXPORT
-		#define NNFW_API 
-		#define NNFW_TEMPLATE 
-	#endif
-	#ifdef NNFW_STATIC
 		#define NNFW_API 
 		#define NNFW_TEMPLATE 
 	#endif

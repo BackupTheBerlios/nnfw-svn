@@ -280,12 +280,12 @@ NNFW_INTERNAL void parseCluster_11( QDomElement cur, BaseNeuralNet* net ) {
 	QDomNamedNodeMap amap = cur.attributes();
 	for( int i=0; i<amap.count(); i++ ) {
 		QDomAttr item = amap.item( i ).toAttr();
-		std::string name = item.name().toStdString();
-		std::string value = item.value().toStdString();
+		std::string name = item.name().toAscii().data();
+		std::string value = item.value().toAscii().data();
 		prop[name] = Variant( value.data() );
 	}
-    if ( prop["type"].isNull() ) {
-        nError() << "attribute type of <cluster> is mandatory" ;
+	if ( prop["type"].isNull() ) {
+		nError() << "attribute type of <cluster> is mandatory" ;
 		return;
     }
 	//--- add meta-informations
@@ -406,8 +406,8 @@ NNFW_INTERNAL void parseLinker_11( QDomElement cur, BaseNeuralNet* net ) {
 	QDomNamedNodeMap amap = cur.attributes();
 	for( int i=0; i<amap.count(); i++ ) {
 		QDomAttr item = amap.item( i ).toAttr();
-		std::string name = item.name().toStdString();
-		std::string value = item.value().toStdString();
+		std::string name = item.name().toAscii().data();
+		std::string value = item.value().toAscii().data();
 		prop[name] = Variant( value.data() );
 	}
     if ( prop["type"].isNull() ) {
